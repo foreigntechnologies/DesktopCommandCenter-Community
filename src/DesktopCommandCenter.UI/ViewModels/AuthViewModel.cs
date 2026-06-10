@@ -107,7 +107,7 @@ public partial class AuthViewModel : ObservableObject
         if (user == null) return;
         
         // O UID é passado no client_reference_id para o webhook atualizar o banco!
-        string url = $"https://buy.stripe.com/SEU_LINK_MENSAL?client_reference_id={user.Uid}";
+        string url = $"https://buy.stripe.com/14AeVf9Q46Gz5nY9ttf3a0p?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
     }
 
@@ -117,7 +117,7 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user == null) return;
         
-        string url = $"https://buy.stripe.com/SEU_LINK_ANUAL?client_reference_id={user.Uid}";
+        string url = $"https://buy.stripe.com/7sYbJ3e6k3uncQq499f3a0q?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
     }
 
