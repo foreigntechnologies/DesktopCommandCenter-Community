@@ -27,4 +27,20 @@ public class ClipboardRepository : IClipboardRepository
         await _context.SaveChangesAsync();
         return item;
     }
+
+    public async Task DeleteAsync(int id)
+    {
+        var item = await _context.ClipboardItems.FindAsync(id);
+        if (item != null)
+        {
+            _context.ClipboardItems.Remove(item);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task ClearAsync()
+    {
+        _context.ClipboardItems.RemoveRange(_context.ClipboardItems);
+        await _context.SaveChangesAsync();
+    }
 }

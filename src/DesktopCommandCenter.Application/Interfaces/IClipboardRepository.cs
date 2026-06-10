@@ -8,4 +8,6 @@ public interface IClipboardRepository
 {
     Task<IEnumerable<ClipboardItem>> GetAllAsync();
     Task<ClipboardItem> AddAsync(ClipboardItem item);
+    Task DeleteAsync(int id);
+    Task ClearAsync();
 }

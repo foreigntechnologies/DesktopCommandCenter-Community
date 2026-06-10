@@ -19,6 +19,11 @@
                 <NavigationViewItem Tag="Notes" Icon="Document" Content="Notes" />
                 <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="Clipboard" />
                 <NavigationViewItem Tag="ColorPicker" Icon="Highlight" Content="Color Picker" />
+                <NavigationViewItem Tag="CliCommands" Content="Comandos CLI">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE756;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>

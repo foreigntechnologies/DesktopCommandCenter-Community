@@ -8,6 +8,7 @@ using DesktopCommandCenter.Infrastructure;
 
 using Serilog;
 using DesktopCommandCenter.Application;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace DesktopCommandCenter.UI;
 
@@ -20,6 +21,15 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     public App()
     {
+        AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
+        {
+            try
+            {
+                System.IO.File.AppendAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "dcc_firstchance.txt"), args.Exception.ToString() + "\n\n");
+            }
+            catch { }
+        };
+
         Services = ConfigureServices();
         InitializeComponent();
         
@@ -27,19 +37,43 @@ public partial class App : Microsoft.UI.Xaml.Application
         var dbContext = Services.GetRequiredService<AppDbContext>();
         dbContext.Database.EnsureCreated();
         
-        // Iniciar Monitoramento Smart Clipboard
+        // Start Smart Clipboard Monitoring
         var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
         clipboardService.StartMonitoring();
 
-        // Registrar Atalho Temporário do Pincel (Win + Shift + C)
-        var hotkeyService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyService>();
-        hotkeyService.RegisterHotkey(8 | 4, 0x43, () => 
-        {
-            var colorVm = Services.GetRequiredService<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
-            colorVm.TogglePicking();
-        });
+        // Register Dynamic Hotkeys
+        RegisterAllHotkeys();
+        var configManager = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager>();
+        configManager.ConfigsChanged += (s, e) => RegisterAllHotkeys();
         
         Log.Information("DCC Inicializado com sucesso.");
+    }
+
+    private void RegisterAllHotkeys()
+    {
+        var hotkeyService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyService>();
+        var configManager = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager>();
+
+        hotkeyService.UnregisterAll();
+
+        foreach (var config in configManager.GetAllConfigs())
+        {
+            if (config.VirtualKey == 0) continue; // Hotkey not configured
+
+            hotkeyService.RegisterHotkey((int)config.Modifiers, (int)config.VirtualKey, () =>
+            {
+                if (config.ActionId == "ColorPicker")
+                {
+                    var colorVm = Services.GetRequiredService<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
+                    colorVm.TogglePicking();
+                }
+                else
+                {
+                    // Uses WeakReferenceMessenger to notify MainPage
+                    WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage(config.ActionId));
+                }
+            });
+        }
     }
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

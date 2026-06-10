@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddSingleton<IColorPickerService, ColorPickerService>();
         services.AddSingleton<ILicenseService, FirestoreLicenseService>();
         services.AddSingleton<IHotkeyService, GlobalHotkeyService>();
+        services.AddSingleton<IHotkeyConfigManager, HotkeyConfigManager>();
         return services;
     }
 }

@@ -63,7 +63,7 @@ public class GlobalHotkeyService : IHotkeyService, IDisposable
         {
             cbSize = (uint)Marshal.SizeOf(typeof(WNDCLASSEX)),
             lpfnWndProc = _wndProcDelegate,
-            hInstance = GetModuleHandle(null),
+            hInstance = GetModuleHandle(null!),
             lpszClassName = "GlobalHotkeyMessageWindow"
         };
         RegisterClassEx(ref wndClass);
@@ -98,11 +98,27 @@ public class GlobalHotkeyService : IHotkeyService, IDisposable
             int id = wParam.ToInt32();
             if (_callbacks.TryGetValue(id, out var action))
             {
-                // Dispara a ação na thread atual (que será a UI thread se o serviço foi criado nela)
+                // Trigger the action on the current thread
                 action();
             }
         }
         return DefWindowProc(hWnd, msg, wParam, lParam);
+    }
+
+    public static string GetHotkeyString(uint modifiers, uint virtualKey)
+    {
+        if (virtualKey == 0) return "None";
+
+        var parts = new List<string>();
+        if ((modifiers & 2) != 0) parts.Add("Ctrl");
+        if ((modifiers & 1) != 0) parts.Add("Alt");
+        if ((modifiers & 4) != 0) parts.Add("Shift");
+        if ((modifiers & 8) != 0) parts.Add("Win");
+
+        // Convert virtual key to char if possible, or string
+        parts.Add(((ConsoleKey)virtualKey).ToString());
+
+        return string.Join(" + ", parts);
     }
 
     public void Dispose()

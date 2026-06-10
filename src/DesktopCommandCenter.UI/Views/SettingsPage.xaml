@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -32,9 +33,31 @@
 
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
-                        <TextBlock Text="Teclas de Atalho (Em Breve)" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Personalização avançada de teclas de atalho estará disponível aqui nas próximas versões." 
+                        <TextBlock Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Configure atalhos que funcionam de qualquer lugar do Windows." 
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                        <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:HotkeyConfigItemViewModel">
+                                    <Grid Padding="8" Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Bind DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                                        
+                                        <TextBox Grid.Column="1" 
+                                                 Text="{x:Bind CurrentHotkeyDisplay, Mode=OneWay}" 
+                                                 PlaceholderText="Pressione um atalho..." 
+                                                 IsReadOnly="True" 
+                                                 KeyDown="HotkeyTextBox_KeyDown" 
+                                                 Tag="{Binding}"
+                                                 Width="200" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </StackPanel>
                 </Border>
             </StackPanel>
