@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DesktopCommandCenter.Application/DesktopCommandCenter.Application.csproj" />
+    <Project Path="src/DesktopCommandCenter.CLI/DesktopCommandCenter.CLI.csproj" />
+    <Project Path="src/DesktopCommandCenter.Domain/DesktopCommandCenter.Domain.csproj" />
+    <Project Path="src/DesktopCommandCenter.Infrastructure/DesktopCommandCenter.Infrastructure.csproj" />
+    <Project Path="src/DesktopCommandCenter.Installer/DesktopCommandCenter.Installer.csproj" />
+    <Project Path="src/DesktopCommandCenter.PluginSDK/DesktopCommandCenter.PluginSDK.csproj" />
+    <Project Path="src/DesktopCommandCenter.Shared/DesktopCommandCenter.Shared.csproj" />
+    <Project Path="src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj">
+      <Platform Project="x86" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DesktopCommandCenter.IntegrationTests/DesktopCommandCenter.IntegrationTests.csproj" />
+    <Project Path="tests/DesktopCommandCenter.UITests/DesktopCommandCenter.UITests.csproj" />
+    <Project Path="tests/DesktopCommandCenter.UnitTests/DesktopCommandCenter.UnitTests.csproj" />
+  </Folder>
+</Solution>
