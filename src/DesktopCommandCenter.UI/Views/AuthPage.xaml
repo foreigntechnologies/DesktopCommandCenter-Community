@@ -57,7 +57,7 @@
                             <Button Grid.Column="1" Command="{x:Bind ViewModel.UpgradeYearlyCommand}" HorizontalAlignment="Stretch" Padding="12" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Foreground="White">
                                 <StackPanel>
                                     <TextBlock Text="Anual" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    <TextBlock Text="R$ 399,00/ano" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="R$ 429,90/ano" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
