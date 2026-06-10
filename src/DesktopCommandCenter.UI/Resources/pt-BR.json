@@ -1,12 +1,8 @@
 {
-  "AppTitle": "Desktop Command Center",
-  "MenuDashboard": "Início",
-  "MenuNotes": "Notas Rápidas",
-  "MenuClipboard": "Área de Transferência",
-  "MenuSettings": "Configurações",
-  "WelcomeMessage": "Bem-vindo de volta!",
-  "TodayTasks": "Tarefas de Hoje",
-  "FocusTime": "Tempo de Foco",
-  "NewNote": "Nova Nota",
-  "GeneralCategory": "Geral"
+  "auth_login_google": "Continuar com o Google",
+  "auth_login_github": "Continuar com o GitHub",
+  "auth_pro_title": "Desktop Command Center PRO",
+  "auth_pro_desc": "🚀 Desbloqueie o histórico infinito e automações nativas.",
+  "auth_community_details": "Ferramentas essenciais para uso local e código aberto.",
+  "auth_enterprise_details": "Desbloqueia automações na nuvem, plugins premium e integrações de inteligência artificial."
 }

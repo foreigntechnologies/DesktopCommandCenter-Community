@@ -30,6 +30,14 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Iniciar Monitoramento Smart Clipboard
         var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
         clipboardService.StartMonitoring();
+
+        // Registrar Atalho Temporário do Pincel (Win + Shift + C)
+        var hotkeyService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyService>();
+        hotkeyService.RegisterHotkey(8 | 4, 0x43, () => 
+        {
+            var colorVm = Services.GetRequiredService<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
+            colorVm.TogglePicking();
+        });
         
         Log.Information("DCC Inicializado com sucesso.");
     }
@@ -62,7 +70,8 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.NotesViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.AuthViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.ClipboardViewModel>();
-        services.AddTransient<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.SettingsViewModel>();
+        services.AddSingleton<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
         
         // Configurar MediatR / Application
         services.AddApplication();

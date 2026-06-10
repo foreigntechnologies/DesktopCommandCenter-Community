@@ -10,8 +10,8 @@ public sealed partial class ClipboardPage : Page
 
     public ClipboardPage()
     {
-        InitializeComponent();
         ViewModel = App.Current.Services.GetRequiredService<ViewModels.ClipboardViewModel>();
+        InitializeComponent();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)

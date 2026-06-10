@@ -42,7 +42,6 @@
 
             <ToggleButton Content="Ativar Conta-gotas (Mouse)" 
                           IsChecked="{x:Bind ViewModel.IsPicking, Mode=TwoWay}"
-                          Command="{x:Bind ViewModel.TogglePickingCommand}"
                           HorizontalAlignment="Stretch" 
                           Margin="0,16,0,0" />
                           

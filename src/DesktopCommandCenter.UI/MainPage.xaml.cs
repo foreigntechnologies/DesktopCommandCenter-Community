@@ -20,7 +20,7 @@ public sealed partial class MainPage : Page
     {
         if (args.IsSettingsInvoked)
         {
-            // ContentFrame.Navigate(typeof(Views.SettingsPage));
+            ContentFrame.Navigate(typeof(Views.SettingsPage));
         }
         else if (args.InvokedItemContainer != null)
         {

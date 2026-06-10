@@ -37,29 +37,30 @@
                         <TextBlock Text="Desktop Command Center PRO" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" />
                         <TextBlock Text="🚀 Desbloqueie o histórico infinito e automações nativas." TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
                         
-                        <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" CornerRadius="4" Padding="8,4" HorizontalAlignment="Center" Margin="0,8,0,0">
-                            <TextBlock Text="Oferta Founder Launch: Use o cupom FOUNDER2000 no checkout para 25% de desconto por 12 meses!" Foreground="White" FontWeight="SemiBold" FontSize="12"/>
-                        </Border>
-
                         <Grid ColumnSpacing="16" Margin="0,16,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             
-                            <Button Command="{x:Bind ViewModel.UpgradeMonthlyCommand}" HorizontalAlignment="Stretch" Padding="12">
-                                <StackPanel>
-                                    <TextBlock Text="Mensal" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    <TextBlock Text="R$ 39,90/mês" HorizontalAlignment="Center"/>
+                            <!-- Assinatura Community -->
+                            <Border Grid.Column="0" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="16">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Community" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Grátis" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Ferramentas essenciais para uso local e código aberto." FontSize="12" TextWrapping="Wrap" TextAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 </StackPanel>
-                            </Button>
-                            
-                            <Button Grid.Column="1" Command="{x:Bind ViewModel.UpgradeYearlyCommand}" HorizontalAlignment="Stretch" Padding="12" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Foreground="White">
-                                <StackPanel>
-                                    <TextBlock Text="Anual" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    <TextBlock Text="R$ 429,90/ano" HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Assinatura Enterprise -->
+                            <Border Grid.Column="1" Background="{ThemeResource SystemControlBackgroundAccentBrush}" CornerRadius="8" Padding="16">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Enterprise" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="R$ 39,90/mês" Foreground="White" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Desbloqueia automações na nuvem, plugins premium e integrações de inteligência artificial." FontSize="12" TextWrapping="Wrap" Foreground="White" TextAlignment="Center"/>
+                                    <Button Command="{x:Bind ViewModel.UpgradeMonthlyCommand}" Content="Assinar" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                                 </StackPanel>
-                            </Button>
+                            </Border>
                         </Grid>
 
                         <HyperlinkButton Content="Gerenciar minha Assinatura" Command="{x:Bind ViewModel.OpenCustomerPortalCommand}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
