@@ -1,0 +1,21 @@
+<Window
+    x:Class="DesktopCommandCenter.UI.Views.ColorLoupeWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <Border Width="80" Height="80" CornerRadius="40" BorderThickness="3" BorderBrush="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ColorBorder">
+            <Border.Background>
+                <SolidColorBrush x:Name="ColorBrush" Color="#FFFFFF" />
+            </Border.Background>
+            <Border Background="#88000000" VerticalAlignment="Bottom" Padding="4" CornerRadius="0,0,36,36">
+                <TextBlock x:Name="HexText" Text="#FFFFFF" Foreground="White" FontSize="10" 
+                           HorizontalAlignment="Center" FontWeight="Bold" />
+            </Border>
+        </Border>
+    </Grid>
+</Window>

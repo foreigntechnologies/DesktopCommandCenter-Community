@@ -15,9 +15,9 @@
                         Background="Transparent">
             
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="Dashboard" Icon="Home" Content="{Binding [MenuDashboard], Mode=OneWay}" />
-                <NavigationViewItem Tag="Notes" Icon="Document" Content="{Binding [MenuNotes], Mode=OneWay}" />
-                <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="{Binding [MenuClipboard], Mode=OneWay}" />
+                <NavigationViewItem Tag="Dashboard" Icon="Home" Content="Dashboard" />
+                <NavigationViewItem Tag="Notes" Icon="Document" Content="Notes" />
+                <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="Clipboard" />
                 <NavigationViewItem Tag="ColorPicker" Icon="Highlight" Content="Color Picker" />
             </NavigationView.MenuItems>
 

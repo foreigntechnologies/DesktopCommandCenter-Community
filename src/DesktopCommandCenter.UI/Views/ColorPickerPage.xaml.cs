@@ -9,7 +9,7 @@ public sealed partial class ColorPickerPage : Page
 
     public ColorPickerPage()
     {
-        InitializeComponent();
         ViewModel = App.Current.Services.GetRequiredService<ViewModels.ColorPickerViewModel>();
+        InitializeComponent();
     }
 }

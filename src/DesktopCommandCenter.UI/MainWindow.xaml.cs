@@ -31,5 +31,33 @@ public sealed partial class MainWindow : Window
 
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
+
+        RootFrame.Loaded += RootFrame_Loaded;
+    }
+
+    private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
+    {
+        RootFrame.Loaded -= RootFrame_Loaded; // Run only once
+        
+        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        if (!localSettings.Values.ContainsKey("AppTheme"))
+        {
+            var dialog = new Views.OobeDialog();
+            dialog.XamlRoot = this.Content.XamlRoot;
+            await dialog.ShowAsync();
+        }
+        else
+        {
+            string themeStr = localSettings.Values["AppTheme"] as string ?? "Default";
+            if (this.Content is FrameworkElement fw)
+            {
+                fw.RequestedTheme = themeStr switch
+                {
+                    "Light" => ElementTheme.Light,
+                    "Dark" => ElementTheme.Dark,
+                    _ => ElementTheme.Default
+                };
+            }
+        }
     }
 }
