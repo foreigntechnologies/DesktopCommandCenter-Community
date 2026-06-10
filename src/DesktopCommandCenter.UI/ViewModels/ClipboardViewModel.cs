@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopCommandCenter.Application.Features.Clipboard.Queries;
+using DesktopCommandCenter.Application.Features.Clipboard.Commands;
 using DesktopCommandCenter.Application.Interfaces;
 using DesktopCommandCenter.Domain.Entities;
 using MediatR;
@@ -63,6 +64,26 @@ public partial class ClipboardViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+        }
+    }
+    [RelayCommand]
+    public async Task ClearHistoryAsync()
+    {
+        try
+        {
+            await _mediator.Send(new ClearClipboardCommand());
+            Items.Clear();
+
+            // Limpar imagens da pasta local também
+            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            if (await localFolder.TryGetItemAsync("ClipboardImages") is Windows.Storage.StorageFolder imgFolder)
+            {
+                await imgFolder.DeleteAsync();
+            }
+        }
+        catch (Exception)
+        {
+            // Tratamento de erro
         }
     }
 }

@@ -21,7 +21,8 @@ public class CreateClipboardItemCommandHandler : IRequestHandler<CreateClipboard
         var item = new ClipboardItem
         {
             Content = request.Content,
-            Type = request.Type
+            Type = request.Type,
+            ImagePath = request.ImagePath
         };
 
         return await _repository.AddAsync(item);

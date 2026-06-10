@@ -7,12 +7,18 @@ namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
+    private readonly DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager _hotkeyManager;
+
     [ObservableProperty]
     private int _selectedThemeIndex;
 
-    public SettingsViewModel()
+    public System.Collections.ObjectModel.ObservableCollection<HotkeyConfigItemViewModel> Hotkeys { get; } = new();
+
+    public SettingsViewModel(DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager hotkeyManager)
     {
-        // Ler tema salvo
+        _hotkeyManager = hotkeyManager;
+
+        // Read saved theme
         var localSettings = ApplicationData.Current.LocalSettings;
         if (localSettings.Values.TryGetValue("AppTheme", out object? themeObj) && themeObj is string themeStr)
         {
@@ -22,8 +28,34 @@ public partial class SettingsViewModel : ObservableObject
         }
         else
         {
-            SelectedThemeIndex = 2; // Padrão
+            SelectedThemeIndex = 2; // Default
         }
+
+        LoadHotkeys();
+    }
+
+    private void LoadHotkeys()
+    {
+        Hotkeys.Clear();
+        foreach (var config in _hotkeyManager.GetAllConfigs())
+        {
+            Hotkeys.Add(new HotkeyConfigItemViewModel
+            {
+                ActionId = config.ActionId,
+                DisplayName = config.DisplayName,
+                Modifiers = config.Modifiers,
+                VirtualKey = config.VirtualKey,
+                CurrentHotkeyDisplay = DesktopCommandCenter.Infrastructure.Services.GlobalHotkeyService.GetHotkeyString(config.Modifiers, config.VirtualKey)
+            });
+        }
+    }
+
+    public void SaveHotkey(HotkeyConfigItemViewModel item, uint modifiers, uint virtualKey)
+    {
+        _hotkeyManager.SaveConfig(item.ActionId, modifiers, virtualKey);
+        item.Modifiers = modifiers;
+        item.VirtualKey = virtualKey;
+        item.CurrentHotkeyDisplay = DesktopCommandCenter.Infrastructure.Services.GlobalHotkeyService.GetHotkeyString(modifiers, virtualKey);
     }
 
     partial void OnSelectedThemeIndexChanged(int value)

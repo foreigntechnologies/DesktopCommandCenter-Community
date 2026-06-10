@@ -5,8 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:DesktopCommandCenter.Domain.Entities"
+    xmlns:converters="using:DesktopCommandCenter.UI.Converters"
     mc:Ignorable="d"
     Background="Transparent">
+
+    <Page.Resources>
+        <converters:TypeToVisibilityConverter x:Key="TextVisibilityConverter" TargetType="Text" />
+        <converters:TypeToVisibilityConverter x:Key="ImageVisibilityConverter" TargetType="Image" />
+    </Page.Resources>
 
     <Grid Padding="24">
         <Grid.RowDefinitions>
@@ -14,7 +20,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" Content="Limpar Histórico" Command="{x:Bind ViewModel.ClearHistoryCommand}" />
+        </Grid>
 
         <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -27,7 +40,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" MaxLines="3" VerticalAlignment="Center" />
+                        <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" MaxLines="3" VerticalAlignment="Center" Visibility="{x:Bind Type, Converter={StaticResource TextVisibilityConverter}}" />
+                        <Image Source="{x:Bind ImagePath}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" Visibility="{x:Bind Type, Converter={StaticResource ImageVisibilityConverter}}" />
                         
                         <Button Grid.Column="1" ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center"/>
                     </Grid>
