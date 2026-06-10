@@ -17,7 +17,7 @@ public class FirebaseAuthService : IAuthService
         // A API Key e o Domínio devem ser movidos para uma configuração externa ou appsettings.json.
         var config = new FirebaseAuthConfig
         {
-            ApiKey = "SUA_WEB_API_KEY_AQUI", // A Service Account não entra aqui, precisa da Web API Key pública
+            ApiKey = "AIzaSyDyAVbKJ8umZ_ezLHl9dCUWfE3cGIa-6zA", // A Service Account não entra aqui, precisa da Web API Key pública
             AuthDomain = "desktop-command-center-windows.firebaseapp.com",
             Providers = new FirebaseAuthProvider[]
             {
