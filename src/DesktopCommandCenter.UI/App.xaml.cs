@@ -14,13 +14,139 @@ namespace DesktopCommandCenter.UI;
 
 public partial class App : Microsoft.UI.Xaml.Application
 {
-    private Window? _window;
+    public Window? MainWindow { get; private set; }
     
     public new static App Current => (App)Microsoft.UI.Xaml.Application.Current;
+
+    public static string GetTheme()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_theme.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+
+        try
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.TryGetValue("AppTheme", out object? themeObj) && themeObj is string themeStr)
+            {
+                return themeStr;
+            }
+        }
+        catch { }
+
+        return "Default";
+    }
+
+    public static void SaveTheme(string themeStr)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_theme.txt");
+            System.IO.File.WriteAllText(filePath, themeStr);
+        }
+        catch { }
+
+        try
+        {
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["AppTheme"] = themeStr;
+        }
+        catch { }
+    }
+
+    public static void ApplyTheme(string themeStr)
+    {
+        var mainWindow = App.Current.MainWindow;
+        if (mainWindow?.Content is Microsoft.UI.Xaml.FrameworkElement frameworkElement)
+        {
+            frameworkElement.RequestedTheme = themeStr switch
+            {
+                "Light" => Microsoft.UI.Xaml.ElementTheme.Light,
+                "Dark" => Microsoft.UI.Xaml.ElementTheme.Dark,
+                _ => Microsoft.UI.Xaml.ElementTheme.Default
+            };
+        }
+    }
+
+    public static string GetTimeFormat()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_time_format.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return "HH:mm";
+    }
+
+    public static void SaveTimeFormat(string format)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_time_format.txt");
+            System.IO.File.WriteAllText(filePath, format);
+        }
+        catch { }
+    }
+
+    public static string GetDateFormat()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_date_format.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return "dddd, dd MMMM yyyy";
+    }
+
+    public static void SaveDateFormat(string format)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_date_format.txt");
+            System.IO.File.WriteAllText(filePath, format);
+        }
+        catch { }
+    }
+
     public IServiceProvider Services { get; }
+
+#if PRO_VERSION
+    public static bool IsProBuild => true;
+#else
+    public static bool IsProBuild => false;
+#endif
+
+    public static bool IsProUnlocked { get; set; } = false;
 
     public App()
     {
+        // Inicializa o Velopack no início da aplicação para gerenciar atalhos e atualizações
+        Velopack.VelopackApp.Build().Run();
+
+        IsProUnlocked = IsProBuild;
+
         AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
         {
             try
@@ -36,6 +162,15 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Ensure Database is created
         var dbContext = Services.GetRequiredService<AppDbContext>();
         dbContext.Database.EnsureCreated();
+        dbContext.Database.ExecuteSqlRaw(@"
+            CREATE TABLE IF NOT EXISTS Prompts (
+                Id TEXT PRIMARY KEY,
+                CreatedAt TEXT NOT NULL,
+                UpdatedAt TEXT NULL,
+                Title TEXT NOT NULL,
+                Category TEXT NOT NULL,
+                Content TEXT NOT NULL
+            );");
         
         // Start Smart Clipboard Monitoring
         var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
@@ -78,8 +213,8 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        _window = new MainWindow();
-        _window.Activate();
+        MainWindow = new MainWindow();
+        MainWindow.Activate();
     }
 
     private static IServiceProvider ConfigureServices()
@@ -96,7 +231,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Configurar Serilog
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, shared: true)
             .CreateLogger();
 
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
@@ -106,6 +241,19 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.ClipboardViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.SettingsViewModel>();
         services.AddSingleton<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.CalculadoraViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.AwakeViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.AlwaysOnTopViewModel>();
+        
+        // Fase 4: Módulos "Em Breve"
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.TemporizadorViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.CapturaViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.TradutorViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.IALocalViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.PesquisaUniversalViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.PromptsViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.AutomacoesViewModel>();
+        services.AddTransient<DesktopCommandCenter.UI.ViewModels.CliCommandsViewModel>();
         
         // Configurar MediatR / Application
         services.AddApplication();

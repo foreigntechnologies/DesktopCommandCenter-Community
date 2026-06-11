@@ -17,6 +17,13 @@ public sealed partial class ClipboardPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
+        ViewModel.Activate();
         _ = ViewModel.LoadItemsAsync();
+    }
+
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+        ViewModel.Deactivate();
     }
 }

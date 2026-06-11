@@ -11,6 +11,7 @@ public static class DependencyInjection
     {
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IClipboardRepository, ClipboardRepository>();
+        services.AddScoped<IPromptRepository, PromptRepository>();
         services.AddSingleton<ITranslationService, TranslationService>();
         services.AddSingleton<IClipboardService, WindowsClipboardService>();
         services.AddSingleton<IAuthService, FirebaseAuthService>();

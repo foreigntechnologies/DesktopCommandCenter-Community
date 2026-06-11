@@ -55,9 +55,10 @@ public partial class ColorPickerViewModel : ObservableObject
 
     private void StartPicking()
     {
+        var dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         if (_timer == null)
         {
-            _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+            _timer = dispatcherQueue.CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(30);
             _timer.Tick += async (s, e) => await UpdateColorAsync();
         }
@@ -73,7 +74,7 @@ public partial class ColorPickerViewModel : ObservableObject
             _mouseHook = new GlobalMouseHook();
             _mouseHook.OnLeftMouseDown += (s, e) =>
             {
-                DispatcherQueue.GetForCurrentThread()?.TryEnqueue(() => CopyHex());
+                dispatcherQueue?.TryEnqueue(() => CopyHex());
             };
         }
         _mouseHook.Start();

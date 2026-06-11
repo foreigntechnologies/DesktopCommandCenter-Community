@@ -22,7 +22,8 @@ public class FirebaseAuthService : IAuthService
             Providers = new FirebaseAuthProvider[]
             {
                 new GoogleProvider(),
-                new GithubProvider()
+                new GithubProvider(),
+                new EmailProvider()
             }
         };
 
@@ -37,6 +38,30 @@ public class FirebaseAuthService : IAuthService
     public Task<AuthUser> LoginWithGitHubAsync()
     {
         throw new System.NotImplementedException("Fluxo OAuth para Desktop (GitHub) requer injeção do token. Próxima etapa.");
+    }
+
+    public async Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password)
+    {
+        var userCredential = await _client.SignInWithEmailAndPasswordAsync(email, password);
+        var token = await userCredential.User.GetIdTokenAsync();
+        return new AuthUser
+        {
+            Uid = userCredential.User.Uid,
+            Email = userCredential.User.Info.Email ?? "",
+            IdToken = token
+        };
+    }
+
+    public async Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password)
+    {
+        var userCredential = await _client.CreateUserWithEmailAndPasswordAsync(email, password);
+        var token = await userCredential.User.GetIdTokenAsync();
+        return new AuthUser
+        {
+            Uid = userCredential.User.Uid,
+            Email = userCredential.User.Info.Email ?? "",
+            IdToken = token
+        };
     }
 
     public async Task<AuthUser?> GetCurrentUserAsync()

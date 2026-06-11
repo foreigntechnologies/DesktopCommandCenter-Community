@@ -15,19 +15,34 @@
                         Background="Transparent">
             
             <NavigationView.MenuItems>
+                <!-- FREE MODULES -->
                 <NavigationViewItem Tag="Dashboard" Icon="Home" Content="Dashboard" />
                 <NavigationViewItem Tag="Notes" Icon="Document" Content="Notes" />
-                <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="Clipboard" />
-                <NavigationViewItem Tag="ColorPicker" Icon="Highlight" Content="Color Picker" />
+                <NavigationViewItemHeader Content="Utilitários do Sistema" />
+                <NavigationViewItem Tag="ColorPicker" Content="Color Picker" Icon="Highlight" />
+                <NavigationViewItem Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street" />
                 <NavigationViewItem Tag="CliCommands" Content="Comandos CLI">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE756;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="Clipboard" />
+                <NavigationViewItem Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
+                <NavigationViewItem Tag="Temporizador" Icon="Clock" Content="Temporizador" />
+                <NavigationViewItem Tag="Captura" Icon="Camera" Content="Captura de Tela" />
+                <NavigationViewItem Tag="Tradutor" Icon="Character" Content="Tradutor" />
+
+                <!-- PRO MODULES HEADER -->
+                <NavigationViewItemHeader Content="Recursos PRO (IA &amp; Automação)" />
+                <NavigationViewItem Tag="IALocal" Icon="PreviewLink" Content="IA Local" />
+                <NavigationViewItem Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
+                <NavigationViewItem Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
+                <NavigationViewItem Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
+                <NavigationViewItem Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins" />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Tag="Auth" Icon="Contact" Content="Minha Conta (Login)" />
+                <NavigationViewItem Tag="Auth" Icon="Contact" Content="Minha Conta" />
             </NavigationView.FooterMenuItems>
 
             <Frame x:Name="ContentFrame" Margin="24">
