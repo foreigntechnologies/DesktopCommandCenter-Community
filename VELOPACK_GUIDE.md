@@ -59,13 +59,20 @@ dotnet publish src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj -c Rel
 ### Passo 3: Geração dos Instaladores com Velopack (`vpk pack`)
 Uma vez gerada a pasta de publicação pelo .NET, usamos a ferramenta `vpk` para compactar a aplicação em um instalador de um clique e uma versão portátil.
 
+#### Para a versão Community:
 ```powershell
-vpk pack --packId DCC --packVersion 0.0.1 --packDir publish/v0.0.1 --mainExe DesktopCommandCenter.UI.exe --icon "DCC - Logo - Modo Escuro.ico"
+vpk pack --packId DCCCommunity --packTitle "DCC - Community" --packVersion 0.0.1 --packDir publish/v0.0.1 --mainExe DesktopCommandCenter.UI.exe --icon "DCC - Logo - Modo Escuro.ico"
+```
+
+#### Para a versão Pro:
+```powershell
+vpk pack --packId DCCPro --packTitle "DCC - PRO" --packVersion 0.0.1 --packDir publish/v0.0.1 --mainExe DesktopCommandCenter.UI.exe --icon "DCC - Logo - Modo Escuro.ico"
 ```
 
 > [!TIP]
 > **O que cada parâmetro faz:**
-> * `--packId DCC`: Identificador único do seu aplicativo no Windows (usado nas pastas de instalação).
+> * `--packId DCCCommunity` / `DCCPro`: Identificador único do seu aplicativo no Windows (usado nas pastas de instalação).
+> * `--packTitle "DCC - Community"` / `"DCC - PRO"`: Nome amigável do app exibido no Windows.
 > * `--packVersion 0.0.1`: Versão semântica (SemVer) que aparecerá nas propriedades do arquivo e será usada para controle de atualizações.
 > * `--packDir publish/v0.0.1`: A pasta que contém os arquivos gerados pelo `dotnet publish` no Passo 2.
 > * `--mainExe DesktopCommandCenter.UI.exe`: Nome do executável principal do seu app que deve ser lançado ao abrir o atalho.
@@ -75,29 +82,32 @@ vpk pack --packId DCC --packVersion 0.0.1 --packDir publish/v0.0.1 --mainExe Des
 
 ## 📂 Arquivos Gerados na Pasta `Releases`
 
-Os arquivos finais serão salvos automaticamente em um diretório chamado `Releases/` na raiz do projeto:
+Os arquivos finais serão salvos automaticamente em um diretório chamado `Releases/` na raiz do projeto e renomeados para:
 
-* 📦 **`DCC-win-Setup.exe`**: O instalador de um clique para o usuário final. Ao ser executado, ele instala o app no diretório `AppData/Local/DCC`, cria atalhos no Menu Iniciar e Desktop e inicia o app instantaneamente de forma silenciosa.
-* 🤐 **`DCC-win-Portable.zip`**: Versão compactada portátil da aplicação, ideal para uso rápido sem instalação.
+* 📦 **`DCC - Community.exe`** ou **`DCC - PRO.exe`**: O instalador de um clique para o usuário final. Ao ser executado, ele instala o app no diretório `AppData/Local/DCCCommunity` ou `AppData/Local/DCCPro`, cria atalhos no Menu Iniciar e Desktop e inicia o app instantaneamente de forma silenciosa.
+* 🤐 **`DCC - Community-Portable.zip`** ou **`DCC - PRO-Portable.zip`**: Versão compactada portátil da aplicação, ideal para uso rápido sem instalação.
 * 📄 **`RELEASES`**: Arquivo de texto contendo os hashes MD5 e nomes dos pacotes NuGet gerados. **Essencial** caso decida hospedar atualizações automáticas via servidor HTTP/S3 ou GitHub Releases.
-* 📦 **`DCC-0.0.1-full.nupkg`**: O pacote NuGet que contém os binários da versão inteira para o sistema de update do Velopack.
+* 📦 **`DCCCommunity-0.0.1-full.nupkg`** ou **`DCCPro-0.0.1-full.nupkg`**: O pacote NuGet que contém os binários da versão inteira para o sistema de update do Velopack.
 
 ---
 
-## ⚡ Automação com Script PowerShell
+## ⚡ Automação com Scripts PowerShell
 
-Para facilitar e evitar a digitação manual de comandos extensos, criamos um script automatizado chamado [`build_release.ps1`](file:///c:/Users/kogli/Desktop/Projetos/Windows/1.%20Desktop%20Command%20Center%20-%20DCC/build_release.ps1).
+Para facilitar e evitar a digitação manual de comandos extensos, criamos scripts automatizados dedicados:
 
-### Como Usar o Script:
+* 🟢 **[`build_community.ps1`](file:///c:/Users/kogli/Desktop/Projetos/Windows/1.%20Desktop%20Command%20Center%20-%20DCC/build_community.ps1)**: Compila e empacota a versão Community.
+* 🔵 **[`build_pro.ps1`](file:///c:/Users/kogli/Desktop/Projetos/Windows/1.%20Desktop%20Command%20Center%20-%20DCC/build_pro.ps1)**: Compila e empacota a versão Pro.
+
+### Como Usar:
 
 Abra o PowerShell na raiz do projeto e execute:
 
 ```powershell
-# Gerar a versão Community v0.0.1 (Padrão)
-./build_release.ps1 -Version "0.0.1"
+# Gerar a versão Community v0.0.1
+./build_community.ps1 -Version "0.0.1"
 
 # Gerar a versão Pro v0.0.1
-./build_release.ps1 -Version "0.0.1" -Config "ReleasePro"
+./build_pro.ps1 -Version "0.0.1"
 ```
 
-O script fará a limpeza, o build completo do dotnet e invocará o Velopack automaticamente, exibindo o caminho final dos executáveis.
+Os scripts farão a limpeza, o build completo do dotnet, invocarão o Velopack e renomearão os arquivos de saída de acordo com o padrão esperado.

@@ -48,10 +48,13 @@ dotnet run --project src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj
 ### Packaging & Releases (Velopack)
 To generate the one-click installer (`.exe`) and portable zip package (`.zip`) using Velopack, see the [Velopack Packaging Guide](VELOPACK_GUIDE.md) (in Portuguese).
 
-You can also use the automated PowerShell script in the root directory:
+You can also use the automated PowerShell scripts in the root directory:
 ```powershell
-# Build and package the Community version v0.0.1
-./build_release.ps1 -Version "0.0.1"
+# Build and package the Community version (DCC - Community.exe)
+./build_community.ps1 -Version "0.0.1"
+
+# Build and package the PRO version (DCC - PRO.exe)
+./build_pro.ps1 -Version "0.0.1"
 ```
 
 ## Security Notice
