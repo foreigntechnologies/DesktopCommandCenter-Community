@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using DesktopCommandCenter.Application.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _currentPlan = "free";
 
+    [ObservableProperty]
+    private string _email = string.Empty;
+
+    [ObservableProperty]
+    private string _password = string.Empty;
+
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
         _authService = authService;
@@ -42,6 +49,8 @@ public partial class AuthViewModel : ObservableObject
         if (IsLoggedIn)
         {
             CurrentPlan = await _licenseService.GetCurrentPlanAsync();
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
             StatusMessage = $"Logado como: {user!.Email} (Plano: {CurrentPlan.ToUpper()})";
         }
         else
@@ -62,6 +71,8 @@ public partial class AuthViewModel : ObservableObject
             
             // Após o login, checa no Firestore se já é PRO
             CurrentPlan = await _licenseService.GetCurrentPlanAsync();
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
             IsLoggedIn = true;
             
             StatusMessage = $"Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
@@ -86,6 +97,8 @@ public partial class AuthViewModel : ObservableObject
             var user = await _authService.LoginWithGitHubAsync();
             
             CurrentPlan = await _licenseService.GetCurrentPlanAsync();
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
             IsLoggedIn = true;
 
             StatusMessage = $"Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
@@ -98,6 +111,81 @@ public partial class AuthViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+
+    [RelayCommand]
+    public async Task LoginWithEmailAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            StatusMessage = "Por favor, digite o e-mail e a senha.";
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            StatusMessage = "Autenticando...";
+            var user = await _authService.LoginWithEmailAndPasswordAsync(Email, Password);
+            
+            CurrentPlan = await _licenseService.GetCurrentPlanAsync();
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
+            IsLoggedIn = true;
+            
+            StatusMessage = $"Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao entrar: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task RegisterWithEmailAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            StatusMessage = "Por favor, digite o e-mail e a senha.";
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            StatusMessage = "Criando conta...";
+            var user = await _authService.RegisterWithEmailAndPasswordAsync(Email, Password);
+            
+            CurrentPlan = await _licenseService.GetCurrentPlanAsync();
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
+            IsLoggedIn = true;
+            
+            StatusMessage = $"Conta criada! Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao registrar: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    public void Logout()
+    {
+        _authService.Logout();
+        IsLoggedIn = false;
+        CurrentPlan = "free";
+        App.IsProUnlocked = App.IsProBuild;
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
+        StatusMessage = "Você saiu da conta. Usando versão gratuita offline.";
     }
 
     [RelayCommand]

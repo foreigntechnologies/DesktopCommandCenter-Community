@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Windows.Storage;
+using System.IO;
 
 namespace DesktopCommandCenter.Infrastructure.Services;
 
@@ -21,11 +21,14 @@ public class HotkeyConfigManager : IHotkeyConfigManager
 
     private void LoadConfigs()
     {
-        var localSettings = ApplicationData.Current.LocalSettings;
-        if (localSettings.Values.TryGetValue(SettingsKey, out var value) && value is string json)
+        var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+        var filePath = Path.Combine(dir, "dcc_hotkeys.json");
+        
+        if (File.Exists(filePath))
         {
             try
             {
+                var json = File.ReadAllText(filePath);
                 var loaded = JsonSerializer.Deserialize<List<HotkeyConfig>>(json);
                 if (loaded != null)
                 {
@@ -67,8 +70,11 @@ public class HotkeyConfigManager : IHotkeyConfigManager
 
     private void SaveToSettings()
     {
+        var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+        Directory.CreateDirectory(dir);
+        var filePath = Path.Combine(dir, "dcc_hotkeys.json");
         var json = JsonSerializer.Serialize(_configs);
-        ApplicationData.Current.LocalSettings.Values[SettingsKey] = json;
+        File.WriteAllText(filePath, json);
     }
 
     public IEnumerable<HotkeyConfig> GetAllConfigs() => _configs;

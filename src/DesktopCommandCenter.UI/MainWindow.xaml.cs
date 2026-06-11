@@ -39,8 +39,27 @@ public sealed partial class MainWindow : Window
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
         
-        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        if (!localSettings.Values.ContainsKey("AppTheme"))
+        bool firstRun = false;
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_theme.txt");
+            
+            bool hasPackagedSettings = false;
+            try
+            {
+                hasPackagedSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey("AppTheme");
+            }
+            catch { }
+
+            if (!System.IO.File.Exists(filePath) && !hasPackagedSettings)
+            {
+                firstRun = true;
+            }
+        }
+        catch { }
+
+        if (firstRun)
         {
             var dialog = new Views.OobeDialog();
             dialog.XamlRoot = this.Content.XamlRoot;
@@ -48,16 +67,8 @@ public sealed partial class MainWindow : Window
         }
         else
         {
-            string themeStr = localSettings.Values["AppTheme"] as string ?? "Default";
-            if (this.Content is FrameworkElement fw)
-            {
-                fw.RequestedTheme = themeStr switch
-                {
-                    "Light" => ElementTheme.Light,
-                    "Dark" => ElementTheme.Dark,
-                    _ => ElementTheme.Default
-                };
-            }
+            string themeStr = App.GetTheme();
+            App.ApplyTheme(themeStr);
         }
     }
 }

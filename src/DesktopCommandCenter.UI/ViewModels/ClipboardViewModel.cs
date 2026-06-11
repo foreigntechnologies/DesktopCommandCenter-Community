@@ -23,23 +23,35 @@ public partial class ClipboardViewModel : ObservableObject
     [ObservableProperty]
     private bool _isLoading;
 
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue? _dispatcherQueue;
+
     public ClipboardViewModel(IMediator mediator, IClipboardService clipboardService)
     {
         _mediator = mediator;
         _clipboardService = clipboardService;
-        
-        // Opcional: recarregar a lista quando um novo texto for copiado
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+    }
+
+    public void Activate()
+    {
         _clipboardService.TextCopied += OnTextCopied;
+    }
+
+    public void Deactivate()
+    {
+        _clipboardService.TextCopied -= OnTextCopied;
     }
 
     private void OnTextCopied(object? sender, string text)
     {
         // Precisamos marshalar de volta para a UI thread. 
-        // No momento vamos apenas chamar o LoadAsync via DispatcherQueue.
-        Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread()?.TryEnqueue(async () =>
+        if (_dispatcherQueue != null)
         {
-            await LoadItemsAsync();
-        });
+            _dispatcherQueue.TryEnqueue(async () =>
+            {
+                await LoadItemsAsync();
+            });
+        }
     }
 
     [RelayCommand]

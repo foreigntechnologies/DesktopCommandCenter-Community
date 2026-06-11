@@ -14,7 +14,7 @@
                        TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,16" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
             <!-- Estado DESLOGADO -->
-            <StackPanel Spacing="16" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+            <StackPanel Spacing="16" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}" Width="350">
                 <Button Command="{x:Bind ViewModel.LoginWithGoogleCommand}" HorizontalAlignment="Stretch" Padding="12" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Foreground="White">
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <TextBlock Text="&#xEA8A;" FontFamily="Segoe Fluent Icons" FontSize="18" VerticalAlignment="Center"/>
@@ -28,6 +28,37 @@
                         <TextBlock Text="Continuar com o GitHub" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
+
+                <!-- Separador -->
+                <Grid Margin="0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0.5" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="ou use e-mail" Margin="12,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" VerticalAlignment="Center" />
+                    <Border Grid.Column="2" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0.5" VerticalAlignment="Center" />
+                </Grid>
+
+                <!-- Campos de E-mail/Senha -->
+                <TextBox Header="E-mail" 
+                         Text="{x:Bind ViewModel.Email, Mode=TwoWay}" 
+                         PlaceholderText="seuemail@exemplo.com" />
+                
+                <PasswordBox x:Name="PasswordInput" 
+                             Header="Senha" 
+                             PasswordChanged="PasswordInput_PasswordChanged" 
+                             PlaceholderText="Sua senha" />
+
+                <Grid ColumnSpacing="12" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Entrar" Command="{x:Bind ViewModel.LoginWithEmailCommand}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Padding="8" />
+                    <Button Grid.Column="1" Content="Criar Conta" Command="{x:Bind ViewModel.RegisterWithEmailCommand}" HorizontalAlignment="Stretch" Padding="8" />
+                </Grid>
             </StackPanel>
 
             <!-- Estado LOGADO (Painel de Upgrade) -->
@@ -64,6 +95,7 @@
                         </Grid>
 
                         <HyperlinkButton Content="Gerenciar minha Assinatura" Command="{x:Bind ViewModel.OpenCustomerPortalCommand}" HorizontalAlignment="Center" Margin="0,16,0,0"/>
+                        <Button Content="Sair da Conta" Command="{x:Bind ViewModel.LogoutCommand}" HorizontalAlignment="Center" Margin="0,8,0,0" />
                     </StackPanel>
                 </Border>
             </StackPanel>

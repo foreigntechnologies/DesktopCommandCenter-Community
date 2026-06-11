@@ -13,4 +13,12 @@ public sealed partial class AuthPage : Page
         ViewModel = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<AuthViewModel>();
         InitializeComponent();
     }
+
+    private void PasswordInput_PasswordChanged(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (sender is PasswordBox passwordBox)
+        {
+            ViewModel.Password = passwordBox.Password;
+        }
+    }
 }

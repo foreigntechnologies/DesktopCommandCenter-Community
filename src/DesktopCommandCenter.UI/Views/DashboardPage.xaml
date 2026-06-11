@@ -10,7 +10,7 @@
     <Grid Padding="24">
         <StackPanel Spacing="16">
             <TextBlock Text="{x:Bind ViewModel.WelcomeMessage}" Style="{StaticResource TitleTextBlockStyle}" />
-            <TextBlock Text="{x:Bind ViewModel.CurrentTime}" Style="{StaticResource HeaderTextBlockStyle}" Foreground="{ThemeResource SystemAccentColor}" />
+            <TextBlock Text="{x:Bind ViewModel.CurrentTime}" Style="{StaticResource HeaderTextBlockStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
             <TextBlock Text="{x:Bind ViewModel.CurrentDate}" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             
             <Grid Margin="0,24,0,0" ColumnSpacing="16">

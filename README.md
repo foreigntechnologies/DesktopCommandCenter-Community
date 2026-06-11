@@ -30,7 +30,7 @@ Targeted at professionals, developers, content creators, analysts, and power use
 ## Getting Started
 ### Prerequisites
 - Windows 10 (19041) or Windows 11
-- .NET 9 SDK
+- .NET 10 SDK
 - Visual Studio 2022 (with Windows App SDK workload)
 
 ### Build & Run
@@ -43,6 +43,15 @@ dotnet build DesktopCommandCenter.slnx
 
 # Run the UI Project
 dotnet run --project src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj
+```
+
+### Packaging & Releases (Velopack)
+To generate the one-click installer (`.exe`) and portable zip package (`.zip`) using Velopack, see the [Velopack Packaging Guide](VELOPACK_GUIDE.md) (in Portuguese).
+
+You can also use the automated PowerShell script in the root directory:
+```powershell
+# Build and package the Community version v0.0.1
+./build_release.ps1 -Version "0.0.1"
 ```
 
 ## Security Notice

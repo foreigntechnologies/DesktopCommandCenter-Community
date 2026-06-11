@@ -40,8 +40,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" MaxLines="3" VerticalAlignment="Center" Visibility="{x:Bind Type, Converter={StaticResource TextVisibilityConverter}}" />
-                        <Image Source="{x:Bind ImagePath}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" Visibility="{x:Bind Type, Converter={StaticResource ImageVisibilityConverter}}" />
+                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" MaxLines="3" VerticalAlignment="Center" Visibility="{x:Bind Type, Converter={StaticResource TextVisibilityConverter}}" />
+                        <Image Source="{Binding ImagePath}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" Visibility="{x:Bind Type, Converter={StaticResource ImageVisibilityConverter}}" />
                         
                         <Button Grid.Column="1" ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center"/>
                     </Grid>
