@@ -1,0 +1,23 @@
+CONTRATO DE LICENÇA DE USUÁRIO FINAL (EULA) - DESKTOP COMMAND CENTER (DCC)
+
+Por favor, leia atentamente este Contrato de Licença de Usuário Final ("Contrato") antes de clicar no botão "Eu Aceito", instalar ou usar o aplicativo Desktop Command Center ("DCC").
+
+1. CONCESSÃO DE LICENÇA
+A Foreign Technologies LTDA concede a você uma licença pessoal, revogável, não exclusiva e intransferível para baixar, instalar e usar o aplicativo DCC estritamente de acordo com os termos deste Contrato.
+
+2. RESTRIÇÕES
+Você concorda em não realizar, e não permitir que outros realizem:
+- Licenciamento, venda, aluguel, arrendamento, atribuição, distribuição, transmissão, hospedagem, terceirização, divulgação ou exploração comercial do aplicativo de forma não autorizada.
+- Engenharia reversa, descompilação ou desmontagem de qualquer parte do aplicativo.
+- Modificação ou criação de obras derivadas baseadas no aplicativo.
+
+3. PRIVACIDADE E DADOS (LOCAL-FIRST)
+O DCC é projetado sob a filosofia "Local-First". Todas as notas pessoais, histórico da área de transferência e dados configurados permanecem estritamente na sua máquina local em um banco de dados SQLite. Nenhuma informação pessoal de uso é transmitida a servidores externos. A conexão de nuvem (Firebase) destina-se única e exclusivamente para autenticação de licença.
+
+4. DIREITOS AUTORAIS
+O aplicativo e todos os direitos autorais, marcas registradas e outros direitos de propriedade intelectual associados são de propriedade exclusiva da Foreign Technologies LTDA.
+
+5. ISENÇÃO DE GARANTIAS
+O aplicativo é fornecido "COMO ESTÁ" e "CONFORME DISPONÍVEL", sem garantias de qualquer tipo, expressas ou implícitas.
+
+Ao continuar com a instalação, você declara ter lido, compreendido e concordado com todos os termos descritos acima.
