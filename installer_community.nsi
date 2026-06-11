@@ -5,6 +5,7 @@
 Unicode true
 
 !include "MUI2.nsh"
+!include "LogicLib.nsh"
 
 # Nome do produto e do executável do instalador
 Name "DCC - Community"
@@ -17,8 +18,17 @@ OutFile "Releases\DCC - Community.exe"
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_KEY "Software\DCCCommunity"
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME "InstallDir"
 !define MULTIUSER_INSTALLMODE_COMMANDLINE
-!define MULTIUSER_INSTALLMODE_WORKDIR "DCCCommunity"
+!define MULTIUSER_INSTALLMODE_INSTDIR "DCC - Community"
+!define MULTIUSER_INSTALLMODE_FUNCTION onMultiUserModeChanged
 !include "MultiUser.nsh"
+
+Function onMultiUserModeChanged
+  ${If} $MultiUser.InstallMode == "CurrentUser"
+    StrCpy $INSTDIR "$LocalAppData\Programs\${MULTIUSER_INSTALLMODE_INSTDIR}"
+  ${Else}
+    StrCpy $INSTDIR "$PROGRAMFILES64\${MULTIUSER_INSTALLMODE_INSTDIR}"
+  ${EndIf}
+FunctionEnd
 
 # Configurações visuais (Ícone do Instalador e Desinstalador)
 !define MUI_ICON "src\DesktopCommandCenter.UI\Assets\AppIcon.ico"
