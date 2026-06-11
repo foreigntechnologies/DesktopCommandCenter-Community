@@ -40,6 +40,7 @@ FunctionEnd
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN "$INSTDIR\DesktopCommandCenter.UI.exe"
 !insertmacro MUI_PAGE_FINISH
 
 # Páginas do Desinstalador
