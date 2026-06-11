@@ -48,10 +48,13 @@ dotnet run --project src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj
 ### Empacotamento & Releases (Velopack)
 Para gerar o instalador executável de um clique (`.exe`) e a versão portátil (`.zip`) do DCC, consulte o [Guia de Empacotamento com Velopack](VELOPACK_GUIDE.md).
 
-Você também pode utilizar o script automatizado diretamente no PowerShell da raiz:
+Você também pode utilizar os scripts automatizados diretamente no PowerShell da raiz:
 ```powershell
-# Gerar instalador executável da versão 0.0.1 (Community)
-./build_release.ps1 -Version "0.0.1"
+# Gerar instalador 'DCC - Community.exe'
+./build_community.ps1 -Version "0.0.1"
+
+# Gerar instalador 'DCC - PRO.exe'
+./build_pro.ps1 -Version "0.0.1"
 ```
 
 ## Aviso de Segurança
