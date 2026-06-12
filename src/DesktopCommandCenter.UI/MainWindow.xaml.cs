@@ -16,6 +16,7 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        this.Closed += MainWindow_Closed;
 
         // Habilitar efeito Mica (Translúcido do Windows 11)
         SystemBackdrop = new MicaBackdrop();
@@ -41,6 +42,12 @@ public sealed partial class MainWindow : Window
     }
 
 
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        // Cancel the close, hide instead so the app keeps running in the background for hotkeys
+        args.Handled = true;
+        this.AppWindow.Hide();
+    }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
     {
