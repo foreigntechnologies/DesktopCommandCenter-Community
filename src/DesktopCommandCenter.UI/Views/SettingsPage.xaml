@@ -152,112 +152,120 @@
 
                             <!-- COMMUNITY -->
                             <Border Grid.Column="0" CornerRadius="8" Padding="20"
-                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}">
-                                <StackPanel Spacing="10">
-                                    <StackPanel Spacing="2">
-                                        <TextBlock Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
-                                        <TextBlock Text="Open Source · Grátis para sempre"
-                                                   Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                            <TextBlock Text="Open Source · Grátis para sempre"
+                                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   TextWrapping="Wrap" FontSize="12" />
+
+                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                        <StackPanel Spacing="7">
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Always On Top:</Run><Run> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Awake (Caffeine):</Run><Run> Impede suspensão da tela.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Clipboard Avançado:</Run><Run> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Calculadora Power Users:</Run><Run> Com histórico de operações.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Color Picker e Lupa:</Run><Run> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Pesquisa Universal:</Run><Run> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Temporizadores:</Run><Run> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Notas Rápidas:</Run><Run> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Automações e CLI:</Run><Run> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Utilitários de Texto:</Run><Run> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Integração de IA" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                        </StackPanel>
                                     </StackPanel>
-                                    <TextBlock Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                               TextWrapping="Wrap" FontSize="12" />
 
-                                    <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
-
-                                    <StackPanel Spacing="7">
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Always On Top:</Run><Run> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Awake (Caffeine):</Run><Run> Impede suspensão da tela.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Clipboard Avançado:</Run><Run> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Calculadora Power Users:</Run><Run> Com histórico de operações.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Color Picker e Lupa:</Run><Run> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Pesquisa Universal:</Run><Run> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Temporizadores:</Run><Run> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Notas Rápidas:</Run><Run> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Automações e CLI:</Run><Run> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Utilitários de Texto:</Run><Run> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Integração de IA" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                    </StackPanel>
-
-                                    <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
-
-                                    <Button HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click">
+                                    <Button Grid.Row="1" HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click" Margin="0,16,0,0">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <FontIcon Glyph="&#xE8A7;" FontSize="14" />
                                             <TextBlock Text="Baixar Grátis (GitHub)" />
                                         </StackPanel>
                                     </Button>
-                                </StackPanel>
+                                </Grid>
                             </Border>
 
                             <!-- PRO ENTERPRISE -->
                             <Border Grid.Column="1" CornerRadius="8" Padding="20"
-                                    Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <StackPanel Spacing="10">
-                                    <StackPanel Spacing="2">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <TextBlock Text="PRO Enterprise" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="White" />
-                                            <Border Background="Gold" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                                <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="#1A1A1A" />
-                                            </Border>
+                                    BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="PRO Enterprise" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                                <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                    <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="Licença Nuvem · Atualizada automaticamente"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
                                         </StackPanel>
-                                        <TextBlock Text="Licença Nuvem · Atualizada automaticamente"
-                                                   Foreground="#DDEEFF" FontSize="12" />
+                                        <TextBlock Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
+
+                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                        <StackPanel Spacing="7">
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Respostas em Streaming:</Run><Run> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Visão Computacional Local:</Run><Run> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
+                                        </StackPanel>
                                     </StackPanel>
-                                    <TextBlock Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
-                                               Foreground="#DDEEFF" TextWrapping="Wrap" FontSize="12" />
-
-                                    <Border BorderBrush="#55FFFFFF" BorderThickness="0,1,0,0" Margin="0,4" />
-
-                                    <StackPanel Spacing="7">
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock Text="Todas as funcionalidades Community" Foreground="White" FontWeight="SemiBold" FontSize="12" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">Respostas em Streaming:</Run><Run> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">Visão Computacional Local:</Run><Run> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12"><Run FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock Foreground="White" FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="Gold" FontWeight="Bold" /><TextBlock Foreground="White" FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
-                                    </StackPanel>
-
-                                    <Border BorderBrush="#55FFFFFF" BorderThickness="0,1,0,0" Margin="0,4" />
 
                                     <!-- Botão único — muda conforme estado -->
-
-                                    <!-- Não logado -->
-                                    <Button HorizontalAlignment="Stretch" Padding="12,10" Background="White"
-                                            Command="{x:Bind ViewModel.GoToLoginCommand}"
-                                            Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
-                                        <TextBlock Text="Entrar para Assinar PRO" FontWeight="SemiBold" Foreground="#1A1A1A" />
-                                    </Button>
-
-                                    <!-- Logado, plano Free -->
-                                    <Button HorizontalAlignment="Stretch" Padding="12,10" Background="White"
-                                            Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                            Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
-                                        <TextBlock Text="Baixar na Microsoft Store" FontWeight="SemiBold" Foreground="#1A1A1A" />
-                                    </Button>
-
-                                    <!-- Logado, plano PRO -->
-                                    <StackPanel Spacing="6" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="Gold" />
-                                            <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="White" FontSize="13" />
-                                        </StackPanel>
-                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Background="White"
-                                                Command="{x:Bind ViewModel.OpenCustomerPortalCommand}">
-                                            <TextBlock Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" Foreground="#1A1A1A" />
+                                    <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                                        <!-- Não logado -->
+                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                                Command="{x:Bind ViewModel.GoToLoginCommand}"
+                                                Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+                                            <TextBlock Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
                                         </Button>
-                                    </StackPanel>
 
-                                </StackPanel>
+                                        <!-- Logado, plano Free -->
+                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                                Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
+                                                Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                                            <TextBlock Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
+                                        </Button>
+
+                                        <!-- Logado, plano PRO -->
+                                        <StackPanel Spacing="6" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                                                <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
+                                            </StackPanel>
+                                            <Button HorizontalAlignment="Stretch" Padding="12,10"
+                                                    Command="{x:Bind ViewModel.OpenCustomerPortalCommand}">
+                                                <TextBlock Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
                             </Border>
                         </Grid>
 
