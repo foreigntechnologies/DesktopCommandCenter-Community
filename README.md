@@ -54,6 +54,9 @@ You can also use the automated PowerShell scripts in the root directory:
 ```powershell
 # Build and package the Community version (DCC - Community.exe)
 ./build_community.ps1 -Version "0.0.1"
+
+# Build and package the PRO version (DCC - PRO.exe)
+./build_pro.ps1 -Version "0.0.1"
 ```
 
 ### Docker & Local AI Stack
@@ -69,6 +72,9 @@ Make sure Docker Desktop is switched to "Windows Containers" to build WinUI 3 ap
 ```powershell
 # Build Community Edition
 docker-compose run --rm build-exe 0.0.2 COMMUNITY
+
+# Build PRO Edition
+docker-compose run --rm build-exe 0.0.2 PRO
 ```
 
 ## Security Notice
