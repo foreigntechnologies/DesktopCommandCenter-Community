@@ -54,9 +54,6 @@ Você também pode utilizar os scripts automatizados diretamente no PowerShell d
 ```powershell
 # Gerar instalador 'DCC - Community.exe'
 ./build_community.ps1 -Version "0.0.1"
-
-# Gerar instalador 'DCC - PRO.exe'
-./build_pro.ps1 -Version "0.0.1"
 ```
 
 ### Docker & Automação Local
@@ -72,9 +69,6 @@ Certifique-se de que o seu Docker Desktop esteja na modalidade "Windows Containe
 ```powershell
 # Compilar a Edição Community
 docker-compose run --rm build-exe 0.0.2 COMMUNITY
-
-# Compilar a Edição PRO
-docker-compose run --rm build-exe 0.0.2 PRO
 ```
 
 ## Aviso de Segurança

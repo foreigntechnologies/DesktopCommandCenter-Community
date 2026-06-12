@@ -52,9 +52,6 @@ Para generar el instalador y la versión portátil del DCC, puedes utilizar los 
 ```powershell
 # Compilar versión Community
 ./build_community.ps1 -Version "0.0.1"
-
-# Compilar versión PRO
-./build_pro.ps1 -Version "0.0.1"
 ```
 
 ### Docker y Stack de IA Local
@@ -70,9 +67,6 @@ Asegúrate de que Docker Desktop esté configurado en "Windows Containers".
 ```powershell
 # Compilar Edición Community
 docker-compose run --rm build-exe 0.0.2 COMMUNITY
-
-# Compilar Edición PRO
-docker-compose run --rm build-exe 0.0.2 PRO
 ```
 
 ## Aviso de Seguridad
