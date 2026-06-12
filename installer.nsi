@@ -40,7 +40,8 @@ FunctionEnd
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe"
+!define MUI_FINISHPAGE_RUN "explorer.exe"
+!define MUI_FINISHPAGE_RUN_PARAMETERS '"$INSTDIR\Desktop Command Center.exe"'
 !insertmacro MUI_PAGE_FINISH
 
 # Páginas do Desinstalador
@@ -67,7 +68,7 @@ Section "Install"
   SetOutPath "$INSTDIR"
   
   # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar
-  ExecWait 'taskkill /F /IM "DCC - Desktop Command Center*.exe"'
+  ExecWait 'taskkill /F /IM "Desktop Command Center.exe"'
   Sleep 1000
   
   # Copia recursivamente todos os arquivos da compilação de publicação
@@ -78,14 +79,14 @@ Section "Install"
   
   # Atalhos (Menu Iniciar e Área de Trabalho)
   CreateDirectory "$SMPROGRAMS\Desktop Command Center"
-  CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" "" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" 0
+  CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desinstalar DCC.lnk" "$INSTDIR\uninstall.exe"
-  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" "" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" 0
+  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   
   # Chaves de registro de desinstalação para o Windows adicionar/remover programas
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayName" "Desktop Command Center"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" '"$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe"'
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" '"$INSTDIR\Desktop Command Center.exe"'
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayVersion" "${VERSION}"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "Publisher" "Foreign Technologies"
 SectionEnd

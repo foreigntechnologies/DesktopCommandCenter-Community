@@ -200,6 +200,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                 }
                 else
                 {
+                    App.Current.MainWindow?.AppWindow.Show();
                     // Uses WeakReferenceMessenger to notify MainPage
                     WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage(config.ActionId));
                 }
