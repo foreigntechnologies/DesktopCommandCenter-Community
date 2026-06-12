@@ -132,12 +132,8 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     public IServiceProvider Services { get; }
 
-#if PRO_VERSION
-    public static bool IsProBuild => true;
-#else
-    public static bool IsProBuild => false;
-#endif
-
+    public static bool IsProBuild => System.IO.File.Exists(System.IO.Path.Combine(System.AppContext.BaseDirectory, "DesktopCommandCenter.ProFeatures.dll"));
+    
     public static bool IsProUnlocked { get; set; } = false;
 
     public App()
