@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Servidor Local de IA (Ollama) para processar os Agentes
+  ollama:
+    image: ollama/ollama:latest
+    container_name: dcc-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    # Opcional: Se você tiver GPU NVIDIA configurada no Docker
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_data:
