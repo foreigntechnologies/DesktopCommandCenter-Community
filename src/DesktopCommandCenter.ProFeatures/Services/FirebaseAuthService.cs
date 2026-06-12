@@ -277,11 +277,7 @@ public class FirebaseAuthService : IAuthService
 
     private static int GetAvailablePort()
     {
-        using var tcp = new TcpListener(IPAddress.Loopback, 0);
-        tcp.Start();
-        int port = ((IPEndPoint)tcp.LocalEndpoint).Port;
-        tcp.Stop();
-        return port;
+        return 5000;
     }
 
     private static async Task<string> ListenForCallbackAsync(int port)
