@@ -1,5 +1,5 @@
 # This file defines the CODEOWNERS for the repository.
 # GitHub uses this to automatically request reviews.
 
-*       @GustavoKoglin
-/src/   @GustavoKoglin
+*       @GustavoKoglin @ForeignTechnologies
+/src/   @GustavoKoglin @ForeignTechnologies
