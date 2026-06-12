@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="DesktopCommandCenter.UI.Views.NotesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-            <TextBlock Text="Notas Rápidas" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
+            <TextBlock Text="Notas RÃ¡pidas" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
             <Button Content="Nova Nota" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.AddTestNoteCommand}" />
         </StackPanel>
 
@@ -37,7 +37,7 @@
                         <StackPanel>
                             <TextBlock Text="{Binding Title}" Style="{StaticResource SubtitleTextBlockStyle}" />
                             <TextBlock Text="{Binding Content}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
-                            <TextBlock Text="{Binding Category}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemAccentColor}" Margin="0,8,0,0" />
+                            <TextBlock Text="{Binding Category}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Margin="0,8,0,0" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>

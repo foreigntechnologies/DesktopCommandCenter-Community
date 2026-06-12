@@ -30,14 +30,40 @@ public class FirebaseAuthService : IAuthService
         _client = new FirebaseAuthClient(config);
     }
 
-    public Task<AuthUser> LoginWithGoogleAsync()
+    public async Task<AuthUser> LoginWithGoogleAsync()
     {
-        throw new System.NotImplementedException("Fluxo OAuth para Desktop (Google) requer injeção do token. Próxima etapa.");
+        var userCredential = await _client.SignInWithRedirectAsync(
+            FirebaseProviderType.Google, 
+            async uri => {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = uri, UseShellExecute = true });
+                return await DesktopOAuthHelper.WaitForRedirectAsync();
+            });
+            
+        var token = await userCredential.User.GetIdTokenAsync();
+        return new AuthUser
+        {
+            Uid = userCredential.User.Uid,
+            Email = userCredential.User.Info.Email ?? "",
+            IdToken = token
+        };
     }
 
-    public Task<AuthUser> LoginWithGitHubAsync()
+    public async Task<AuthUser> LoginWithGitHubAsync()
     {
-        throw new System.NotImplementedException("Fluxo OAuth para Desktop (GitHub) requer injeção do token. Próxima etapa.");
+        var userCredential = await _client.SignInWithRedirectAsync(
+            FirebaseProviderType.Github, 
+            async uri => {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = uri, UseShellExecute = true });
+                return await DesktopOAuthHelper.WaitForRedirectAsync();
+            });
+            
+        var token = await userCredential.User.GetIdTokenAsync();
+        return new AuthUser
+        {
+            Uid = userCredential.User.Uid,
+            Email = userCredential.User.Info.Email ?? "",
+            IdToken = token
+        };
     }
 
     public async Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password)

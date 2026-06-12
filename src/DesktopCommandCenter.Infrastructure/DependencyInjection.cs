@@ -19,6 +19,9 @@ public static class DependencyInjection
         services.AddSingleton<ILicenseService, FirestoreLicenseService>();
         services.AddSingleton<IHotkeyService, GlobalHotkeyService>();
         services.AddSingleton<IHotkeyConfigManager, HotkeyConfigManager>();
+        
+        services.AddSingleton<IIAAgentService, SemanticKernelAgentService>();
+        services.AddTransient<IWhisperTranscriptionService, WhisperTranscriptionService>();
         return services;
     }
 }

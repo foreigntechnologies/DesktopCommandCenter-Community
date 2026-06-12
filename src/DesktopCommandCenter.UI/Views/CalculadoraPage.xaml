@@ -83,7 +83,7 @@
                             <Button Grid.Row="4" Grid.Column="2" Content="," Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="," HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="60" />
                             <Button Grid.Row="4" Grid.Column="3" Content="+" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="60" />
 
-                            <Button Grid.Row="5" Grid.ColumnSpan="4" Content="=" Command="{x:Bind ViewModel.EvaluateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="60" Background="{ThemeResource AccentFillColorDefaultBrush}" Foreground="White" />
+                            <Button Grid.Row="5" Grid.ColumnSpan="4" Content="=" Command="{x:Bind ViewModel.EvaluateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="60" Background="{ThemeResource AccentFillColorDefaultBrush}" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
                         </Grid>
                     </Grid>
                 </TabViewItem>
@@ -120,47 +120,52 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <!-- Linha 0 -->
-                            <Button Content="sin" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sin" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Column="1" Content="cos" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="cos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Column="2" Content="CE" Command="{x:Bind ViewModel.ClearEntryCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Column="3" Content="C" Command="{x:Bind ViewModel.ClearAllCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Column="4" Content="⌫" Command="{x:Bind ViewModel.BackspaceCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Column="5" Content="÷" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <!-- Linha 0 (Parênteses) -->
+                            <Button Content="(" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="(" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Grid.ColumnSpan="3" />
+                            <Button Grid.Column="3" Content=")" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter=")" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Grid.ColumnSpan="3" />
 
                             <!-- Linha 1 -->
-                            <Button Grid.Row="1" Content="tan" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="tan" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="1" Grid.Column="1" Content="√" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sqrt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="1" Grid.Column="2" Content="7" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="1" Grid.Column="3" Content="8" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="1" Grid.Column="4" Content="9" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="1" Grid.Column="5" Content="×" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Content="sin" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sin" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Grid.Column="1" Content="cos" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="cos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Grid.Column="2" Content="CE" Command="{x:Bind ViewModel.ClearEntryCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Grid.Column="3" Content="C" Command="{x:Bind ViewModel.ClearAllCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Grid.Column="4" Content="⌫" Command="{x:Bind ViewModel.BackspaceCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="1" Grid.Column="5" Content="÷" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
 
                             <!-- Linha 2 -->
-                            <Button Grid.Row="2" Content="log" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="log" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="2" Grid.Column="1" Content="ln" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="ln" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="2" Grid.Column="2" Content="4" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="2" Grid.Column="3" Content="5" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="2" Grid.Column="4" Content="6" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="2" Grid.Column="5" Content="-" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="-" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="2" Content="tan" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="tan" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="2" Grid.Column="1" Content="√" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sqrt" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="2" Grid.Column="2" Content="7" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="2" Grid.Column="3" Content="8" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="2" Grid.Column="4" Content="9" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="2" Grid.Column="5" Content="×" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
 
                             <!-- Linha 3 -->
-                            <Button Grid.Row="3" Content="x²" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sqr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="3" Grid.Column="1" Content="π" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="pi" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="3" Grid.Column="2" Content="1" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="3" Grid.Column="3" Content="2" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="3" Grid.Column="4" Content="3" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="3" Grid.Column="5" Content="+" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="3" Content="log" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="log" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="3" Grid.Column="1" Content="ln" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="ln" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="3" Grid.Column="2" Content="4" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="3" Grid.Column="3" Content="5" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="3" Grid.Column="4" Content="6" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="3" Grid.Column="5" Content="-" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="-" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
 
                             <!-- Linha 4 -->
-                            <Button Grid.Row="4" Content="e" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="e" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="4" Grid.Column="1" Content="%" Command="{x:Bind ViewModel.CalculatePercentCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="4" Grid.Column="2" Content="+/-" Command="{x:Bind ViewModel.NegateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="4" Grid.Column="3" Content="0" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                            <Button Grid.Row="4" Grid.Column="4" Content="," Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="," HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
-                            <Button Grid.Row="4" Grid.Column="5" Content="=" Command="{x:Bind ViewModel.EvaluateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource AccentFillColorDefaultBrush}" Foreground="White" />
+                            <Button Grid.Row="4" Content="x²" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="sqr" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="4" Grid.Column="1" Content="π" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="pi" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="4" Grid.Column="2" Content="1" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="4" Grid.Column="3" Content="2" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="4" Grid.Column="4" Content="3" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="4" Grid.Column="5" Content="+" Command="{x:Bind ViewModel.OperatorCommand}" CommandParameter="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+
+                            <!-- Linha 5 -->
+                            <Button Grid.Row="5" Content="e" Command="{x:Bind ViewModel.ScientificFunctionCommand}" CommandParameter="e" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="5" Grid.Column="1" Content="%" Command="{x:Bind ViewModel.CalculatePercentCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="5" Grid.Column="2" Content="+/-" Command="{x:Bind ViewModel.NegateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="5" Grid.Column="3" Content="0" Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                            <Button Grid.Row="5" Grid.Column="4" Content="," Command="{x:Bind ViewModel.DigitCommand}" CommandParameter="," HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" />
+                            <Button Grid.Row="5" Grid.Column="5" Content="=" Command="{x:Bind ViewModel.EvaluateCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="55" Background="{ThemeResource AccentFillColorDefaultBrush}" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
                         </Grid>
                     </Grid>
                 </TabViewItem>

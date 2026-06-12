@@ -6,12 +6,15 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class TradutorViewModel : ObservableObject
 {
+    private CancellationTokenSource? _debounceCts;
+    private bool _isTranslating;
     private readonly Dictionary<string, string> _langCodes = new()
     {
         { "Detectar Idioma (Auto)", "auto" },
@@ -72,25 +75,69 @@ public partial class TradutorViewModel : ObservableObject
         }
     }
 
+    partial void OnSourceTextChanged(string value) => DebounceTranslate(true);
+    partial void OnTranslatedTextChanged(string value) => DebounceTranslate(false);
+    partial void OnSourceLanguageChanged(string value) => DebounceTranslate(true);
+    partial void OnTargetLanguageChanged(string value) => DebounceTranslate(true);
+
+    private async void DebounceTranslate(bool forward)
+    {
+        if (_isTranslating) return;
+
+        _debounceCts?.Cancel();
+        _debounceCts = new CancellationTokenSource();
+        var token = _debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(500, token); // Debounce de 500ms
+            if (!token.IsCancellationRequested)
+            {
+                await TranslateInternalAsync(forward);
+            }
+        }
+        catch (TaskCanceledException) { }
+    }
+
     [RelayCommand]
     private async Task TranslateAsync()
     {
-        if (string.IsNullOrWhiteSpace(SourceText))
+        await TranslateInternalAsync(true);
+    }
+
+    private async Task TranslateInternalAsync(bool forward)
+    {
+        string input = forward ? SourceText : TranslatedText;
+
+        if (string.IsNullOrWhiteSpace(input))
         {
-            TranslatedText = string.Empty;
+            _isTranslating = true;
+            if (forward) TranslatedText = string.Empty;
+            else SourceText = string.Empty;
+            _isTranslating = false;
             return;
         }
 
         try
         {
-            TranslatedText = "Traduzindo...";
+            _isTranslating = true;
 
-            string sl = _langCodes.TryGetValue(SourceLanguage, out string? slCode) ? slCode : "auto";
-            string tl = _langCodes.TryGetValue(TargetLanguage, out string? tlCode) ? tlCode : "pt";
+            if (forward) TranslatedText = "Traduzindo...";
+            else SourceText = "Traduzindo...";
+
+            string sl = forward 
+                ? (_langCodes.TryGetValue(SourceLanguage, out string? slCode1) ? slCode1 : "auto")
+                : (_langCodes.TryGetValue(TargetLanguage, out string? slCode2) ? slCode2 : "pt");
+
+            string tl = forward 
+                ? (_langCodes.TryGetValue(TargetLanguage, out string? tlCode1) ? tlCode1 : "pt")
+                : (_langCodes.TryGetValue(SourceLanguage, out string? tlCode2) ? tlCode2 : "auto");
+
+            // Se for tradução reversa e a fonte original era Auto, vamos traduzir para inglês como fallback ou pt
+            if (tl == "auto") tl = "en";
 
             using var httpClient = new HttpClient();
-            // Google Translate free endpoint
-            string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sl}&tl={tl}&dt=t&q={Uri.EscapeDataString(SourceText)}";
+            string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sl}&tl={tl}&dt=t&q={Uri.EscapeDataString(input)}";
             
             var response = await httpClient.GetStringAsync(url);
             
@@ -113,15 +160,25 @@ public partial class TradutorViewModel : ObservableObject
                             }
                         }
                     }
-                    TranslatedText = sb.ToString();
+                    
+                    if (forward) TranslatedText = sb.ToString();
+                    else SourceText = sb.ToString();
+                    
+                    _isTranslating = false;
                     return;
                 }
             }
-            TranslatedText = "Erro: Resposta inesperada do tradutor.";
+            if (forward) TranslatedText = "Erro: Resposta inesperada do tradutor.";
+            else SourceText = "Erro: Resposta inesperada do tradutor.";
         }
         catch (Exception ex)
         {
-            TranslatedText = $"Erro ao traduzir: {ex.Message}";
+            if (forward) TranslatedText = $"Erro ao traduzir: {ex.Message}";
+            else SourceText = $"Erro ao traduzir: {ex.Message}";
+        }
+        finally
+        {
+            _isTranslating = false;
         }
     }
 
@@ -145,5 +202,47 @@ public partial class TradutorViewModel : ObservableObject
         var tempText = SourceText;
         SourceText = TranslatedText;
         TranslatedText = tempText;
+    }
+
+    [RelayCommand]
+    private void CopySource()
+    {
+        if (!string.IsNullOrEmpty(SourceText))
+        {
+            var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            dataPackage.SetText(SourceText);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+        }
+    }
+
+    [RelayCommand]
+    private void CopyTranslated()
+    {
+        if (!string.IsNullOrEmpty(TranslatedText))
+        {
+            var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            dataPackage.SetText(TranslatedText);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+        }
+    }
+
+    [RelayCommand]
+    private async Task PasteSourceAsync()
+    {
+        var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
+        if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
+        {
+            SourceText = await dataPackageView.GetTextAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task PasteTranslatedAsync()
+    {
+        var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
+        if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
+        {
+            TranslatedText = await dataPackageView.GetTextAsync();
+        }
     }
 }

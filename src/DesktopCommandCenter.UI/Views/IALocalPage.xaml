@@ -12,7 +12,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-            <TextBlock Text="Chat IA Local" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="ChatFT" Style="{StaticResource TitleTextBlockStyle}" />
             <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" VerticalAlignment="Bottom" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
         </StackPanel>
 
@@ -22,7 +22,8 @@
                     <Grid Margin="0,8">
                         <Border CornerRadius="8" Padding="16" MaxWidth="600" HorizontalAlignment="Left" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
                             <StackPanel>
-                                <TextBlock Text="{x:Bind Role}" FontWeight="Bold" Margin="0,0,0,4" Foreground="{ThemeResource SystemAccentColor}" />
+                                <TextBlock Text="{x:Bind Role}" FontWeight="Bold" Margin="0,0,0,4" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                                <Image Source="{x:Bind ImagePath}" MaxWidth="300" MaxHeight="300" HorizontalAlignment="Left" Margin="0,0,0,8" Visibility="{x:Bind HasImage}" />
                                 <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
@@ -31,17 +32,33 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid Grid.Row="2" Margin="0,16,0,0" ColumnSpacing="16">
+        <Grid Grid.Row="2" Margin="0,16,0,0" ColumnSpacing="8">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                     PlaceholderText="Escreva seu prompt aqui..." 
-                     AcceptsReturn="True" MaxHeight="100"/>
+            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Bottom" Margin="0,0,0,4">
+                <Button Command="{x:Bind ViewModel.AttachImageCommand}" ToolTipService.ToolTip="Anexar Imagem" Background="Transparent" BorderThickness="0">
+                    <FontIcon Glyph="&#xEB9F;" />
+                </Button>
+                <Button Command="{x:Bind ViewModel.AttachAudioCommand}" ToolTipService.ToolTip="Transcrever Áudio" Background="Transparent" BorderThickness="0">
+                    <FontIcon Glyph="&#xE8D6;" />
+                </Button>
+                <Button Command="{x:Bind ViewModel.ToggleRecordingCommand}" ToolTipService.ToolTip="Falar no Microfone" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}">
+                    <FontIcon Glyph="&#xE720;" />
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="{x:Bind ViewModel.AttachedImagePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="11" Margin="0,0,0,4" />
+                <TextBox Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         PlaceholderText="Escreva seu prompt aqui, fale ao microfone ou anexe uma imagem..." 
+                         AcceptsReturn="True" MaxHeight="100"/>
+            </StackPanel>
                      
-            <Button Grid.Column="1" Content="Enviar" Command="{x:Bind ViewModel.SendMessageCommand}" 
+            <Button Grid.Column="2" Content="Enviar" Command="{x:Bind ViewModel.SendMessageCommand}" 
                     Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" MinWidth="100"/>
         </Grid>
     </Grid>

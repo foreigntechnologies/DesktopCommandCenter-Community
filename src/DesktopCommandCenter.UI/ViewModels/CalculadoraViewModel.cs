@@ -78,59 +78,39 @@ public partial class CalculadoraViewModel : ObservableObject
     [RelayCommand]
     private void Digit(string digit)
     {
-        if (_isNewEntry)
+        if (_isNewEntry && digit != "(" && digit != ")")
         {
             CurrentEntry = digit;
             _isNewEntry = false;
         }
         else
         {
-            if (digit == "," && CurrentEntry.Contains(",")) return;
-            CurrentEntry = CurrentEntry == "0" && digit != "," ? digit : CurrentEntry + digit;
+            CurrentEntry = CurrentEntry == "0" && digit != "," && digit != "(" && digit != ")" ? digit : CurrentEntry + digit;
+            _isNewEntry = false;
         }
     }
 
     [RelayCommand]
     private void Operator(string op)
     {
-        if (!_isNewEntry && !string.IsNullOrEmpty(_currentOperator))
-        {
-            Evaluate();
-        }
-
-        if (double.TryParse(CurrentEntry, out var val))
-        {
-            _leftOperand = val;
-        }
-
-        _currentOperator = op;
-        ExpressionDisplay = $"{_leftOperand} {op}";
-        _isNewEntry = true;
+        if (_isNewEntry) _isNewEntry = false;
+        CurrentEntry += op;
     }
 
     [RelayCommand]
     private void Evaluate()
     {
-        if (string.IsNullOrEmpty(_currentOperator) || _isNewEntry) return;
-
-        if (double.TryParse(CurrentEntry, out var rightOperand))
+        try
         {
-            double result = 0;
-            switch (_currentOperator)
-            {
-                case "+": result = _leftOperand + rightOperand; break;
-                case "-": result = _leftOperand - rightOperand; break;
-                case "*": result = _leftOperand * rightOperand; break;
-                case "/": 
-                    if (rightOperand == 0) { CurrentEntry = "Erro"; _isNewEntry = true; return; }
-                    result = _leftOperand / rightOperand; 
-                    break;
-            }
-
-            ExpressionDisplay = $"{_leftOperand} {_currentOperator} {rightOperand} =";
+            var parser = new MathParser();
+            double result = parser.Parse(CurrentEntry);
+            ExpressionDisplay = CurrentEntry + " =";
             CurrentEntry = result.ToString();
-            _leftOperand = result;
-            _currentOperator = "";
+            _isNewEntry = true;
+        }
+        catch
+        {
+            CurrentEntry = "Erro";
             _isNewEntry = true;
         }
     }
@@ -140,8 +120,6 @@ public partial class CalculadoraViewModel : ObservableObject
     {
         CurrentEntry = "0";
         ExpressionDisplay = "";
-        _currentOperator = "";
-        _leftOperand = 0;
         _isNewEntry = true;
     }
 
@@ -169,43 +147,151 @@ public partial class CalculadoraViewModel : ObservableObject
     [RelayCommand]
     private void Negate()
     {
-        if (double.TryParse(CurrentEntry, out var val))
-        {
-            CurrentEntry = (-val).ToString();
-        }
+        if (_isNewEntry) _isNewEntry = false;
+        if (CurrentEntry.StartsWith("-"))
+            CurrentEntry = CurrentEntry.Substring(1);
+        else if (CurrentEntry != "0")
+            CurrentEntry = "-" + CurrentEntry;
     }
 
     [RelayCommand]
     private void CalculatePercent()
     {
-        if (double.TryParse(CurrentEntry, out var val))
+        try
         {
-            CurrentEntry = (val / 100).ToString();
+            var parser = new MathParser();
+            double result = parser.Parse(CurrentEntry) / 100.0;
+            CurrentEntry = result.ToString();
             _isNewEntry = true;
         }
+        catch { }
     }
 
     [RelayCommand]
     private void ScientificFunction(string funcName)
     {
-        if (double.TryParse(CurrentEntry, out var val))
+        if (_isNewEntry)
         {
-            double result = 0;
-            switch (funcName)
+            CurrentEntry = "";
+            _isNewEntry = false;
+        }
+        if (CurrentEntry == "0") CurrentEntry = "";
+        
+        switch (funcName)
+        {
+            case "sin": CurrentEntry += "sin("; break;
+            case "cos": CurrentEntry += "cos("; break;
+            case "tan": CurrentEntry += "tan("; break;
+            case "sqrt": CurrentEntry += "sqrt("; break;
+            case "log": CurrentEntry += "log("; break;
+            case "ln": CurrentEntry += "ln("; break;
+            case "pi": CurrentEntry += "pi"; break;
+            case "e": CurrentEntry += "e"; break;
+            case "sqr": CurrentEntry += "^2"; break;
+        }
+    }
+
+    public class MathParser
+    {
+        private string _expr = "";
+        private int _pos;
+
+        public double Parse(string expression)
+        {
+            _expr = expression.Replace(" ", "").Replace(",", ".").Replace("×", "*").Replace("÷", "/");
+            _pos = 0;
+            return ParseExpression();
+        }
+
+        private double ParseExpression()
+        {
+            double result = ParseTerm();
+            while (_pos < _expr.Length)
             {
-                case "sin": result = Math.Sin(val); break;
-                case "cos": result = Math.Cos(val); break;
-                case "tan": result = Math.Tan(val); break;
-                case "sqrt": result = Math.Sqrt(val); break;
-                case "log": result = Math.Log10(val); break;
-                case "ln": result = Math.Log(val); break;
-                case "pi": CurrentEntry = Math.PI.ToString(); _isNewEntry = true; return;
-                case "e": CurrentEntry = Math.E.ToString(); _isNewEntry = true; return;
-                case "sqr": result = Math.Pow(val, 2); break;
+                char op = _expr[_pos];
+                if (op != '+' && op != '-') break;
+                _pos++;
+                double term = ParseTerm();
+                if (op == '+') result += term;
+                else result -= term;
             }
-            ExpressionDisplay = $"{funcName}({val}) =";
-            CurrentEntry = result.ToString();
-            _isNewEntry = true;
+            return result;
+        }
+
+        private double ParseTerm()
+        {
+            double result = ParsePower();
+            while (_pos < _expr.Length)
+            {
+                char op = _expr[_pos];
+                if (op != '*' && op != '/') break;
+                _pos++;
+                double factor = ParsePower();
+                if (op == '*') result *= factor;
+                else result /= factor;
+            }
+            return result;
+        }
+
+        private double ParsePower()
+        {
+            double result = ParseFactor();
+            while (_pos < _expr.Length && _expr[_pos] == '^')
+            {
+                _pos++;
+                double exponent = ParseFactor();
+                result = System.Math.Pow(result, exponent);
+            }
+            return result;
+        }
+
+        private double ParseFactor()
+        {
+            if (_pos >= _expr.Length) return 0;
+            int startPos = _pos;
+            if (_expr[_pos] == '+' || _expr[_pos] == '-')
+            {
+                _pos++;
+                double factor = ParseFactor();
+                return _expr[startPos] == '+' ? factor : -factor;
+            }
+
+            if (_expr[_pos] == '(')
+            {
+                _pos++;
+                double result = ParseExpression();
+                if (_pos < _expr.Length && _expr[_pos] == ')') _pos++;
+                return result;
+            }
+
+            if (char.IsLetter(_expr[_pos]))
+            {
+                while (_pos < _expr.Length && char.IsLetter(_expr[_pos])) _pos++;
+                string func = _expr.Substring(startPos, _pos - startPos);
+                if (func.ToLower() == "pi") return System.Math.PI;
+                if (func.ToLower() == "e") return System.Math.E;
+                
+                double arg = ParseFactor();
+                return func.ToLower() switch
+                {
+                    "sin" => System.Math.Sin(arg),
+                    "cos" => System.Math.Cos(arg),
+                    "tan" => System.Math.Tan(arg),
+                    "log" => System.Math.Log10(arg),
+                    "ln" => System.Math.Log(arg),
+                    "sqrt" => System.Math.Sqrt(arg),
+                    _ => 0
+                };
+            }
+
+            while (_pos < _expr.Length && (char.IsDigit(_expr[_pos]) || _expr[_pos] == '.')) _pos++;
+            if (_pos > startPos)
+            {
+                string numStr = _expr.Substring(startPos, _pos - startPos);
+                double.TryParse(numStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double result);
+                return result;
+            }
+            return 0;
         }
     }
 
