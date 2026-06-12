@@ -59,6 +59,24 @@ You can also use the automated PowerShell scripts in the root directory:
 ./build_pro.ps1 -Version "0.0.1"
 ```
 
+### Docker & Local AI Stack
+This repository includes a `docker-compose.yml` to orchestrate the local AI backend (Ollama) and a builder container for the Windows executable.
+
+**1. Run the Local AI Agent (Ollama)**
+```powershell
+docker-compose up -d ollama
+```
+
+**2. Build Releases via Docker (Requires Windows Containers)**
+Make sure Docker Desktop is switched to "Windows Containers" to build WinUI 3 applications.
+```powershell
+# Build Community Edition
+docker-compose run --rm build-exe 0.0.2 COMMUNITY
+
+# Build PRO Edition
+docker-compose run --rm build-exe 0.0.2 PRO
+```
+
 ## Security Notice
 This project uses Firebase for Identity Management. **Do not commit** Firebase Service Account keys (`.json`) or environment files containing sensitive credentials. The client app only requires the public Web API Key.
 
