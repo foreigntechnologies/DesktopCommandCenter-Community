@@ -1,5 +1,9 @@
 # Desktop Command Center (DCC)
 
+<p align="center">
+  <img src="src/DesktopCommandCenter.UI/Assets/StoreLogo.png" alt="Desktop Command Center Logo" width="200" />
+</p>
+
 [![Language: English](https://img.shields.io/badge/Language-English-blue.svg)](README.md)
 [![Idioma: Português](https://img.shields.io/badge/Idioma-Português-green.svg)](README.pt-BR.md)
 [![Idioma: Español](https://img.shields.io/badge/Idioma-Español-yellow.svg)](README.es.md)
