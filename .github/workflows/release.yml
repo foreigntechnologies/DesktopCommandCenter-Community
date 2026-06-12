@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Install NSIS
+      run: choco install nsis -y
+
+    - name: Build and Package Community
+      shell: pwsh
+      run: .\build_community.ps1 -Version "${{ github.ref_name }}"
+
+    - name: Build and Package PRO
+      shell: pwsh
+      run: .\build_pro.ps1 -Version "${{ github.ref_name }}"
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          Releases/DCC - Community.exe
+          Releases/DCC - PRO.exe
+          Releases/DCC - Community-Portable.zip
+          Releases/DCC - PRO-Portable.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
