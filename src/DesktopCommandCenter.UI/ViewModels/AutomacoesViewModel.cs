@@ -6,13 +6,33 @@ namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class AutomacaoRegra : ObservableObject
 {
-    public string Gatilho { get; set; } = string.Empty;
-    public string Acao { get; set; } = string.Empty;
-    public bool IsAtivo { get; set; } = true;
+    [ObservableProperty] private string _gatilho = string.Empty;
+    [ObservableProperty] private string _acao = string.Empty;
+    [ObservableProperty] private bool _isAtivo = true;
 }
 
 public partial class AutomacoesViewModel : ObservableObject
 {
+    public ObservableCollection<string> AvailableTriggers { get; } = new()
+    {
+        "Ao copiar um link do YouTube",
+        "Ao tirar um printscreen",
+        "Ao plugar Pendrive",
+        "Ao abrir o Visual Studio",
+        "Ao ligar o computador",
+        "A cada 1 hora"
+    };
+
+    public ObservableCollection<string> AvailableActions { get; } = new()
+    {
+        "Extrair ID do vídeo",
+        "Salvar em C:\\Prints e extrair texto (OCR)",
+        "Rodar Antivírus no diretório raiz",
+        "Limpar área de transferência",
+        "Ativar modo Não Perturbe",
+        "Sincronizar arquivos para nuvem"
+    };
+
     public ObservableCollection<AutomacaoRegra> Regras { get; } = new()
     {
         new AutomacaoRegra { Gatilho = "Ao copiar um link do YouTube", Acao = "Extrair ID do vídeo" },
@@ -20,9 +40,20 @@ public partial class AutomacoesViewModel : ObservableObject
         new AutomacaoRegra { Gatilho = "Ao plugar Pendrive", Acao = "Rodar Antivírus no diretório raiz" }
     };
 
-    [RelayCommand]
-    private void NovaRegra()
+    public void AddNovaRegra(string gatilho, string acao)
     {
-        Regras.Add(new AutomacaoRegra { Gatilho = "[Novo Gatilho]", Acao = "[Nova Ação]", IsAtivo = false });
+        if (!string.IsNullOrEmpty(gatilho) && !string.IsNullOrEmpty(acao))
+        {
+            Regras.Add(new AutomacaoRegra { Gatilho = gatilho, Acao = acao, IsAtivo = true });
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveRegra(AutomacaoRegra regra)
+    {
+        if (regra != null)
+        {
+            Regras.Remove(regra);
+        }
     }
 }

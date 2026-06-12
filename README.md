@@ -15,6 +15,8 @@ Targeted at professionals, developers, content creators, analysts, and power use
 
 ## Features
 - ✨ **Fluent Design System**: Built natively for Windows 11 with seamless transparent Mica backdrops and Fluent UI animations.
+- 🤖 **ChatFT (AI Agent)**: A local-first autonomous agent powered by Microsoft Semantic Kernel and Ollama. It can execute local C# plugins (e.g. read your files, get system time) completely offline.
+- 🎙️ **Voice & Vision**: Includes Whisper.net for offline audio transcription (microphone and files) and multi-modal Vision support using Ollama.
 - 📋 **Smart Clipboard**: A background service that silently captures and stores your clipboard history, allowing you to search and retrieve previous copies instantly.
 - 📝 **Quick Notes**: A lightning-fast notepad embedded in the sidebar.
 - 🌍 **Real-Time Localization**: Fully translated interface (English, Portuguese, Spanish).

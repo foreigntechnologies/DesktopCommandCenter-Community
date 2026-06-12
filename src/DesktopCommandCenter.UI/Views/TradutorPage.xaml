@@ -37,11 +37,30 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 
-                <TextBox Text="{x:Bind ViewModel.SourceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="Digite ou cole o texto aqui..." MinHeight="300"/>
-                <TextBox Grid.Column="1" Text="{x:Bind ViewModel.TranslatedText, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" MinHeight="300" />
+                <Grid>
+                    <TextBox Text="{x:Bind ViewModel.SourceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="Digite ou cole o texto aqui..." MinHeight="300" Padding="12,12,12,48"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12" Spacing="4">
+                        <Button Command="{x:Bind ViewModel.PasteSourceCommand}" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Colar">
+                            <FontIcon Glyph="&#xE77F;" FontSize="14"/>
+                        </Button>
+                        <Button Command="{x:Bind ViewModel.CopySourceCommand}" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Copiar">
+                            <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <TextBox Text="{x:Bind ViewModel.TranslatedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" MinHeight="300" Padding="12,12,12,48" PlaceholderText="Tradução..."/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12" Spacing="4">
+                        <Button Command="{x:Bind ViewModel.PasteTranslatedCommand}" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Colar">
+                            <FontIcon Glyph="&#xE77F;" FontSize="14"/>
+                        </Button>
+                        <Button Command="{x:Bind ViewModel.CopyTranslatedCommand}" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Copiar">
+                            <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
-        
-        <Button Grid.Row="1" Content="Traduzir Texto" Command="{x:Bind ViewModel.TranslateCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="24" Style="{StaticResource AccentButtonStyle}" MinWidth="150" />
     </Grid>
 </Page>

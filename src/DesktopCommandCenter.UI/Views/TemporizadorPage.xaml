@@ -11,22 +11,29 @@
 
         <TextBlock Text="Temporizador (Pomodoro)" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
 
-        <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="32" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="500">
+        <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="32" HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="800">
             <StackPanel Spacing="24" HorizontalAlignment="Center">
-                <TextBlock Text="{x:Bind ViewModel.TimeDisplay, Mode=OneWay}" FontSize="72" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Center" />
+                <TextBlock Text="{x:Bind ViewModel.TimeDisplay, Mode=OneWay}" FontSize="56" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                 
-                <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
-                    <NumberBox Value="{x:Bind ViewModel.InputMinutes, Mode=TwoWay}" Header="Minutos" Minimum="1" Maximum="120" Width="100"/>
-                    <Button Content="Resetar" Command="{x:Bind ViewModel.ResetTimerCommand}" VerticalAlignment="Bottom" />
-                </StackPanel>
+                <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4" HorizontalAlignment="Center">
+                    <NumberBox Value="{x:Bind ViewModel.InputYears, Mode=TwoWay}" Header="Anos" Minimum="0" Maximum="99" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputMonths, Mode=TwoWay}" Header="Meses" Minimum="0" Maximum="11" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputDays, Mode=TwoWay}" Header="Dias" Minimum="0" Maximum="30" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputHours, Mode=TwoWay}" Header="Horas" Minimum="0" Maximum="23" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputMinutes, Mode=TwoWay}" Header="Minutos" Minimum="0" Maximum="59" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputSeconds, Mode=TwoWay}" Header="Segundos" Minimum="0" Maximum="59" Width="100" Margin="8"/>
+                    <NumberBox Value="{x:Bind ViewModel.InputMilliseconds, Mode=TwoWay}" Header="Milissegundos" Minimum="0" Maximum="999" Width="120" Margin="8"/>
+                </VariableSizedWrapGrid>
 
-                <Grid ColumnSpacing="16">
+                <Grid ColumnSpacing="16" MaxWidth="400" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Button Content="Iniciar" Command="{x:Bind ViewModel.StartTimerCommand}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotRunning, Mode=OneWay}" />
                     <Button Grid.Column="1" Content="Pausar" Command="{x:Bind ViewModel.StopTimerCommand}" HorizontalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay}" />
+                    <Button Grid.Column="2" Content="Resetar" Command="{x:Bind ViewModel.ResetTimerCommand}" HorizontalAlignment="Stretch" />
                 </Grid>
             </StackPanel>
         </Grid>

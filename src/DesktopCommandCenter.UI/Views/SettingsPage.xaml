@@ -14,7 +14,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
                     <TextBlock Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
                     <Border x:Name="ProBadge" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
-                        <TextBlock Text="PRO" Foreground="White" FontWeight="Bold" FontSize="12" />
+                        <TextBlock Text="PRO" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
                     </Border>
                     <Border x:Name="CommunityBadge" Background="{ThemeResource SystemFillColorNeutralBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
                         <TextBlock Text="COMMUNITY" Foreground="{ThemeResource TextFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
@@ -114,7 +114,7 @@
             <StackPanel Spacing="16" Width="400">
                 <TextBlock x:Name="HotkeyDialogActionText" Text="Configurar atalho para: [Ação]" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
                 
-                <Border BorderThickness="1" BorderBrush="{ThemeResource SystemControlElevationBorderBrush}" CornerRadius="4" Padding="12" Background="{ThemeResource ControlOnImageFillColorDefaultBrush}">
+                <Border BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4" Padding="12" Background="{ThemeResource ControlOnImageFillColorDefaultBrush}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

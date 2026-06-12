@@ -131,8 +131,8 @@ public sealed partial class MainPage : Page
         var dialog = new ContentDialog
         {
             Title = "Recurso PRO Necessário",
-            Content = $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Assine agora para liberar!",
-            PrimaryButtonText = "Assinar PRO",
+            Content = $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!",
+            PrimaryButtonText = "Entrar / Assinar",
             CloseButtonText = "Cancelar",
             XamlRoot = this.XamlRoot
         };
@@ -141,39 +141,14 @@ public sealed partial class MainPage : Page
 
         if (result == ContentDialogResult.Primary)
         {
-            // Simulate subscription logic
-            await SimulateProInstallation();
+            // Redireciona para a tela de Auth ao invés de simular a compra local
+            NavigateToAction("Auth");
         }
         else
         {
             // Revert selection
             AppNavigationView.SelectedItem = AppNavigationView.MenuItems[0];
         }
-    }
-
-    private async System.Threading.Tasks.Task SimulateProInstallation()
-    {
-        if (!App.IsProBuild)
-        {
-            // Community build needs to simulate downloading/installing modules
-            var progressDialog = new ContentDialog
-            {
-                Title = "Instalando Módulos PRO",
-                Content = new ProgressRing { IsActive = true, Width = 50, Height = 50, Margin = new Microsoft.UI.Xaml.Thickness(0, 20, 0, 0) },
-                XamlRoot = this.XamlRoot
-            };
-
-            var showTask = progressDialog.ShowAsync();
-            await System.Threading.Tasks.Task.Delay(3000); // Simulate installation time
-            progressDialog.Hide();
-        }
-
-        App.IsProUnlocked = true;
-        UpdateNavigationLocks();
-        
-        // Navigate to the Dashboard or refresh to show unlock success
-        ContentFrame.Navigate(typeof(Views.DashboardPage));
-        AppNavigationView.SelectedItem = AppNavigationView.MenuItems[0];
     }
 
     public void UpdateNavigationLocks()

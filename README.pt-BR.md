@@ -15,6 +15,8 @@ Projetado para profissionais, desenvolvedores, criadores de conteúdo, analistas
 
 ## Funcionalidades
 - ✨ **Fluent Design System**: Construído nativamente para Windows 11, com fundo translúcido (Mica) e animações suaves.
+- 🤖 **ChatFT (Agente IA)**: Um agente autônomo "Local First" alimentado pelo Microsoft Semantic Kernel e Ollama. Capaz de invocar plugins C# locais (ler seus arquivos, checar hora do sistema) de forma 100% offline.
+- 🎙️ **Voz e Visão**: Transcrição local de áudio (microfone e arquivos mp3/wav) usando Whisper.net e suporte a múltiplas modalidades (Visão) analisando imagens via Ollama.
 - 📋 **Smart Clipboard**: Um serviço em background que captura silenciosamente seu histórico de cópias (Ctrl+C), permitindo buscar e reutilizar textos anteriores instantaneamente.
 - 📝 **Notas Rápidas**: Um bloco de notas incrivelmente rápido embutido na barra lateral.
 - 🌍 **Internacionalização em Tempo Real**: Interface totalmente traduzida (Inglês, Português, Espanhol).

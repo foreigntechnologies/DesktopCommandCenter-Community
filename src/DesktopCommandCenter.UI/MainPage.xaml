@@ -34,7 +34,7 @@
 
                 <!-- PRO MODULES HEADER -->
                 <NavigationViewItemHeader Content="Recursos PRO (IA &amp; Automação)" />
-                <NavigationViewItem Tag="IALocal" Icon="PreviewLink" Content="IA Local" />
+                <NavigationViewItem Tag="IALocal" Icon="PreviewLink" Content="ChatFT" />
                 <NavigationViewItem Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
                 <NavigationViewItem Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
                 <NavigationViewItem Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
