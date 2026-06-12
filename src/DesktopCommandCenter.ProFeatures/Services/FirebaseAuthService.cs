@@ -3,7 +3,7 @@ using Firebase.Auth;
 using Firebase.Auth.Providers;
 using System.Threading.Tasks;
 
-namespace DesktopCommandCenter.Infrastructure.Services;
+namespace DesktopCommandCenter.ProFeatures.Services;
 
 public class FirebaseAuthService : IAuthService
 {

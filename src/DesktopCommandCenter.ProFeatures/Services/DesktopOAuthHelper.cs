@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace DesktopCommandCenter.Infrastructure.Services;
+namespace DesktopCommandCenter.ProFeatures.Services;
 
 public static class DesktopOAuthHelper
 {

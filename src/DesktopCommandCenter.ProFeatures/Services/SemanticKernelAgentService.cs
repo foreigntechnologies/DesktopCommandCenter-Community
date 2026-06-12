@@ -9,7 +9,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
-namespace DesktopCommandCenter.Infrastructure.Services;
+namespace DesktopCommandCenter.ProFeatures.Services;
 
 public class SemanticKernelAgentService : IIAAgentService
 {

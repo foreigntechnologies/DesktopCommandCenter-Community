@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System;
 
-namespace DesktopCommandCenter.Infrastructure.Services;
+namespace DesktopCommandCenter.ProFeatures.Services;
 
 public class FirestoreLicenseService : ILicenseService
 {

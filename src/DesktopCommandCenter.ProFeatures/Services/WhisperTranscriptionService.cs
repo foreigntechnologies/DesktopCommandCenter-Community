@@ -7,7 +7,7 @@ using DesktopCommandCenter.Application.Interfaces;
 using NAudio.Wave;
 using Whisper.net;
 
-namespace DesktopCommandCenter.Infrastructure.Services;
+namespace DesktopCommandCenter.ProFeatures.Services;
 
 public class WhisperTranscriptionService : IWhisperTranscriptionService, IDisposable
 {
