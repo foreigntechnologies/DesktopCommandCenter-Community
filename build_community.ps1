@@ -11,12 +11,15 @@ param (
 
 $ErrorActionPreference = "Stop"
 
+# Remove the 'v' prefix if present (e.g., 'v0.0.1' becomes '0.0.1') for MSBuild compatibility
+$CleanVersion = $Version -replace '^v', ''
+
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "     DCC COMMUNITY WIZARD PACKAGER (NSIS)        " -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "Versão: $Version" -ForegroundColor Yellow
+Write-Host "Versão: $CleanVersion" -ForegroundColor Yellow
 
-$PublishDir = "publish/v$Version"
+$PublishDir = "publish/v$CleanVersion"
 $ProjectFile = "src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj"
 $ReleasesDir = "Releases"
 $TargetExeName = "DCC - Community.exe"
@@ -35,7 +38,7 @@ if (!(Test-Path $ReleasesDir)) {
 
 # 2. dotnet publish
 Write-Host "Iniciando compilação e publicação .NET..." -ForegroundColor Gray
-$PublishCmd = "dotnet publish $ProjectFile -c ReleaseCommunity -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishReadyToRun=true -p:WindowsPackageType=None -p:Version=$Version -o $PublishDir"
+$PublishCmd = "dotnet publish $ProjectFile -c ReleaseCommunity -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishReadyToRun=true -p:WindowsPackageType=None -p:Version=$CleanVersion -o $PublishDir"
 Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
 
@@ -74,7 +77,7 @@ if (!(Test-Path $MakensisPath)) {
     Write-Error "Compilador NSIS não encontrado em '$MakensisPath'. Certifique-se de que o NSIS está instalado."
 }
 
-$PackCmd = "& `"$MakensisPath`" /DVERSION=$Version installer_community.nsi"
+$PackCmd = "& `"$MakensisPath`" /DVERSION=$CleanVersion installer_community.nsi"
 Write-Host "Executando: $PackCmd" -ForegroundColor DarkGray
 Invoke-Expression $PackCmd
 
