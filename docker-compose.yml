@@ -21,5 +21,14 @@ services:
     #           count: 1
     #           capabilities: [gpu]
 
+  # Serviço auxiliar para compilar o executável e o instalador (.exe e .zip) do Windows
+  build-exe:
+    build:
+      context: .
+      dockerfile: Dockerfile.builder
+    # Monta a pasta atual do seu PC dentro do /app no contêiner
+    volumes:
+      - ./:C:/app
+
 volumes:
   ollama_data:
