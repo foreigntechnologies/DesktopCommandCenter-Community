@@ -8,7 +8,7 @@
     <Project Path="src/DesktopCommandCenter.PluginSDK/DesktopCommandCenter.PluginSDK.csproj" />
     <Project Path="src/DesktopCommandCenter.Shared/DesktopCommandCenter.Shared.csproj" />
     <Project Path="src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj">
-      <Platform Project="x86" />
+      <Platform Project="x64" />
     </Project>
   </Folder>
   <Folder Name="/tests/">
