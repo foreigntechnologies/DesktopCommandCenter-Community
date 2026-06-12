@@ -73,6 +73,17 @@ public partial class App : Microsoft.UI.Xaml.Application
                 "Dark" => Microsoft.UI.Xaml.ElementTheme.Dark,
                 _ => Microsoft.UI.Xaml.ElementTheme.Default
             };
+
+            var isDark = frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+            if (frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+            {
+                isDark = App.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
+            }
+
+            if (mainWindow.AppWindow?.TitleBar != null)
+            {
+                mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+            }
         }
     }
 
