@@ -66,6 +66,10 @@ FunctionEnd
 Section "Install"
   SetOutPath "$INSTDIR"
   
+  # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar
+  ExecWait 'taskkill /F /IM "DCC - Desktop Command Center*.exe"'
+  Sleep 1000
+  
   # Copia recursivamente todos os arquivos da compilação de publicação
   File /r "publish\v${VERSION}\*.*"
   
@@ -81,7 +85,7 @@ Section "Install"
   # Chaves de registro de desinstalação para o Windows adicionar/remover programas
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayName" "Desktop Command Center"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe,0"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" '"$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe"'
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayVersion" "${VERSION}"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "Publisher" "Foreign Technologies"
 SectionEnd
