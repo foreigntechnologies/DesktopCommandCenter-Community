@@ -47,6 +47,34 @@ dotnet build DesktopCommandCenter.slnx
 dotnet run --project src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj
 ```
 
+### Empaquetado y Lanzamientos
+Para generar el instalador y la versión portátil del DCC, puedes utilizar los scripts automatizados:
+```powershell
+# Compilar versión Community
+./build_community.ps1 -Version "0.0.1"
+
+# Compilar versión PRO
+./build_pro.ps1 -Version "0.0.1"
+```
+
+### Docker y Stack de IA Local
+Este repositorio incluye un archivo `docker-compose.yml` para orquestar el servidor de IA local (Ollama) y un contenedor para compilar la aplicación.
+
+**1. Ejecutar el Agente IA Local (Ollama)**
+```powershell
+docker-compose up -d ollama
+```
+
+**2. Compilar mediante Docker (Requiere Windows Containers)**
+Asegúrate de que Docker Desktop esté configurado en "Windows Containers".
+```powershell
+# Compilar Edición Community
+docker-compose run --rm build-exe 0.0.2 COMMUNITY
+
+# Compilar Edición PRO
+docker-compose run --rm build-exe 0.0.2 PRO
+```
+
 ## Aviso de Seguridad
 Este proyecto utiliza Firebase para la Gestión de Identidad. **No hagas commit** de claves de Cuentas de Servicio (`.json`) de Firebase ni archivos de entorno con credenciales confidenciales. La aplicación cliente solo requiere la Web API Key pública.
 

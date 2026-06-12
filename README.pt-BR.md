@@ -59,6 +59,24 @@ Você também pode utilizar os scripts automatizados diretamente no PowerShell d
 ./build_pro.ps1 -Version "0.0.1"
 ```
 
+### Docker & Automação Local
+Este repositório possui um `docker-compose.yml` que sobe o servidor de Inteligência Artificial Local (Ollama) e disponibiliza um contêiner auxiliar para empacotar o projeto via Docker.
+
+**1. Executar o Agente IA Local (Ollama)**
+```powershell
+docker-compose up -d ollama
+```
+
+**2. Compilar via Docker (Exige Contêineres do Windows)**
+Certifique-se de que o seu Docker Desktop esteja na modalidade "Windows Containers" para conseguir gerar aplicações Desktop/WinUI 3.
+```powershell
+# Compilar a Edição Community
+docker-compose run --rm build-exe 0.0.2 COMMUNITY
+
+# Compilar a Edição PRO
+docker-compose run --rm build-exe 0.0.2 PRO
+```
+
 ## Aviso de Segurança
 Este projeto utiliza o Firebase para Gestão de Identidade. **Não comite** chaves de Service Account (`.json`) do Firebase ou arquivos de ambiente com credenciais sensíveis. O aplicativo cliente exige apenas a Web API Key pública.
 
