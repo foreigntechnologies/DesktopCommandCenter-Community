@@ -43,6 +43,9 @@ FunctionEnd
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Desktop Command Center.exe"
 !define MUI_FINISHPAGE_RUN_TEXT "Executar Desktop Command Center"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchAsNormalUser"
+!define MUI_FINISHPAGE_SHOWREADME ""
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Criar atalho na Área de Trabalho"
+!define MUI_FINISHPAGE_SHOWREADME_FUNCTION "CreateDesktopShortcut"
 !insertmacro MUI_PAGE_FINISH
 
 # Páginas do Desinstalador
@@ -87,7 +90,6 @@ Section "Install"
   CreateDirectory "$SMPROGRAMS\Desktop Command Center"
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desinstalar DCC.lnk" "$INSTDIR\uninstall.exe"
-  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   
   # Chaves de registro de desinstalação para o Windows adicionar/remover programas
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayName" "Desktop Command Center"
@@ -114,4 +116,8 @@ SectionEnd
 
 Function LaunchAsNormalUser
   Exec '"$WINDIR\explorer.exe" "$INSTDIR\Desktop Command Center.exe"'
+FunctionEnd
+
+Function CreateDesktopShortcut
+  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
 FunctionEnd

@@ -38,7 +38,7 @@ if (!(Test-Path $ReleasesDir)) {
 
 # 2. dotnet publish
 Write-Host "Iniciando compilação e publicação .NET..." -ForegroundColor Gray
-$PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishReadyToRun=true -p:WindowsPackageType=None -p:Version=$CleanVersion -o $PublishDir"
+$PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:WindowsPackageType=None -p:Version=$CleanVersion -o $PublishDir"
 Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
 
