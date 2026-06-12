@@ -19,9 +19,10 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Restore dependencies
-      # -r win-x64 garante que os runtime packs do WinUI sejam baixados
-      # antes do build com --no-restore
-      run: dotnet restore DesktopCommandCenter.slnx -r win-x64
+      # O csproj define RuntimeIdentifier=win-x64, então o restore da solution
+      # já baixa os runtime packs corretos automaticamente.
+      run: dotnet restore DesktopCommandCenter.slnx
 
     - name: Build
-      run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release -r win-x64
+      # NETSDK1134: não é possível passar -r em solution (.slnx); o RID vem do csproj.
+      run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release

@@ -6,8 +6,9 @@
     <RootNamespace>DCC_Community_UI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;x86;ARM64</Platforms>
-    <!-- RID apenas durante publish; em build normal o CI não precisa dos runtime packs -->
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and '$(PublishProtocol)' != ''">win-x64</RuntimeIdentifier>
+    <!-- RID fixo win-x64: o restore da solution baixa os packs automaticamente,
+         permitindo dotnet build sem -r (NETSDK1134 proíbe -r em solution files) -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <WinUISDKReferences>false</WinUISDKReferences>
