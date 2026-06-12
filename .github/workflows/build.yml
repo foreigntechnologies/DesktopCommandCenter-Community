@@ -19,7 +19,9 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Restore dependencies
-      run: dotnet restore DesktopCommandCenter.slnx
+      # -r win-x64 garante que os runtime packs do WinUI sejam baixados
+      # antes do build com --no-restore
+      run: dotnet restore DesktopCommandCenter.slnx -r win-x64
 
     - name: Build
-      run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release
+      run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release -r win-x64
