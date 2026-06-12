@@ -40,7 +40,7 @@ FunctionEnd
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "$INSTDIR\DesktopCommandCenter.UI.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe"
 !insertmacro MUI_PAGE_FINISH
 
 # Páginas do Desinstalador
@@ -74,14 +74,14 @@ Section "Install"
   
   # Atalhos (Menu Iniciar e Área de Trabalho)
   CreateDirectory "$SMPROGRAMS\Desktop Command Center"
-  CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\DesktopCommandCenter.UI.exe" "" "$INSTDIR\DesktopCommandCenter.UI.exe" 0
+  CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" "" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" 0
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desinstalar DCC.lnk" "$INSTDIR\uninstall.exe"
-  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\DesktopCommandCenter.UI.exe" "" "$INSTDIR\DesktopCommandCenter.UI.exe" 0
+  CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" "" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe" 0
   
   # Chaves de registro de desinstalação para o Windows adicionar/remover programas
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayName" "Desktop Command Center"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" "$INSTDIR\DesktopCommandCenter.UI.exe,0"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" "$INSTDIR\DCC - Desktop Command Center - v${VERSION}.exe,0"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayVersion" "${VERSION}"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "Publisher" "Foreign Technologies"
 SectionEnd
