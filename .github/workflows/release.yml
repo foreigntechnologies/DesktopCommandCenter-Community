@@ -28,6 +28,7 @@ jobs:
       run: .\build_community.ps1 -Version "${{ github.ref_name }}"
 
     - name: Build and Package PRO
+      if: hashFiles('build_pro.ps1') != ''
       shell: pwsh
       run: .\build_pro.ps1 -Version "${{ github.ref_name }}"
 
