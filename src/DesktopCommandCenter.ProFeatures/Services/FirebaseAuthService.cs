@@ -73,13 +73,15 @@ public class FirebaseAuthService : IAuthService
     {
         int port        = GetAvailablePort();
         string redirect = $"http://127.0.0.1:{port}/";
+        string sessionId = Guid.NewGuid().ToString("N");
 
         // 1. Obter URL de autenticação do provedor via Firebase
         var authUriPayload = JsonSerializer.Serialize(new
         {
             providerId,
             continueUri  = redirect,
-            oauthScope   = "email profile"
+            oauthScope   = "email profile",
+            sessionId    = sessionId
         });
 
         var createUriBody = await PostRawAsync($"{IdentityBase}:createAuthUri", authUriPayload);
@@ -112,6 +114,7 @@ public class FirebaseAuthService : IAuthService
         var payloadDict = new System.Collections.Generic.Dictionary<string, object>
         {
             ["requestUri"] = callbackUrl,
+            ["sessionId"]  = sessionId,
             ["returnSecureToken"] = true,
             ["returnIdpCredential"] = true
         };

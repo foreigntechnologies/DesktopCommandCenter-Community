@@ -43,12 +43,6 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _userEmail = string.Empty;
 
-    [ObservableProperty]
-    private string _email = string.Empty;
-
-    [ObservableProperty]
-    private string _password = string.Empty;
-
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public string PlanDisplayText => IsProPlan ? "✔ Plano PRO Enterprise ativo" : "Plano Community (Gratuito)";
@@ -153,70 +147,6 @@ public partial class AuthViewModel : ObservableObject
             StatusMessage = $"Erro ao vincular: {ex.Message}";
         }
         finally { IsLoading = false; }
-    }
-
-    [RelayCommand]
-    public async Task LoginWithEmailAsync()
-    {
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
-        {
-            StatusMessage = "Por favor, digite o e-mail e a senha.";
-            return;
-        }
-
-        try
-        {
-            IsLoading = true;
-            StatusMessage = "Autenticando...";
-            var user = await _authService.LoginWithEmailAndPasswordAsync(Email, Password);
-            
-            CurrentPlan = await _licenseService.GetCurrentPlanAsync();
-            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
-            IsLoggedIn = true;
-            
-            StatusMessage = $"Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Erro ao entrar: {ex.Message}";
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    [RelayCommand]
-    public async Task RegisterWithEmailAsync()
-    {
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
-        {
-            StatusMessage = "Por favor, digite o e-mail e a senha.";
-            return;
-        }
-
-        try
-        {
-            IsLoading = true;
-            StatusMessage = "Criando conta...";
-            var user = await _authService.RegisterWithEmailAndPasswordAsync(Email, Password);
-            
-            CurrentPlan = await _licenseService.GetCurrentPlanAsync();
-            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new DesktopCommandCenter.UI.Messages.LicenseChangedMessage(App.IsProUnlocked));
-            IsLoggedIn = true;
-            
-            StatusMessage = $"Conta criada! Bem-vindo, {user.Email}! Plano: {CurrentPlan.ToUpper()}";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Erro ao registrar: {ex.Message}";
-        }
-        finally
-        {
-            IsLoading = false;
-        }
     }
 
     [RelayCommand]
