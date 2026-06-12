@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DesktopCommandCenter.Application.Interfaces;
-using DesktopCommandCenter.Infrastructure.Plugins;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -30,7 +29,7 @@ public class SemanticKernelAgentService : IIAAgentService
         );
 
         // Registra o nosso plugin local nativo (Ferramentas do Sistema)
-        builder.Plugins.AddFromType<SystemInfoPlugin>("SystemInfo");
+        // builder.Plugins.AddFromType<SystemInfoPlugin>("SystemInfo");
 
         _kernel = builder.Build();
         _chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
