@@ -1,0 +1,14 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Enforce LF for bash scripts
+*.sh text eol=lf
+
+# Enforce CRLF for Windows specific files
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.nsi text eol=crlf
+
+# Exclude from language statistics
+tests/* linguist-vendored
+*.Designer.cs linguist-generated
