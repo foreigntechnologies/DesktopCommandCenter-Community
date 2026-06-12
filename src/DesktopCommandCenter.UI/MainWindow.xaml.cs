@@ -31,7 +31,7 @@ public sealed partial class MainWindow : Window
 
         if (Content is FrameworkElement rootElement)
         {
-            rootElement.ActualThemeChanged += (s, e) => UpdateTitleBarColors();
+            // TitleBar control automatically updates with theme, no need to manually set AppWindow colors
         }
 
         // Navigate the root frame to the main page on startup.
@@ -40,33 +40,7 @@ public sealed partial class MainWindow : Window
         RootFrame.Loaded += RootFrame_Loaded;
     }
 
-    public void UpdateTitleBarColors()
-    {
-        if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
-        {
-            var titleBar = AppWindow.TitleBar;
-            var theme = ((FrameworkElement)Content).ActualTheme;
-            
-            if (theme == ElementTheme.Dark)
-            {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(25, 255, 255, 255);
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(51, 255, 255, 255);
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.Colors.DarkGray;
-            }
-            else
-            {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(25, 0, 0, 0);
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(51, 0, 0, 0);
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.Colors.DarkGray;
-            }
-        }
-    }
+
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
     {
@@ -103,7 +77,5 @@ public sealed partial class MainWindow : Window
             string themeStr = App.GetTheme();
             App.ApplyTheme(themeStr);
         }
-        
-        UpdateTitleBarColors();
     }
 }
