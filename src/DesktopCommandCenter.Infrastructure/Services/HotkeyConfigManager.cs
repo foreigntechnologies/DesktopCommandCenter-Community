@@ -47,12 +47,25 @@ public class HotkeyConfigManager : IHotkeyConfigManager
     {
         var defaults = new List<HotkeyConfig>
         {
-            new HotkeyConfig { ActionId = "ColorPicker", DisplayName = "Color Picker", Modifiers = 0, VirtualKey = 0 }, // User configurable
-            new HotkeyConfig { ActionId = "Settings", DisplayName = "Configurações", Modifiers = 2, VirtualKey = 0xDE }, // 2 = Ctrl, 0xDE = Oem7 (quote key in US layout)
-            new HotkeyConfig { ActionId = "Dashboard", DisplayName = "Dashboard", Modifiers = 0, VirtualKey = 0 },
-            new HotkeyConfig { ActionId = "Notes", DisplayName = "Notes", Modifiers = 0, VirtualKey = 0 },
-            new HotkeyConfig { ActionId = "Clipboard", DisplayName = "Smart Clipboard", Modifiers = 0, VirtualKey = 0 },
-            new HotkeyConfig { ActionId = "CliCommands", DisplayName = "Comandos CLI", Modifiers = 0, VirtualKey = 0 }
+            // ── Community ──────────────────────────────────────────────────
+            new HotkeyConfig { ActionId = "Dashboard",         DisplayName = "Dashboard",                Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Calculadora",       DisplayName = "Calculadora",              Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Temporizador",      DisplayName = "Temporizador",             Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Notes",             DisplayName = "Notas Rápidas",            Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Clipboard",         DisplayName = "Smart Clipboard",          Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "ColorPicker",       DisplayName = "Color Picker",             Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "AlwaysOnTop",       DisplayName = "Always On Top",            Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Awake",             DisplayName = "Awake (Caffeine)",         Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Captura",           DisplayName = "Captura de Tela",          Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Tradutor",          DisplayName = "Tradutor",                 Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "CliCommands",       DisplayName = "Comandos CLI",             Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Settings",          DisplayName = "Configurações",            Modifiers = 2, VirtualKey = 0xDE },
+            // ── PRO (Enterprise) ──────────────────────────────────────────
+            new HotkeyConfig { ActionId = "ChatFT",            DisplayName = "ChatFT",                   Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "PesquisaUniversal", DisplayName = "Pesquisa Universal",       Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Prompts",           DisplayName = "Biblioteca de Prompts",    Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Automacoes",        DisplayName = "Automações",               Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "Marketplace",       DisplayName = "Marketplace e Plugins",    Modifiers = 0, VirtualKey = 0 },
         };
 
         bool changed = false;
