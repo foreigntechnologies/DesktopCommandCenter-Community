@@ -76,9 +76,22 @@ Section "Install"
   RMDir /r "$LocalAppData\Programs\DCC - PRO"
   RMDir /r "$LocalAppData\Programs\DCCPro"
   
-  # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar (modo silencioso sem janela CMD)
-  nsExec::Exec 'taskkill /F /IM "Desktop Command Center.exe"'
-  Sleep 1000
+  # Verifica se o aplicativo está rodando antes de sobrescrever
+  IfFileExists "$INSTDIR\Desktop Command Center.exe" 0 SkipCheck
+CheckRunning:
+  ClearErrors
+  FileOpen $0 "$INSTDIR\Desktop Command Center.exe" a
+  IfErrors IsRunning IsNotRunning
+
+IsRunning:
+  MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "O Desktop Command Center está em execução.$\n$\nPor favor, feche o aplicativo (verifique a bandeja do sistema perto do relógio) e clique em Repetir para continuar a instalação." IDRETRY CheckRunning IDCANCEL AbortInstall
+
+AbortInstall:
+  Abort "Instalação cancelada pelo usuário."
+
+IsNotRunning:
+  FileClose $0
+SkipCheck:
   
   # Copia recursivamente todos os arquivos da compilação de publicação
   File /r "publish\v${VERSION}\*.*"
