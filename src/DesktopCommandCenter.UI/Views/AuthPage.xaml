@@ -25,6 +25,45 @@
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" />
                 </StackPanel>
 
+                <!-- Mensagens globais (Loading / Erro / Sucesso) -->
+                <StackPanel Spacing="12" Margin="0,0,0,20">
+                    <StackPanel Spacing="12" HorizontalAlignment="Center"
+                                Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+                        <ProgressRing IsActive="True" Width="32" Height="32" HorizontalAlignment="Center" />
+                        <TextBlock Text="Processando requisição..."
+                                   HorizontalAlignment="Center"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   FontSize="12" />
+                    </StackPanel>
+
+                    <Border CornerRadius="8" Padding="12,10"
+                            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
+                            Visibility="{x:Bind ViewModel.HasError, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <FontIcon Glyph="&#xE783;" FontSize="16"
+                                      Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                      VerticalAlignment="Center" />
+                            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                                       Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                       TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Mensagem de Sucesso Genérica -->
+                    <Border CornerRadius="8" Padding="12,10"
+                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                            Visibility="{x:Bind ViewModel.HasSuccess, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <FontIcon Glyph="&#xE73E;" FontSize="16"
+                                      Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                      VerticalAlignment="Center" />
+                            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                                       Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                       TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
                 <!-- ══ PAINEL NÃO LOGADO ══ -->
                 <StackPanel Spacing="16" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
 
@@ -63,29 +102,7 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- Loading / Feedback -->
-                    <StackPanel Spacing="12" HorizontalAlignment="Center" Margin="0,8,0,0"
-                                Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
-                        <ProgressRing IsActive="True" Width="32" Height="32" HorizontalAlignment="Center" />
-                        <TextBlock Text="Aguardando autorização no browser..."
-                                   HorizontalAlignment="Center"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   FontSize="12" />
-                    </StackPanel>
-
-                    <!-- Erro -->
-                    <Border CornerRadius="8" Padding="12,10"
-                            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
-                            Visibility="{x:Bind ViewModel.HasError, Mode=OneWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <FontIcon Glyph="&#xE783;" FontSize="16"
-                                      Foreground="{ThemeResource SystemFillColorCriticalBrush}"
-                                      VerticalAlignment="Center" />
-                            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
-                                       Foreground="{ThemeResource SystemFillColorCriticalBrush}"
-                                       TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
+                    <!-- Botões de login movidos para cima para manter os erros abaixo -->
 
                     <!-- Nota de privacidade -->
                     <TextBlock FontSize="11" TextWrapping="Wrap" TextAlignment="Center"
@@ -115,6 +132,21 @@
                             <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                        HorizontalAlignment="Center" FontSize="12" />
+                        </StackPanel>
+
+                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />
+
+                        <!-- Vinculação de Contas -->
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" Content="Vincular Google" Padding="12,6" ToolTipService.ToolTip="Fazer login também via Google" />
+                                <Button Command="{x:Bind ViewModel.LinkGitHubCommand}" Content="Vincular GitHub" Padding="12,6" ToolTipService.ToolTip="Fazer login também via GitHub" />
+                            </StackPanel>
+                            <TextBlock Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
+                                       FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextWrapping="Wrap" TextAlignment="Center" />
                         </StackPanel>
 
                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />

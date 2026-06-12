@@ -51,14 +51,25 @@ public class FirebaseAuthService : IAuthService
     public Task<AuthUser> LoginWithGoogleAsync()  => LoginWithProviderAsync("google.com");
     public Task<AuthUser> LoginWithGitHubAsync()  => LoginWithProviderAsync("github.com");
 
+    public Task<AuthUser> LinkWithGoogleAsync()   => LinkWithProviderAsync("google.com");
+    public Task<AuthUser> LinkWithGitHubAsync()   => LinkWithProviderAsync("github.com");
+
+    private async Task<AuthUser> LinkWithProviderAsync(string providerId)
+    {
+        var currentUser = await GetCurrentUserAsync();
+        if (currentUser == null) throw new Exception("Nenhum usuário logado para vincular.");
+        return await LoginWithProviderAsync(providerId, currentUser.IdToken);
+    }
+
     /// <summary>
     /// Fluxo OAuth 2.0 para apps desktop:
     /// 1. Firebase createAuthUri       → URL de login do provedor (Google/GitHub)
     /// 2. Abre browser do sistema      → usuário autoriza
     /// 3. HttpListener local           → captura o callback na porta aleatória
     /// 4. Firebase signInWithIdp       → troca o callback por ID token
+    /// Se um idToken for fornecido, a credencial será VINCULADA a este idToken (conta existente).
     /// </summary>
-    private async Task<AuthUser> LoginWithProviderAsync(string providerId)
+    private async Task<AuthUser> LoginWithProviderAsync(string providerId, string? idToken = null)
     {
         int port        = GetAvailablePort();
         string redirect = $"http://127.0.0.1:{port}/";
@@ -97,13 +108,17 @@ public class FirebaseAuthService : IAuthService
             throw new Exception("Login cancelado: o tempo limite de 5 minutos foi atingido.");
         }
 
-        // 5. Troca o callback URL por tokens Firebase
-        var signInPayload = JsonSerializer.Serialize(new
+        // 5. Troca o callback URL por tokens Firebase (e vincula se idToken não for nulo)
+        var payloadDict = new System.Collections.Generic.Dictionary<string, object>
         {
-            requestUri         = callbackUrl,
-            returnSecureToken  = true,
-            returnIdpCredential = true
-        });
+            ["requestUri"] = callbackUrl,
+            ["returnSecureToken"] = true,
+            ["returnIdpCredential"] = true
+        };
+        if (!string.IsNullOrEmpty(idToken))
+            payloadDict["idToken"] = idToken;
+
+        var signInPayload = JsonSerializer.Serialize(payloadDict);
 
         var signInBody = await PostRawAsync($"{IdentityBase}:signInWithIdp", signInPayload);
         return await ParseAuthResponseAsync(signInBody);
