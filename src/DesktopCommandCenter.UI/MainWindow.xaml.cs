@@ -26,6 +26,7 @@ public sealed partial class MainWindow : Window
         Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
 
         ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
 
         AppWindow.SetIcon("Assets/AppIcon.ico");
 
