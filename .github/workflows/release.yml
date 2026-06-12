@@ -23,15 +23,15 @@ jobs:
     - name: Install NSIS
       run: choco install nsis -y
 
-    - name: Build and Package PRO
+    - name: Build and Package
       shell: pwsh
-      run: .\build_pro.ps1 -Version "${{ github.ref_name }}"
+      run: .\build.ps1 -Version "${{ github.ref_name }}"
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          Releases/DCC - PRO.exe
-          Releases/DCC - PRO-Portable.zip
+          Releases/DCC - Desktop Command Center - v*.exe
+          Releases/DCC - Desktop Command Center - v*-Portable.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

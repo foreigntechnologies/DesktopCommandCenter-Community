@@ -22,7 +22,9 @@ public partial class AuthViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasError))]
     private string _statusMessage = string.Empty;
 
-    public bool HasError => !string.IsNullOrEmpty(StatusMessage) && !IsLoading && !IsLoggedIn;
+    public bool HasError => !string.IsNullOrEmpty(StatusMessage) && !IsLoading && !StatusMessage.Contains("sucesso", StringComparison.OrdinalIgnoreCase);
+
+    public bool HasSuccess => !string.IsNullOrEmpty(StatusMessage) && !IsLoading && StatusMessage.Contains("sucesso", StringComparison.OrdinalIgnoreCase);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
@@ -115,6 +117,40 @@ public partial class AuthViewModel : ObservableObject
         catch (Exception ex)
         {
             StatusMessage = ex.Message;
+        }
+        finally { IsLoading = false; }
+    }
+
+    [RelayCommand]
+    public async Task LinkGoogleAsync()
+    {
+        StatusMessage = string.Empty;
+        IsLoading = true;
+        try
+        {
+            var user = await _authService.LinkWithGoogleAsync();
+            StatusMessage = "Conta do Google vinculada com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao vincular: {ex.Message}";
+        }
+        finally { IsLoading = false; }
+    }
+
+    [RelayCommand]
+    public async Task LinkGitHubAsync()
+    {
+        StatusMessage = string.Empty;
+        IsLoading = true;
+        try
+        {
+            var user = await _authService.LinkWithGitHubAsync();
+            StatusMessage = "Conta do GitHub vinculada com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao vincular: {ex.Message}";
         }
         finally { IsLoading = false; }
     }
