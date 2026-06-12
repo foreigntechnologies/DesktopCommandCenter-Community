@@ -14,11 +14,15 @@
     </Window.SystemBackdrop>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <tb:TaskbarIcon
             x:Name="TrayIcon"
             IconSource="/Assets/AppIcon.ico"
             ToolTipText="Desktop Command Center"
-            ForceCreate="True"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
@@ -39,10 +43,7 @@
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+
 
         <Grid x:Name="AppTitleBar" Background="Transparent" Height="32">
             <Grid.ColumnDefinitions>
