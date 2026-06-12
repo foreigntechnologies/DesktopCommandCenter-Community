@@ -19,10 +19,9 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Restore dependencies
-      # O csproj define RuntimeIdentifier=win-x64, então o restore da solution
-      # já baixa os runtime packs corretos automaticamente.
-      run: dotnet restore DesktopCommandCenter.slnx
+      run: |
+        dotnet restore DesktopCommandCenter.slnx
+        dotnet restore src\DesktopCommandCenter.UI\DesktopCommandCenter.UI.csproj -r win-x64
 
     - name: Build
-      # NETSDK1134: não é possível passar -r em solution (.slnx); o RID vem do csproj.
       run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release
