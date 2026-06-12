@@ -72,8 +72,8 @@ Section "Install"
   RMDir /r "$LocalAppData\Programs\DCC - PRO"
   RMDir /r "$LocalAppData\Programs\DCCPro"
   
-  # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar
-  ExecWait 'taskkill /F /IM "Desktop Command Center.exe"'
+  # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar (modo silencioso sem janela CMD)
+  nsExec::Exec 'taskkill /F /IM "Desktop Command Center.exe"'
   Sleep 1000
   
   # Copia recursivamente todos os arquivos da compilação de publicação
