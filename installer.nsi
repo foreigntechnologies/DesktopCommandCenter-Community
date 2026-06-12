@@ -40,7 +40,8 @@ FunctionEnd
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN "$INSTDIR\Desktop Command Center.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Executar Desktop Command Center"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchAsNormalUser"
 !insertmacro MUI_PAGE_FINISH
 
@@ -112,5 +113,5 @@ Section "Uninstall"
 SectionEnd
 
 Function LaunchAsNormalUser
-  ExecShell "" "$INSTDIR\Desktop Command Center.exe"
+  Exec '"$WINDIR\explorer.exe" "$INSTDIR\Desktop Command Center.exe"'
 FunctionEnd
