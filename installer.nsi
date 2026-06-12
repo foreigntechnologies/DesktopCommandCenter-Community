@@ -40,8 +40,8 @@ FunctionEnd
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN "explorer.exe"
-!define MUI_FINISHPAGE_RUN_PARAMETERS '"$INSTDIR\Desktop Command Center.exe"'
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchAsNormalUser"
 !insertmacro MUI_PAGE_FINISH
 
 # Páginas do Desinstalador
@@ -66,6 +66,11 @@ FunctionEnd
 
 Section "Install"
   SetOutPath "$INSTDIR"
+  
+  # Limpeza preventiva de antigas versões em cache de instalações passadas
+  RMDir /r "$LocalAppData\Programs\DCC - Community"
+  RMDir /r "$LocalAppData\Programs\DCC - PRO"
+  RMDir /r "$LocalAppData\Programs\DCCPro"
   
   # Fechar o app se estiver rodando para permitir atualizações "limpas" sem desinstalar
   ExecWait 'taskkill /F /IM "Desktop Command Center.exe"'
@@ -105,3 +110,7 @@ Section "Uninstall"
   DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC"
   DeleteRegKey SHCTX "Software\DCCPro"
 SectionEnd
+
+Function LaunchAsNormalUser
+  ExecShell "" "$INSTDIR\Desktop Command Center.exe"
+FunctionEnd
