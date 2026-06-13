@@ -194,7 +194,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     public void OpenCustomerPortal()
     {
-        string url = "https://billing.stripe.com/p/login/SEU_ID_DO_PORTAL";
+        string url = "https://billing.stripe.com/p/login/7sY7sN6DS9SL5nY6hhf3a00";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
     }
 

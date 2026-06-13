@@ -41,6 +41,10 @@ public sealed partial class MainWindow : Window
         RootFrame.Navigate(typeof(MainPage));
 
         RootFrame.Loaded += RootFrame_Loaded;
+
+        // Iniciar maximizado
+        var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+        presenter?.Maximize();
     }
 
 
@@ -63,10 +67,33 @@ public sealed partial class MainWindow : Window
         // (If needed, use P/Invoke SetForegroundWindow, but Show() usually suffices for WinUI 3)
     }
 
-    private void TrayUpdate_Click(object sender, RoutedEventArgs e)
+    private async void TrayUpdate_Click(object sender, RoutedEventArgs e)
     {
         ShowApp();
-        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Settings"));
+        try
+        {
+            // Verifica se está rodando como pacote MSIX (Microsoft Store)
+            var currentPackage = Windows.ApplicationModel.Package.Current;
+            if (currentPackage != null)
+            {
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://downloadsAndUpdates"));
+                return;
+            }
+        }
+        catch { }
+
+        // Se for EXE Portable/GitHub, usa o Velopack
+        try
+        {
+            var mgr = new Velopack.UpdateManager("https://github.com/foreigntechnologies/DesktopCommandCenter-Community");
+            var newVersion = await mgr.CheckForUpdatesAsync();
+            if (newVersion != null)
+            {
+                // Mostra um dialog no RootFrame
+                CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("UpdateAvailable"));
+            }
+        }
+        catch { }
     }
 
     private void TrayShow_Click(object sender, RoutedEventArgs e)
@@ -87,7 +114,19 @@ public sealed partial class MainWindow : Window
 
     private async void TrayBug_Click(object sender, RoutedEventArgs e)
     {
-        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/foreigntechnologies/DesktopCommandCenter-Community/issues"));
+        ShowApp();
+        
+        if (RootFrame.Content is Microsoft.UI.Xaml.Controls.Page currentPage)
+        {
+            var dialog = new Views.BugReportDialog();
+            dialog.XamlRoot = currentPage.XamlRoot;
+            await dialog.ShowAsync();
+        }
+        else
+        {
+            // Fallback
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:suporte@foreigntechnologies.com.br?subject=Bug%20Report%20-%20DCC"));
+        }
     }
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)

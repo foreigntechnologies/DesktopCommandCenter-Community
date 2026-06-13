@@ -43,6 +43,26 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _userEmail = string.Empty;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanLinkGoogle))]
+    private bool _hasGoogleLinked;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanLinkGitHub))]
+    private bool _hasGitHubLinked;
+
+    [ObservableProperty]
+    private string _linkedEmailsText = string.Empty;
+
+    [ObservableProperty]
+    private string _googleEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _gitHubEmail = string.Empty;
+
+    public bool CanLinkGoogle => !HasGoogleLinked;
+    public bool CanLinkGitHub => !HasGitHubLinked;
+
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public string PlanDisplayText => IsProPlan ? "✔ Plano PRO Enterprise ativo" : "Plano Community (Gratuito)";
@@ -81,6 +101,12 @@ public partial class AuthViewModel : ObservableObject
             App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             UserEmail  = user.Email;
+            HasGoogleLinked = user.Providers.Contains("google.com");
+            HasGitHubLinked = user.Providers.Contains("github.com");
+            
+            if (HasGoogleLinked && user.LinkedEmails.TryGetValue("google.com", out var gEmail)) GoogleEmail = gEmail; else GoogleEmail = string.Empty;
+            if (HasGitHubLinked && user.LinkedEmails.TryGetValue("github.com", out var ghEmail)) GitHubEmail = ghEmail; else GitHubEmail = string.Empty;
+
             IsLoggedIn = true;
             StatusMessage = string.Empty;
 
@@ -134,6 +160,7 @@ public partial class AuthViewModel : ObservableObject
         {
             var user = await _authService.LinkWithGoogleAsync();
             StatusMessage = "Conta do Google vinculada com sucesso!";
+            await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
@@ -151,6 +178,7 @@ public partial class AuthViewModel : ObservableObject
         {
             var user = await _authService.LinkWithGitHubAsync();
             StatusMessage = "Conta do GitHub vinculada com sucesso!";
+            await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
@@ -166,6 +194,11 @@ public partial class AuthViewModel : ObservableObject
         IsLoggedIn    = false;
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
+        LinkedEmailsText = string.Empty;
+        GoogleEmail   = string.Empty;
+        GitHubEmail   = string.Empty;
+        HasGoogleLinked = false;
+        HasGitHubLinked = false;
         StatusMessage = string.Empty;
         App.IsProUnlocked = false;
         WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));

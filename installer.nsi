@@ -1,5 +1,5 @@
-!ifndef VERSION
-  !define VERSION "0.0.1"
+﻿!ifndef VERSION
+  !define VERSION "1.0.0"
 !endif
 
 Unicode true
@@ -7,11 +7,11 @@ Unicode true
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 
-# Nome do produto e do executável do instalador
+# Nome do produto e do executÃ¡vel do instalador
 Name "Desktop Command Center"
 OutFile "Releases\DCC - Desktop Command Center - v${VERSION}.exe"
 
-# Define o modo de usuário múltiplo (Permite instalar por usuário ou por máquina)
+# Define o modo de usuÃ¡rio mÃºltiplo (Permite instalar por usuÃ¡rio ou por mÃ¡quina)
 !define MULTIUSER_MUI
 !define MULTIUSER_EXECUTIONLEVEL Highest
 !define MULTIUSER_INSTALLMODE_DEFAULT_CURRENTUSER
@@ -30,24 +30,24 @@ Function onMultiUserModeChanged
   ${EndIf}
 FunctionEnd
 
-# Configurações visuais (Ícone do Instalador e Desinstalador)
+# ConfiguraÃ§Ãµes visuais (Ãcone do Instalador e Desinstalador)
 !define MUI_ICON "src\DesktopCommandCenter.UI\Assets\AppIcon.ico"
 !define MUI_UNICON "src\DesktopCommandCenter.UI\Assets\AppIcon.ico"
 
-# Páginas do Instalador
+# PÃ¡ginas do Instalador
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE $(myLicenseData)
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Desktop Command Center.exe"
-!define MUI_FINISHPAGE_RUN_TEXT "Executar Desktop Command Center"
+!define MUI_FINISHPAGE_RUN_TEXT $(FinRunText)
 !define MUI_FINISHPAGE_SHOWREADME ""
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "Criar atalho na Área de Trabalho"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT $(FinLinkText)
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION "CreateDesktopShortcut"
 !insertmacro MUI_PAGE_FINISH
 
-# Páginas do Desinstalador
+# PÃ¡ginas do Desinstalador
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
@@ -55,9 +55,24 @@ FunctionEnd
 !insertmacro MUI_LANGUAGE "PortugueseBR"
 !insertmacro MUI_LANGUAGE "English"
 
+LicenseLangString myLicenseData ${LANG_PORTUGUESEBR} "LICENSE.txt"
+LicenseLangString myLicenseData ${LANG_ENGLISH} "LICENSE_EN.txt"
+
+LangString FinRunText ${LANG_PORTUGUESEBR} "Executar Desktop Command Center"
+LangString FinRunText ${LANG_ENGLISH} "Run Desktop Command Center"
+
+LangString FinLinkText ${LANG_PORTUGUESEBR} "Criar atalho na Ãrea de Trabalho"
+LangString FinLinkText ${LANG_ENGLISH} "Create Desktop Shortcut"
+
+LangString MsgAppRunning ${LANG_PORTUGUESEBR} "O Desktop Command Center estÃ¡ em execuÃ§Ã£o em segundo plano.$\n$\nDeseja fechÃ¡-lo automaticamente para continuar a instalaÃ§Ã£o?"
+LangString MsgAppRunning ${LANG_ENGLISH} "Desktop Command Center is currently running in the background.$\n$\nDo you want to close it automatically to continue the installation?"
+
+LangString MsgInstallAborted ${LANG_PORTUGUESEBR} "InstalaÃ§Ã£o cancelada pelo usuÃ¡rio."
+LangString MsgInstallAborted ${LANG_ENGLISH} "Installation aborted by user."
+
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
-# Inicialização do MultiUser
+# InicializaÃ§Ã£o do MultiUser
 Function .onInit
   !insertmacro MULTIUSER_INIT
   !insertmacro MUI_LANGDLL_DISPLAY
@@ -70,12 +85,12 @@ FunctionEnd
 Section "Install"
   SetOutPath "$INSTDIR"
   
-  # Limpeza preventiva de antigas versões em cache de instalações passadas
+  # Limpeza preventiva de antigas versÃµes em cache de instalaÃ§Ãµes passadas
   RMDir /r "$LocalAppData\Programs\DCC - Community"
   RMDir /r "$LocalAppData\Programs\DCC - PRO"
   RMDir /r "$LocalAppData\Programs\DCCPro"
   
-  # Verifica se o aplicativo está rodando antes de sobrescrever
+  # Verifica se o aplicativo estÃ¡ rodando antes de sobrescrever
   IfFileExists "$INSTDIR\Desktop Command Center.exe" 0 SkipCheck
 CheckRunning:
   ClearErrors
@@ -83,7 +98,7 @@ CheckRunning:
   IfErrors IsRunning IsNotRunning
 
 IsRunning:
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "O Desktop Command Center está em execução em segundo plano.$\n$\nDeseja fechá-lo automaticamente para continuar a instalação?" IDYES KillApp IDNO AbortInstall
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION $(MsgAppRunning) IDYES KillApp IDNO AbortInstall
 
 KillApp:
   nsExec::Exec 'taskkill /F /IM "Desktop Command Center.exe"'
@@ -91,24 +106,24 @@ KillApp:
   Goto CheckRunning
 
 AbortInstall:
-  Abort "Instalação cancelada pelo usuário."
+  Quit
 
 IsNotRunning:
   FileClose $0
 SkipCheck:
   
-  # Copia recursivamente todos os arquivos da compilação de publicação
+  # Copia recursivamente todos os arquivos da compilaÃ§Ã£o de publicaÃ§Ã£o
   File /r "publish\v${VERSION}\*.*"
   
-  # Cria o desinstalador executável no diretório de instalação
+  # Cria o desinstalador executÃ¡vel no diretÃ³rio de instalaÃ§Ã£o
   WriteUninstaller "$INSTDIR\uninstall.exe"
   
-  # Atalhos (Menu Iniciar e Área de Trabalho)
+  # Atalhos (Menu Iniciar e Ãrea de Trabalho)
   CreateDirectory "$SMPROGRAMS\Desktop Command Center"
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desinstalar DCC.lnk" "$INSTDIR\uninstall.exe"
   
-  # Chaves de registro de desinstalação para o Windows adicionar/remover programas
+  # Chaves de registro de desinstalaÃ§Ã£o para o Windows adicionar/remover programas
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayName" "Desktop Command Center"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\DCC" "DisplayIcon" '"$INSTDIR\Desktop Command Center.exe"'
@@ -138,3 +153,4 @@ FunctionEnd
 Function CreateDesktopShortcut
   CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
 FunctionEnd
+

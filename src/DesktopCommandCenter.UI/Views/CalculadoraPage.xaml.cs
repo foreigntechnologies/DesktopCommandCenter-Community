@@ -47,15 +47,26 @@ public sealed partial class CalculadoraPage : Page
                 
                 var featureName = restrictedIndex == 2 ? "Física Quântica / Nuclear" : "Química";
                 
+                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
+                bool isLoggedIn = authService.IsAuthenticated;
+
                 var dialog = new ContentDialog
                 {
                     Title = "Recurso PRO Necessário",
-                    Content = $"As calculadoras avançadas de '{featureName}' estão disponíveis apenas no plano PRO. Use o menu lateral para assinar o PRO e liberar todos os recursos!",
-                    CloseButtonText = "Entendi",
+                    Content = isLoggedIn
+                        ? $"As calculadoras avançadas de '{featureName}' estão disponíveis apenas no plano PRO. Assine agora para liberar todos os recursos!"
+                        : $"As calculadoras avançadas de '{featureName}' estão disponíveis apenas no plano PRO. Faça login ou assine agora para liberar todos os recursos!",
+                    PrimaryButtonText = isLoggedIn ? "Assinar" : "Entrar / Assinar",
+                    CloseButtonText = "Cancelar",
                     XamlRoot = this.XamlRoot
                 };
                 
-                await dialog.ShowAsync();
+                var result = await dialog.ShowAsync();
+                
+                if (result == ContentDialogResult.Primary)
+                {
+                    this.Frame.Navigate(typeof(AuthPage));
+                }
                 return;
             }
         }
