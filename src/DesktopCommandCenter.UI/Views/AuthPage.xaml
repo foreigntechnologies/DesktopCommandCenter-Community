@@ -20,7 +20,7 @@
                     <TextBlock Text="Licenciamento &amp; Nuvem"
                                Style="{StaticResource TitleTextBlockStyle}"
                                HorizontalAlignment="Center" />
-                    <TextBlock Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO Enterprise."
+                    <TextBlock Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO."
                                TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" />
                 </StackPanel>
@@ -126,7 +126,7 @@
                         <!-- User avatar area -->
                         <StackPanel Spacing="12" HorizontalAlignment="Center">
                             <Grid Margin="0,0,0,24">
-                                <PersonPicture ProfilePicture="{x:Bind ViewModel.ProfilePhotoUrl, Mode=OneWay}"
+                                <PersonPicture ProfilePicture="{x:Bind ConvertToImageSource(ViewModel.ProfilePhotoUrl), Mode=OneWay}"
                                                Width="96" Height="96" HorizontalAlignment="Center"/>
                             </Grid>
                                 
@@ -202,7 +202,7 @@
 
                         <!-- Ações PRO / Free -->
                         <StackPanel x:Name="FreeActionsPanel" Spacing="20" x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
-                            <TextBlock Text="🚀 Desbloqueie o Poder do PRO Enterprise"
+                            <TextBlock Text="🚀 Desbloqueie o Poder do PRO"
                                        FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" 
                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
                                        
@@ -252,7 +252,7 @@
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
-                                <TextBlock Text="Plano PRO Enterprise Ativo!" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16" />
                             </StackPanel>
                             <TextBlock Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"

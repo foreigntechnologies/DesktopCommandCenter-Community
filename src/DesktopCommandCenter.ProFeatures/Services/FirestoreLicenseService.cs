@@ -30,7 +30,10 @@ public class FirestoreLicenseService : ILicenseService
         {
             var user = await _authService.GetCurrentUserAsync();
             if (user == null || string.IsNullOrEmpty(user.IdToken))
-                return "free"; // Se não está logado, usa a versão local gratuita
+            {
+                Serilog.Log.Debug("GetCurrentPlanAsync: No user logged in or empty IdToken.");
+                return "free";
+            }
 
             // Usa a API REST do Firestore passando o Token de Autenticação (OAuth Bearer)
             var firestoreUrl = $"https://firestore.googleapis.com/v1/projects/{_projectId}/databases/(default)/documents/users/{user.Uid}";
@@ -42,7 +45,9 @@ public class FirestoreLicenseService : ILicenseService
 
             if (!response.IsSuccessStatusCode)
             {
-                // Se o documento não existe (404), o usuário acabou de se registrar e ainda não tem plano PRO
+                var errorBody = await response.Content.ReadAsStringAsync();
+                Serilog.Log.Warning("Firestore license check failed. Status: {StatusCode} ({ReasonPhrase}). Body: {Body}", 
+                    response.StatusCode, response.ReasonPhrase, errorBody);
                 return "free";
             }
 
@@ -56,17 +61,19 @@ public class FirestoreLicenseService : ILicenseService
                 {
                     if (planElement.TryGetProperty("stringValue", out var value))
                     {
-                        return value.GetString() ?? "free";
+                        var plan = value.GetString() ?? "free";
+                        Serilog.Log.Information("Firestore license check succeeded. User plan: {Plan}", plan);
+                        return plan;
                     }
                 }
             }
 
+            Serilog.Log.Warning("Firestore license check succeeded but 'plan' field not found in response fields. JSON: {JsonContent}", jsonContent);
             return "free";
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Em caso de erro de rede (offline), rebaixa para "free" temporariamente ou exibe aviso.
-            // Para "Local First", podemos ter um cache local depois, mas por ora assumimos "free".
+            Serilog.Log.Error(ex, "Erro ao obter o plano atual no FirestoreLicenseService.");
             return "free";
         }
     }
