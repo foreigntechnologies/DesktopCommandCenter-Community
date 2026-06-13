@@ -1,15 +1,14 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class AwakeViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private bool _isAwakeEnabled;
+    [ObservableProperty] public partial bool IsAwakeEnabled { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = "O PC pode dormir normalmente baseado nas configurações do Windows.";
+    private string _statusMessage = "O PC pode dormir normalmente baseado nas configuraÃ§Ãµes do Windows.";
 
     [Flags]
     public enum EXECUTION_STATE : uint
@@ -29,13 +28,14 @@ public partial class AwakeViewModel : ObservableObject
         {
             // Impede a tela de desligar e o sistema de dormir
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_SYSTEM_REQUIRED);
-            StatusMessage = "Awake está ATIVO. Sua tela e o PC não vão desligar nem dormir.";
+            StatusMessage = "Awake estÃ¡ ATIVO. Sua tela e o PC nÃ£o vÃ£o desligar nem dormir.";
         }
         else
         {
-            // Restaura o comportamento padrão
+            // Restaura o comportamento padrÃ£o
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
-            StatusMessage = "O PC pode dormir normalmente baseado nas configurações do Windows.";
+            StatusMessage = "O PC pode dormir normalmente baseado nas configuraÃ§Ãµes do Windows.";
         }
     }
 }
+

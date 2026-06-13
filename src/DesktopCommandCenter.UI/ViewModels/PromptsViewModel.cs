@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopCommandCenter.Application.Interfaces;
 using DesktopCommandCenter.Domain.Entities;
@@ -30,8 +30,7 @@ public partial class PromptsViewModel : ObservableObject
     [ObservableProperty]
     private string _editContent = string.Empty;
 
-    [ObservableProperty]
-    private Prompt? _selectedPrompt;
+    [ObservableProperty] public partial Prompt? SelectedPrompt { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FormTitle))]
@@ -168,3 +167,4 @@ public partial class PromptsViewModel : ObservableObject
         }
     }
 }
+

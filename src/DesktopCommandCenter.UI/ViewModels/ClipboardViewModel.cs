@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopCommandCenter.Application.Features.Clipboard.Queries;
 using DesktopCommandCenter.Application.Features.Clipboard.Commands;
@@ -20,8 +20,7 @@ public partial class ClipboardViewModel : ObservableObject
 
     public ObservableCollection<ClipboardItem> Items { get; } = new();
 
-    [ObservableProperty]
-    private bool _isLoading;
+    [ObservableProperty] public partial bool IsLoading { get; set; }
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueue? _dispatcherQueue;
 
@@ -86,7 +85,7 @@ public partial class ClipboardViewModel : ObservableObject
             await _mediator.Send(new ClearClipboardCommand());
             Items.Clear();
 
-            // Limpar imagens da pasta local também
+            // Limpar imagens da pasta local tambÃ©m
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             if (await localFolder.TryGetItemAsync("ClipboardImages") is Windows.Storage.StorageFolder imgFolder)
             {
@@ -99,3 +98,4 @@ public partial class ClipboardViewModel : ObservableObject
         }
     }
 }
+

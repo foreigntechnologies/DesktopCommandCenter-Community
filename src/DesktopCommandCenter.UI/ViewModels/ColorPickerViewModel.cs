@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopCommandCenter.Application.Interfaces;
 using Microsoft.UI.Dispatching;
@@ -31,8 +31,7 @@ public partial class ColorPickerViewModel : ObservableObject
     [ObservableProperty]
     private string _currentRgb = "255, 255, 255";
 
-    [ObservableProperty]
-    private bool _isPicking;
+    [ObservableProperty] public partial bool IsPicking { get; set; }
 
     public ColorPickerViewModel(IColorPickerService colorPickerService)
     {
@@ -136,3 +135,4 @@ public partial class ColorPickerViewModel : ObservableObject
         IsPicking = false;
     }
 }
+
