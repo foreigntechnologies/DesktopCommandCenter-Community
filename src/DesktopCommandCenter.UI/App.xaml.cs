@@ -82,7 +82,14 @@ public partial class App : Microsoft.UI.Xaml.Application
 
             if (mainWindow.AppWindow?.TitleBar != null)
             {
-                mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+                try
+                {
+                    mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+                }
+                catch
+                {
+                    // Ignora exceções COM/ArgumentException que ocorrem ao maximizar no WinUI 3
+                }
             }
         }
     }
@@ -166,28 +173,6 @@ public partial class App : Microsoft.UI.Xaml.Application
         Services = ConfigureServices();
         InitializeComponent();
         
-        // Ensure Database is created
-        var dbContext = Services.GetRequiredService<AppDbContext>();
-        dbContext.Database.EnsureCreated();
-        dbContext.Database.ExecuteSqlRaw(@"
-            CREATE TABLE IF NOT EXISTS Prompts (
-                Id TEXT PRIMARY KEY,
-                CreatedAt TEXT NOT NULL,
-                UpdatedAt TEXT NULL,
-                Title TEXT NOT NULL,
-                Category TEXT NOT NULL,
-                Content TEXT NOT NULL
-            );");
-        
-        // Start Smart Clipboard Monitoring
-        var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
-        clipboardService.StartMonitoring();
-
-        // Register Dynamic Hotkeys
-        RegisterAllHotkeys();
-        var configManager = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager>();
-        configManager.ConfigsChanged += (s, e) => RegisterAllHotkeys();
-        
         Log.Information("DCC Inicializado com sucesso.");
     }
 
@@ -223,6 +208,43 @@ public partial class App : Microsoft.UI.Xaml.Application
     {
         MainWindow = new MainWindow();
         MainWindow.Activate();
+
+        var dispatcherQueue = MainWindow.DispatcherQueue;
+
+        System.Threading.Tasks.Task.Run(() =>
+        {
+            try
+            {
+                // Ensure Database is created
+                var dbContext = Services.GetRequiredService<AppDbContext>();
+                dbContext.Database.EnsureCreated();
+                dbContext.Database.ExecuteSqlRaw(@"
+                    CREATE TABLE IF NOT EXISTS Prompts (
+                        Id TEXT PRIMARY KEY,
+                        CreatedAt TEXT NOT NULL,
+                        UpdatedAt TEXT NULL,
+                        Title TEXT NOT NULL,
+                        Category TEXT NOT NULL,
+                        Content TEXT NOT NULL
+                    );");
+                
+                // Start Smart Clipboard Monitoring
+                var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
+                clipboardService.StartMonitoring();
+
+                // Register Dynamic Hotkeys
+                dispatcherQueue?.TryEnqueue(() =>
+                {
+                    RegisterAllHotkeys();
+                    var configManager = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager>();
+                    configManager.ConfigsChanged += (s, e) => RegisterAllHotkeys();
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Erro na inicialização em background");
+            }
+        });
     }
 
     private static IServiceProvider ConfigureServices()

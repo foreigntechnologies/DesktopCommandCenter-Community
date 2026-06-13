@@ -128,11 +128,16 @@ public sealed partial class MainPage : Page
 
     private async void ShowProRequiredDialog(string featureTag)
     {
+        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
+        bool isLoggedIn = authService.IsAuthenticated;
+
         var dialog = new ContentDialog
         {
             Title = "Recurso PRO Necessário",
-            Content = $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!",
-            PrimaryButtonText = "Entrar / Assinar",
+            Content = isLoggedIn 
+                ? $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Assine agora para liberar!"
+                : $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!",
+            PrimaryButtonText = isLoggedIn ? "Assinar" : "Entrar / Assinar",
             CloseButtonText = "Cancelar",
             XamlRoot = this.XamlRoot
         };

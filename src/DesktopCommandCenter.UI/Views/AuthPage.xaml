@@ -127,7 +127,7 @@
                             <FontIcon Glyph="&#xE77B;" FontSize="40"
                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                       HorizontalAlignment="Center" />
-                            <TextBlock Text="{x:Bind ViewModel.UserEmail, Mode=OneWay}"
+                            <TextBlock Text="{x:Bind ViewModel.LinkedEmailsText, Mode=OneWay}"
                                        FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="15" />
                             <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
@@ -141,8 +141,8 @@
                             <TextBlock Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                                <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" Content="Vincular Google" Padding="12,6" ToolTipService.ToolTip="Fazer login também via Google" />
-                                <Button Command="{x:Bind ViewModel.LinkGitHubCommand}" Content="Vincular GitHub" Padding="12,6" ToolTipService.ToolTip="Fazer login também via GitHub" />
+                                <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" IsEnabled="{x:Bind ViewModel.CanLinkGoogle, Mode=OneWay}" Content="Vincular Google" Padding="12,6" ToolTipService.ToolTip="Fazer login também via Google" />
+                                <Button Command="{x:Bind ViewModel.LinkGitHubCommand}" IsEnabled="{x:Bind ViewModel.CanLinkGitHub, Mode=OneWay}" Content="Vincular GitHub" Padding="12,6" ToolTipService.ToolTip="Fazer login também via GitHub" />
                             </StackPanel>
                             <TextBlock Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
                                        FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"

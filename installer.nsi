@@ -36,14 +36,14 @@ FunctionEnd
 
 # Páginas do Instalador
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE $(myLicenseData)
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Desktop Command Center.exe"
-!define MUI_FINISHPAGE_RUN_TEXT "Executar Desktop Command Center"
+!define MUI_FINISHPAGE_RUN_TEXT $(FinRunText)
 !define MUI_FINISHPAGE_SHOWREADME ""
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "Criar atalho na Área de Trabalho"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT $(FinLinkText)
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION "CreateDesktopShortcut"
 !insertmacro MUI_PAGE_FINISH
 
@@ -54,6 +54,21 @@ FunctionEnd
 # Idiomas suportados
 !insertmacro MUI_LANGUAGE "PortugueseBR"
 !insertmacro MUI_LANGUAGE "English"
+
+LicenseLangString myLicenseData ${LANG_PORTUGUESEBR} "LICENSE.txt"
+LicenseLangString myLicenseData ${LANG_ENGLISH} "LICENSE_EN.txt"
+
+LangString FinRunText ${LANG_PORTUGUESEBR} "Executar Desktop Command Center"
+LangString FinRunText ${LANG_ENGLISH} "Run Desktop Command Center"
+
+LangString FinLinkText ${LANG_PORTUGUESEBR} "Criar atalho na Área de Trabalho"
+LangString FinLinkText ${LANG_ENGLISH} "Create Desktop Shortcut"
+
+LangString MsgAppRunning ${LANG_PORTUGUESEBR} "O Desktop Command Center está em execução em segundo plano.$\n$\nDeseja fechá-lo automaticamente para continuar a instalação?"
+LangString MsgAppRunning ${LANG_ENGLISH} "Desktop Command Center is currently running in the background.$\n$\nDo you want to close it automatically to continue the installation?"
+
+LangString MsgInstallAborted ${LANG_PORTUGUESEBR} "Instalação cancelada pelo usuário."
+LangString MsgInstallAborted ${LANG_ENGLISH} "Installation aborted by user."
 
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
@@ -83,7 +98,7 @@ CheckRunning:
   IfErrors IsRunning IsNotRunning
 
 IsRunning:
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "O Desktop Command Center está em execução em segundo plano.$\n$\nDeseja fechá-lo automaticamente para continuar a instalação?" IDYES KillApp IDNO AbortInstall
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION $(MsgAppRunning) IDYES KillApp IDNO AbortInstall
 
 KillApp:
   nsExec::Exec 'taskkill /F /IM "Desktop Command Center.exe"'
@@ -91,7 +106,7 @@ KillApp:
   Goto CheckRunning
 
 AbortInstall:
-  Abort "Instalação cancelada pelo usuário."
+  Quit
 
 IsNotRunning:
   FileClose $0
@@ -138,3 +153,4 @@ FunctionEnd
 Function CreateDesktopShortcut
   CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
 FunctionEnd
+
