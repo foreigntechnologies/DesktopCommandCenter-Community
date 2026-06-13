@@ -168,7 +168,7 @@
                             </Button>
                             <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
                                     HorizontalAlignment="Stretch" Padding="12,10">
-                                <TextBlock Text="Anual — R$ 399,00/ano · Economize 17%" />
+                                <TextBlock Text="Anual — R$ 429,90/ano · Economize 10%" />
                             </Button>
                         </StackPanel>
 
