@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Runtime.InteropServices;
 
@@ -6,10 +6,11 @@ namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class AlwaysOnTopViewModel : ObservableObject
 {
-    [ObservableProperty] public partial bool IsAlwaysOnTopEnabled { get; set; }
+    [ObservableProperty]
+    private bool _isAlwaysOnTopEnabled;
 
     [ObservableProperty]
-    private string _statusMessage = "A janela se comporta normalmente, ficando atrÃ¡s de outras janelas.";
+    private string _statusMessage = "A janela se comporta normalmente, ficando atrás de outras janelas.";
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -27,13 +28,12 @@ public partial class AlwaysOnTopViewModel : ObservableObject
         if (value)
         {
             SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-            StatusMessage = "Always On Top estÃ¡ ATIVO. A janela ficarÃ¡ flutuando por cima das outras.";
+            StatusMessage = "Always On Top está ATIVO. A janela ficará flutuando por cima das outras.";
         }
         else
         {
             SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-            StatusMessage = "A janela se comporta normalmente, ficando atrÃ¡s de outras janelas.";
+            StatusMessage = "A janela se comporta normalmente, ficando atrás de outras janelas.";
         }
     }
 }
-
