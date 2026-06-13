@@ -14,12 +14,15 @@ public partial class AuthViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotLoading))]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    [NotifyPropertyChangedFor(nameof(HasSuccess))]
     private bool _isLoading;
 
     public bool IsNotLoading => !IsLoading;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasError))]
+    [NotifyPropertyChangedFor(nameof(HasSuccess))]
     private string _statusMessage = string.Empty;
 
     public bool HasError => !string.IsNullOrEmpty(StatusMessage) && !IsLoading && !StatusMessage.Contains("sucesso", StringComparison.OrdinalIgnoreCase);
@@ -61,6 +64,9 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _gitHubEmail = string.Empty;
 
+    [ObservableProperty]
+    private string _profilePhotoUrl = string.Empty;
+
     public bool CanLinkGoogle => !HasGoogleLinked;
     public bool CanLinkGitHub => !HasGitHubLinked;
     public bool HasNoGoogleLinked => !HasGoogleLinked;
@@ -74,6 +80,12 @@ public partial class AuthViewModel : ObservableObject
         _authService = authService;
         _licenseService = licenseService;
         
+        // Escuta mudanças de licença do sistema (ex: ao voltar do Stripe)
+        WeakReferenceMessenger.Default.Register<Messages.LicenseChangedMessage>(this, (r, m) =>
+        {
+            _ = CheckInitialStateAsync();
+        });
+
         // Verifica o estado atual de login e licença em background ao iniciar a ViewModel
         _ = CheckInitialStateAsync();
     }
@@ -101,8 +113,14 @@ public partial class AuthViewModel : ObservableObject
         {
             CurrentPlan = plan;
             App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-            WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            
+            // Só dispara a mensagem se estivermos dentro do fluxo de login real para evitar loops infinitos com o CheckInitialStateAsync
+            // Na verdade, apenas envia se o app.IsproUnlocked mudar, mas como quem chama pode ser o MainWindow FocusChanged, não precisamos enviar a mensagem de volta
+            // WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            
             UserEmail  = user.Email;
+            ProfilePhotoUrl = user.PhotoUrl;
+            
             HasGoogleLinked = user.Providers.Contains("google.com");
             HasGitHubLinked = user.Providers.Contains("github.com");
             

@@ -3,7 +3,8 @@
     x:Class="DesktopCommandCenter.UI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DesktopCommandCenter.UI">
+    xmlns:local="using:DesktopCommandCenter.UI"
+    xmlns:converters="using:DesktopCommandCenter.UI.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,6 +38,8 @@
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#33FFFFFF" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             
             <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
 
