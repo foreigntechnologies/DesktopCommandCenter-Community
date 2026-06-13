@@ -26,8 +26,18 @@ public sealed partial class DashboardPage : Page
         {
             currentUser = await authService.GetCurrentUserAsync();
         }
-        var userName = currentUser?.DisplayName;
-        string nameSuffix = string.IsNullOrWhiteSpace(userName) ? "" : $", {userName.Split(' ')[0]}";
+        
+        string nameSuffix = "";
+        if (currentUser != null && !string.IsNullOrWhiteSpace(currentUser.Email))
+        {
+            var parts = currentUser.Email.Split('@');
+            if (parts.Length > 0 && !string.IsNullOrWhiteSpace(parts[0]))
+            {
+                string namePart = parts[0];
+                namePart = char.ToUpper(namePart[0]) + (namePart.Length > 1 ? namePart.Substring(1) : "");
+                nameSuffix = $", {namePart}";
+            }
+        }
 
         int hour = DateTime.Now.Hour;
         TxtGreeting.Text = hour switch
