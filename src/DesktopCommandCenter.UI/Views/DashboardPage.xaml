@@ -377,7 +377,16 @@
                         <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                         <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
                         <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Upgrade para PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
+                        <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
+                        <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Assinatura Mensal (R$ 39,90)" Click="StripeMonthly_Click" />
+                                    <MenuFlyoutItem Text="Assinatura Anual (R$ 429,90)" Click="StripeYearly_Click" />
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
                     </StackPanel>
                     <TextBlock
                         x:Name="TxtCopyright"
