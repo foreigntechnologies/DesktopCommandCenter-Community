@@ -24,19 +24,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         this.Closed += MainWindow_Closed;
 
-        try
-        {
-            // Habilitar efeito Mica (Translúcido do Windows 11)
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
+        // SystemBackdrop já está definido no MainWindow.xaml
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
