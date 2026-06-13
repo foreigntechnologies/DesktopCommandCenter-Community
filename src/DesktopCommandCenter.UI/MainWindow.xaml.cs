@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using CommunityToolkit.Mvvm.Messaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -15,7 +16,9 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
+        TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
         InitializeComponent();
+        this.Closed += MainWindow_Closed;
 
         // Habilitar efeito Mica (Translúcido do Windows 11)
         SystemBackdrop = new MicaBackdrop();
@@ -31,7 +34,7 @@ public sealed partial class MainWindow : Window
 
         if (Content is FrameworkElement rootElement)
         {
-            rootElement.ActualThemeChanged += (s, e) => UpdateTitleBarColors();
+            // TitleBar control automatically updates with theme, no need to manually set AppWindow colors
         }
 
         // Navigate the root frame to the main page on startup.
@@ -40,32 +43,57 @@ public sealed partial class MainWindow : Window
         RootFrame.Loaded += RootFrame_Loaded;
     }
 
-    public void UpdateTitleBarColors()
+
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        if (Microsoft.UI.Windowing.AppWindowTitleBar.IsCustomizationSupported())
-        {
-            var titleBar = AppWindow.TitleBar;
-            var theme = ((FrameworkElement)Content).ActualTheme;
-            
-            if (theme == ElementTheme.Dark)
-            {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(25, 255, 255, 255);
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(51, 255, 255, 255);
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.Colors.DarkGray;
-            }
-            else
-            {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(25, 0, 0, 0);
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(51, 0, 0, 0);
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.Colors.DarkGray;
-            }
-        }
+        // Cancel the close, hide instead so the app keeps running in the background for hotkeys
+        args.Handled = true;
+        this.AppWindow.Hide();
+    }
+
+    public System.Windows.Input.ICommand TrayShowCommand { get; }
+
+    private void ShowApp()
+    {
+        this.AppWindow.Show();
+        WinRT.Interop.WindowNative.GetWindowHandle(this);
+        // Bring to front
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+        // (If needed, use P/Invoke SetForegroundWindow, but Show() usually suffices for WinUI 3)
+    }
+
+    private void TrayUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        ShowApp();
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Settings"));
+    }
+
+    private void TrayShow_Click(object sender, RoutedEventArgs e)
+    {
+        ShowApp();
+    }
+
+    private void TraySettings_Click(object sender, RoutedEventArgs e)
+    {
+        ShowApp();
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Settings"));
+    }
+
+    private async void TrayDocs_Click(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/foreigntechnologies/DesktopCommandCenter-Community"));
+    }
+
+    private async void TrayBug_Click(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/foreigntechnologies/DesktopCommandCenter-Community/issues"));
+    }
+
+    private void TrayExit_Click(object sender, RoutedEventArgs e)
+    {
+        // Force the app to close completely
+        Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
@@ -103,7 +131,5 @@ public sealed partial class MainWindow : Window
             string themeStr = App.GetTheme();
             App.ApplyTheme(themeStr);
         }
-        
-        UpdateTitleBarColors();
     }
 }

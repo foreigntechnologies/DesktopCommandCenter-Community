@@ -10,7 +10,9 @@
 
     <Grid Padding="24">
         <ScrollViewer>
-            <StackPanel Spacing="24" MaxWidth="800" HorizontalAlignment="Left">
+            <StackPanel Spacing="24" MaxWidth="900" HorizontalAlignment="Left">
+
+                <!-- Título -->
                 <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
                     <TextBlock Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
                     <Border x:Name="ProBadge" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
@@ -21,11 +23,12 @@
                     </Border>
                 </StackPanel>
 
+                <!-- Aparência e Temas -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
                         <TextBlock Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        
-                        <ComboBox Header="Tema do Aplicativo" 
+
+                        <ComboBox Header="Tema do Aplicativo"
                                   SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
                                   Width="300">
                             <ComboBoxItem Content="Claro" />
@@ -33,7 +36,7 @@
                             <ComboBoxItem Content="Padrão do Sistema (Contraste)" />
                         </ComboBox>
 
-                        <ComboBox Header="Formato da Hora (Início)" 
+                        <ComboBox Header="Formato da Hora (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
                                   Width="300">
                             <ComboBoxItem Content="24 Horas (HH:mm) - Ex: 15:30" />
@@ -42,7 +45,7 @@
                             <ComboBoxItem Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
                         </ComboBox>
 
-                        <ComboBox Header="Formato da Data (Início)" 
+                        <ComboBox Header="Formato da Data (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
                                   Width="300">
                             <ComboBoxItem Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
@@ -50,17 +53,18 @@
                             <ComboBoxItem Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
                             <ComboBoxItem Content="Inglês - Ex: Jun 10, 2026" />
                         </ComboBox>
-                        
-                        <TextBlock Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows." 
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+
+                        <TextBlock Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
+                <!-- Teclas de Atalho -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
                         <TextBlock Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Configure atalhos que funcionam de qualquer lugar do Windows." 
+                        <TextBlock Text="Configure atalhos que funcionam de qualquer lugar do Windows."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                         <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
@@ -69,13 +73,18 @@
                                     <Grid Padding="8" Margin="0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{x:Bind DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" />
-                                        
-                                        <Button Grid.Column="1"
+                                        <!-- Cadeado PRO -->
+                                        <FontIcon Grid.Column="1" Glyph="&#xE72E;" FontSize="13" Margin="8,0"
+                                                  Foreground="Gold" VerticalAlignment="Center"
+                                                  Visibility="{x:Bind IsProFeature}" />
+                                        <Button Grid.Column="2"
                                                 Click="EditHotkeyButton_Click"
                                                 Tag="{Binding}"
+                                                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                                                 HorizontalAlignment="Left"
                                                 Width="220"
                                                 Background="{ThemeResource ControlFillColorDefaultBrush}"
@@ -87,7 +96,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{x:Bind CurrentHotkeyDisplay, Mode=OneWay}" 
+                                                <TextBlock Text="{x:Bind CurrentHotkeyDisplay, Mode=OneWay}"
                                                            VerticalAlignment="Center"
                                                            FontFamily="Consolas"
                                                            FontWeight="SemiBold"
@@ -101,6 +110,175 @@
                         </ListView>
                     </StackPanel>
                 </Border>
+
+                <!-- Card de Assinatura / Conta -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
+                    <StackPanel Spacing="16">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon Glyph="&#xE7BF;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Info da conta (visível quando logado) -->
+                        <StackPanel Spacing="4" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE77B;" FontSize="22" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Bind ViewModel.UserEmail, Mode=OneWay}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
+                                               Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                </StackPanel>
+                                <Border Grid.Column="2" Background="{x:Bind ViewModel.PlanBadgeColor, Mode=OneWay}"
+                                        CornerRadius="4" Padding="10,4" VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Bind ViewModel.PlanBadgeText, Mode=OneWay}"
+                                               Foreground="White" FontWeight="Bold" FontSize="12" />
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
+                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />
+
+                        <!-- COMPARAÇÃO DE PLANOS -->
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- COMMUNITY -->
+                            <Border Grid.Column="0" CornerRadius="8" Padding="20"
+                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                            <TextBlock Text="Open Source · Grátis para sempre"
+                                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   TextWrapping="Wrap" FontSize="12" />
+
+                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                        <StackPanel Spacing="7">
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Always On Top:</Run><Run> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Awake (Caffeine):</Run><Run> Impede suspensão da tela.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Clipboard Avançado:</Run><Run> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Calculadora Power Users:</Run><Run> Com histórico de operações.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Color Picker e Lupa:</Run><Run> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Pesquisa Universal:</Run><Run> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Temporizadores:</Run><Run> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Notas Rápidas:</Run><Run> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Automações e CLI:</Run><Run> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Utilitários de Texto:</Run><Run> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Integração de IA" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <Button Grid.Row="1" HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click" Margin="0,16,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8A7;" FontSize="14" />
+                                            <TextBlock Text="Baixar Grátis (GitHub)" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <!-- PRO ENTERPRISE -->
+                            <Border Grid.Column="1" CornerRadius="8" Padding="20"
+                                    BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="PRO Enterprise" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                                <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                    <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="Licença Nuvem · Atualizada automaticamente"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
+
+                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                        <StackPanel Spacing="7">
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Respostas em Streaming:</Run><Run> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Visão Computacional Local:</Run><Run> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <!-- Botão único — muda conforme estado -->
+                                    <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                                        <!-- Não logado -->
+                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                                Command="{x:Bind ViewModel.GoToLoginCommand}"
+                                                Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+                                            <TextBlock Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
+                                        </Button>
+
+                                        <!-- Logado, plano Free -->
+                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                                Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
+                                                Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                                            <TextBlock Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
+                                        </Button>
+
+                                        <!-- Logado, plano PRO -->
+                                        <StackPanel Spacing="6" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                                                <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
+                                            </StackPanel>
+                                            <Button HorizontalAlignment="Stretch" Padding="12,10"
+                                                    Command="{x:Bind ViewModel.OpenCustomerPortalCommand}">
+                                                <TextBlock Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <!-- Sair da conta -->
+                        <StackPanel Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
+                            <HyperlinkButton Command="{x:Bind ViewModel.LogoutCommand}"
+                                             Content="Sair da conta"
+                                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
         </ScrollViewer>
 
@@ -113,7 +291,7 @@
                        KeyDown="EditHotkeyDialog_KeyDown">
             <StackPanel Spacing="16" Width="400">
                 <TextBlock x:Name="HotkeyDialogActionText" Text="Configurar atalho para: [Ação]" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
-                
+
                 <Border BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" CornerRadius="4" Padding="12" Background="{ThemeResource ControlOnImageFillColorDefaultBrush}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -124,9 +302,9 @@
                         <Button Grid.Column="1" Content="Limpar" Click="ClearHotkeyButton_Click" VerticalAlignment="Center" />
                     </Grid>
                 </Border>
-                
-                <TextBlock Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar." 
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+
+                <TextBlock Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar."
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap" FontSize="12" />
             </StackPanel>
         </ContentDialog>

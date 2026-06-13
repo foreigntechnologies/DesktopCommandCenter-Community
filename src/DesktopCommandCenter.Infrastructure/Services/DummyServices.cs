@@ -10,9 +10,11 @@ public class DummyAuthService : IAuthService
     public bool IsAuthenticated => false;
     public string? CurrentUserUid => null;
 
-    public Task<AuthUser> LoginWithGitHubAsync() => Task.FromResult(new AuthUser { Uid = "dummy", Email = "dummy@community" });
-    public Task<AuthUser> LoginWithGoogleAsync() => Task.FromResult(new AuthUser { Uid = "dummy", Email = "dummy@community" });
-    public Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy", Email = email });
+    public Task<AuthUser> LoginWithGitHubAsync() => Task.FromResult(new AuthUser { Uid = "dummy123", Email = "community@user.com", IdToken = "dummy-token" });
+    public Task<AuthUser> LoginWithGoogleAsync() => Task.FromResult(new AuthUser { Uid = "dummy123", Email = "community@user.com", IdToken = "dummy-token" });
+    public Task<AuthUser> LinkWithGitHubAsync() => Task.FromResult(new AuthUser { Uid = "dummy123", Email = "community@user.com", IdToken = "dummy-token" });
+    public Task<AuthUser> LinkWithGoogleAsync() => Task.FromResult(new AuthUser { Uid = "dummy123", Email = "community@user.com", IdToken = "dummy-token" });
+    public Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy123", Email = email, IdToken = "dummy-token" });
     public Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy", Email = email });
     public Task<AuthUser?> GetCurrentUserAsync() => Task.FromResult<AuthUser?>(null);
     public void Logout() { }
