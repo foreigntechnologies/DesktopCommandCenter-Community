@@ -120,6 +120,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!-- Row 1 -->
@@ -268,7 +269,7 @@
                         </Grid>
                     </Button>
 
-                    <!-- Card PRO -->
+                    <!-- Card PRO 1: ChatFT -->
                     <Border Grid.Row="2" Grid.Column="3"
                             Background="Transparent"
                             BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
@@ -281,12 +282,82 @@
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="IA Local" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
                                 <TextBlock Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Row 4 -->
+                    <!-- Card PRO 2: Automações -->
+                    <Border Grid.Row="3" Grid.Column="0"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A00BCD4" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xED35;" FontSize="20" Foreground="#00BCD4" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card PRO 3: Cloud Sync -->
+                    <Border Grid.Row="3" Grid.Column="1"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE91E63" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE753;" FontSize="20" Foreground="#E91E63" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card PRO 4: Perfis -->
+                    <Border Grid.Row="3" Grid.Column="2"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A8BC34A" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE713;" FontSize="20" Foreground="#8BC34A" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Border>
