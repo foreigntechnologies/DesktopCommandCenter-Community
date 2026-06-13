@@ -8,8 +8,14 @@
     mc:Ignorable="d"
     Background="Transparent">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28,20,28,28">
-        <StackPanel Spacing="20" MaxWidth="1400">
+    <Grid Padding="28,20,28,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16">
+            <StackPanel Spacing="20" MaxWidth="1400">
 
             <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
             <Grid>
@@ -363,41 +369,43 @@
                     </Border>
                 </Grid>
             </StackPanel>
-
-            <!-- ══ RODAPÉ: Links do app ══ -->
-            <Border
-                Background="{ThemeResource SubtleFillColorSecondaryBrush}"
-                CornerRadius="10"
-                Padding="16,10">
-                <Grid>
-                    <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
-                        <HyperlinkButton Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
-                        <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
-                            <DropDownButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Text="Assinatura Mensal (R$ 39,90)" Click="StripeMonthly_Click" />
-                                    <MenuFlyoutItem Text="Assinatura Anual (R$ 429,90)" Click="StripeYearly_Click" />
-                                </MenuFlyout>
-                            </DropDownButton.Flyout>
-                        </DropDownButton>
-                    </StackPanel>
-                    <TextBlock
-                        x:Name="TxtCopyright"
-                        Text="© 2025 Foreign Technologies"
-                        FontSize="11"
-                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center" />
-                </Grid>
-            </Border>
-
         </StackPanel>
     </ScrollViewer>
+
+        <!-- ══ RODAPÉ: Links do app ══ -->
+        <Border Grid.Row="1"
+            MaxWidth="1400"
+            HorizontalAlignment="Stretch"
+            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+            CornerRadius="10"
+            Padding="16,10">
+            <Grid>
+                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                    <HyperlinkButton Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
+                    <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Assinatura Mensal (R$ 39,90)" Click="StripeMonthly_Click" />
+                                <MenuFlyoutItem Text="Assinatura Anual (R$ 429,90)" Click="StripeYearly_Click" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </StackPanel>
+                <TextBlock
+                    x:Name="TxtCopyright"
+                    Text="© 2025 Foreign Technologies"
+                    FontSize="11"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+    </Grid>
 </Page>

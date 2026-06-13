@@ -30,19 +30,19 @@
                         
                         <StackPanel>
                             <TextBlock Text="Se isso acontecer (Gatilho):" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Text="{x:Bind Gatilho, Mode=OneWay}" FontWeight="Bold" FontSize="16" />
+                            <TextBlock Text="{x:Bind GatilhoCompleto, Mode=OneWay}" FontWeight="Bold" FontSize="16" />
                         </StackPanel>
 
                         <FontIcon Grid.Column="1" Glyph="&#xE72A;" Margin="24,0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Então faça isso (Ação):" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Text="{x:Bind Acao, Mode=OneWay}" FontWeight="Bold" FontSize="16" />
+                            <TextBlock Text="{x:Bind AcaoCompleta, Mode=OneWay}" FontWeight="Bold" FontSize="16" />
                         </StackPanel>
 
-                        <ToggleSwitch Grid.Column="3" IsOn="{x:Bind IsAtivo, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Center"/>
+                        <ToggleSwitch Grid.Column="3" IsOn="{x:Bind IsAtivo, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Center" AutomationProperties.Name="Ativar ou desativar regra de automação" />
 
-                        <Button Grid.Column="4" Command="{Binding ElementName=Root, Path=ViewModel.RemoveRegraCommand}" CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Margin="16,0,0,0" ToolTipService.ToolTip="Remover">
+                        <Button Grid.Column="4" Command="{Binding ElementName=Root, Path=ViewModel.RemoveRegraCommand}" CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Margin="16,0,0,0" ToolTipService.ToolTip="Remover regra" AutomationProperties.Name="Remover regra de automação">
                             <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
                         </Button>
                     </Grid>
@@ -52,8 +52,11 @@
 
         <ContentDialog x:Name="NovaRegraDialog" Title="Criar Nova Regra" PrimaryButtonText="Salvar" CloseButtonText="Cancelar" PrimaryButtonClick="NovaRegraDialog_PrimaryButtonClick">
             <StackPanel Spacing="16" Width="400">
-                <ComboBox x:Name="TriggersCombo" Header="Gatilho (Se isso acontecer)" ItemsSource="{x:Bind ViewModel.AvailableTriggers}" HorizontalAlignment="Stretch" />
-                <ComboBox x:Name="ActionsCombo" Header="Ação (Faça isso)" ItemsSource="{x:Bind ViewModel.AvailableActions}" HorizontalAlignment="Stretch" />
+                <ComboBox x:Name="TriggersCombo" Header="Gatilho (Se isso acontecer)" ItemsSource="{x:Bind ViewModel.AvailableTriggers}" HorizontalAlignment="Stretch" SelectionChanged="TriggersCombo_SelectionChanged" AutomationProperties.Name="Gatilho de automação" />
+                <TextBox x:Name="TriggerParamTextBox" HorizontalAlignment="Stretch" Visibility="Collapsed" />
+                
+                <ComboBox x:Name="ActionsCombo" Header="Ação (Faça isso)" ItemsSource="{x:Bind ViewModel.AvailableActions}" HorizontalAlignment="Stretch" SelectionChanged="ActionsCombo_SelectionChanged" AutomationProperties.Name="Ação de automação" />
+                <TextBox x:Name="ActionParamTextBox" HorizontalAlignment="Stretch" Visibility="Collapsed" />
             </StackPanel>
         </ContentDialog>
     </Grid>

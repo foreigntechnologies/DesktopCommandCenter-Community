@@ -73,7 +73,7 @@ public partial class AuthViewModel : ObservableObject
 
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO Enterprise ativo" : "Plano Community (Gratuito)";
+    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : "Plano Community (Gratuito)";
 
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
@@ -253,7 +253,7 @@ public partial class AuthViewModel : ObservableObject
     public void OpenCustomerPortal()
     {
         // Redireciona para o Customer Portal do Stripe
-        string url = "https://billing.stripe.com/p/login/SEU_ID_DO_PORTAL";
+        string url = "https://billing.stripe.com/p/login/7sY7sN6DS9SL5nY6hhf3a00";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
     }
 }

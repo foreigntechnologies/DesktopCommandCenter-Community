@@ -56,7 +56,7 @@ public partial class SettingsViewModel : ObservableObject
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
 
     public string PlanDisplayText => IsProPlan
-        ? "✔ Plano PRO Enterprise ativo"
+        ? "✔ Plano PRO ativo"
         : "Plano Community (Gratuito)";
 
     public string PlanBadgeText => IsProPlan ? "PRO" : "FREE";

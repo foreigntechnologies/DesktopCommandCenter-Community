@@ -235,6 +235,10 @@ public partial class App : Microsoft.UI.Xaml.Application
                 var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
                 clipboardService.StartMonitoring();
 
+                // Start Automation Engine
+                var automationEngine = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAutomationEngine>();
+                automationEngine.Start();
+
                 // Register Dynamic Hotkeys
                 dispatcherQueue?.TryEnqueue(() =>
                 {

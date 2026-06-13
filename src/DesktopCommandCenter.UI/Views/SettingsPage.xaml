@@ -198,7 +198,7 @@
                                 </Grid>
                             </Border>
 
-                            <!-- PRO ENTERPRISE -->
+                            <!-- PRO -->
                             <Border Grid.Column="1" CornerRadius="8" Padding="20"
                                     BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                                 <Grid>
@@ -209,7 +209,7 @@
                                     <StackPanel Grid.Row="0" Spacing="10">
                                         <StackPanel Spacing="2">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="PRO Enterprise" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                                <TextBlock Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
                                                 <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
                                                     <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
                                                 </Border>

@@ -23,8 +23,18 @@ public sealed partial class MainWindow : Window
         TrayQuickAccessCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowQuickAccess);
         InitializeComponent();
         this.Closed += MainWindow_Closed;
-
-        // SystemBackdrop já está definido no MainWindow.xaml
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+            }
+            catch { }
+        }
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
