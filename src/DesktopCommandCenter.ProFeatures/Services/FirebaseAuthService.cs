@@ -193,8 +193,42 @@ public class FirebaseAuthService : IAuthService
         _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = idToken };
         _refreshToken = refreshToken;
 
+        await FetchProviderDataAsync(_currentUser);
         await PersistSessionAsync();
         return _currentUser;
+    }
+
+    private async Task FetchProviderDataAsync(AuthUser user)
+    {
+        if (string.IsNullOrEmpty(user.IdToken)) return;
+        var json = JsonSerializer.Serialize(new { idToken = user.IdToken });
+        try
+        {
+            var body = await PostRawAsync($"{IdentityBase}:lookup", json);
+            using var doc = JsonDocument.Parse(body);
+            var users = doc.RootElement.GetProperty("users");
+            if (users.GetArrayLength() > 0)
+            {
+                var targetUser = users[0];
+                if (targetUser.TryGetProperty("providerUserInfo", out var pInfos))
+                {
+                    user.Providers.Clear();
+                    user.LinkedEmails.Clear();
+                    foreach (var pInfo in pInfos.EnumerateArray())
+                    {
+                        var pid = pInfo.GetProperty("providerId").GetString();
+                        var pEmail = pInfo.TryGetProperty("email", out var pEp) ? pEp.GetString() : null;
+                        if (!string.IsNullOrEmpty(pid))
+                        {
+                            user.Providers.Add(pid);
+                            if (!string.IsNullOrEmpty(pEmail))
+                                user.LinkedEmails[pid] = pEmail;
+                        }
+                    }
+                }
+            }
+        }
+        catch { /* falha silenciosa */ }
     }
 
     private async Task RefreshIdTokenAsync()
@@ -218,6 +252,7 @@ public class FirebaseAuthService : IAuthService
         if (_currentUser != null)
         {
             _currentUser.IdToken = newIdToken;
+            await FetchProviderDataAsync(_currentUser);
             await PersistSessionAsync();
         }
     }
@@ -233,7 +268,9 @@ public class FirebaseAuthService : IAuthService
                 uid          = _currentUser.Uid,
                 email        = _currentUser.Email,
                 idToken      = _currentUser.IdToken,
-                refreshToken = _refreshToken
+                refreshToken = _refreshToken,
+                providers    = _currentUser.Providers,
+                linkedEmails = _currentUser.LinkedEmails
             });
             await File.WriteAllTextAsync(SessionFile, data);
         }
@@ -257,6 +294,17 @@ public class FirebaseAuthService : IAuthService
 
             _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = "" };
             _refreshToken = rt;
+
+            if (root.TryGetProperty("providers", out var provs))
+            {
+                foreach (var p in provs.EnumerateArray())
+                    _currentUser.Providers.Add(p.GetString()!);
+            }
+            if (root.TryGetProperty("linkedEmails", out var le))
+            {
+                foreach (var prop in le.EnumerateObject())
+                    _currentUser.LinkedEmails[prop.Name] = prop.Value.GetString()!;
+            }
 
             // Renova imediatamente
             await RefreshIdTokenAsync();

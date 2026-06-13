@@ -41,6 +41,10 @@ public sealed partial class MainWindow : Window
         RootFrame.Navigate(typeof(MainPage));
 
         RootFrame.Loaded += RootFrame_Loaded;
+
+        // Iniciar maximizado
+        var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+        presenter?.Maximize();
     }
 
 
@@ -87,7 +91,7 @@ public sealed partial class MainWindow : Window
 
     private async void TrayBug_Click(object sender, RoutedEventArgs e)
     {
-        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/foreigntechnologies/DesktopCommandCenter-Community/issues"));
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:suporte@foreigntechnologies.com.br?subject=Bug%20Report%20-%20DCC"));
     }
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)
