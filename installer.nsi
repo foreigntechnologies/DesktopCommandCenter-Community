@@ -161,7 +161,7 @@ SectionEnd
 
 Function LaunchApp
   SetOutPath "$INSTDIR"
-  ExecShell "open" "$INSTDIR\Desktop Command Center.exe"
+  Exec '"$INSTDIR\Desktop Command Center.exe"'
 FunctionEnd
 
 Function CreateDesktopShortcut
