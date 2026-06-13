@@ -42,8 +42,9 @@ FunctionEnd
 !insertmacro MUI_PAGE_INSTFILES
 
 # Definicoes para executar apos instalacao
-!define MUI_FINISHPAGE_RUN "$INSTDIR\Desktop Command Center.exe"
+!define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_TEXT $(FinRunText)
+!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchApp"
 
 !define MUI_FINISHPAGE_SHOWREADME ""
 !define MUI_FINISHPAGE_SHOWREADME_TEXT $(FinLinkText)
@@ -157,6 +158,11 @@ Section "Uninstall"
 SectionEnd
 
 
+
+Function LaunchApp
+  SetOutPath "$INSTDIR"
+  ExecShell "open" "$INSTDIR\Desktop Command Center.exe"
+FunctionEnd
 
 Function CreateDesktopShortcut
   CreateShortcut "$DESKTOP\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
