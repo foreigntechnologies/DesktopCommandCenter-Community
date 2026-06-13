@@ -37,7 +37,11 @@ public sealed partial class QuickAccessWindow : Window
         ExtendsContentIntoTitleBar = true;
 
         // Acrylic backdrop
-        SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+        }
+        catch { }
 
         // Sem botões de título, sem redimensionamento, sem maximizar
         if (AppWindow.Presenter is OverlappedPresenter p)
