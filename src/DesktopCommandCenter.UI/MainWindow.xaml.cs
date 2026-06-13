@@ -48,8 +48,9 @@ public sealed partial class MainWindow : Window
 
         RootFrame.Loaded += RootFrame_Loaded;
 
-        // Iniciar maximizado apenas apÃ³s a janela ser ativada
+        // Iniciar maximizado apenas após a janela ser ativada
         this.Activated += MainWindow_Activated;
+        this.Activated += MainWindow_FocusChanged;
     }
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -57,6 +58,46 @@ public sealed partial class MainWindow : Window
         this.Activated -= MainWindow_Activated; // Executa apenas na primeira vez
         var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
         presenter?.Maximize();
+    }
+
+    private DateTime _lastFocusCheck = DateTime.MinValue;
+
+    private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
+    {
+        if (args.WindowActivationState != WindowActivationState.Deactivated)
+        {
+            // Debounce: Evita spammar o Firestore (limita a 1 check a cada 5 segundos)
+            if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
+            {
+                _lastFocusCheck = DateTime.Now;
+                _ = System.Threading.Tasks.Task.Run(async () =>
+                {
+                    try
+                    {
+                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
+                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
+
+                        var user = await authService.GetCurrentUserAsync();
+                        if (user != null)
+                        {
+                            var plan = await licenseService.GetCurrentPlanAsync();
+                            bool isPro = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                            
+                            // Se o plano mudou (ex: acabou de pagar no Stripe)
+                            if (App.IsProUnlocked != isPro)
+                            {
+                                App.IsProUnlocked = isPro;
+                                DispatcherQueue?.TryEnqueue(() =>
+                                {
+                                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
+                                });
+                            }
+                        }
+                    }
+                    catch { }
+                });
+            }
+        }
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
