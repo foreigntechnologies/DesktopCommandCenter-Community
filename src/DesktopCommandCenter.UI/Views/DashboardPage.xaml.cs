@@ -17,11 +17,16 @@ public sealed partial class DashboardPage : Page
         Loaded += DashboardPage_Loaded;
     }
 
-    private void DashboardPage_Loaded(object sender, RoutedEventArgs e)
+    private async void DashboardPage_Loaded(object sender, RoutedEventArgs e)
     {
         // Saudação dinâmica por horário
-        var authService = ((App)Application.Current).Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.IAuthService)) as DesktopCommandCenter.Application.Interfaces.IAuthService;
-        var userName = authService?.CurrentUser?.DisplayName;
+        var authService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.IAuthService)) as DesktopCommandCenter.Application.Interfaces.IAuthService;
+        DesktopCommandCenter.Application.Interfaces.AuthUser? currentUser = null;
+        if (authService != null)
+        {
+            currentUser = await authService.GetCurrentUserAsync();
+        }
+        var userName = currentUser?.DisplayName;
         string nameSuffix = string.IsNullOrWhiteSpace(userName) ? "" : $", {userName.Split(' ')[0]}";
 
         int hour = DateTime.Now.Hour;
