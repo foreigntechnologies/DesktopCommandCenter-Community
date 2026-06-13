@@ -20,12 +20,16 @@ public sealed partial class DashboardPage : Page
     private void DashboardPage_Loaded(object sender, RoutedEventArgs e)
     {
         // Saudação dinâmica por horário
+        var authService = ((App)Application.Current).Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.IAuthService)) as DesktopCommandCenter.Application.Interfaces.IAuthService;
+        var userName = authService?.CurrentUser?.DisplayName;
+        string nameSuffix = string.IsNullOrWhiteSpace(userName) ? "" : $", {userName.Split(' ')[0]}";
+
         int hour = DateTime.Now.Hour;
         TxtGreeting.Text = hour switch
         {
-            >= 5 and < 12  => "Bom dia 👋",
-            >= 12 and < 18 => "Boa tarde 👋",
-            _              => "Boa noite 👋"
+            >= 5 and < 12  => $"Bom dia{nameSuffix} 👋",
+            >= 12 and < 18 => $"Boa tarde{nameSuffix} 👋",
+            _              => $"Boa noite{nameSuffix} 👋"
         };
 
         // Versão do app
