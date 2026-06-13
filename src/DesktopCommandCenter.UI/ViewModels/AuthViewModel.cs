@@ -122,6 +122,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LoginWithGoogleAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
@@ -139,6 +140,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LoginWithGitHubAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
@@ -156,6 +158,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LinkGoogleAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
@@ -174,6 +177,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LinkGitHubAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
