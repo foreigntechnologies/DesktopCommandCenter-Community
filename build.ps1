@@ -15,15 +15,15 @@ $ErrorActionPreference = "Stop"
 $CleanVersion = $Version -replace '^v', ''
 
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "     DCC COMMUNITY WIZARD PACKAGER (NSIS)        " -ForegroundColor Cyan
+Write-Host "        DCC PRO WIZARD PACKAGER (NSIS)           " -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "Versão: $CleanVersion" -ForegroundColor Yellow
 
 $PublishDir = "publish/v$CleanVersion"
 $ProjectFile = "src/DesktopCommandCenter.UI/DesktopCommandCenter.UI.csproj"
 $ReleasesDir = "Releases"
-$TargetExeName = "DCC - Community.exe"
-$TargetZipName = "DCC - Community-Portable.zip"
+$TargetExeName = "DCC - Desktop Command Center - v$CleanVersion.exe"
+$TargetZipName = "DCC - Desktop Command Center - v$CleanVersion-Portable.zip"
 
 # 1. Limpeza
 if (Test-Path $PublishDir) {
@@ -38,7 +38,7 @@ if (!(Test-Path $ReleasesDir)) {
 
 # 2. dotnet publish
 Write-Host "Iniciando compilação e publicação .NET..." -ForegroundColor Gray
-$PublishCmd = "dotnet publish $ProjectFile -c ReleaseCommunity -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishReadyToRun=true -p:WindowsPackageType=None -p:Version=$CleanVersion -o $PublishDir"
+$PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:WindowsPackageType=None -p:Version=$CleanVersion -o $PublishDir"
 Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
 
@@ -77,7 +77,7 @@ if (!(Test-Path $MakensisPath)) {
     Write-Error "Compilador NSIS não encontrado em '$MakensisPath'. Certifique-se de que o NSIS está instalado."
 }
 
-$PackCmd = "& `"$MakensisPath`" /DVERSION=$CleanVersion installer_community.nsi"
+$PackCmd = "& `"$MakensisPath`" /DVERSION=$CleanVersion installer.nsi"
 Write-Host "Executando: $PackCmd" -ForegroundColor DarkGray
 Invoke-Expression $PackCmd
 
@@ -104,7 +104,7 @@ Write-Host "-> Portable Zip gerado com sucesso em: $ZipDest" -ForegroundColor Cy
 $SetupDest = Join-Path $ReleasesDir $TargetExeName
 
 Write-Host "==================================================" -ForegroundColor Green
-Write-Host "        RELEASE COMMUNITY GERADA COM SUCESSO!     " -ForegroundColor Green
+Write-Host "          RELEASE PRO GERADA COM SUCESSO!         " -ForegroundColor Green
 Write-Host "==================================================" -ForegroundColor Green
 Write-Host "Instalador e zip portátil disponíveis em:" -ForegroundColor Gray
 Write-Host "  -> $(Resolve-Path $SetupDest)" -ForegroundColor Cyan

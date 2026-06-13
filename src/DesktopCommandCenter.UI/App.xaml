@@ -11,28 +11,34 @@
             </ResourceDictionary.MergedDictionaries>
             
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Dark">
-                    <!-- Fundo Translúcido e Escuro -->
+                <!-- Default atua como fallback e também define o modo claro -->
+                <ResourceDictionary x:Key="Default">
                     <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
-                    
-                    <!-- Cores de Destaque (Accent) Futuristas (Ciano Neon) -->
                     <Color x:Key="SystemAccentColor">#00E5FF</Color>
-                    <Color x:Key="SystemAccentColorLight1">#40EFFF</Color>
-                    <Color x:Key="SystemAccentColorLight2">#80F5FF</Color>
-                    <Color x:Key="SystemAccentColorLight3">#BFFFFF</Color>
-                    <Color x:Key="SystemAccentColorDark1">#00B8CC</Color>
-                    <Color x:Key="SystemAccentColorDark2">#008999</Color>
-                    <Color x:Key="SystemAccentColorDark3">#005B66</Color>
-                    
                     <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
-                    
-                    <!-- Fundo de Cards Semi-Transparentes -->
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0A000000" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#1A000000" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
+                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
+                    <Color x:Key="SystemAccentColor">#00E5FF</Color>
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0A000000" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#1A000000" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
+                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
+                    <Color x:Key="SystemAccentColor">#00E5FF</Color>
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1AFFFFFF" />
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#33FFFFFF" />
-                    <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            
+            <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

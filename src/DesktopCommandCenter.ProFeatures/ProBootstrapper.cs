@@ -10,7 +10,7 @@ public static class ProBootstrapper
     {
         services.AddSingleton<IAuthService, FirebaseAuthService>();
         services.AddSingleton<ILicenseService, FirestoreLicenseService>();
-        services.AddSingleton<IIAAgentService, SemanticKernelAgentService>();
+        services.AddSingleton<IIAAgentService, ProIAAgentService>();
         services.AddTransient<IWhisperTranscriptionService, WhisperTranscriptionService>();
     }
 }

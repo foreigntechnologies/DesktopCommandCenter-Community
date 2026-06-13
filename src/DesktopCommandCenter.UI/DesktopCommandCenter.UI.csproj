@@ -6,7 +6,9 @@
     <RootNamespace>DCC_Community_UI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;x86;ARM64</Platforms>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</RuntimeIdentifier>
+    <!-- RID fixo win-x64: o restore da solution baixa os packs automaticamente,
+         permitindo dotnet build sem -r (NETSDK1134 proíbe -r em solution files) -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <WinUISDKReferences>false</WinUISDKReferences>
@@ -16,6 +18,14 @@
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <!-- Versão e nome do executável -->
+    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+    <AssemblyName>Desktop Command Center</AssemblyName>
+    <Product>Desktop Command Center</Product>
+    <Company>Foreign Technologies</Company>
+    <Copyright>© 2025 Foreign Technologies. Todos os direitos reservados.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,6 +71,7 @@
   -->
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.4" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -85,6 +96,7 @@
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
+    <ProjectReference Include="..\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
   </ItemGroup>
 
   <!--

@@ -14,11 +14,4 @@ public sealed partial class AuthPage : Page
         InitializeComponent();
     }
 
-    private void PasswordInput_PasswordChanged(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        if (sender is PasswordBox passwordBox)
-        {
-            ViewModel.Password = passwordBox.Password;
-        }
-    }
 }

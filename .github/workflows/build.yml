@@ -2,9 +2,12 @@ name: Build
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "enterprise" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "enterprise" ]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -19,7 +22,9 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Restore dependencies
-      run: dotnet restore DesktopCommandCenter.slnx
+      run: |
+        dotnet restore DesktopCommandCenter.slnx
+        dotnet restore src\DesktopCommandCenter.UI\DesktopCommandCenter.UI.csproj -r win-x64
 
     - name: Build
       run: dotnet build DesktopCommandCenter.slnx --no-restore --configuration Release

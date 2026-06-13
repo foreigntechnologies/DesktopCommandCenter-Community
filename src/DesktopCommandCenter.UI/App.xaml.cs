@@ -73,6 +73,17 @@ public partial class App : Microsoft.UI.Xaml.Application
                 "Dark" => Microsoft.UI.Xaml.ElementTheme.Dark,
                 _ => Microsoft.UI.Xaml.ElementTheme.Default
             };
+
+            var isDark = frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+            if (frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+            {
+                isDark = App.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
+            }
+
+            if (mainWindow.AppWindow?.TitleBar != null)
+            {
+                mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+            }
         }
     }
 
@@ -141,7 +152,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Inicializa o Velopack no início da aplicação para gerenciar atalhos e atualizações
         Velopack.VelopackApp.Build().Run();
 
-        IsProUnlocked = IsProBuild;
+        IsProUnlocked = false;
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
         {
@@ -200,6 +211,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                 }
                 else
                 {
+                    App.Current.MainWindow?.AppWindow.Show();
                     // Uses WeakReferenceMessenger to notify MainPage
                     WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage(config.ActionId));
                 }

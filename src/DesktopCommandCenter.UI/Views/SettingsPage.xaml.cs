@@ -144,4 +144,10 @@ public sealed partial class SettingsPage : Page
             HotkeyPreviewText.Text = "Nenhum";
         }
     }
+    private void OpenCommunityRepo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(
+            "https://github.com/foreigntechnologies/DesktopCommandCenter-Community")
+        { UseShellExecute = true });
+    }
 }
