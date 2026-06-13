@@ -29,9 +29,20 @@ exports.stripeWebhookCheckout = functions.runWith({
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     // client_reference_id é injetado pelo app Desktop na URL do Stripe Checkout!
-    const uid = session.client_reference_id;
+    let uid = session.client_reference_id;
     const customerEmail = session.customer_details?.email;
     const customerId = session.customer;
+
+    // Fallback: Se o usuário assinou pelo site ou perdeu o reference_id, busca pelo E-mail!
+    if (!uid && customerEmail) {
+      try {
+        const userRecord = await admin.auth().getUserByEmail(customerEmail);
+        uid = userRecord.uid;
+        console.log(`Fallback: Encontrado UID ${uid} via email do Stripe (${customerEmail}).`);
+      } catch (err) {
+        console.warn(`Fallback Falhou: Email ${customerEmail} não encontrado no Firebase Auth.`);
+      }
+    }
 
     if (uid) {
       try {
