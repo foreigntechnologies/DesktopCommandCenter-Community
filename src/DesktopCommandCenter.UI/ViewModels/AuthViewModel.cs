@@ -73,12 +73,22 @@ public partial class AuthViewModel : ObservableObject
     // ── Helper compartilhado pós-login ──────────────────────────────────────
     private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user)
     {
-        CurrentPlan = await _licenseService.GetCurrentPlanAsync();
-        App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-        WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
-        UserEmail  = user.Email;
-        IsLoggedIn = true;
-        StatusMessage = string.Empty;
+        var plan = await _licenseService.GetCurrentPlanAsync();
+        
+        App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
+        {
+            CurrentPlan = plan;
+            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            UserEmail  = user.Email;
+            IsLoggedIn = true;
+            StatusMessage = string.Empty;
+
+            // Restaura a janela e traz para frente após o login via browser
+            App.Current.MainWindow?.AppWindow.Show();
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Current.MainWindow);
+            Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+        });
     }
 
     [RelayCommand]
