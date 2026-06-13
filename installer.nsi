@@ -1,4 +1,4 @@
-﻿!ifndef VERSION
+!ifndef VERSION
   !define VERSION "1.0.0"
 !endif
 
@@ -111,6 +111,13 @@ AbortInstall:
 IsNotRunning:
   FileClose $0
 SkipCheck:
+
+  # === LIMPEZA COMPLETA DA INSTALAÇÃO ANTERIOR ===
+  # Remove TODOS os arquivos da pasta de instalação para evitar conflito de versões de DLL
+  # Os dados do usuário ficam em AppData\Local\DCC e não são afetados
+  RMDir /r "$INSTDIR"
+  CreateDirectory "$INSTDIR"
+  # ================================================
   
   # Copia recursivamente todos os arquivos da compilaÃ§Ã£o de publicaÃ§Ã£o
   File /r "publish\v${VERSION}\*.*"
@@ -118,7 +125,7 @@ SkipCheck:
   # Cria o desinstalador executÃ¡vel no diretÃ³rio de instalaÃ§Ã£o
   WriteUninstaller "$INSTDIR\uninstall.exe"
   
-  # Atalhos (Menu Iniciar e Ãrea de Trabalho)
+  # Atalhos (Menu Iniciar e Ã rea de Trabalho)
   CreateDirectory "$SMPROGRAMS\Desktop Command Center"
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desktop Command Center.lnk" "$INSTDIR\Desktop Command Center.exe" "" "$INSTDIR\Desktop Command Center.exe" 0
   CreateShortcut "$SMPROGRAMS\Desktop Command Center\Desinstalar DCC.lnk" "$INSTDIR\uninstall.exe"

@@ -23,6 +23,7 @@
             x:Name="TrayIcon"
             IconSource="/Assets/AppIcon.ico"
             ToolTipText="Desktop Command Center"
+            LeftClickCommand="{x:Bind TrayQuickAccessCommand}"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
