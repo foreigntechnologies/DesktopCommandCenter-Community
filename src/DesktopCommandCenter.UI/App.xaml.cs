@@ -152,7 +152,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         // Inicializa o Velopack no início da aplicação para gerenciar atalhos e atualizações
         Velopack.VelopackApp.Build().Run();
 
-        IsProUnlocked = IsProBuild;
+        IsProUnlocked = false;
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
         {

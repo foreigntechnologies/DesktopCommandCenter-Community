@@ -78,7 +78,7 @@ public partial class AuthViewModel : ObservableObject
         App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            App.IsProUnlocked = App.IsProBuild || CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             UserEmail  = user.Email;
             IsLoggedIn = true;
@@ -167,7 +167,7 @@ public partial class AuthViewModel : ObservableObject
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
         StatusMessage = string.Empty;
-        App.IsProUnlocked = App.IsProBuild;
+        App.IsProUnlocked = false;
         WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
     }
 
