@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DesktopCommandCenter.Application.Interfaces;
@@ -16,19 +16,22 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IAuthService _authService;
     private readonly ILicenseService _licenseService;
 
-    // â”€â”€ AparÃªncia â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Aparência ──────────────────────────────────────────────────────────────
 
-    [ObservableProperty] public partial int SelectedThemeIndex { get; set; }
+    [ObservableProperty]
+    private int _selectedThemeIndex;
 
-    [ObservableProperty] public partial int SelectedTimeFormatIndex { get; set; }
+    [ObservableProperty]
+    private int _selectedTimeFormatIndex;
 
-    [ObservableProperty] public partial int SelectedDateFormatIndex { get; set; }
+    [ObservableProperty]
+    private int _selectedDateFormatIndex;
 
-    // â”€â”€ Hotkeys â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Hotkeys ────────────────────────────────────────────────────────────────
 
     public System.Collections.ObjectModel.ObservableCollection<HotkeyConfigItemViewModel> Hotkeys { get; } = new();
 
-    // â”€â”€ Conta / Assinatura â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Conta / Assinatura ─────────────────────────────────────────────────────
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
@@ -53,14 +56,14 @@ public partial class SettingsViewModel : ObservableObject
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
 
     public string PlanDisplayText => IsProPlan
-        ? "âœ” Plano PRO Enterprise ativo"
+        ? "✔ Plano PRO Enterprise ativo"
         : "Plano Community (Gratuito)";
 
     public string PlanBadgeText => IsProPlan ? "PRO" : "FREE";
 
     public string PlanBadgeColor => IsProPlan ? "#7B2FBE" : "#444444";
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ──────────────────────────────────────────────────────────────────────────
 
     public SettingsViewModel(
         IHotkeyConfigManager hotkeyManager,
@@ -71,7 +74,7 @@ public partial class SettingsViewModel : ObservableObject
         _authService   = authService;
         _licenseService = licenseService;
 
-        // AparÃªncia
+        // Aparência
         string themeStr = App.GetTheme();
         SelectedThemeIndex = themeStr == "Light" ? 0 : themeStr == "Dark" ? 1 : 2;
 
@@ -97,7 +100,7 @@ public partial class SettingsViewModel : ObservableObject
 
         LoadHotkeys();
 
-        // Escuta mudanÃ§as de licenÃ§a do AuthViewModel (ex: login, logout)
+        // Escuta mudanças de licença do AuthViewModel (ex: login, logout)
         WeakReferenceMessenger.Default.Register<LicenseChangedMessage>(this, (r, m) =>
         {
             _ = RefreshAccountStateAsync();
@@ -106,7 +109,7 @@ public partial class SettingsViewModel : ObservableObject
         _ = RefreshAccountStateAsync();
     }
 
-    // â”€â”€ Hotkeys â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Hotkeys ────────────────────────────────────────────────────────────────
 
     private static readonly string[] ProActionIds =
     {
@@ -140,7 +143,7 @@ public partial class SettingsViewModel : ObservableObject
         item.CurrentHotkeyDisplay = DesktopCommandCenter.Infrastructure.Services.GlobalHotkeyService.GetHotkeyString(modifiers, virtualKey);
     }
 
-    // â”€â”€ Conta / Assinatura â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Conta / Assinatura ─────────────────────────────────────────────────────
 
     private async Task RefreshAccountStateAsync()
     {
@@ -166,7 +169,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     public void GoToLogin()
     {
-        // Navega para a pÃ¡gina de Conta usando o mesmo sistema de mensagens da app
+        // Navega para a página de Conta usando o mesmo sistema de mensagens da app
         WeakReferenceMessenger.Default.Send(new NavigateMessage("Auth"));
     }
 
@@ -209,7 +212,7 @@ public partial class SettingsViewModel : ObservableObject
             if (h.IsProFeature) h.IsEnabled = false;
     }
 
-    // â”€â”€ AparÃªncia â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Aparência ──────────────────────────────────────────────────────────────
 
     partial void OnSelectedThemeIndexChanged(int value)
     {
@@ -237,4 +240,3 @@ public partial class SettingsViewModel : ObservableObject
         App.SaveDateFormat(format);
     }
 }
-
