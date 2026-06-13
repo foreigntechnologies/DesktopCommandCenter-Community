@@ -118,83 +118,135 @@
 
                 <!-- ══ PAINEL LOGADO ══ -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="12" Padding="28"
-                        Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
-                    <StackPanel Spacing="20">
+                        BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="16" Padding="32,32,32,24"
+                        Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"
+                        MaxWidth="460">
+                    <StackPanel Spacing="24">
 
                         <!-- Info da conta -->
-                        <StackPanel Spacing="4" HorizontalAlignment="Center">
-                            <FontIcon Glyph="&#xE77B;" FontSize="40"
-                                      Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                      HorizontalAlignment="Center" />
+                        <StackPanel Spacing="12" HorizontalAlignment="Center">
+                            <Grid Width="72" Height="72" HorizontalAlignment="Center">
+                                <Ellipse Fill="{ThemeResource ControlFillColorDefaultBrush}" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="1"/>
+                                <FontIcon Glyph="&#xE77B;" FontSize="32" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            </Grid>
+                            
+                            <!-- Quebra de linha no e-mail para não quebrar o layout (Wrap) -->
                             <TextBlock Text="{x:Bind ViewModel.LinkedEmailsText, Mode=OneWay}"
-                                       FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="15" />
-                            <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
-                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                       HorizontalAlignment="Center" FontSize="12" />
+                                       FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="16"
+                                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380" />
+                            
+                            <Border Background="{ThemeResource ControlFillColorSecondaryBrush}" 
+                                    CornerRadius="12" Padding="14,6" HorizontalAlignment="Center">
+                                <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
+                                           Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                           FontSize="12" FontWeight="Bold" />
+                            </Border>
                         </StackPanel>
 
-                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />
+                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
                         <!-- Vinculação de Contas -->
-                        <StackPanel Spacing="12">
+                        <StackPanel Spacing="16">
                             <TextBlock Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                                <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" IsEnabled="{x:Bind ViewModel.CanLinkGoogle, Mode=OneWay}" Content="Vincular Google" Padding="12,6" ToolTipService.ToolTip="Fazer login também via Google" />
-                                <Button Command="{x:Bind ViewModel.LinkGitHubCommand}" IsEnabled="{x:Bind ViewModel.CanLinkGitHub, Mode=OneWay}" Content="Vincular GitHub" Padding="12,6" ToolTipService.ToolTip="Fazer login também via GitHub" />
-                            </StackPanel>
+                            
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <Button Grid.Column="0" Command="{x:Bind ViewModel.LinkGoogleCommand}" 
+                                        IsEnabled="{x:Bind ViewModel.CanLinkGoogle, Mode=OneWay}" 
+                                        HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
+                                    <TextBlock Text="🔗 Vincular Google" FontSize="13" FontWeight="SemiBold" />
+                                </Button>
+                                
+                                <Button Grid.Column="1" Command="{x:Bind ViewModel.LinkGitHubCommand}" 
+                                        IsEnabled="{x:Bind ViewModel.CanLinkGitHub, Mode=OneWay}" 
+                                        HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
+                                    <TextBlock Text="🔗 Vincular GitHub" FontSize="13" FontWeight="SemiBold" />
+                                </Button>
+                            </Grid>
                             <TextBlock Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
                                        FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                        TextWrapping="Wrap" TextAlignment="Center" />
                         </StackPanel>
 
-                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />
+                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
                         <!-- Ações PRO / Free -->
-                        <StackPanel Spacing="10" Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
-                            <TextBlock Text="Assine o PRO Enterprise para desbloquear:"
-                                       FontWeight="SemiBold" HorizontalAlignment="Center" />
-                            <StackPanel Spacing="4">
-                                <TextBlock Text="✔  IA Autônoma com Semantic Kernel + Ollama" FontSize="12" />
-                                <TextBlock Text="✔  Reconhecimento de Voz Offline (Whisper)" FontSize="12" />
-                                <TextBlock Text="✔  Biblioteca de Prompts e Automações" FontSize="12" />
-                                <TextBlock Text="✔  Marketplace de Plugins (em breve)" FontSize="12" />
+                        <StackPanel Spacing="20" Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                            <TextBlock Text="🚀 Desbloqueie o Poder do PRO Enterprise"
+                                       FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" 
+                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
+                                       
+                            <!-- Lista de Funcionalidades PRO Premium -->
+                            <Border Background="{ThemeResource ControlFillColorTransparentBrush}" 
+                                    BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" 
+                                    BorderThickness="1" CornerRadius="12" Padding="20">
+                                <StackPanel Spacing="14">
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
+                                        <TextBlock Text="IA Autônoma (Semantic Kernel + Ollama)" FontSize="13" FontWeight="Medium" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
+                                        <TextBlock Text="Reconhecimento de Voz Offline (Whisper)" FontSize="13" FontWeight="Medium" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
+                                        <TextBlock Text="Biblioteca de Prompts e Automações" FontSize="13" FontWeight="Medium" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
+                                        <TextBlock Text="Marketplace de Plugins (em breve)" FontSize="13" FontWeight="Medium" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <StackPanel Spacing="8">
+                                <Button Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        HorizontalAlignment="Stretch" Padding="0,14" CornerRadius="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE73F;" FontSize="16" />
+                                        <TextBlock Text="Assinar PRO — R$ 39,90 / mês" FontWeight="Bold" FontSize="14" />
+                                    </StackPanel>
+                                </Button>
+                                
+                                <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
+                                        HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8">
+                                    <TextBlock Text="Assinatura Anual — R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
+                                </Button>
                             </StackPanel>
-                            <Button Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                    Style="{StaticResource AccentButtonStyle}"
-                                    HorizontalAlignment="Stretch" Padding="12,10" Margin="0,8,0,0">
-                                <TextBlock Text="Assinar PRO — R$ 39,90/mês" FontWeight="SemiBold" />
-                            </Button>
-                            <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
-                                    HorizontalAlignment="Stretch" Padding="12,10">
-                                <TextBlock Text="Anual — R$ 429,90/ano · Economize 10%" />
-                            </Button>
                         </StackPanel>
 
                         <!-- Plano PRO ativo -->
-                        <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}"
+                        <StackPanel Spacing="16" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}"
                                     HorizontalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-                                <FontIcon Glyph="&#xE734;" FontSize="20" Foreground="Gold" />
-                                <TextBlock Text="Plano PRO Enterprise Ativo!" FontWeight="Bold" FontSize="15" />
+                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
+                                <TextBlock Text="Plano PRO Enterprise Ativo!" FontWeight="Bold" FontSize="16" />
                             </StackPanel>
-                            <TextBlock Text="Você tem acesso completo a todos os recursos." FontSize="13"
+                            <TextBlock Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        HorizontalAlignment="Center" />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
-                                    HorizontalAlignment="Stretch" Padding="12,10">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE9E9;" FontSize="13" />
-                                    <TextBlock Text="Gerenciar / Cancelar Assinatura" />
+                                    HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <FontIcon Glyph="&#xE9E9;" FontSize="14" />
+                                    <TextBlock Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
-                        <HyperlinkButton Content="Sair da Conta"
+                        <HyperlinkButton Content="Fazer Logout"
                                          Command="{x:Bind ViewModel.LogoutCommand}"
                                          HorizontalAlignment="Center"
-                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                         Margin="0,8,0,0" />
                     </StackPanel>
                 </Border>
 

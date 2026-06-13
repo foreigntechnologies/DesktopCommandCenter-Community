@@ -13,7 +13,7 @@ public sealed partial class MainPage : Page
         AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
         
         // Navigate to Dashboard by default
-        ContentFrame.Navigate(typeof(Views.DashboardPage));
+        ContentFrame.Navigate(typeof(Views.DashboardPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
         AppNavigationView.SelectedItem = AppNavigationView.MenuItems[0];
         
         UpdateNavigationLocks();
@@ -33,13 +33,36 @@ public sealed partial class MainPage : Page
                 UpdateNavigationLocks();
             });
         });
+
+        _ = ValidateProLicenseAsync();
+    }
+
+    private async System.Threading.Tasks.Task ValidateProLicenseAsync()
+    {
+        try
+        {
+            var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
+            var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>((App.Current as App).Services);
+
+            var user = await authService.GetCurrentUserAsync();
+            if (user != null)
+            {
+                var plan = await licenseService.GetCurrentPlanAsync();
+                App.IsProUnlocked = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            }
+        }
+        catch { }
     }
 
     private void NavigateToAction(string actionId)
     {
         if (actionId == "Settings")
         {
-            ContentFrame.Navigate(typeof(Views.SettingsPage));
+            if (ContentFrame.CurrentSourcePageType != typeof(Views.SettingsPage))
+            {
+                ContentFrame.Navigate(typeof(Views.SettingsPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
+            }
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
@@ -65,9 +88,9 @@ public sealed partial class MainPage : Page
             _ => typeof(Views.ComingSoonPage)
         };
 
-        if (pageType != null)
+        if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
         {
-            ContentFrame.Navigate(pageType, actionId);
+            ContentFrame.Navigate(pageType, actionId, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             
             foreach (var item in AppNavigationView.MenuItems)
             {
@@ -84,7 +107,10 @@ public sealed partial class MainPage : Page
     {
         if (args.IsSettingsInvoked)
         {
-            ContentFrame.Navigate(typeof(Views.SettingsPage));
+            if (ContentFrame.CurrentSourcePageType != typeof(Views.SettingsPage))
+            {
+                ContentFrame.Navigate(typeof(Views.SettingsPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
+            }
         }
         else if (args.InvokedItemContainer != null)
         {
@@ -119,9 +145,9 @@ public sealed partial class MainPage : Page
                 return;
             }
 
-            if (pageType != null)
+            if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
             {
-                ContentFrame.Navigate(pageType, tag);
+                ContentFrame.Navigate(pageType, tag, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             }
         }
     }
