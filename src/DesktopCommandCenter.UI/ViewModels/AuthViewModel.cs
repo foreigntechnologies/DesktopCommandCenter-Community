@@ -54,6 +54,12 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private string _linkedEmailsText = string.Empty;
 
+    [ObservableProperty]
+    private string _googleEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _gitHubEmail = string.Empty;
+
     public bool CanLinkGoogle => !HasGoogleLinked;
     public bool CanLinkGitHub => !HasGitHubLinked;
 
@@ -98,10 +104,8 @@ public partial class AuthViewModel : ObservableObject
             HasGoogleLinked = user.Providers.Contains("google.com");
             HasGitHubLinked = user.Providers.Contains("github.com");
             
-            var emails = new System.Collections.Generic.List<string>();
-            if (HasGoogleLinked && user.LinkedEmails.TryGetValue("google.com", out var gEmail)) emails.Add($"Google: {gEmail}");
-            if (HasGitHubLinked && user.LinkedEmails.TryGetValue("github.com", out var ghEmail)) emails.Add($"GitHub: {ghEmail}");
-            LinkedEmailsText = emails.Count > 0 ? string.Join(" | ", emails) : user.Email;
+            if (HasGoogleLinked && user.LinkedEmails.TryGetValue("google.com", out var gEmail)) GoogleEmail = gEmail; else GoogleEmail = string.Empty;
+            if (HasGitHubLinked && user.LinkedEmails.TryGetValue("github.com", out var ghEmail)) GitHubEmail = ghEmail; else GitHubEmail = string.Empty;
 
             IsLoggedIn = true;
             StatusMessage = string.Empty;
@@ -191,6 +195,8 @@ public partial class AuthViewModel : ObservableObject
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
         LinkedEmailsText = string.Empty;
+        GoogleEmail   = string.Empty;
+        GitHubEmail   = string.Empty;
         HasGoogleLinked = false;
         HasGitHubLinked = false;
         StatusMessage = string.Empty;
