@@ -24,8 +24,19 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         this.Closed += MainWindow_Closed;
 
-        // Habilitar efeito Mica (Translúcido do Windows 11)
-        SystemBackdrop = new MicaBackdrop();
+        try
+        {
+            // Habilitar efeito Mica (Translúcido do Windows 11)
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+            }
+            catch { }
+        }
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -37,7 +48,13 @@ public sealed partial class MainWindow : Window
 
         RootFrame.Loaded += RootFrame_Loaded;
 
-        // Iniciar maximizado
+        // Iniciar maximizado apenas apÃ³s a janela ser ativada
+        this.Activated += MainWindow_Activated;
+    }
+
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        this.Activated -= MainWindow_Activated; // Executa apenas na primeira vez
         var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
         presenter?.Maximize();
     }

@@ -156,6 +156,9 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     public App()
     {
+        // Intercepta qualquer exceÃ§Ã£o grave nÃ£o tratada
+        DesktopCommandCenter.UI.Services.CrashLogger.Initialize();
+
         // Inicializa o Velopack no início da aplicação para gerenciar atalhos e atualizações
         Velopack.VelopackApp.Build().Run();
 
