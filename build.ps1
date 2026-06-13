@@ -42,6 +42,11 @@ $PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 --self-containe
 Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
 
+# Copia a DLL ProFeatures para o pacote
+$ProPublishCmd = "dotnet publish src/DesktopCommandCenter.ProFeatures/DesktopCommandCenter.ProFeatures.csproj -c Release -o $PublishDir"
+Write-Host "Compilando e copiando DesktopCommandCenter.ProFeatures.dll..." -ForegroundColor DarkGray
+Invoke-Expression $ProPublishCmd
+
 if ($LASTEXITCODE -ne 0) {
     Write-Error "A compilação do .NET falhou."
 }
