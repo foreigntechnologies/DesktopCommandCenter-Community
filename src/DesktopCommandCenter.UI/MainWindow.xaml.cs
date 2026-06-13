@@ -139,6 +139,33 @@ public sealed partial class MainWindow : Window
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
         
+        // Verifica a licença no startup em background
+        _ = System.Threading.Tasks.Task.Run(async () =>
+        {
+            try
+            {
+                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
+                var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
+
+                var user = await authService.GetCurrentUserAsync();
+                if (user != null)
+                {
+                    var plan = await licenseService.GetCurrentPlanAsync();
+                    bool isPro = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                    App.IsProUnlocked = isPro;
+                    
+                    DispatcherQueue?.TryEnqueue(() =>
+                    {
+                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Error(ex, "Erro ao verificar a licença inicial no startup.");
+            }
+        });
+        
         bool firstRun = false;
         try
         {

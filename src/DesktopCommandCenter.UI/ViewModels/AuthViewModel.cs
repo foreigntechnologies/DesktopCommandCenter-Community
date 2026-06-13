@@ -45,6 +45,7 @@ public partial class AuthViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanLinkGoogle))]
+    [NotifyPropertyChangedFor(nameof(HasNoGoogleLinked))]
     private bool _hasGoogleLinked;
 
     [ObservableProperty]
@@ -62,6 +63,7 @@ public partial class AuthViewModel : ObservableObject
 
     public bool CanLinkGoogle => !HasGoogleLinked;
     public bool CanLinkGitHub => !HasGitHubLinked;
+    public bool HasNoGoogleLinked => !HasGoogleLinked;
 
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);

@@ -136,7 +136,7 @@
                                 <TextBlock Text="{x:Bind ViewModel.UserEmail, Mode=OneWay}"
                                            FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="16"
                                            TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"
-                                           Visibility="{x:Bind ViewModel.HasGoogleLinked, Mode=OneWay, Converter={StaticResource InverseBoolConverter}}" />
+                                           Visibility="{x:Bind ViewModel.HasNoGoogleLinked, Mode=OneWay}" />
 
                                 <!-- Google -->
                                 <StackPanel Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.HasGoogleLinked, Mode=OneWay}" HorizontalAlignment="Center">

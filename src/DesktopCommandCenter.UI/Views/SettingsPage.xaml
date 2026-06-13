@@ -288,7 +288,7 @@
                        CloseButtonText="Cancelar"
                        DefaultButton="Primary"
                        PrimaryButtonClick="EditHotkeyDialog_PrimaryButtonClick"
-                       KeyDown="EditHotkeyDialog_KeyDown">
+                       PreviewKeyDown="EditHotkeyDialog_KeyDown">
             <StackPanel Spacing="16" Width="400">
                 <TextBlock x:Name="HotkeyDialogActionText" Text="Configurar atalho para: [Ação]" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
 
