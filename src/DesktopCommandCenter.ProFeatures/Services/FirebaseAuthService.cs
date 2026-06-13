@@ -38,10 +38,12 @@ public class FirebaseAuthService : IAuthService
     public bool IsAuthenticated  => _currentUser != null;
     public string? CurrentUserUid => _currentUser?.Uid;
 
+    private Task? _initTask;
+
     public FirebaseAuthService()
     {
         // Tenta restaurar a sessão salva em disco (login persistente entre reinicializações)
-        Task.Run(TryRestoreSessionAsync);
+        _initTask = TryRestoreSessionAsync();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -151,6 +153,12 @@ public class FirebaseAuthService : IAuthService
 
     public async Task<AuthUser?> GetCurrentUserAsync()
     {
+        if (_initTask != null)
+        {
+            await _initTask;
+            _initTask = null; // Executa apenas uma vez no startup
+        }
+
         if (_currentUser == null) return null;
 
         // Tenta renovar o token se tivermos um refresh token
