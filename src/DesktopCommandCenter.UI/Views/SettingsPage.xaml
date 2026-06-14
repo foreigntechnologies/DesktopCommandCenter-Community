@@ -36,6 +36,14 @@
                             <ComboBoxItem x:Name="CmbThemeItem3" Content="Padrão do Sistema (Contraste)" />
                         </ComboBox>
 
+                        <ComboBox x:Name="CmbLanguage" Header="Idioma do Aplicativo (Requer reinício)"
+                                  SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
+                                  Width="300">
+                            <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
+                            <ComboBoxItem x:Name="CmbLang2" Content="English" />
+                            <ComboBoxItem x:Name="CmbLang3" Content="Español" />
+                        </ComboBox>
+
                         <ComboBox x:Name="CmbTimeFormat" Header="Formato da Hora (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
                                   Width="300">
@@ -108,6 +116,39 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card de Inteligência Artificial -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
+                    <StackPanel Spacing="16">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon Glyph="&#xECE4;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TxtAITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="TxtAIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+
+                        <Grid ColumnSpacing="20" RowSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="OpenAI (ChatGPT)" VerticalAlignment="Center" FontWeight="SemiBold" />
+                            <PasswordBox Grid.Column="1" PlaceholderText="sk-..." Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="1" Text="Google Gemini" VerticalAlignment="Center" FontWeight="SemiBold" />
+                            <PasswordBox Grid.Row="1" Grid.Column="1" PlaceholderText="AIza..." Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="2" Text="Anthropic Claude" VerticalAlignment="Center" FontWeight="SemiBold" />
+                            <PasswordBox Grid.Row="2" Grid.Column="1" PlaceholderText="sk-ant..." Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" />
+                        </Grid>
                     </StackPanel>
                 </Border>
 
