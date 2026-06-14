@@ -18,10 +18,14 @@ public class LocalizationHelper : INotifyPropertyChanged
         _translationService.LanguageChanged += (s, e) => OnPropertyChanged("Item[]");
         
         // Carregar idioma padrão no início
-        _ = _translationService.SetLanguageAsync("pt-BR");
+        _ = _translationService.SetLanguageAsync(App.GetAppLanguage());
     }
 
     public string this[string key] => _translationService.Get(key);
+
+    // Método explícito para suportar {x:Bind} com passagem de parâmetro em XAML,
+    // pois {x:Bind helpers:LocalizationHelper.Instance['Chave']} causa erro WMC9999.
+    public string GetString(string key) => _translationService.Get(key);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

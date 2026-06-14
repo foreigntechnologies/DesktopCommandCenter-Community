@@ -276,97 +276,81 @@
                     </Button>
 
                     <!-- Card PRO 1: ChatFT -->
-                    <Border Grid.Row="2" Grid.Column="3"
-                            Background="Transparent"
-                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1.5" CornerRadius="12">
-                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
-                        <Grid Padding="16,14" Opacity="0.75">
+                    <Button Grid.Row="2" Grid.Column="3" Click="ToolCard_Click" Tag="ChatFT" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
                                 <FontIcon Glyph="&#xE9F5;" FontSize="20" Foreground="#FF9800" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtPro1Title" Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
-                    </Border>
+                    </Button>
 
                     <!-- Row 4 -->
                     <!-- Card PRO 2: Automações -->
-                    <Border Grid.Row="3" Grid.Column="0"
-                            Background="Transparent"
-                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1.5" CornerRadius="12">
-                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
-                        <Grid Padding="16,14" Opacity="0.75">
+                    <Button Grid.Row="3" Grid.Column="0" Click="ToolCard_Click" Tag="Automacoes" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A00BCD4" Margin="0,0,12,0">
                                 <FontIcon Glyph="&#xED35;" FontSize="20" Foreground="#00BCD4" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtPro2Title" Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
-                    </Border>
+                    </Button>
 
                     <!-- Card PRO 3: Cloud Sync -->
-                    <Border Grid.Row="3" Grid.Column="1"
-                            Background="Transparent"
-                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1.5" CornerRadius="12">
-                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
-                        <Grid Padding="16,14" Opacity="0.75">
+                    <Button Grid.Row="3" Grid.Column="1" Click="ToolCard_Click" Tag="CloudSync" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE91E63" Margin="0,0,12,0">
                                 <FontIcon Glyph="&#xE753;" FontSize="20" Foreground="#E91E63" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtPro3Title" Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
-                    </Border>
+                    </Button>
 
                     <!-- Card PRO 4: Perfis -->
-                    <Border Grid.Row="3" Grid.Column="2"
-                            Background="Transparent"
-                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
-                            BorderThickness="1.5" CornerRadius="12">
-                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
-                        <Grid Padding="16,14" Opacity="0.75">
+                    <Button Grid.Row="3" Grid.Column="2" Click="ToolCard_Click" Tag="Perfis" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A8BC34A" Margin="0,0,12,0">
                                 <FontIcon Glyph="&#xE713;" FontSize="20" Foreground="#8BC34A" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtPro4Title" Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
-                    </Border>
+                    </Button>
                 </Grid>
             </StackPanel>
         </StackPanel>
