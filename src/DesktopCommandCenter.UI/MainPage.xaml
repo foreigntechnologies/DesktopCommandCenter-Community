@@ -54,5 +54,20 @@
                 </Frame.ContentTransitions>
             </Frame>
         </NavigationView>
+
+        <ContentDialog x:Name="FirstLaunchLanguageDialog"
+                       Title="Select Language / Selecione o Idioma / Seleccione el Idioma"
+                       PrimaryButtonText="OK"
+                       IsPrimaryButtonEnabled="False"
+                       PrimaryButtonClick="FirstLaunchLanguageDialog_PrimaryButtonClick">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Welcome! Please choose your preferred language for Desktop Command Center:" TextWrapping="Wrap" />
+                <ComboBox x:Name="CmbFirstLaunchLanguage" Width="300" SelectionChanged="CmbFirstLaunchLanguage_SelectionChanged">
+                    <ComboBoxItem Content="Português - Brasil" Tag="pt-BR" />
+                    <ComboBoxItem Content="English" Tag="en-US" />
+                    <ComboBoxItem Content="Español" Tag="es-ES" />
+                </ComboBox>
+            </StackPanel>
+        </ContentDialog>
     </Grid>
 </Page>

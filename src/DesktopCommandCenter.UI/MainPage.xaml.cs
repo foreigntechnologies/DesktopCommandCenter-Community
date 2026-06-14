@@ -11,6 +11,7 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
+        this.Loaded += MainPage_Loaded;
         
         // Removed broken x:Bind DataContext
         // AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
@@ -276,6 +277,36 @@ public sealed partial class MainPage : Page
                     }
                 }
             }
+        }
+    }
+
+    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
+        var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+        if (!System.IO.File.Exists(filePath))
+        {
+            FirstLaunchLanguageDialog.XamlRoot = this.XamlRoot;
+            await FirstLaunchLanguageDialog.ShowAsync();
+        }
+    }
+
+    private void CmbFirstLaunchLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        FirstLaunchLanguageDialog.IsPrimaryButtonEnabled = CmbFirstLaunchLanguage.SelectedItem != null;
+    }
+
+    private void FirstLaunchLanguageDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    {
+        if (CmbFirstLaunchLanguage.SelectedItem is ComboBoxItem item && item.Tag is string lang)
+        {
+            App.SaveAppLanguage(lang);
+            _ = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.SetLanguageAsync(lang);
+            UpdateTranslations();
+            
+            // Also force update the dialog UI itself using LocalizationHelper
+            var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+            FirstLaunchLanguageDialog.Title = loc.GetString("Settings_Language"); 
         }
     }
 }
