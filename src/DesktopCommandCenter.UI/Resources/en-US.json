@@ -1,4 +1,4 @@
-{
+ï»¿{
     "Nav_Dashboard":  "Dashboard",
     "Nav_Notes":  "Quick Notes",
     "Nav_SysUtils":  "System Utilities",
@@ -88,9 +88,9 @@
     "Chat_Placeholder":  "Type your prompt here, speak to the mic, or attach an image...",
     "Chat_Send":  "Send",
     "Settings_Language":  "App Language (Requires restart)",
-    "Settings_Lang1":  "Português - Brasil",
+    "Settings_Lang1":  "Portuguï¿½s - Brasil",
     "Settings_Lang2":  "English",
-    "Settings_Lang3":  "Español",
+    "Settings_Lang3":  "Espaï¿½ol",
     "Settings_AiTitle":  "Artificial Intelligence (ChatFT)",
     "Settings_AiDesc":  "Set the API keys for the desired providers. Leave blank to use Ollama (Local) for free."
 }
