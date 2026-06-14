@@ -373,6 +373,17 @@ public partial class App : Microsoft.UI.Xaml.Application
         catch { }
     }
 
+    public static bool HasAppLanguageCached()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+            return System.IO.File.Exists(filePath);
+        }
+        catch { return false; }
+    }
+
     public static string GetAppLanguage()
     {
         try

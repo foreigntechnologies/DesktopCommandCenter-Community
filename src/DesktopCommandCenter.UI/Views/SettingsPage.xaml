@@ -5,8 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
+    xmlns:converters="using:DesktopCommandCenter.UI.Converters"
     mc:Ignorable="d"
     Background="Transparent">
+    
+
 
     <Grid Padding="24">
         <ScrollViewer>
@@ -88,7 +91,7 @@
                                         <!-- Cadeado PRO -->
                                         <FontIcon Grid.Column="1" Glyph="&#xE72E;" FontSize="13" Margin="8,0"
                                                   Foreground="Gold" VerticalAlignment="Center"
-                                                  Visibility="{x:Bind IsProFeature}" />
+                                                  Visibility="{x:Bind InverseEnabledVisibility, Mode=OneWay}" />
                                         <Button Grid.Column="2"
                                                 Click="EditHotkeyButton_Click"
                                                 Tag="{Binding}"
@@ -193,7 +196,8 @@
 
                             <!-- COMMUNITY -->
                             <Border Grid.Column="0" CornerRadius="8" Padding="20"
-                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />

@@ -10,7 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <ResourceDictionary.ThemeDictionaries>
                 <!-- Default atua como fallback e também define o modo claro -->
                 <ResourceDictionary x:Key="Default">
@@ -38,9 +38,7 @@
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#33FFFFFF" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            
+
             <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
 
             <!-- ── Estilos do Dashboard (DCC original, não remete ao PowerToys) ── -->

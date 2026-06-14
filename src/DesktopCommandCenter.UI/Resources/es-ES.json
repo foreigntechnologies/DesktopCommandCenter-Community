@@ -1,5 +1,6 @@
-﻿{
+{
     "Nav_Dashboard":  "Dashboard",
+    "Nav_ProcessManager":  "Administrador de Tareas",
     "Nav_Notes":  "Notas Rápidas",
     "Nav_SysUtils":  "Utilidades del Sistema",
     "Nav_ColorPicker":  "Selector de Color",
@@ -24,7 +25,7 @@
     "Dash_ProFeature3":  "Perfiles",
     "Dash_ProFeature3Desc":  "Alterna entre Trabajo, Estudio y Personal.",
     "Dash_ProFeature4":  "Sincronización en la Nube",
-    "Dash_ProFeature4Desc":  "Sincroniza notas, atajos y IA en la nube.",
+    "Dash_ProFeature4Desc":  "Sincroniza notas, atajos e IA en la nube.",
     "Auth_Title":  "Licencias y Nube",
     "Auth_Desc":  "DCC es 100% offline y gratuito. Inicia sesión solo para desbloquear las funciones PRO.",
     "Auth_Loading":  "Procesando solicitud...",
@@ -87,10 +88,22 @@
     "Chat_SpeakMic":  "Hablar al Micrófono",
     "Chat_Placeholder":  "Escribe tu prompt aquí, habla al micrófono o adjunta una imagen...",
     "Chat_Send":  "Enviar",
-    "Settings_Language":  "Idioma de la Aplicaci�n (Requiere reinicio)",
-    "Settings_Lang1":  "Portugu�s - Brasil",
+    "Settings_Language":  "Idioma de la Aplicación (Requiere reinicio)",
+    "Settings_Lang1":  "Português - Brasil",
     "Settings_Lang2":  "English",
-    "Settings_Lang3":  "Espa�ol",
+    "Settings_Lang3":  "Español",
     "Settings_AiTitle":  "Inteligencia Artificial (ChatFT)",
-    "Settings_AiDesc":  "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis."
+    "Settings_AIEngines_Save": "Guardar Claves API",
+    "Dialog_LoginRequired_Title": "Requiere Iniciar Sesión",
+    "Dialog_LoginRequired_Content": "Debes iniciar sesión en la aplicación antes de proceder con la suscripción para vincular tu perfil a la licencia.",
+    "Dialog_GotIt": "Entendido",
+    "Dialog_ProRequired_Title": "Función PRO Requerida",
+    "Dialog_ProRequired_Content_LoggedIn": "La función '{0}' está disponible solo para suscriptores PRO. ¡Suscríbete ahora para desbloquear!",
+    "Dialog_ProRequired_Content_LoggedOut": "La función '{0}' está disponible solo para suscriptores PRO. ¡Inicia sesión y suscríbete para desbloquear!",
+    "Dialog_Login": "Iniciar Sesión",
+    "Dialog_Cancel": "Cancelar",
+    "GreetingMorning": "Buenos días",
+    "GreetingAfternoon": "Buenas tardes",
+    "GreetingEvening": "Buenas noches",
+    "Settings_AiDesc": "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis."
 }
