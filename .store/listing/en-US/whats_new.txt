@@ -1,0 +1,32 @@
+🆕 What's new in this version
+
+▶ Update Center — New unified module for Windows and software updates
+• Check and install Windows Updates directly from the sidebar, with one click.
+• See all your outdated software (via Winget) in a single list, with current and new version side by side.
+• Cleanly uninstall apps without leaving registry or temporary file leftovers — powered by Windows Package Manager (Winget).
+• Background Auto-Update: enable the toggle and DCC will silently check and install Windows Updates during idle hours.
+• Visual progress indicator during installations and uninstalls, so you always know what's happening.
+
+▶ Universal Search — Find anything, instantly
+• New global search bar (Ctrl+Space) that searches across your apps, system settings, automation rules, notes, clipboard history, and installed apps — all at once.
+• Results load in real time as you type, with zero lag.
+
+▶ Dashboard Redesign — Your command center, at a glance
+• The main Dashboard now shows live cards for all tools, including a dedicated Update Center card with your pending update count.
+• Faster navigation: click any card to jump straight to the tool.
+
+▶ Advanced Process Manager
+• Monitor all running processes with real-time CPU and memory usage.
+• Terminate unresponsive processes directly from the sidebar.
+
+▶ Automation Rules
+• Create conditional rules that trigger automatic actions in the background (e.g., open an app when connected to Wi-Fi, run a script on startup).
+
+▶ Fast Boot Optimization
+• View and disable startup programs to speed up your Windows boot time.
+
+▶ Bug Report (built-in)
+• Found an issue? Submit a bug report directly from the app in seconds.
+
+▶ Stability & Polish
+• Dozens of UI fixes, performance improvements, and translation updates across English, Portuguese (Brazil), and Spanish.
