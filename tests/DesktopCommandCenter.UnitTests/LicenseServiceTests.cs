@@ -23,7 +23,7 @@ public class LicenseServiceTests
         // Arrange
         var user = new AuthUser { Uid = "123", Email = "test@pro.com" };
         _authServiceMock
-            .Setup(a => a.GetCurrentUserAsync())
+            .Setup(a => a.GetCurrentUserAsync(It.IsAny<bool>()))
             .Returns(Task.FromResult<AuthUser?>(user));
 
         // Act
