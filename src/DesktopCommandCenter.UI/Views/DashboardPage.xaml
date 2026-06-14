@@ -400,7 +400,7 @@
                 </StackPanel>
                 <TextBlock
                     x:Name="TxtCopyright"
-                    Text="© 2025 Foreign Technologies"
+                    Text="© 2026 Foreign Technologies®. All rights reserved"
                     FontSize="11"
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     HorizontalAlignment="Right"
