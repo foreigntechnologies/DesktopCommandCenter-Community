@@ -53,9 +53,24 @@ public sealed partial class SettingsPage : Page
         CmbDate2.Content = loc.GetString("Settings_Date2");
         CmbDate3.Content = loc.GetString("Settings_Date3");
         CmbDate4.Content = loc.GetString("Settings_Date4");
+
+        if (CmbLanguage != null)
+        {
+            CmbLanguage.Header = loc.GetString("Settings_Language");
+            CmbLang1.Content = loc.GetString("Settings_Lang1");
+            CmbLang2.Content = loc.GetString("Settings_Lang2");
+            CmbLang3.Content = loc.GetString("Settings_Lang3");
+        }
+
         TxtThemeDesc.Text = loc.GetString("Settings_ThemeDesc");
         TxtHotkeysTitle.Text = loc.GetString("Settings_HotkeysTitle");
         TxtHotkeysDesc.Text = loc.GetString("Settings_HotkeysDesc");
+        
+        if (TxtAITitle != null)
+        {
+            TxtAITitle.Text = loc.GetString("Settings_AiTitle");
+            TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
+        }
         TxtSubscriptionTitle.Text = loc.GetString("Settings_SubTitle");
         TxtCommunityTitle.Text = loc.GetString("Settings_CommTitle");
         TxtCommunitySubtitle.Text = loc.GetString("Settings_CommSub");

@@ -38,6 +38,15 @@ public partial class SettingsViewModel : ObservableObject
     private string _aiAgentApiKey = string.Empty;
 
     [ObservableProperty]
+    private string _openAIApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _geminiApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _claudeApiKey = string.Empty;
+
+    [ObservableProperty]
     private string _aiAgentModel = string.Empty;
 
     public bool IsApiKeyVisible => SelectedAIProviderIndex != 0;
@@ -146,6 +155,9 @@ public partial class SettingsViewModel : ObservableObject
             _        => 0
         };
         AiAgentApiKey = App.GetAIAgentApiKey();
+        OpenAIApiKey = App.GetOpenAIApiKey();
+        GeminiApiKey = App.GetGeminiApiKey();
+        ClaudeApiKey = App.GetClaudeApiKey();
         AiAgentModel = App.GetAIAgentModel();
 
         // Escuta mudanças de licença do AuthViewModel (ex: login, logout)
@@ -322,6 +334,24 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnAiAgentApiKeyChanged(string value)
     {
         App.SaveAIAgentApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnOpenAIApiKeyChanged(string value)
+    {
+        App.SaveOpenAIApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnGeminiApiKeyChanged(string value)
+    {
+        App.SaveGeminiApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnClaudeApiKeyChanged(string value)
+    {
+        App.SaveClaudeApiKey(value);
         WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
     }
 
