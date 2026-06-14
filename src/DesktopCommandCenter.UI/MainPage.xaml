@@ -30,13 +30,13 @@
                 <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />
                 <NavigationViewItem x:Name="NavCalculator" Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
                 <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador" />
+                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
                 <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela" />
                 <NavigationViewItem x:Name="NavTranslator" Tag="Tradutor" Icon="Character" Content="Tradutor" />
 
                 <!-- PRO MODULES HEADER -->
                 <NavigationViewItemHeader x:Name="HeaderPro" Content="Recursos PRO (IA &amp; Automação)" />
                 <NavigationViewItem x:Name="NavIALocal" Tag="IALocal" Icon="PreviewLink" Content="ChatFT" />
-                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
                 <NavigationViewItem x:Name="NavPrompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
                 <NavigationViewItem x:Name="NavAutomations" Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
                 <NavigationViewItem x:Name="NavMarketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins" />

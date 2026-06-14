@@ -151,7 +151,7 @@ public class FirebaseAuthService : IAuthService
     // SESSÃO
     // ─────────────────────────────────────────────────────────────────────────
 
-    public async Task<AuthUser?> GetCurrentUserAsync()
+    public async Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false)
     {
         if (_initTask != null)
         {
@@ -162,7 +162,7 @@ public class FirebaseAuthService : IAuthService
         if (_currentUser == null) return null;
 
         // Tenta renovar o token se tivermos um refresh token
-        if (_refreshToken != null)
+        if (_refreshToken != null && forceRefresh)
         {
             try { await RefreshIdTokenAsync(); }
             catch { /* mantém o token atual; vai expirar naturalmente */ }

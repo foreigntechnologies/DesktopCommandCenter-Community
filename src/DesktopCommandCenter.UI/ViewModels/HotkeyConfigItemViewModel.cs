@@ -24,7 +24,10 @@ public partial class HotkeyConfigItemViewModel : ObservableObject
     /// Funcionalidades PRO ficam desabilitadas enquanto o plano for Free.
     /// </summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(InverseEnabledVisibility))]
     private bool _isEnabled = true;
+
+    public Visibility InverseEnabledVisibility => IsEnabled ? Visibility.Collapsed : Visibility.Visible;
 
     /// <summary>
     /// Visibilidade do ícone de cadeado (Visible se IsProFeature e não tem PRO).

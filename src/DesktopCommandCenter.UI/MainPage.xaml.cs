@@ -104,7 +104,7 @@ public sealed partial class MainPage : Page
             return;
         }
 
-        bool isProFeature = actionId == "IALocal" || actionId == "PesquisaUniversal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
+        bool isProFeature = actionId == "IALocal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
         if (isProFeature && !App.IsProUnlocked)
         {
             if (actionId == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))

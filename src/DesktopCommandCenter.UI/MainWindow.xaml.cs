@@ -225,6 +225,34 @@ public sealed partial class MainWindow : Window
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
+
+        if (!App.HasAppLanguageCached() && RootFrame.Content is Microsoft.UI.Xaml.Controls.Page currentPage)
+        {
+            var combo = new Microsoft.UI.Xaml.Controls.ComboBox
+            {
+                Items = { "Português - Brasil", "English", "Español" },
+                SelectedIndex = 0,
+                HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch
+            };
+            var dialog = new Microsoft.UI.Xaml.Controls.ContentDialog
+            {
+                Title = "Select Language / Selecione o Idioma / Seleccionar Idioma",
+                Content = combo,
+                PrimaryButtonText = "OK",
+                XamlRoot = currentPage.XamlRoot
+            };
+
+            await dialog.ShowAsync();
+            string lang = combo.SelectedIndex switch
+            {
+                1 => "en-US",
+                2 => "es-ES",
+                _ => "pt-BR"
+            };
+            App.SaveAppLanguage(lang);
+            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>(App.Current.Services);
+            _ = tService.SetLanguageAsync(lang);
+        }
         
         // Verifica a licença no startup em background
         _ = System.Threading.Tasks.Task.Run(async () =>

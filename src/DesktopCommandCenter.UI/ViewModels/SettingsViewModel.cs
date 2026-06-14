@@ -73,9 +73,14 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
+    [NotifyPropertyChangedFor(nameof(PlanBadgeText))]
+    [NotifyPropertyChangedFor(nameof(PlanBadgeColor))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     private bool _isLoggedIn;
 
     public bool IsNotLoggedIn => !IsLoggedIn;
+    public Visibility InverseProVisibility => IsProPlan ? Visibility.Collapsed : Visibility.Visible;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
@@ -83,6 +88,7 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     [NotifyPropertyChangedFor(nameof(PlanBadgeText))]
     [NotifyPropertyChangedFor(nameof(PlanBadgeColor))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     private string _currentPlan = "free";
 
     [ObservableProperty]
@@ -267,10 +273,11 @@ public partial class SettingsViewModel : ObservableObject
     public void Logout()
     {
         _authService.Logout();
+        App.SaveCachedEmail(string.Empty);
         IsLoggedIn  = false;
         UserEmail   = string.Empty;
         CurrentPlan = "free";
-        App.IsProUnlocked = App.IsProBuild;
+        App.IsProUnlocked = false;
         WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
 
         foreach (var h in Hotkeys)

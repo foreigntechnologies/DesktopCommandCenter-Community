@@ -56,15 +56,17 @@ public sealed partial class DashboardPage : Page
         }
 
         int hour = DateTime.Now.Hour;
-        TxtGreeting.Text = hour switch
+        string greetingKey = hour switch
         {
-            >= 5 and < 12  => $"Bom dia{nameSuffix} 👋",
-            >= 12 and < 18 => $"Boa tarde{nameSuffix} 👋",
-            _              => $"Boa noite{nameSuffix} 👋"
+            < 12 => "GreetingMorning",
+            < 18 => "GreetingAfternoon",
+            _ => "GreetingEvening"
         };
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        TxtGreeting.Text = loc.GetString(greetingKey) + nameSuffix;
 
         // Versão do app
-        TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1"}";
+        TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? "1.0.0.0"}";
 
         // Badge do plano
         bool isPro = App.IsProUnlocked;
@@ -73,6 +75,7 @@ public sealed partial class DashboardPage : Page
         BtnUpgradePro.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
+        SeparatorBugReport.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void ToolCard_Click(object sender, RoutedEventArgs e)

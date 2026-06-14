@@ -220,6 +220,7 @@ public partial class AuthViewModel : ObservableObject
     public void Logout()
     {
         _authService.Logout();
+        App.SaveCachedEmail(string.Empty);
         IsLoggedIn    = false;
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
