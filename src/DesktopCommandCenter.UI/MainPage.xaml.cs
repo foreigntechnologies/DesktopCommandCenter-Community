@@ -304,7 +304,8 @@ public sealed partial class MainPage : Page
         if (CmbFirstLaunchLanguage.SelectedItem is ComboBoxItem item && item.Tag is string lang)
         {
             App.SaveAppLanguage(lang);
-            _ = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.SetLanguageAsync(lang);
+            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>((App.Current as App).Services);
+            _ = tService.SetLanguageAsync(lang);
             UpdateTranslations();
             
             // Also force update the dialog UI itself using LocalizationHelper
