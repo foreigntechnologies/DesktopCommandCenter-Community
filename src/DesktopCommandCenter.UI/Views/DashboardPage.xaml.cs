@@ -44,15 +44,18 @@ public sealed partial class DashboardPage : Page
         }
         
         string nameSuffix = "";
-        if (currentUser != null && !string.IsNullOrWhiteSpace(currentUser.Email))
+        if (currentUser != null)
         {
-            var parts = currentUser.Email.Split('@');
-            if (parts.Length > 0 && !string.IsNullOrWhiteSpace(parts[0]))
-            {
-                string namePart = parts[0];
-                namePart = char.ToUpper(namePart[0]) + (namePart.Length > 1 ? namePart.Substring(1) : "");
-                nameSuffix = $", {namePart}";
-            }
+            // Usa o nome real do perfil (ex: Google OAuth "Gustavo Koglin")
+            // Fallback para o prefixo do email se o DisplayName estiver vazio
+            string nameToShow = !string.IsNullOrWhiteSpace(currentUser.DisplayName)
+                ? currentUser.DisplayName
+                : (!string.IsNullOrWhiteSpace(currentUser.Email)
+                    ? CapitalizeFirst(currentUser.Email.Split('@')[0])
+                    : "");
+
+            if (!string.IsNullOrWhiteSpace(nameToShow))
+                nameSuffix = $", {nameToShow}";
         }
 
         int hour = DateTime.Now.Hour;
@@ -77,6 +80,9 @@ public sealed partial class DashboardPage : Page
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorBugReport.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
     }
+
+    private static string CapitalizeFirst(string s)
+        => string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1);
 
     private void ToolCard_Click(object sender, RoutedEventArgs e)
     {
