@@ -15,10 +15,26 @@ public sealed partial class DashboardPage : Page
         ViewModel = new DashboardViewModel();
         InitializeComponent();
         Loaded += DashboardPage_Loaded;
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+    }
+
+    private void UpdateTranslations()
+    {
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        TxtPro1Title.Text = loc.GetString("Dash_ProFeature1");
+        TxtPro1Desc.Text = loc.GetString("Dash_ProFeature1Desc");
+        TxtPro2Title.Text = loc.GetString("Dash_ProFeature2");
+        TxtPro2Desc.Text = loc.GetString("Dash_ProFeature2Desc");
+        TxtPro3Title.Text = loc.GetString("Dash_ProFeature4"); // Cloud Sync
+        TxtPro3Desc.Text = loc.GetString("Dash_ProFeature4Desc");
+        TxtPro4Title.Text = loc.GetString("Dash_ProFeature3"); // Perfis
+        TxtPro4Desc.Text = loc.GetString("Dash_ProFeature3Desc");
     }
 
     private async void DashboardPage_Loaded(object sender, RoutedEventArgs e)
     {
+        UpdateTranslations();
+        
         // Saudação dinâmica por horário
         var authService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.IAuthService)) as DesktopCommandCenter.Application.Interfaces.IAuthService;
         DesktopCommandCenter.Application.Interfaces.AuthUser? currentUser = null;

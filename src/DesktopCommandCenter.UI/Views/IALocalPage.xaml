@@ -40,25 +40,34 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Bottom" Margin="0,0,0,4">
-                <Button Command="{x:Bind ViewModel.AttachImageCommand}" ToolTipService.ToolTip="Anexar Imagem" Background="Transparent" BorderThickness="0">
+                <Button Command="{x:Bind ViewModel.AttachImageCommand}" Background="Transparent" BorderThickness="0">
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="TooltipAttachImage" Content="Anexar Imagem" />
+                    </ToolTipService.ToolTip>
                     <FontIcon Glyph="&#xEB9F;" />
                 </Button>
-                <Button Command="{x:Bind ViewModel.AttachAudioCommand}" ToolTipService.ToolTip="Transcrever Áudio" Background="Transparent" BorderThickness="0">
+                <Button Command="{x:Bind ViewModel.AttachAudioCommand}" Background="Transparent" BorderThickness="0">
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="TooltipAttachAudio" Content="Transcrever Áudio" />
+                    </ToolTipService.ToolTip>
                     <FontIcon Glyph="&#xE8D6;" />
                 </Button>
-                <Button Command="{x:Bind ViewModel.ToggleRecordingCommand}" ToolTipService.ToolTip="Falar no Microfone" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}">
+                <Button Command="{x:Bind ViewModel.ToggleRecordingCommand}" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}">
+                    <ToolTipService.ToolTip>
+                        <ToolTip x:Name="TooltipMic" Content="Falar no Microfone" />
+                    </ToolTipService.ToolTip>
                     <FontIcon Glyph="&#xE720;" />
                 </Button>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
                 <TextBlock Text="{x:Bind ViewModel.AttachedImagePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="11" Margin="0,0,0,4" />
-                <TextBox Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox x:Name="TxtPromptInput" Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          PlaceholderText="Escreva seu prompt aqui, fale ao microfone ou anexe uma imagem..." 
                          AcceptsReturn="True" MaxHeight="100"/>
             </StackPanel>
                      
-            <Button Grid.Column="2" Content="Enviar" Command="{x:Bind ViewModel.SendMessageCommand}" 
+            <Button x:Name="BtnSend" Grid.Column="2" Content="Enviar" Command="{x:Bind ViewModel.SendMessageCommand}" 
                     Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" MinWidth="100"/>
         </Grid>
     </Grid>

@@ -72,6 +72,20 @@ public sealed partial class MainPage : Page
             return;
         }
 
+        bool isProFeature = actionId == "IALocal" || actionId == "PesquisaUniversal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
+        if (isProFeature && !App.IsProUnlocked)
+        {
+            if (actionId == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+            {
+                // Permitido se tiver chave de API própria
+            }
+            else
+            {
+                ShowProRequiredDialog(actionId);
+                return;
+            }
+        }
+
         Type? pageType = actionId switch
         {
             "Dashboard" => typeof(Views.DashboardPage),
@@ -149,8 +163,15 @@ public sealed partial class MainPage : Page
 
             if (isProFeature && !App.IsProUnlocked)
             {
-                ShowProRequiredDialog(tag ?? "Recurso PRO");
-                return;
+                if (tag == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                {
+                    // Permitido se tiver chave própria
+                }
+                else
+                {
+                    ShowProRequiredDialog(tag ?? "Recurso PRO");
+                    return;
+                }
             }
 
             if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
@@ -200,7 +221,13 @@ public sealed partial class MainPage : Page
                 var tag = navItem.Tag?.ToString();
                 if (string.IsNullOrEmpty(tag)) continue;
                 
-                if (System.Array.Exists(proFeatures, f => f == tag) && !App.IsProUnlocked)
+                bool isLocked = System.Array.Exists(proFeatures, f => f == tag) && !App.IsProUnlocked;
+                if (isLocked && tag == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                {
+                    isLocked = false; // Desbloqueia se tiver chave própria
+                }
+
+                if (isLocked)
                 {
                     // Locked state
                     if (navItem.Content != null)
