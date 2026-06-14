@@ -14,4 +14,18 @@ public sealed partial class AuthPage : Page
         InitializeComponent();
     }
 
+    public Microsoft.UI.Xaml.Media.ImageSource? ConvertToImageSource(string url)
+    {
+        if (string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return null;
+        try
+        {
+            return new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(uri);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
 }

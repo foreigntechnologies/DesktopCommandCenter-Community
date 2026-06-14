@@ -218,6 +218,12 @@ public class FirebaseAuthService : IAuthService
             if (users.GetArrayLength() > 0)
             {
                 var targetUser = users[0];
+                
+                if (targetUser.TryGetProperty("photoUrl", out var photoProp))
+                {
+                    user.PhotoUrl = photoProp.GetString() ?? "";
+                }
+
                 if (targetUser.TryGetProperty("providerUserInfo", out var pInfos))
                 {
                     user.Providers.Clear();
@@ -226,6 +232,10 @@ public class FirebaseAuthService : IAuthService
                     {
                         var pid = pInfo.GetProperty("providerId").GetString();
                         var pEmail = pInfo.TryGetProperty("email", out var pEp) ? pEp.GetString() : null;
+                        if (string.IsNullOrEmpty(user.PhotoUrl) && pInfo.TryGetProperty("photoUrl", out var pPhotoUrl))
+                        {
+                            user.PhotoUrl = pPhotoUrl.GetString() ?? user.PhotoUrl;
+                        }
                         if (!string.IsNullOrEmpty(pid))
                         {
                             user.Providers.Add(pid);
@@ -278,7 +288,8 @@ public class FirebaseAuthService : IAuthService
                 idToken      = _currentUser.IdToken,
                 refreshToken = _refreshToken,
                 providers    = _currentUser.Providers,
-                linkedEmails = _currentUser.LinkedEmails
+                linkedEmails = _currentUser.LinkedEmails,
+                photoUrl     = _currentUser.PhotoUrl
             });
             await File.WriteAllTextAsync(SessionFile, data);
         }
@@ -297,10 +308,11 @@ public class FirebaseAuthService : IAuthService
             var uid   = root.GetProperty("uid").GetString()!;
             var email = root.GetProperty("email").GetString()!;
             var rt    = root.TryGetProperty("refreshToken", out var rp) ? rp.GetString() : null;
+            var photoUrl = root.TryGetProperty("photoUrl", out var pUp) ? pUp.GetString() ?? "" : "";
 
             if (string.IsNullOrEmpty(rt)) return;
 
-            _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = "" };
+            _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = "", PhotoUrl = photoUrl };
             _refreshToken = rt;
 
             if (root.TryGetProperty("providers", out var provs))

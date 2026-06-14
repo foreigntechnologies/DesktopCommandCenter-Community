@@ -25,7 +25,7 @@
     <AssemblyName>Desktop Command Center</AssemblyName>
     <Product>Desktop Command Center</Product>
     <Company>Foreign Technologies</Company>
-    <Copyright>© 2025 Foreign Technologies. Todos os direitos reservados.</Copyright>
+    <Copyright>© 2026 Foreign Technologies®. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -96,7 +96,11 @@
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
-
+    <ProjectReference Include="..\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ProjectReference>
   </ItemGroup>
 
   <!--

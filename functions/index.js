@@ -68,7 +68,7 @@ exports.stripeWebhookCheckout = functions.runWith({
             .setHtml(`
               <h2>Olá!</h2>
               <p>Sua assinatura foi processada com sucesso. Muito obrigado por apoiar o desenvolvimento do DCC!</p>
-              <p>O seu plano <strong>PRO Enterprise</strong> já está ativado. Basta reiniciar ou acessar o aplicativo que as IAs e funcionalidades premium já estarão desbloqueadas e prontas para uso.</p>
+              <p>O seu plano <strong>PRO</strong> já está ativado. Basta reiniciar ou acessar o aplicativo que as IAs e funcionalidades premium já estarão desbloqueadas e prontas para uso.</p>
               <br/>
               <p>Qualquer dúvida, responda a este e-mail. Estarei à disposição!</p>
               <br/>
@@ -76,8 +76,15 @@ exports.stripeWebhookCheckout = functions.runWith({
             `)
             .setText("Sua assinatura foi processada. Seu plano PRO já está ativo. Obrigado!");
 
-          await mailersend.email.send(emailParams);
-          console.log(`📧 E-mail de boas-vindas enviado para ${customerEmail}`);
+          try {
+            await mailersend.email.send(emailParams);
+            console.log(`📧 E-mail de boas-vindas enviado para ${customerEmail}`);
+          } catch (emailErr) {
+            console.error(`⚠️ Falha ao enviar email pelo MailerSend para ${customerEmail}, mas a ativação do plano no Firestore foi concluída:`, emailErr);
+            if (emailErr.body) {
+              console.error('Detalhes do erro do MailerSend:', JSON.stringify(emailErr.body, null, 2));
+            }
+          }
         } else {
             console.log(`⚠️ Email não enviado: customerEmail ausente ou chave do Mailersend não configurada.`);
         }

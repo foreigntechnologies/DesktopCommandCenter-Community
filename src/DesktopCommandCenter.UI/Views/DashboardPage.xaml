@@ -1,20 +1,411 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="Transparent">
 
-    <Grid Padding="24">
-        <StackPanel Spacing="16">
-            <TextBlock Text="{x:Bind ViewModel.WelcomeMessage}" Style="{StaticResource TitleTextBlockStyle}" />
-            <TextBlock Text="{x:Bind ViewModel.CurrentTime}" Style="{StaticResource HeaderTextBlockStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
-            <TextBlock Text="{x:Bind ViewModel.CurrentDate}" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-            
-            <!-- Reservado para futuras métricas dinâmicas do usuário -->
+    <Grid Padding="28,20,28,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16">
+            <StackPanel Spacing="20" MaxWidth="1400">
+
+            <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <TextBlock
+                        x:Name="TxtGreeting"
+                        Style="{StaticResource TitleLargeTextBlockStyle}"
+                        FontWeight="SemiBold" />
+                    <TextBlock
+                        Text="{x:Bind ViewModel.CurrentDate, Mode=OneWay}"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                <!-- Relógio + Badge de versão -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Spacing="4">
+                    <TextBlock
+                        Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        FontWeight="SemiBold"
+                        HorizontalAlignment="Right"
+                        FontFamily="Consolas" />
+                    <Border
+                        Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                        CornerRadius="100" Padding="10,3"
+                        HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse Width="6" Height="6" Fill="#4CAF50" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TxtVersion" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- ══ MÉTRICAS RÁPIDAS (4 Cards) ══ -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Card 1: Ferramentas disponíveis -->
+                <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel Spacing="4">
+                        <FontIcon Glyph="&#xE74C;" FontSize="20" Foreground="#00BCD4" />
+                        <TextBlock Text="12" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock Text="Ferramentas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 2: Notas -->
+                <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel Spacing="4">
+                        <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
+                        <TextBlock x:Name="TxtNotesCount" Text="—" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock Text="Notas salvas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 3: Itens no Clipboard -->
+                <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel Spacing="4">
+                        <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
+                        <TextBlock x:Name="TxtClipCount" Text="—" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock Text="No Clipboard" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 4: Plano -->
+                <Border Grid.Column="3" x:Name="PlanCard" Style="{StaticResource MetricCardStyle}">
+                    <StackPanel Spacing="4">
+                        <FontIcon Glyph="&#xE734;" FontSize="20" Foreground="#FF9800" />
+                        <TextBlock x:Name="TxtPlanBadge" Text="Community" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" FontSize="18" />
+                        <TextBlock Text="Plano atual" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ══ FERRAMENTAS EM DESTAQUE (Grid de Cards) ══ -->
+            <StackPanel Spacing="12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Ferramentas" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="1" x:Name="TxtProBadge" FontSize="12"
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <!-- Grade 4 colunas -->
+                <Grid ColumnSpacing="12" RowSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 1 -->
+                    <Button Grid.Row="0" Grid.Column="0" Click="ToolCard_Click" Tag="ColorPicker" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A0099DA" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="0" Grid.Column="1" Click="ToolCard_Click" Tag="Clipboard" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="0" Grid.Column="2" Click="ToolCard_Click" Tag="Notes" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFFB347" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Notas" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Anotações rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="0" Grid.Column="3" Click="ToolCard_Click" Tag="Calculadora" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A4CAF50" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE8EF;" FontSize="20" Foreground="#4CAF50" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Calculadora" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Científica, física, química" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Row 2 -->
+                    <Button Grid.Row="1" Grid.Column="0" Click="ToolCard_Click" Tag="Awake" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="1" Grid.Column="1" Click="ToolCard_Click" Tag="AlwaysOnTop" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A4FC3F7" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE898;" FontSize="20" Foreground="#4FC3F7" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Sempre no Topo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Fixa janelas na frente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="1" Grid.Column="2" Click="ToolCard_Click" Tag="Tradutor" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A26C6DA" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="1" Grid.Column="3" Click="ToolCard_Click" Tag="Temporizador" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF7043" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Row 3 -->
+                    <Button Grid.Row="2" Grid.Column="0" Click="ToolCard_Click" Tag="Prompts" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AAB47BC" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE8BD;" FontSize="20" Foreground="#AB47BC" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="2" Grid.Column="1" Click="ToolCard_Click" Tag="PesquisaUniversal" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A42A5F5" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="2" Grid.Column="2" Click="ToolCard_Click" Tag="CliCommands" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AEF5350" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#EF5350" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Card PRO 1: ChatFT -->
+                    <Border Grid.Row="2" Grid.Column="3"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE9F5;" FontSize="20" Foreground="#FF9800" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Row 4 -->
+                    <!-- Card PRO 2: Automações -->
+                    <Border Grid.Row="3" Grid.Column="0"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A00BCD4" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xED35;" FontSize="20" Foreground="#00BCD4" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card PRO 3: Cloud Sync -->
+                    <Border Grid.Row="3" Grid.Column="1"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE91E63" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE753;" FontSize="20" Foreground="#E91E63" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card PRO 4: Perfis -->
+                    <Border Grid.Row="3" Grid.Column="2"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1.5" CornerRadius="12">
+                        <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
+                        <Grid Padding="16,14" Opacity="0.75">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A8BC34A" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE713;" FontSize="20" Foreground="#8BC34A" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,1">
+                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </StackPanel>
         </StackPanel>
+    </ScrollViewer>
+
+        <!-- ══ RODAPÉ: Links do app ══ -->
+        <Border Grid.Row="1"
+            MaxWidth="1400"
+            HorizontalAlignment="Stretch"
+            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+            CornerRadius="10"
+            Padding="16,10">
+            <Grid>
+                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                    <HyperlinkButton Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
+                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
+                    <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
+                                <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </StackPanel>
+                <TextBlock
+                    x:Name="TxtCopyright"
+                    Text="© 2026 Foreign Technologies®. All rights reserved"
+                    FontSize="11"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </Border>
     </Grid>
 </Page>
-

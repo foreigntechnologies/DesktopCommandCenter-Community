@@ -9,9 +9,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="DCC - Desktop Command Center"
     mc:Ignorable="d">
-    <Window.SystemBackdrop>
-        <MicaBackdrop Kind="Base" />
-    </Window.SystemBackdrop>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -23,6 +20,7 @@
             x:Name="TrayIcon"
             IconSource="/Assets/AppIcon.ico"
             ToolTipText="Desktop Command Center"
+            LeftClickCommand="{x:Bind TrayQuickAccessCommand}"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>

@@ -6,6 +6,8 @@ namespace DesktopCommandCenter.UI;
 
 public sealed partial class MainPage : Page
 {
+    private DateTime _lastNavTime = DateTime.MinValue;
+
     public MainPage()
     {
         InitializeComponent();
@@ -57,6 +59,9 @@ public sealed partial class MainPage : Page
 
     private void NavigateToAction(string actionId)
     {
+        if ((DateTime.Now - _lastNavTime).TotalMilliseconds < 350) return;
+        _lastNavTime = DateTime.Now;
+
         if (actionId == "Settings")
         {
             if (ContentFrame.CurrentSourcePageType != typeof(Views.SettingsPage))
@@ -105,6 +110,9 @@ public sealed partial class MainPage : Page
 
     private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
+        if ((DateTime.Now - _lastNavTime).TotalMilliseconds < 350) return;
+        _lastNavTime = DateTime.Now;
+
         if (args.IsSettingsInvoked)
         {
             if (ContentFrame.CurrentSourcePageType != typeof(Views.SettingsPage))

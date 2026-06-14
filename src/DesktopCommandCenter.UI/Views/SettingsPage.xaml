@@ -120,7 +120,7 @@
                         </StackPanel>
 
                         <!-- Info da conta (visível quando logado) -->
-                        <StackPanel Spacing="4" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
+                        <StackPanel x:Name="LoggedInAccountInfoPanel" Spacing="4" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -198,7 +198,7 @@
                                 </Grid>
                             </Border>
 
-                            <!-- PRO ENTERPRISE -->
+                            <!-- PRO -->
                             <Border Grid.Column="1" CornerRadius="8" Padding="20"
                                     BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                                 <Grid>
@@ -209,7 +209,7 @@
                                     <StackPanel Grid.Row="0" Spacing="10">
                                         <StackPanel Spacing="2">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="PRO Enterprise" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                                <TextBlock Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
                                                 <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
                                                     <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
                                                 </Border>
@@ -240,21 +240,21 @@
                                     <!-- Botão único — muda conforme estado -->
                                     <StackPanel Grid.Row="1" Margin="0,16,0,0">
                                         <!-- Não logado -->
-                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                        <Button x:Name="NotLoggedInProButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.GoToLoginCommand}"
-                                                Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+                                                x:Load="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
                                             <TextBlock Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano Free -->
-                                        <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                        <Button x:Name="FreePlanUpgradeButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                                Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                                                x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
                                             <TextBlock Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano PRO -->
-                                        <StackPanel Spacing="6" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
+                                        <StackPanel x:Name="ProPlanActivePanel" Spacing="6" x:Load="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
                                                 <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
@@ -270,7 +270,7 @@
                         </Grid>
 
                         <!-- Sair da conta -->
-                        <StackPanel Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
+                        <StackPanel x:Name="LogoutPanel" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
                             <HyperlinkButton Command="{x:Bind ViewModel.LogoutCommand}"
                                              Content="Sair da conta"
                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -288,7 +288,7 @@
                        CloseButtonText="Cancelar"
                        DefaultButton="Primary"
                        PrimaryButtonClick="EditHotkeyDialog_PrimaryButtonClick"
-                       KeyDown="EditHotkeyDialog_KeyDown">
+                       PreviewKeyDown="EditHotkeyDialog_KeyDown">
             <StackPanel Spacing="16" Width="400">
                 <TextBlock x:Name="HotkeyDialogActionText" Text="Configurar atalho para: [Ação]" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold" />
 
