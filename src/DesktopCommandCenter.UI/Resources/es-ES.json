@@ -1,4 +1,4 @@
-{
+ï»¿{
     "Nav_Dashboard":  "Dashboard",
     "Nav_Notes":  "Notas RÃ¡pidas",
     "Nav_SysUtils":  "Utilidades del Sistema",
@@ -87,10 +87,10 @@
     "Chat_SpeakMic":  "Hablar al MicrÃ³fono",
     "Chat_Placeholder":  "Escribe tu prompt aquÃ­, habla al micrÃ³fono o adjunta una imagen...",
     "Chat_Send":  "Enviar",
-    "Settings_Language":  "Idioma de la Aplicación (Requiere reinicio)",
-    "Settings_Lang1":  "Português - Brasil",
+    "Settings_Language":  "Idioma de la Aplicaciï¿½n (Requiere reinicio)",
+    "Settings_Lang1":  "Portuguï¿½s - Brasil",
     "Settings_Lang2":  "English",
-    "Settings_Lang3":  "Español",
+    "Settings_Lang3":  "Espaï¿½ol",
     "Settings_AiTitle":  "Inteligencia Artificial (ChatFT)",
     "Settings_AiDesc":  "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis."
 }

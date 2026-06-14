@@ -218,15 +218,18 @@ public sealed partial class MainPage : Page
     {
         var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
         bool isLoggedIn = authService.IsAuthenticated;
+        var t = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
 
         var dialog = new ContentDialog
         {
-            Title = "Recurso PRO Necessário",
+            Title = t.GetString("Dialog_ProRequired_Title") ?? "Recurso PRO Necessário",
             Content = isLoggedIn 
-                ? $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Assine agora para liberar!"
-                : $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!",
-            PrimaryButtonText = isLoggedIn ? "Assinar" : "Entrar / Assinar",
-            CloseButtonText = "Cancelar",
+                ? string.Format(t.GetString("Dialog_ProRequired_Content_LoggedIn") ?? "O recurso '{0}' está disponível apenas para assinantes PRO. Assine agora para liberar!", featureTag)
+                : string.Format(t.GetString("Dialog_ProRequired_Content_LoggedOut") ?? "O recurso '{0}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!", featureTag),
+            PrimaryButtonText = isLoggedIn 
+                ? (t.GetString("Dialog_ProRequired_Primary_LoggedIn") ?? "Assinar") 
+                : (t.GetString("Dialog_ProRequired_Primary_LoggedOut") ?? "Entrar / Assinar"),
+            CloseButtonText = t.GetString("Dialog_Cancel") ?? "Cancelar",
             XamlRoot = this.XamlRoot
         };
 

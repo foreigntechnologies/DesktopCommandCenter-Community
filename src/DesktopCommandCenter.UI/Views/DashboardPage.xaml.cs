@@ -110,12 +110,13 @@ public sealed partial class DashboardPage : Page
         
         if (user == null || string.IsNullOrEmpty(user.Uid))
         {
+            var t = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
             // Requer login primeiro
             var dialog = new ContentDialog
             {
-                Title = "Requer Login",
-                Content = "Você precisa fazer login no aplicativo antes de prosseguir com a assinatura para vincular seu perfil à licença.",
-                CloseButtonText = "Entendi",
+                Title = t.GetString("Dialog_LoginRequired_Title") ?? "Requer Login",
+                Content = t.GetString("Dialog_LoginRequired_Content") ?? "Você precisa fazer login no aplicativo antes de prosseguir com a assinatura para vincular seu perfil à licença.",
+                CloseButtonText = t.GetString("Dialog_GotIt") ?? "Entendi",
                 DefaultButton = ContentDialogButton.Close,
                 XamlRoot = this.XamlRoot
             };
