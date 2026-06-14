@@ -112,6 +112,11 @@ public partial class AuthViewModel : ObservableObject
     // ── Helper compartilhado pós-login ──────────────────────────────────────
     private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user)
     {
+        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) para evitar
+        //    que o status da conta anterior vaze para a nova sessão.
+        App.IsProUnlocked = false;
+        App.SaveProCached(false);
+
         var plan = await _licenseService.GetCurrentPlanAsync();
         
         App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
@@ -119,9 +124,8 @@ public partial class AuthViewModel : ObservableObject
             CurrentPlan = plan;
             App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
             
-            // Só dispara a mensagem se estivermos dentro do fluxo de login real para evitar loops infinitos com o CheckInitialStateAsync
-            // Na verdade, apenas envia se o app.IsproUnlocked mudar, mas como quem chama pode ser o MainWindow FocusChanged, não precisamos enviar a mensagem de volta
-            // WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            // Notifica todos os listeners (Dashboard, MainPage, etc.) que o estado de licença mudou
+            WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             
             UserEmail  = user.Email;
             ProfilePhotoUrl = user.PhotoUrl;

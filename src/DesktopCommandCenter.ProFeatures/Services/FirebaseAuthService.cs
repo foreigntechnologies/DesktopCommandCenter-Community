@@ -195,10 +195,11 @@ public class FirebaseAuthService : IAuthService
 
         var uid          = root.GetProperty("localId").GetString()!;
         var email        = root.TryGetProperty("email", out var ep) ? ep.GetString() ?? "" : "";
+        var displayName  = root.TryGetProperty("displayName", out var dnp) ? dnp.GetString() ?? "" : "";
         var idToken      = root.GetProperty("idToken").GetString()!;
         var refreshToken = root.TryGetProperty("refreshToken", out var rp) ? rp.GetString() : null;
 
-        _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = idToken };
+        _currentUser  = new AuthUser { Uid = uid, Email = email, DisplayName = displayName, IdToken = idToken };
         _refreshToken = refreshToken;
 
         await FetchProviderDataAsync(_currentUser);
@@ -218,7 +219,14 @@ public class FirebaseAuthService : IAuthService
             if (users.GetArrayLength() > 0)
             {
                 var targetUser = users[0];
-                
+
+                // Captura displayName do perfil Firebase (ex: nome real do Google)
+                if (string.IsNullOrEmpty(user.DisplayName) &&
+                    targetUser.TryGetProperty("displayName", out var dnProp))
+                {
+                    user.DisplayName = dnProp.GetString() ?? "";
+                }
+
                 if (targetUser.TryGetProperty("photoUrl", out var photoProp))
                 {
                     user.PhotoUrl = photoProp.GetString() ?? "";
@@ -232,6 +240,11 @@ public class FirebaseAuthService : IAuthService
                     {
                         var pid = pInfo.GetProperty("providerId").GetString();
                         var pEmail = pInfo.TryGetProperty("email", out var pEp) ? pEp.GetString() : null;
+                        if (string.IsNullOrEmpty(user.DisplayName) &&
+                            pInfo.TryGetProperty("displayName", out var pDn))
+                        {
+                            user.DisplayName = pDn.GetString() ?? user.DisplayName;
+                        }
                         if (string.IsNullOrEmpty(user.PhotoUrl) && pInfo.TryGetProperty("photoUrl", out var pPhotoUrl))
                         {
                             user.PhotoUrl = pPhotoUrl.GetString() ?? user.PhotoUrl;
@@ -285,6 +298,7 @@ public class FirebaseAuthService : IAuthService
             {
                 uid          = _currentUser.Uid,
                 email        = _currentUser.Email,
+                displayName  = _currentUser.DisplayName,
                 idToken      = _currentUser.IdToken,
                 refreshToken = _refreshToken,
                 providers    = _currentUser.Providers,
@@ -308,11 +322,12 @@ public class FirebaseAuthService : IAuthService
             var uid   = root.GetProperty("uid").GetString()!;
             var email = root.GetProperty("email").GetString()!;
             var rt    = root.TryGetProperty("refreshToken", out var rp) ? rp.GetString() : null;
-            var photoUrl = root.TryGetProperty("photoUrl", out var pUp) ? pUp.GetString() ?? "" : "";
+            var photoUrl   = root.TryGetProperty("photoUrl",   out var pUp) ? pUp.GetString()   ?? "" : "";
+            var displayName = root.TryGetProperty("displayName", out var dnUp) ? dnUp.GetString() ?? "" : "";
 
             if (string.IsNullOrEmpty(rt)) return;
 
-            _currentUser  = new AuthUser { Uid = uid, Email = email, IdToken = "", PhotoUrl = photoUrl };
+            _currentUser  = new AuthUser { Uid = uid, Email = email, DisplayName = displayName, IdToken = "", PhotoUrl = photoUrl };
             _refreshToken = rt;
 
             if (root.TryGetProperty("providers", out var provs))

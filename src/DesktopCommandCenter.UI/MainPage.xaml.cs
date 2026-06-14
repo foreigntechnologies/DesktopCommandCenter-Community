@@ -252,7 +252,7 @@ public sealed partial class MainPage : Page
 
     public void UpdateNavigationLocks()
     {
-        var proFeatures = new[] { "IALocal", "PesquisaUniversal", "Prompts", "Automacoes", "Marketplace" };
+        var proFeatures = new[] { "IALocal", "Prompts", "Automacoes", "Marketplace" };
         foreach (var item in AppNavigationView.MenuItems)
         {
             if (item is NavigationViewItem navItem)
