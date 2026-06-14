@@ -236,13 +236,13 @@
                                         HorizontalAlignment="Stretch" Padding="0,14" CornerRadius="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE73F;" FontSize="16" />
-                                        <TextBlock Text="Assinar PRO — R$ 39,90 / mês" FontWeight="Bold" FontSize="14" />
+                                        <TextBlock Text="Assinar PRO | R$ 39,90/mês" FontWeight="Bold" FontSize="14" />
                                     </StackPanel>
                                 </Button>
                                 
                                 <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
                                         HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8">
-                                    <TextBlock Text="Assinatura Anual — R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock Text="Assinatura Anual | R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
                                 </Button>
                             </StackPanel>
                         </StackPanel>

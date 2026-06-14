@@ -392,8 +392,8 @@
                     <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
                         <DropDownButton.Flyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Assinatura Mensal (R$ 39,90)" Click="StripeMonthly_Click" />
-                                <MenuFlyoutItem Text="Assinatura Anual (R$ 429,90)" Click="StripeYearly_Click" />
+                                <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
+                                <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
                     </DropDownButton>
