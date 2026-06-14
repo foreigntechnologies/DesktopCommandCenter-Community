@@ -15,17 +15,20 @@ public class LicenseServiceTests
     }
 
     [Fact]
-    public void IsProUnlocked_ShouldReturnTrue_WhenForcedByConfig()
+    public async Task IsProUnlocked_ShouldReturnTrue_WhenForcedByConfig()
     {
         // This is just a placeholder test for the UI logic that would be handled by App.IsProUnlocked
         // Since we are testing pure logic, we mock the behavior of a user with a Pro license.
-        
+
         // Arrange
         var user = new AuthUser { Uid = "123", Email = "test@pro.com" };
-        _authServiceMock.Setup(a => a.GetCurrentUserAsync()).ReturnsAsync(user);
+        _authServiceMock
+            .Setup(a => a.GetCurrentUserAsync())
+            .Returns(Task.FromResult<AuthUser?>(user));
 
         // Act
-        var hasUser = _authServiceMock.Object.GetCurrentUserAsync().Result != null;
+        var result = await _authServiceMock.Object.GetCurrentUserAsync();
+        var hasUser = result != null;
 
         // Assert
         Assert.True(hasUser);
