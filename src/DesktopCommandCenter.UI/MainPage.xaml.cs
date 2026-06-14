@@ -12,8 +12,12 @@ public sealed partial class MainPage : Page
     {
         InitializeComponent();
         
-        AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        // Removed broken x:Bind DataContext
+        // AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
         
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        UpdateTranslations();
+
         // Navigate to Dashboard by default
         ContentFrame.Navigate(typeof(Views.DashboardPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
         AppNavigationView.SelectedItem = AppNavigationView.MenuItems[0];
@@ -37,6 +41,33 @@ public sealed partial class MainPage : Page
         });
 
         _ = ValidateProLicenseAsync();
+    }
+
+    private void UpdateTranslations()
+    {
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+
+        NavDashboard.Content = loc.GetString("Nav_Dashboard");
+        NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
+        NavNotes.Content = loc.GetString("Nav_Notes");
+        HeaderSysUtils.Content = loc.GetString("Nav_SysUtils");
+        NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
+        NavAwake.Content = loc.GetString("Nav_Awake");
+        NavCliCommands.Content = loc.GetString("Nav_CliCommands");
+        NavClipboard.Content = loc.GetString("Nav_Clipboard");
+        NavCalculator.Content = loc.GetString("Nav_Calculator");
+        NavTimer.Content = loc.GetString("Nav_Timer");
+        NavCapture.Content = loc.GetString("Nav_Capture");
+        NavTranslator.Content = loc.GetString("Nav_Translator");
+        HeaderPro.Content = loc.GetString("Nav_ProFeatures");
+        NavIALocal.Content = loc.GetString("Nav_ChatFT");
+        NavSearch.Content = loc.GetString("Nav_Search");
+        NavPrompts.Content = loc.GetString("Nav_Prompts");
+        NavAutomations.Content = loc.GetString("Nav_Automations");
+        NavMarketplace.Content = loc.GetString("Nav_Marketplace");
+        NavAuth.Content = loc.GetString("Nav_Auth");
+
+        UpdateNavigationLocks();
     }
 
     private async System.Threading.Tasks.Task ValidateProLicenseAsync()
@@ -141,6 +172,7 @@ public sealed partial class MainPage : Page
             Type? pageType = tag switch
             {
                 "Dashboard" => typeof(Views.DashboardPage),
+                "ProcessManager" => typeof(Views.ProcessManagerPage),
                 "Notes" => typeof(Views.NotesPage),
                 "Clipboard" => typeof(Views.ClipboardPage),
                 "Calculadora" => typeof(Views.CalculadoraPage),

@@ -154,6 +154,11 @@ public partial class SettingsViewModel : ObservableObject
             _ = RefreshAccountStateAsync();
         });
 
+        // Set initial synchronous state based on cached data
+        IsLoggedIn = !string.IsNullOrEmpty(App.GetCachedEmail());
+        UserEmail = App.GetCachedEmail();
+        CurrentPlan = App.GetProCached() ? "pro" : "free";
+
         _ = RefreshAccountStateAsync();
     }
 

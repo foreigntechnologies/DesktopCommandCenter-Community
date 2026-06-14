@@ -86,6 +86,11 @@ public partial class AuthViewModel : ObservableObject
             _ = CheckInitialStateAsync();
         });
 
+        // Set initial synchronous state based on cached data to avoid logged-out UI flickering
+        IsLoggedIn = !string.IsNullOrEmpty(App.GetCachedEmail());
+        UserEmail = App.GetCachedEmail();
+        CurrentPlan = App.GetProCached() ? "pro" : "free";
+
         // Verifica o estado atual de login e licença em background ao iniciar a ViewModel
         _ = CheckInitialStateAsync();
     }
