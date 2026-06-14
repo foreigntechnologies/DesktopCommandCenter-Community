@@ -73,6 +73,11 @@ public sealed partial class DashboardPage : Page
         BtnUpgradePro.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
+        
+        BtnProChatFT.IsEnabled = isPro;
+        BtnProAutomacoes.IsEnabled = isPro;
+        BtnProCloudSync.IsEnabled = isPro;
+        BtnProPerfis.IsEnabled = isPro;
     }
 
     private void ToolCard_Click(object sender, RoutedEventArgs e)

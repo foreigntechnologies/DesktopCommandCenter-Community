@@ -16,33 +16,34 @@
             
             <NavigationView.MenuItems>
                 <!-- FREE MODULES -->
-                <NavigationViewItem Tag="Dashboard" Icon="Home" Content="Dashboard" />
-                <NavigationViewItem Tag="Notes" Icon="Document" Content="Notes" />
-                <NavigationViewItemHeader Content="Utilitários do Sistema" />
-                <NavigationViewItem Tag="ColorPicker" Content="Color Picker" Icon="Highlight" />
-                <NavigationViewItem Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street" />
-                <NavigationViewItem Tag="CliCommands" Content="Comandos CLI">
+                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="Home" Content="Dashboard" />
+                <NavigationViewItem x:Name="NavProcessManager" Content="Processos" Tag="ProcessManager" Icon="List" />
+                <NavigationViewItem x:Name="NavNotes" Tag="Notes" Icon="Document" Content="Notes" />
+                <NavigationViewItemHeader x:Name="HeaderSysUtils" Content="Utilitários do Sistema" />
+                <NavigationViewItem x:Name="NavColorPicker" Tag="ColorPicker" Content="Color Picker" Icon="Highlight" />
+                <NavigationViewItem x:Name="NavAwake" Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street" />
+                <NavigationViewItem x:Name="NavCliCommands" Tag="CliCommands" Content="Comandos CLI">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE756;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Clipboard" Icon="Copy" Content="Clipboard" />
-                <NavigationViewItem Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
-                <NavigationViewItem Tag="Temporizador" Icon="Clock" Content="Temporizador" />
-                <NavigationViewItem Tag="Captura" Icon="Camera" Content="Captura de Tela" />
-                <NavigationViewItem Tag="Tradutor" Icon="Character" Content="Tradutor" />
+                <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />
+                <NavigationViewItem x:Name="NavCalculator" Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
+                <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador" />
+                <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela" />
+                <NavigationViewItem x:Name="NavTranslator" Tag="Tradutor" Icon="Character" Content="Tradutor" />
 
                 <!-- PRO MODULES HEADER -->
-                <NavigationViewItemHeader Content="Recursos PRO (IA &amp; Automação)" />
-                <NavigationViewItem Tag="IALocal" Icon="PreviewLink" Content="ChatFT" />
-                <NavigationViewItem Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
-                <NavigationViewItem Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
-                <NavigationViewItem Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
-                <NavigationViewItem Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins" />
+                <NavigationViewItemHeader x:Name="HeaderPro" Content="Recursos PRO (IA &amp; Automação)" />
+                <NavigationViewItem x:Name="NavIALocal" Tag="IALocal" Icon="PreviewLink" Content="ChatFT" />
+                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
+                <NavigationViewItem x:Name="NavPrompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
+                <NavigationViewItem x:Name="NavAutomations" Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
+                <NavigationViewItem x:Name="NavMarketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins" />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Tag="Auth" Icon="Contact" Content="Minha Conta" />
+                <NavigationViewItem x:Name="NavAuth" Tag="Auth" Icon="Contact" Content="Minha Conta" />
             </NavigationView.FooterMenuItems>
 
             <Frame x:Name="ContentFrame" Margin="24">

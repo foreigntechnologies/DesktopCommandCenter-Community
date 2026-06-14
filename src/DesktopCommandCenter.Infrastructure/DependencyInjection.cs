@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddSingleton<IHotkeyService, GlobalHotkeyService>();
         services.AddSingleton<IHotkeyConfigManager, HotkeyConfigManager>();
         services.AddSingleton<IAutomationEngine, AutomationEngine>();
+        services.AddSingleton<IProcessService, ProcessService>();
         
         // Load PRO Features if available
         var proAssemblyPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "DesktopCommandCenter.ProFeatures.dll");

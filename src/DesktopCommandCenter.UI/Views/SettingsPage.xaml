@@ -14,7 +14,7 @@
 
                 <!-- Título -->
                 <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-                    <TextBlock Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtSettingsTitle" Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
                     <Border x:Name="ProBadge" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
                         <TextBlock Text="PRO" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
                     </Border>
@@ -26,35 +26,35 @@
                 <!-- Aparência e Temas -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
-                        <TextBlock Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Name="TxtAppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
 
-                        <ComboBox Header="Tema do Aplicativo"
+                        <ComboBox x:Name="CmbTheme" Header="Tema do Aplicativo"
                                   SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem Content="Claro" />
-                            <ComboBoxItem Content="Escuro" />
-                            <ComboBoxItem Content="Padrão do Sistema (Contraste)" />
+                            <ComboBoxItem x:Name="CmbThemeItem1" Content="Claro" />
+                            <ComboBoxItem x:Name="CmbThemeItem2" Content="Escuro" />
+                            <ComboBoxItem x:Name="CmbThemeItem3" Content="Padrão do Sistema (Contraste)" />
                         </ComboBox>
 
-                        <ComboBox Header="Formato da Hora (Início)"
+                        <ComboBox x:Name="CmbTimeFormat" Header="Formato da Hora (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem Content="24 Horas (HH:mm) - Ex: 15:30" />
-                            <ComboBoxItem Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
-                            <ComboBoxItem Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
-                            <ComboBoxItem Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
+                            <ComboBoxItem x:Name="CmbTime1" Content="24 Horas (HH:mm) - Ex: 15:30" />
+                            <ComboBoxItem x:Name="CmbTime2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
+                            <ComboBoxItem x:Name="CmbTime3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
+                            <ComboBoxItem x:Name="CmbTime4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
                         </ComboBox>
 
-                        <ComboBox Header="Formato da Data (Início)"
+                        <ComboBox x:Name="CmbDateFormat" Header="Formato da Data (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
-                            <ComboBoxItem Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
-                            <ComboBoxItem Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
-                            <ComboBoxItem Content="Inglês - Ex: Jun 10, 2026" />
+                            <ComboBoxItem x:Name="CmbDate1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
+                            <ComboBoxItem x:Name="CmbDate2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
+                            <ComboBoxItem x:Name="CmbDate3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
+                            <ComboBoxItem x:Name="CmbDate4" Content="Inglês - Ex: Jun 10, 2026" />
                         </ComboBox>
 
-                        <TextBlock Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
+                        <TextBlock x:Name="TxtThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    TextWrapping="Wrap"/>
                     </StackPanel>
@@ -63,8 +63,8 @@
                 <!-- Teclas de Atalho -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
-                        <TextBlock Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Configure atalhos que funcionam de qualquer lugar do Windows."
+                        <TextBlock x:Name="TxtHotkeysTitle" Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Name="TxtHotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                         <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
@@ -116,7 +116,7 @@
                     <StackPanel Spacing="16">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <FontIcon Glyph="&#xE7BF;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
-                            <TextBlock Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtSubscriptionTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <!-- Info da conta (visível quando logado) -->
@@ -160,11 +160,11 @@
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Spacing="10">
                                         <StackPanel Spacing="2">
-                                            <TextBlock Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
-                                            <TextBlock Text="Open Source · Grátis para sempre"
+                                            <TextBlock x:Name="TxtCommunityTitle" Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                            <TextBlock x:Name="TxtCommunitySubtitle" Text="Open Source · Grátis para sempre"
                                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
                                         </StackPanel>
-                                        <TextBlock Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
+                                        <TextBlock x:Name="TxtCommunityDesc" Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                    TextWrapping="Wrap" FontSize="12" />
 
@@ -192,7 +192,7 @@
                                     <Button Grid.Row="1" HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click" Margin="0,16,0,0">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <FontIcon Glyph="&#xE8A7;" FontSize="14" />
-                                            <TextBlock Text="Baixar Grátis (GitHub)" />
+                                            <TextBlock x:Name="TxtCommunityBtn" Text="Baixar Grátis (GitHub)" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -209,15 +209,15 @@
                                     <StackPanel Grid.Row="0" Spacing="10">
                                         <StackPanel Spacing="2">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                                <TextBlock x:Name="TxtProBadgeTitle" Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
                                                 <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                                    <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                    <TextBlock x:Name="TxtProRecommended" Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
                                                 </Border>
                                             </StackPanel>
-                                            <TextBlock Text="Licença Nuvem · Atualizada automaticamente"
+                                            <TextBlock x:Name="TxtProSubtitle" Text="Licença Nuvem · Atualizada automaticamente"
                                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
                                         </StackPanel>
-                                        <TextBlock Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
+                                        <TextBlock x:Name="TxtProDesc" Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
 
                                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
@@ -243,25 +243,25 @@
                                         <Button x:Name="NotLoggedInProButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.GoToLoginCommand}"
                                                 x:Load="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
-                                            <TextBlock Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
+                                            <TextBlock x:Name="TxtProBtnNotLogged" Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano Free -->
                                         <Button x:Name="FreePlanUpgradeButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
                                                 x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
-                                            <TextBlock Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
+                                            <TextBlock x:Name="TxtProBtnFree" Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano PRO -->
                                         <StackPanel x:Name="ProPlanActivePanel" Spacing="6" x:Load="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
-                                                <TextBlock Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
+                                                <TextBlock x:Name="TxtProBtnActive" Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
                                             </StackPanel>
                                             <Button HorizontalAlignment="Stretch" Padding="12,10"
                                                     Command="{x:Bind ViewModel.OpenCustomerPortalCommand}">
-                                                <TextBlock Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" />
+                                                <TextBlock x:Name="TxtProBtnManage" Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" />
                                             </Button>
                                         </StackPanel>
                                     </StackPanel>
@@ -271,7 +271,7 @@
 
                         <!-- Sair da conta -->
                         <StackPanel x:Name="LogoutPanel" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
-                            <HyperlinkButton Command="{x:Bind ViewModel.LogoutCommand}"
+                            <HyperlinkButton x:Name="BtnLogoutSettings" Command="{x:Bind ViewModel.LogoutCommand}"
                                              Content="Sair da conta"
                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         </StackPanel>

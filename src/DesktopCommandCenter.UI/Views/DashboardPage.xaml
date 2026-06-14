@@ -276,7 +276,7 @@
                     </Button>
 
                     <!-- Card PRO 1: ChatFT -->
-                    <Button Grid.Row="2" Grid.Column="3" Click="ToolCard_Click" Tag="ChatFT" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button x:Name="BtnProChatFT" Grid.Row="2" Grid.Column="3" Click="ToolCard_Click" Tag="ChatFT" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
@@ -296,7 +296,7 @@
 
                     <!-- Row 4 -->
                     <!-- Card PRO 2: Automações -->
-                    <Button Grid.Row="3" Grid.Column="0" Click="ToolCard_Click" Tag="Automacoes" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button x:Name="BtnProAutomacoes" Grid.Row="3" Grid.Column="0" Click="ToolCard_Click" Tag="Automacoes" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A00BCD4" Margin="0,0,12,0">
@@ -315,7 +315,7 @@
                     </Button>
 
                     <!-- Card PRO 3: Cloud Sync -->
-                    <Button Grid.Row="3" Grid.Column="1" Click="ToolCard_Click" Tag="CloudSync" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button x:Name="BtnProCloudSync" Grid.Row="3" Grid.Column="1" Click="ToolCard_Click" Tag="CloudSync" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE91E63" Margin="0,0,12,0">
@@ -334,7 +334,7 @@
                     </Button>
 
                     <!-- Card PRO 4: Perfis -->
-                    <Button Grid.Row="3" Grid.Column="2" Click="ToolCard_Click" Tag="Perfis" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button x:Name="BtnProPerfis" Grid.Row="3" Grid.Column="2" Click="ToolCard_Click" Tag="Perfis" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A8BC34A" Margin="0,0,12,0">
