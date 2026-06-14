@@ -52,6 +52,7 @@ public sealed partial class MainPage : Page
         NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
         NavNotes.Content = loc.GetString("Nav_Notes");
         HeaderSysUtils.Content = loc.GetString("Nav_SysUtils");
+        NavSystemUpdates.Content = loc.GetString("Nav_SystemUpdates");
         NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
         NavAwake.Content = loc.GetString("Nav_Awake");
         NavCliCommands.Content = loc.GetString("Nav_CliCommands");
@@ -128,6 +129,7 @@ public sealed partial class MainPage : Page
             "Awake" => typeof(Views.AwakePage),
             "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
             "Temporizador" => typeof(Views.TemporizadorPage),
+            "SystemUpdates" => typeof(Views.SystemUpdatesPage),
             "Captura" => typeof(Views.CapturaPage),
             "Tradutor" => typeof(Views.TradutorPage),
             "IALocal" => typeof(Views.IALocalPage),
@@ -181,6 +183,7 @@ public sealed partial class MainPage : Page
                 "Awake" => typeof(Views.AwakePage),
                 "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
                 "Temporizador" => typeof(Views.TemporizadorPage),
+                "SystemUpdates" => typeof(Views.SystemUpdatesPage),
                 "Captura" => typeof(Views.CapturaPage),
                 "Tradutor" => typeof(Views.TradutorPage),
                 "IALocal" => typeof(Views.IALocalPage),
