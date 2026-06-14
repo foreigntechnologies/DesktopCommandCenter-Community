@@ -58,21 +58,27 @@ FunctionEnd
 # Idiomas suportados
 !insertmacro MUI_LANGUAGE "PortugueseBR"
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "Spanish"
 
 LicenseLangString myLicenseData ${LANG_PORTUGUESEBR} "LICENSE.txt"
 LicenseLangString myLicenseData ${LANG_ENGLISH} "LICENSE_EN.txt"
+LicenseLangString myLicenseData ${LANG_SPANISH} "LICENSE_ES.txt"
 
 LangString FinRunText ${LANG_PORTUGUESEBR} "Executar Desktop Command Center"
 LangString FinRunText ${LANG_ENGLISH} "Run Desktop Command Center"
+LangString FinRunText ${LANG_SPANISH} "Ejecutar Desktop Command Center"
 
 LangString FinLinkText ${LANG_PORTUGUESEBR} "Criar atalho na Area de Trabalho"
 LangString FinLinkText ${LANG_ENGLISH} "Create Desktop Shortcut"
+LangString FinLinkText ${LANG_SPANISH} "Crear acceso directo en el Escritorio"
 
 LangString MsgAppRunning ${LANG_PORTUGUESEBR} "O Desktop Command Center esta em execucao em segundo plano.$\n$\nDeseja fecha-lo automaticamente para continuar a instalacao?"
 LangString MsgAppRunning ${LANG_ENGLISH} "Desktop Command Center is currently running in the background.$\n$\nDo you want to close it automatically to continue the installation?"
+LangString MsgAppRunning ${LANG_SPANISH} "Desktop Command Center esta ejecutandose en segundo plano.$\n$\nDesea cerrarlo automaticamente para continuar la instalacion?"
 
 LangString MsgInstallAborted ${LANG_PORTUGUESEBR} "Instalacao cancelada pelo usuario."
 LangString MsgInstallAborted ${LANG_ENGLISH} "Installation aborted by user."
+LangString MsgInstallAborted ${LANG_SPANISH} "Instalacion cancelada por el usuario."
 
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
