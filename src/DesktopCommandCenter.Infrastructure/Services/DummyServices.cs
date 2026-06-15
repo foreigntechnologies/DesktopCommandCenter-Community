@@ -16,7 +16,7 @@ public class DummyAuthService : IAuthService
     public Task<AuthUser> LinkWithGoogleAsync() => Task.FromResult(new AuthUser { Uid = "dummy123", Email = "community@user.com", IdToken = "dummy-token" });
     public Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy123", Email = email, IdToken = "dummy-token" });
     public Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy", Email = email });
-    public Task<AuthUser?> GetCurrentUserAsync() => Task.FromResult<AuthUser?>(null);
+    public Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false) => Task.FromResult<AuthUser?>(null);
     public void Logout() { }
 }
 

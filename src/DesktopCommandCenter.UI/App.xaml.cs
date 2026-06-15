@@ -152,26 +152,279 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     public static bool IsProBuild => System.IO.File.Exists(System.IO.Path.Combine(System.AppContext.BaseDirectory, "DesktopCommandCenter.ProFeatures.dll"));
     
-    public static bool IsProUnlocked { get; set; } = false;
+    private static bool _isProUnlocked = false;
+    public static bool IsProUnlocked
+    {
+        get => _isProUnlocked;
+        set
+        {
+            if (_isProUnlocked != value)
+            {
+                _isProUnlocked = value;
+                SaveProCached(value);
+            }
+        }
+    }
+
+    public static string GetAIAgentProvider()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_provider.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return "Ollama";
+    }
+
+    public static void SaveAIAgentProvider(string provider)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_provider.txt");
+            System.IO.File.WriteAllText(filePath, provider);
+        }
+        catch { }
+    }
+
+    public static string GetAIAgentApiKey()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_apikey.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveAIAgentApiKey(string apiKey)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_apikey.txt");
+            System.IO.File.WriteAllText(filePath, apiKey);
+        }
+        catch { }
+    }
+
+    public static string GetOpenAIApiKey()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_openai_apikey.txt");
+            if (System.IO.File.Exists(filePath)) return System.IO.File.ReadAllText(filePath).Trim();
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveOpenAIApiKey(string apiKey)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_openai_apikey.txt");
+            System.IO.File.WriteAllText(filePath, apiKey);
+        }
+        catch { }
+    }
+
+    public static string GetGeminiApiKey()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_gemini_apikey.txt");
+            if (System.IO.File.Exists(filePath)) return System.IO.File.ReadAllText(filePath).Trim();
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveGeminiApiKey(string apiKey)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_gemini_apikey.txt");
+            System.IO.File.WriteAllText(filePath, apiKey);
+        }
+        catch { }
+    }
+
+    public static string GetClaudeApiKey()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_claude_apikey.txt");
+            if (System.IO.File.Exists(filePath)) return System.IO.File.ReadAllText(filePath).Trim();
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveClaudeApiKey(string apiKey)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_claude_apikey.txt");
+            System.IO.File.WriteAllText(filePath, apiKey);
+        }
+        catch { }
+    }
+
+    public static string GetAIAgentModel()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_model.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveAIAgentModel(string model)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_ai_model.txt");
+            System.IO.File.WriteAllText(filePath, model);
+        }
+        catch { }
+    }
+
+    public static bool GetProCached()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_pro_cached.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim() == "true";
+            }
+        }
+        catch { }
+        return false;
+    }
+
+    public static void SaveProCached(bool isPro)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_pro_cached.txt");
+            System.IO.File.WriteAllText(filePath, isPro ? "true" : "false");
+        }
+        catch { }
+    }
+
+    public static string GetCachedEmail()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_cached_email.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        return string.Empty;
+    }
+
+    public static void SaveCachedEmail(string email)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_cached_email.txt");
+            System.IO.File.WriteAllText(filePath, email);
+        }
+        catch { }
+    }
+
+    public static bool HasAppLanguageCached()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+            return System.IO.File.Exists(filePath);
+        }
+        catch { return false; }
+    }
+
+    public static string GetAppLanguage()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+            if (System.IO.File.Exists(filePath))
+            {
+                return System.IO.File.ReadAllText(filePath).Trim();
+            }
+        }
+        catch { }
+        
+        // Fallback to System Language
+        var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+        if (culture.StartsWith("pt")) return "pt-BR";
+        if (culture.StartsWith("es")) return "es-ES";
+        return "en-US";
+    }
+
+    public static void SaveAppLanguage(string lang)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC");
+            System.IO.Directory.CreateDirectory(dir);
+            var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+            System.IO.File.WriteAllText(filePath, lang);
+        }
+        catch { }
+    }
 
     public App()
     {
-        // Intercepta qualquer exceÃ§Ã£o grave nÃ£o tratada
+        // Intercepta qualquer exceção grave não tratada
         DesktopCommandCenter.UI.Services.CrashLogger.Initialize();
 
         // Inicializa o Velopack no início da aplicação para gerenciar atalhos e atualizações
         Velopack.VelopackApp.Build().Run();
 
-        IsProUnlocked = false;
-
-        AppDomain.CurrentDomain.FirstChanceException += (sender, args) =>
-        {
-            try
-            {
-                System.IO.File.AppendAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "dcc_firstchance.txt"), args.Exception.ToString() + "\n\n");
-            }
-            catch { }
-        };
+        _isProUnlocked = GetProCached();
 
         Services = ConfigureServices();
         InitializeComponent();

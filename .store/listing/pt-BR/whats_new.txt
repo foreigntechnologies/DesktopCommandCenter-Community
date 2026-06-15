@@ -1,0 +1,32 @@
+🆕 O que há de novo nesta versão
+
+▶ Update Center — Novo módulo unificado de atualizações do Windows e softwares
+• Verifique e instale Atualizações do Windows direto da barra lateral, com um clique.
+• Veja todos os softwares desatualizados (via Winget) em uma única lista, com a versão atual e a nova lado a lado.
+• Desinstale aplicativos de forma limpa, sem deixar sobras no registro ou arquivos temporários — graças ao Windows Package Manager (Winget).
+• Atualização Automática em Background: ative o toggle e o DCC verificará e instalará as atualizações do Windows silenciosamente nos horários ociosos.
+• Indicador visual de progresso durante instalações e desinstalações — você sempre sabe o que está acontecendo.
+
+▶ Pesquisa Universal — Encontre qualquer coisa, instantaneamente
+• Nova barra de busca global (Ctrl+Space) que pesquisa em apps, configurações do sistema, regras de automação, notas, histórico da área de transferência e aplicativos instalados — tudo de uma vez.
+• Os resultados aparecem em tempo real enquanto você digita, com zero atraso.
+
+▶ Redesign do Dashboard — Seu centro de comando, em um relance
+• O Dashboard principal agora exibe cards ao vivo para todas as ferramentas, incluindo um card dedicado do Update Center com a contagem de atualizações pendentes.
+• Navegação mais rápida: clique em qualquer card para ir diretamente à ferramenta.
+
+▶ Gerenciador de Processos Avançado
+• Monitore todos os processos em execução com uso de CPU e memória em tempo real.
+• Encerre processos travados diretamente da barra lateral.
+
+▶ Regras de Automação
+• Crie regras condicionais que disparam ações automáticas em segundo plano (ex.: abrir um app ao conectar no Wi-Fi, rodar um script na inicialização).
+
+▶ Otimização de Inicialização Rápida
+• Veja e desative programas de startup para acelerar o tempo de boot do seu Windows.
+
+▶ Relatório de Bug (integrado)
+• Encontrou algum problema? Envie um relatório de bug diretamente pelo aplicativo em segundos.
+
+▶ Estabilidade e Polimento
+• Dezenas de correções de UI, melhorias de performance e atualizações de tradução em Inglês, Português (Brasil) e Espanhol.

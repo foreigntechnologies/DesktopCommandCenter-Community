@@ -10,7 +10,7 @@ public interface IAuthService
     Task<AuthUser> LinkWithGitHubAsync();
     Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password);
     Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password);
-    Task<AuthUser?> GetCurrentUserAsync();
+    Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false);
     void Logout();
     bool IsAuthenticated { get; }
     string? CurrentUserUid { get; }

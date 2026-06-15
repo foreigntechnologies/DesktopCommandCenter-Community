@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using Microsoft.UI.Xaml;
 
@@ -17,6 +18,12 @@ public partial class DashboardViewModel : ObservableObject
 
     private readonly DispatcherTimer _timer;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
+    private bool _isProUnlocked = App.IsProUnlocked;
+
+    public Visibility InverseProVisibility => IsProUnlocked ? Visibility.Collapsed : Visibility.Visible;
+
     public DashboardViewModel()
     {
         UpdateDateTime();
@@ -25,6 +32,11 @@ public partial class DashboardViewModel : ObservableObject
         _timer.Interval = TimeSpan.FromSeconds(1);
         _timer.Tick += (s, e) => UpdateDateTime();
         _timer.Start();
+
+        WeakReferenceMessenger.Default.Register<DesktopCommandCenter.UI.Messages.LicenseChangedMessage>(this, (r, m) =>
+        {
+            IsProUnlocked = m.Value;
+        });
     }
 
     private void UpdateDateTime()

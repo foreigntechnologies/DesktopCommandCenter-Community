@@ -15,10 +15,26 @@ public sealed partial class DashboardPage : Page
         ViewModel = new DashboardViewModel();
         InitializeComponent();
         Loaded += DashboardPage_Loaded;
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+    }
+
+    private void UpdateTranslations()
+    {
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        TxtPro1Title.Text = loc.GetString("Dash_ProFeature1");
+        TxtPro1Desc.Text = loc.GetString("Dash_ProFeature1Desc");
+        TxtPro2Title.Text = loc.GetString("Dash_ProFeature2");
+        TxtPro2Desc.Text = loc.GetString("Dash_ProFeature2Desc");
+        TxtPro3Title.Text = loc.GetString("Dash_ProFeature4"); // Cloud Sync
+        TxtPro3Desc.Text = loc.GetString("Dash_ProFeature4Desc");
+        TxtPro4Title.Text = loc.GetString("Dash_ProFeature3"); // Perfis
+        TxtPro4Desc.Text = loc.GetString("Dash_ProFeature3Desc");
     }
 
     private async void DashboardPage_Loaded(object sender, RoutedEventArgs e)
     {
+        UpdateTranslations();
+        
         // Saudação dinâmica por horário
         var authService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.IAuthService)) as DesktopCommandCenter.Application.Interfaces.IAuthService;
         DesktopCommandCenter.Application.Interfaces.AuthUser? currentUser = null;
@@ -28,27 +44,32 @@ public sealed partial class DashboardPage : Page
         }
         
         string nameSuffix = "";
-        if (currentUser != null && !string.IsNullOrWhiteSpace(currentUser.Email))
+        if (currentUser != null)
         {
-            var parts = currentUser.Email.Split('@');
-            if (parts.Length > 0 && !string.IsNullOrWhiteSpace(parts[0]))
-            {
-                string namePart = parts[0];
-                namePart = char.ToUpper(namePart[0]) + (namePart.Length > 1 ? namePart.Substring(1) : "");
-                nameSuffix = $", {namePart}";
-            }
+            // Usa o nome real do perfil (ex: Google OAuth "Gustavo Koglin")
+            // Fallback para o prefixo do email se o DisplayName estiver vazio
+            string nameToShow = !string.IsNullOrWhiteSpace(currentUser.DisplayName)
+                ? currentUser.DisplayName
+                : (!string.IsNullOrWhiteSpace(currentUser.Email)
+                    ? CapitalizeFirst(currentUser.Email.Split('@')[0])
+                    : "");
+
+            if (!string.IsNullOrWhiteSpace(nameToShow))
+                nameSuffix = $", {nameToShow}";
         }
 
         int hour = DateTime.Now.Hour;
-        TxtGreeting.Text = hour switch
+        string greetingKey = hour switch
         {
-            >= 5 and < 12  => $"Bom dia{nameSuffix} 👋",
-            >= 12 and < 18 => $"Boa tarde{nameSuffix} 👋",
-            _              => $"Boa noite{nameSuffix} 👋"
+            < 12 => "GreetingMorning",
+            < 18 => "GreetingAfternoon",
+            _ => "GreetingEvening"
         };
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        TxtGreeting.Text = loc.GetString(greetingKey) + nameSuffix;
 
         // Versão do app
-        TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1"}";
+        TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? "1.0.0.0"}";
 
         // Badge do plano
         bool isPro = App.IsProUnlocked;
@@ -57,7 +78,11 @@ public sealed partial class DashboardPage : Page
         BtnUpgradePro.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
+        SeparatorBugReport.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
     }
+
+    private static string CapitalizeFirst(string s)
+        => string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1);
 
     private void ToolCard_Click(object sender, RoutedEventArgs e)
     {
@@ -94,12 +119,13 @@ public sealed partial class DashboardPage : Page
         
         if (user == null || string.IsNullOrEmpty(user.Uid))
         {
+            var t = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
             // Requer login primeiro
             var dialog = new ContentDialog
             {
-                Title = "Requer Login",
-                Content = "Você precisa fazer login no aplicativo antes de prosseguir com a assinatura para vincular seu perfil à licença.",
-                CloseButtonText = "Entendi",
+                Title = t.GetString("Dialog_LoginRequired_Title") ?? "Requer Login",
+                Content = t.GetString("Dialog_LoginRequired_Content") ?? "Você precisa fazer login no aplicativo antes de prosseguir com a assinatura para vincular seu perfil à licença.",
+                CloseButtonText = t.GetString("Dialog_GotIt") ?? "Entendi",
                 DefaultButton = ContentDialogButton.Close,
                 XamlRoot = this.XamlRoot
             };

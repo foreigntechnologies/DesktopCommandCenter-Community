@@ -1,0 +1,84 @@
+using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using DesktopCommandCenter.UI.ViewModels;
+
+namespace DesktopCommandCenter.UI.Views;
+
+public sealed partial class SystemUpdatesPage : Page
+{
+    public SystemUpdatesViewModel ViewModel { get; }
+
+    public SystemUpdatesPage()
+    {
+        ViewModel = new SystemUpdatesViewModel();
+        this.InitializeComponent();
+
+        this.Loaded += SystemUpdatesPage_Loaded;
+    }
+
+    private async void SystemUpdatesPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        UpdateEmptyStates();
+        
+        if (!ViewModel.WindowsUpdates.Any() && !ViewModel.IsLoadingWindowsUpdates)
+        {
+            await ViewModel.CheckWindowsUpdatesAsync();
+        }
+        
+        UpdateEmptyStates();
+    }
+
+    private void UpdateEmptyStates()
+    {
+        PnlWUEmpty.Visibility = ViewModel.WindowsUpdates.Any() ? Visibility.Collapsed : Visibility.Visible;
+        PnlSWEmpty.Visibility = ViewModel.SoftwareUpdates.Any() ? Visibility.Collapsed : Visibility.Visible;
+        PnlAppsEmpty.Visibility = ViewModel.InstalledApps.Any() ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    // -- ABA 1: Windows Update --
+
+    private async void BtnCheckWU_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.CheckWindowsUpdatesAsync();
+        UpdateEmptyStates();
+    }
+
+    private async void BtnInstallWU_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.InstallSelectedWindowsUpdatesAsync();
+        UpdateEmptyStates();
+    }
+
+    private void ToggleAutoInstall_Toggled(object sender, RoutedEventArgs e)
+    {
+    }
+
+    // -- ABA 2: Softwares (Winget) --
+
+    private async void BtnCheckSW_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.CheckSoftwareUpdatesAsync();
+        UpdateEmptyStates();
+    }
+
+    private async void BtnUpdateSW_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.UpdateSelectedSoftwareAsync();
+        UpdateEmptyStates();
+    }
+
+    // -- ABA 3: Gerenciar Apps (Desinstalação) --
+
+    private async void BtnLoadApps_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.LoadInstalledAppsAsync();
+        UpdateEmptyStates();
+    }
+
+    private async void BtnUninstall_Click(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.UninstallSelectedAppsAsync();
+        UpdateEmptyStates();
+    }
+}
