@@ -122,7 +122,7 @@ public partial class AuthViewModel : ObservableObject
         App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            App.IsProUnlocked = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
             
             // Notifica todos os listeners (Dashboard, MainPage, etc.) que o estado de licença mudou
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));

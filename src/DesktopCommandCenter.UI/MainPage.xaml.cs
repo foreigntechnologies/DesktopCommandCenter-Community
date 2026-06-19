@@ -83,7 +83,7 @@ public sealed partial class MainPage : Page
             if (user != null)
             {
                 var plan = await licenseService.GetCurrentPlanAsync();
-                App.IsProUnlocked = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                App.IsProUnlocked = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                 WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             }
         }

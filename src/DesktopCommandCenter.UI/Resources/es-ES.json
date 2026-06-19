@@ -106,5 +106,15 @@
     "GreetingMorning": "Buenos días",
     "GreetingAfternoon": "Buenas tardes",
     "GreetingEvening": "Buenas noches",
-    "Settings_AiDesc": "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis."
+    "Settings_AiDesc": "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis.",
+    "ProcMgr_Title": "Administrador de Tareas",
+    "ProcMgr_Search": "Buscar procesos por nombre...",
+    "ProcMgr_Name": "Nombre del Proceso",
+    "ProcMgr_CPU": "CPU (%)",
+    "ProcMgr_RAM": "RAM (MB)",
+    "ProcMgr_Status": "Estado",
+    "ProcMgr_ConfirmKill_Title": "Confirmar Acción",
+    "ProcMgr_ConfirmKill_Msg": "¿Estás seguro de que deseas terminar este árbol de procesos?",
+    "ProcMgr_Kill": "Terminar Proceso",
+    "Gen_Cancel": "Cancelar"
 }

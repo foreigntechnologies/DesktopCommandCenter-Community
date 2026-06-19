@@ -106,5 +106,15 @@
     "GreetingMorning": "Good morning",
     "GreetingAfternoon": "Good afternoon",
     "GreetingEvening": "Good evening",
-    "Settings_AiDesc": "Define API keys for desired providers. Leave blank to use Ollama (Local) for free."
+    "Settings_AiDesc": "Define API keys for desired providers. Leave blank to use Ollama (Local) for free.",
+    "ProcMgr_Title": "Process Manager",
+    "ProcMgr_Search": "Search processes by name...",
+    "ProcMgr_Name": "Process Name",
+    "ProcMgr_CPU": "CPU (%)",
+    "ProcMgr_RAM": "RAM (MB)",
+    "ProcMgr_Status": "Status",
+    "ProcMgr_ConfirmKill_Title": "Confirm Action",
+    "ProcMgr_ConfirmKill_Msg": "Are you sure you want to terminate this process tree?",
+    "ProcMgr_Kill": "Kill Process",
+    "Gen_Cancel": "Cancel"
 }
