@@ -113,6 +113,8 @@
     "ProcMgr_CPU": "CPU (%)",
     "ProcMgr_RAM": "RAM (MB)",
     "ProcMgr_Status": "Estado",
+    "ProcMgr_Orphan": "Huérfano",
+    "ProcMgr_KillTree": "Terminar Árbol de Procesos",
     "ProcMgr_ConfirmKill_Title": "Confirmar Acción",
     "ProcMgr_ConfirmKill_Msg": "¿Estás seguro de que deseas terminar este árbol de procesos?",
     "ProcMgr_Kill": "Terminar Proceso",

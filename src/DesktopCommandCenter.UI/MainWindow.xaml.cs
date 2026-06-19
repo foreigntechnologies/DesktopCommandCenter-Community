@@ -79,7 +79,7 @@ public sealed partial class MainWindow : Window
                         if (user != null)
                         {
                             var plan = await licenseService.GetCurrentPlanAsync();
-                            bool isPro = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                            bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                             
                             // Se o plano mudou (ex: acabou de pagar no Stripe)
                             if (App.IsProUnlocked != isPro)
@@ -110,6 +110,28 @@ public sealed partial class MainWindow : Window
 
     // ── Quick Access Panel (singleton) ────────────────────────────────────────
     private Views.QuickAccessWindow? _quickAccessWindow;
+    private DesktopCommandCenter.Application.Interfaces.ITerminalService? _terminalService;
+    private bool _isTerminalOpen = false;
+
+    private void ToggleTerminal()
+    {
+        DispatcherQueue.TryEnqueue(() => 
+        {
+            _isTerminalOpen = !_isTerminalOpen;
+            if (_isTerminalOpen)
+            {
+                ShowApp();
+                TerminalOverlay.Visibility = Visibility.Visible;
+                TerminalTransform.Y = 0;
+                TerminalWebView.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                TerminalTransform.Y = -2000;
+                TerminalOverlay.Visibility = Visibility.Collapsed;
+            }
+        });
+    }
 
     private void ShowQuickAccess()
     {
@@ -266,7 +288,7 @@ public sealed partial class MainWindow : Window
                 if (user != null)
                 {
                     var plan = await licenseService.GetCurrentPlanAsync();
-                    bool isPro = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                    bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                     App.IsProUnlocked = isPro;
                     
                     DispatcherQueue?.TryEnqueue(() =>
@@ -311,6 +333,60 @@ public sealed partial class MainWindow : Window
         {
             string themeStr = App.GetTheme();
             App.ApplyTheme(themeStr);
+        }
+
+        try
+        {
+            await TerminalWebView.EnsureCoreWebView2Async();
+            var terminalPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "Assets", "Terminal", "terminal.html");
+            TerminalWebView.CoreWebView2.Navigate(new Uri(terminalPath).AbsoluteUri);
+
+            TerminalWebView.CoreWebView2.WebMessageReceived += async (s, args) =>
+            {
+                try
+                {
+                    var json = args.TryGetWebMessageAsString();
+                    var msg = System.Text.Json.JsonDocument.Parse(json).RootElement;
+                    var type = msg.GetProperty("type").GetString();
+                    if (type == "input")
+                    {
+                        var data = msg.GetProperty("data").GetString();
+                        if (_terminalService != null && data != null)
+                            await _terminalService.WriteInputAsync(data);
+                    }
+                    else if (type == "resize")
+                    {
+                        int cols = msg.GetProperty("cols").GetInt32();
+                        int rows = msg.GetProperty("rows").GetInt32();
+                        _terminalService?.Resize(cols, rows);
+                    }
+                }
+                catch { }
+            };
+
+            var hotkeyService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyService>(App.Current.Services);
+            // Ctrl + ' (Oem3 is 0xC0 = 192)
+            hotkeyService.RegisterHotkey(2, 192, ToggleTerminal);
+
+            _terminalService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITerminalService>(App.Current.Services);
+            _terminalService.OutputDataReceived += (s, text) =>
+            {
+                DispatcherQueue?.TryEnqueue(() =>
+                {
+                    try
+                    {
+                        var escaped = System.Text.Json.JsonSerializer.Serialize(new { type = "output", data = text });
+                        TerminalWebView.CoreWebView2.PostWebMessageAsJson(escaped);
+                    }
+                    catch { }
+                });
+            };
+            
+            await _terminalService.StartAsync("powershell.exe", 80, 24);
+        }
+        catch (Exception ex)
+        {
+            Serilog.Log.Error(ex, "Erro ao inicializar o Terminal (FutureShell).");
         }
     }
 }

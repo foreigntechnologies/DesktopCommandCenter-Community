@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="DesktopCommandCenter.UI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -58,6 +58,16 @@
             navigation events and the Loaded lifecycle.
         -->
         <Frame x:Name="RootFrame" Grid.Row="1" />
+
+        <!-- FutureShell Terminal Overlay -->
+        <Grid x:Name="TerminalOverlay" Grid.Row="0" Grid.RowSpan="2" 
+              Visibility="Collapsed" Canvas.ZIndex="1000" Background="Transparent">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="TerminalTransform" Y="-2000" />
+            </Grid.RenderTransform>
+            <WebView2 x:Name="TerminalWebView" Source="about:blank" 
+                      DefaultBackgroundColor="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Grid>
     </Grid>
 </Window>
 
