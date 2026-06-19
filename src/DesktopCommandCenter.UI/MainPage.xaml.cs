@@ -113,7 +113,7 @@ public sealed partial class MainPage : Page
                 {
                     FileName = exePath,
                     Arguments = "--futureshell",
-                    UseShellExecute = false,
+                    UseShellExecute = true,
                     WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
                 });
             }
@@ -198,7 +198,7 @@ public sealed partial class MainPage : Page
                     {
                         FileName = exePath,
                         Arguments = "--futureshell",
-                        UseShellExecute = false,
+                        UseShellExecute = true,
                         WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
                     });
                 }
