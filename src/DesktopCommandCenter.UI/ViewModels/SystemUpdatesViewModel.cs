@@ -63,6 +63,13 @@ public sealed class InstalledSoftwareItem : ObservableObject
 
 public sealed partial class SystemUpdatesViewModel : ObservableObject
 {
+    private readonly DesktopCommandCenter.Application.Interfaces.IDeepCleanService _deepCleanService;
+
+    public SystemUpdatesViewModel(DesktopCommandCenter.Application.Interfaces.IDeepCleanService deepCleanService)
+    {
+        _deepCleanService = deepCleanService;
+    }
+
     // ── Windows Update ──────────────────────────────────────────────
     [ObservableProperty] private bool   _isLoadingWindowsUpdates;
     [ObservableProperty] private string _windowsUpdateStatus = string.Empty;
@@ -86,6 +93,7 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
     [ObservableProperty] private string _installedAppsStatus = string.Empty;
     [ObservableProperty] private bool   _isUninstalling;
     [ObservableProperty] private string _uninstallProgress = string.Empty;
+    [ObservableProperty] private bool   _deepCleanEnabled;
 
     private CancellationTokenSource? _cts;
 
@@ -346,6 +354,17 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             try
             {
                 await RunWingetAsync($"uninstall --id \"{pkg.PackageId}\" --silent", CancellationToken.None);
+                
+                if (DeepCleanEnabled)
+                {
+                    UninstallProgress = string.Format(
+                        Helpers.LocalizationHelper.Instance.GetString("Updates_Apps_DeepCleaning") ?? "Limpando sobras do {0}...",
+                        pkg.Name);
+                    
+                    var deleted = await _deepCleanService.CleanLeftoversAsync(pkg.Name, pkg.Publisher);
+                    // Opcional: logar os arquivos deletados
+                }
+
                 done++;
             }
             catch { }
@@ -376,9 +395,17 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
         };
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start PowerShell.");
-        string stdout = await proc.StandardOutput.ReadToEndAsync(ct);
+        
+        // Kill process if token is cancelled
+        await using var registration = ct.Register(() => { try { if (!proc.HasExited) proc.Kill(true); } catch { } });
+
+        // Read concurrently to avoid pipe buffer deadlock
+        var stdoutTask = proc.StandardOutput.ReadToEndAsync();
+        var stderrTask = proc.StandardError.ReadToEndAsync();
+        
+        await Task.WhenAll(stdoutTask, stderrTask);
         await proc.WaitForExitAsync(ct);
-        return stdout;
+        return stdoutTask.Result;
     }
 
     private static async Task<string> RunPowerShellElevatedAsync(string script)
@@ -409,10 +436,16 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             CreateNoWindow         = true
         };
 
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("winget not found. Install App Installer from the Microsoft Store.");
-        string stdout = await proc.StandardOutput.ReadToEndAsync(ct);
+        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("winget not found.");
+        
+        await using var registration = ct.Register(() => { try { if (!proc.HasExited) proc.Kill(true); } catch { } });
+
+        var stdoutTask = proc.StandardOutput.ReadToEndAsync();
+        var stderrTask = proc.StandardError.ReadToEndAsync();
+
+        await Task.WhenAll(stdoutTask, stderrTask);
         await proc.WaitForExitAsync(ct);
-        return stdout;
+        return stdoutTask.Result;
     }
 
     private static string EscapePs(string script) => script.Replace("\"", "`\"").Replace("\r\n", " ").Replace("\n", " ");

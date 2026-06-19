@@ -39,6 +39,9 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+
             <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
 
             <!-- ── Estilos do Dashboard (DCC original, não remete ao PowerToys) ── -->

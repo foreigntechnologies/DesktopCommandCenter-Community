@@ -28,6 +28,11 @@
                         <FontIcon Glyph="&#xE756;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE756;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />
                 <NavigationViewItem x:Name="NavCalculator" Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
                 <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador" />

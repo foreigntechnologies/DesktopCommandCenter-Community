@@ -104,6 +104,22 @@ public sealed partial class MainPage : Page
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
+        else if (actionId == "FutureShell")
+        {
+            var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            if (!string.IsNullOrEmpty(exePath))
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = "--futureshell",
+                    UseShellExecute = false,
+                    WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                });
+            }
+            AppNavigationView.SelectedItem = null;
+            return;
+        }
 
         bool isProFeature = actionId == "IALocal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
         if (isProFeature && !App.IsProUnlocked)
@@ -138,6 +154,7 @@ public sealed partial class MainPage : Page
             "Automacoes" => typeof(Views.AutomacoesPage),
             "Auth" => typeof(Views.AuthPage),
             "CliCommands" => typeof(Views.CliCommandsPage),
+            "ProcessManager" => typeof(Views.ProcessManagerPage),
             _ => typeof(Views.ComingSoonPage)
         };
 
@@ -171,6 +188,23 @@ public sealed partial class MainPage : Page
         else if (args.InvokedItemContainer != null)
         {
             var tag = args.InvokedItemContainer.Tag?.ToString();
+
+            if (tag == "FutureShell")
+            {
+                var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                if (!string.IsNullOrEmpty(exePath))
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = "--futureshell",
+                        UseShellExecute = false,
+                        WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                    });
+                }
+                sender.SelectedItem = null;
+                return;
+            }
 
             Type? pageType = tag switch
             {

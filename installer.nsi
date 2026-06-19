@@ -129,6 +129,13 @@ SkipCheck:
   CreateDirectory "$INSTDIR"
   # ================================================
   
+  # === LIMPEZA DE CACHE E LOGS ===
+  # Limpa os logs antigos, caches e a pasta temporaria do WebView2, 
+  # mas preserva sessões (login) e banco de dados do usuario
+  RMDir /r "$LocalAppData\DCC\logs"
+  RMDir /r "$LocalAppData\Desktop Command Center.exe.WebView2"
+  # ================================================
+  
   # Copia recursivamente todos os arquivos da compilacao de publicacao
   File /r "publish\v${VERSION}\*.*"
   

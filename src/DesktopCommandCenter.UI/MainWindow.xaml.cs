@@ -68,12 +68,14 @@ public sealed partial class MainWindow : Window
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
             {
                 _lastFocusCheck = DateTime.Now;
+                var currentServices = App.Current.Services;
+                
                 _ = System.Threading.Tasks.Task.Run(async () =>
                 {
                     try
                     {
-                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
-                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
+                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
+                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
 
                         var user = await authService.GetCurrentUserAsync();
                         if (user != null)
@@ -122,15 +124,148 @@ public sealed partial class MainWindow : Window
             {
                 ShowApp();
                 TerminalOverlay.Visibility = Visibility.Visible;
-                TerminalTransform.Y = 0;
+                TerminalSlideUpAnimation.Begin();
                 TerminalWebView.Focus(FocusState.Programmatic);
             }
             else
             {
-                TerminalTransform.Y = -2000;
-                TerminalOverlay.Visibility = Visibility.Collapsed;
+                TerminalSlideDownAnimation.Begin();
             }
         });
+    }
+
+    private void TerminalSlideDownAnimation_Completed(object sender, object e)
+    {
+        TerminalOverlay.Visibility = Visibility.Collapsed;
+    }
+
+    private void CloseTerminal_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isTerminalOpen) ToggleTerminal();
+    }
+
+    private class QuickCommandItem
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Command { get; set; } = string.Empty;
+    }
+
+    private System.Collections.Generic.List<QuickCommandItem> _quickCommands = new();
+    
+    private void LoadQuickCommands()
+    {
+        try
+        {
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC", "dcc_quick_commands.json");
+            if (System.IO.File.Exists(path))
+            {
+                var json = System.IO.File.ReadAllText(path);
+                var items = System.Text.Json.JsonSerializer.Deserialize<System.Collections.Generic.List<QuickCommandItem>>(json);
+                if (items != null) _quickCommands = items;
+            }
+            else
+            {
+                _quickCommands = new System.Collections.Generic.List<QuickCommandItem>
+                {
+                    new QuickCommandItem { Title = "Ping Google", Command = "ping google.com" },
+                    new QuickCommandItem { Title = "IP Config", Command = "ipconfig" }
+                };
+                SaveQuickCommands();
+            }
+            RenderQuickCommands();
+        }
+        catch { }
+    }
+
+    private void SaveQuickCommands()
+    {
+        try
+        {
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC", "dcc_quick_commands.json");
+            var json = System.Text.Json.JsonSerializer.Serialize(_quickCommands);
+            System.IO.File.WriteAllText(path, json);
+        }
+        catch { }
+    }
+
+    private void RenderQuickCommands()
+    {
+        QuickCommandsPanel.Children.Clear();
+        foreach (var cmd in _quickCommands)
+        {
+            var btn = new Microsoft.UI.Xaml.Controls.Button
+            {
+                Content = cmd.Title,
+                FontSize = 12,
+                Tag = cmd.Command,
+                Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
+                BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Microsoft.UI.Xaml.Application.Current.Resources["CardBorderBrush"]
+            };
+            btn.Click += async (s, e) =>
+            {
+                if (_terminalService != null && s is Microsoft.UI.Xaml.Controls.Button b && b.Tag is string commandText)
+                {
+                    await _terminalService.WriteInputAsync(commandText + "\r\n");
+                }
+            };
+            QuickCommandsPanel.Children.Add(btn);
+        }
+
+        var addBtn = new Microsoft.UI.Xaml.Controls.Button
+        {
+            Content = "+ Novo",
+            FontSize = 12,
+            Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
+            BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Microsoft.UI.Xaml.Application.Current.Resources["CardBorderBrush"]
+        };
+        addBtn.Click += AddQuickCommand_Click;
+        QuickCommandsPanel.Children.Add(addBtn);
+    }
+
+    private async void AddQuickCommand_Click(object sender, RoutedEventArgs e)
+    {
+        var titleBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Título (ex: Ping)", Margin = new Thickness(0, 0, 0, 8) };
+        var cmdBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Comando (ex: ping google.com)" };
+        var panel = new Microsoft.UI.Xaml.Controls.StackPanel();
+        panel.Children.Add(titleBox);
+        panel.Children.Add(cmdBox);
+
+        var dialog = new Microsoft.UI.Xaml.Controls.ContentDialog
+        {
+            Title = "Novo Comando Rápido",
+            Content = panel,
+            PrimaryButtonText = "Salvar",
+            CloseButtonText = "Cancelar",
+            XamlRoot = this.Content.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(titleBox.Text) && !string.IsNullOrWhiteSpace(cmdBox.Text))
+        {
+            _quickCommands.Add(new QuickCommandItem { Title = titleBox.Text, Command = cmdBox.Text });
+            SaveQuickCommands();
+            RenderQuickCommands();
+        }
+    }
+
+    private async void CmbShellSelector_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
+    {
+        if (_terminalService == null) return;
+        
+        if (CmbShellSelector.SelectedItem is Microsoft.UI.Xaml.Controls.ComboBoxItem item && item.Tag is string shell)
+        {
+            try
+            {
+                _terminalService.Stop();
+                await _terminalService.StartAsync(shell, 80, 24);
+                // Trigger an initial resize logic if WebView is loaded
+                if (TerminalWebView.CoreWebView2 != null)
+                {
+                    TerminalWebView.CoreWebView2.PostWebMessageAsJson("{\"type\":\"resize_trigger\"}");
+                }
+            }
+            catch { }
+        }
     }
 
     private void ShowQuickAccess()
@@ -276,13 +411,16 @@ public sealed partial class MainWindow : Window
             _ = tService.SetLanguageAsync(lang);
         }
         
+        // Salva uma referência para usar dentro do Task.Run com segurança
+        var currentServices = App.Current.Services;
+        
         // Verifica a licença no startup em background
         _ = System.Threading.Tasks.Task.Run(async () =>
         {
             try
             {
-                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
-                var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
+                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
+                var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
 
                 var user = await authService.GetCurrentUserAsync();
                 if (user != null)
@@ -382,7 +520,9 @@ public sealed partial class MainWindow : Window
                 });
             };
             
-            await _terminalService.StartAsync("powershell.exe", 80, 24);
+            LoadQuickCommands();
+            
+            // Note: StartAsync is now triggered by CmbShellSelector_SelectionChanged as it defaults to index 0
         }
         catch (Exception ex)
         {

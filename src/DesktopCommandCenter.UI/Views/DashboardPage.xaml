@@ -126,6 +126,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!-- Row 1 -->
@@ -283,6 +284,19 @@
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <TextBlock Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
                                 <TextBlock Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="4" Grid.Column="0" Click="ToolCard_Click" Tag="FutureShell" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#7B68EE" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>

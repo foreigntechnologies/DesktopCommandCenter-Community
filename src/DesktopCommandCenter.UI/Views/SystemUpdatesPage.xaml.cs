@@ -11,7 +11,8 @@ public sealed partial class SystemUpdatesPage : Page
 
     public SystemUpdatesPage()
     {
-        ViewModel = new SystemUpdatesViewModel();
+        var deepCleanService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IDeepCleanService>(App.Current.Services);
+        ViewModel = new SystemUpdatesViewModel(deepCleanService);
         this.InitializeComponent();
 
         this.Loaded += SystemUpdatesPage_Loaded;
@@ -34,6 +35,20 @@ public sealed partial class SystemUpdatesPage : Page
         PnlWUEmpty.Visibility = ViewModel.WindowsUpdates.Any() ? Visibility.Collapsed : Visibility.Visible;
         PnlSWEmpty.Visibility = ViewModel.SoftwareUpdates.Any() ? Visibility.Collapsed : Visibility.Visible;
         PnlAppsEmpty.Visibility = ViewModel.InstalledApps.Any() ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private async void MainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (MainPivot.SelectedItem == PivotApps && !ViewModel.InstalledApps.Any() && !ViewModel.IsLoadingInstalledApps)
+        {
+            await ViewModel.LoadInstalledAppsAsync();
+            UpdateEmptyStates();
+        }
+        else if (MainPivot.SelectedItem == PivotSW && !ViewModel.SoftwareUpdates.Any() && !ViewModel.IsLoadingSoftwareUpdates)
+        {
+            await ViewModel.CheckSoftwareUpdatesAsync();
+            UpdateEmptyStates();
+        }
     }
 
     // -- ABA 1: Windows Update --

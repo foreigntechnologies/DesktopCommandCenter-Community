@@ -101,6 +101,8 @@
     "Dialog_ProRequired_Title": "PRO Feature Required",
     "Dialog_ProRequired_Content_LoggedIn": "The '{0}' feature is available only for PRO subscribers. Subscribe now to unlock!",
     "Dialog_ProRequired_Content_LoggedOut": "The '{0}' feature is available only for PRO subscribers. Log in and subscribe to unlock!",
+    "Dialog_ProRequired_Primary_LoggedIn": "Subscribe to PRO",
+    "Dialog_ProRequired_Primary_LoggedOut": "Login / Subscribe to PRO",
     "Dialog_Login": "Log In",
     "Dialog_Cancel": "Cancel",
     "GreetingMorning": "Good morning",

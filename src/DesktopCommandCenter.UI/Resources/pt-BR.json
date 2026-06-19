@@ -101,6 +101,8 @@
     "Dialog_ProRequired_Title": "Recurso PRO Necessário",
     "Dialog_ProRequired_Content_LoggedIn": "O recurso '{0}' está disponível apenas para assinantes PRO. Assine agora para liberar!",
     "Dialog_ProRequired_Content_LoggedOut": "O recurso '{0}' está disponível apenas para assinantes PRO. Faça login e assine para liberar!",
+    "Dialog_ProRequired_Primary_LoggedIn": "Assinar PRO",
+    "Dialog_ProRequired_Primary_LoggedOut": "Entrar / Assinar PRO",
     "Dialog_Login": "Fazer Login",
     "Dialog_Cancel": "Cancelar",
     "GreetingMorning": "Bom dia",

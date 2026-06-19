@@ -66,9 +66,11 @@ public class ConPTYService : ITerminalService
         var pSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
         var tSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
 
+        var cmdBuilder = new StringBuilder(commandLine);
+
         bool created = TerminalNativeMethods.CreateProcess(
             null!,
-            commandLine,
+            cmdBuilder,
             ref pSec,
             ref tSec,
             false,

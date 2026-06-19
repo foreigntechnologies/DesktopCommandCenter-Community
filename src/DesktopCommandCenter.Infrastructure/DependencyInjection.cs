@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddSingleton<IAutomationEngine, AutomationEngine>();
         services.AddSingleton<IProcessService, ProcessService>();
         services.AddTransient<ITerminalService, ConPTYService>();
+        services.AddTransient<IDeepCleanService, DeepCleanService>();
         
         // Load PRO Features if available
         var proAssemblyPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "DesktopCommandCenter.ProFeatures.dll");

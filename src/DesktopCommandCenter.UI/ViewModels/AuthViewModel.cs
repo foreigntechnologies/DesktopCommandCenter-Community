@@ -11,6 +11,7 @@ public partial class AuthViewModel : ObservableObject
 {
     private readonly IAuthService _authService;
     private readonly ILicenseService _licenseService;
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotLoading))]
@@ -79,6 +80,7 @@ public partial class AuthViewModel : ObservableObject
     {
         _authService = authService;
         _licenseService = licenseService;
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
         
         // Escuta mudanças de licença do sistema (ex: ao voltar do Stripe)
         WeakReferenceMessenger.Default.Register<Messages.LicenseChangedMessage>(this, (r, m) =>
@@ -119,7 +121,7 @@ public partial class AuthViewModel : ObservableObject
 
         var plan = await _licenseService.GetCurrentPlanAsync();
         
-        App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
+        _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
             App.IsProUnlocked = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);

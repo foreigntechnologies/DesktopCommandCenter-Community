@@ -61,11 +61,68 @@
 
         <!-- FutureShell Terminal Overlay -->
         <Grid x:Name="TerminalOverlay" Grid.Row="0" Grid.RowSpan="2" 
-              Visibility="Collapsed" Canvas.ZIndex="1000" Background="Transparent">
+              Visibility="Collapsed" Canvas.ZIndex="1000" 
+              VerticalAlignment="Bottom" Height="400"
+              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              BorderBrush="{ThemeResource CardBorderBrush}"
+              BorderThickness="0,1,0,0">
+            
+            <Grid.Resources>
+                <Storyboard x:Name="TerminalSlideUpAnimation">
+                    <DoubleAnimation Storyboard.TargetName="TerminalTransform" 
+                                     Storyboard.TargetProperty="Y"
+                                     To="0" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction>
+                            <ExponentialEase EasingMode="EaseOut" Exponent="5"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+                <Storyboard x:Name="TerminalSlideDownAnimation" Completed="TerminalSlideDownAnimation_Completed">
+                    <DoubleAnimation Storyboard.TargetName="TerminalTransform" 
+                                     Storyboard.TargetProperty="Y"
+                                     To="400" Duration="0:0:0.25">
+                        <DoubleAnimation.EasingFunction>
+                            <ExponentialEase EasingMode="EaseIn" Exponent="5"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </Grid.Resources>
+
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="TerminalTransform" Y="-2000" />
+                <TranslateTransform x:Name="TerminalTransform" Y="400" />
             </Grid.RenderTransform>
-            <WebView2 x:Name="TerminalWebView" Source="about:blank" 
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Grid Background="{ThemeResource CardBackgroundBrush}" Padding="16,8">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <FontIcon Glyph="&#xE756;" FontSize="14" Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center" />
+                    <ComboBox x:Name="CmbShellSelector" Width="140" SelectedIndex="0" SelectionChanged="CmbShellSelector_SelectionChanged" Height="32" Padding="8,4">
+                        <ComboBoxItem Content="PowerShell" Tag="powershell.exe" />
+                        <ComboBoxItem Content="CMD" Tag="cmd.exe" />
+                        <ComboBoxItem Content="Bash (WSL)" Tag="wsl.exe" />
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="&#xE711;" FontFamily="Segoe Fluent Icons" FontSize="10" 
+                        Background="Transparent" BorderThickness="0" 
+                        HorizontalAlignment="Right" Click="CloseTerminal_Click"
+                        Width="28" Height="28" Padding="0"/>
+            </Grid>
+
+            <!-- Quick Commands Bar -->
+            <Border Grid.Row="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource CardBorderBrush}" BorderThickness="0,0,0,1">
+                <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" Padding="16,8">
+                    <StackPanel x:Name="QuickCommandsPanel" Orientation="Horizontal" Spacing="8">
+                        <Button Content="+ Novo Comando" FontSize="12" Click="AddQuickCommand_Click" Background="Transparent" BorderBrush="{ThemeResource CardBorderBrush}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <WebView2 x:Name="TerminalWebView" Grid.Row="2" Source="about:blank" 
                       DefaultBackgroundColor="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         </Grid>
     </Grid>

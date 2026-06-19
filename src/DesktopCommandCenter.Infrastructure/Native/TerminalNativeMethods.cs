@@ -80,7 +80,7 @@ internal static class TerminalNativeMethods
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     internal static extern bool CreateProcess(
         string lpApplicationName,
-        string lpCommandLine,
+        [In, Out] System.Text.StringBuilder lpCommandLine,
         ref SECURITY_ATTRIBUTES lpProcessAttributes,
         ref SECURITY_ATTRIBUTES lpThreadAttributes,
         bool bInheritHandles,

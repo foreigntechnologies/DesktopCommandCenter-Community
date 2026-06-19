@@ -462,6 +462,21 @@ public partial class App : Microsoft.UI.Xaml.Application
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        var cmdArgs = Environment.GetCommandLineArgs();
+        bool isFutureShell = false;
+        foreach (var arg in cmdArgs)
+        {
+            if (arg.Equals("--futureshell", StringComparison.OrdinalIgnoreCase))
+                isFutureShell = true;
+        }
+
+        if (isFutureShell)
+        {
+            MainWindow = new Views.FutureShellWindow();
+            MainWindow.Activate();
+            return;
+        }
+
         MainWindow = new MainWindow();
         MainWindow.Activate();
 

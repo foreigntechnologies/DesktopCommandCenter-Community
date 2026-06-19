@@ -46,7 +46,7 @@
         </StackPanel>
 
         <!-- ══ PIVOT (abas) ══ -->
-        <Pivot Grid.Row="1" x:Name="MainPivot">
+        <Pivot Grid.Row="1" x:Name="MainPivot" SelectionChanged="MainPivot_SelectionChanged">
 
             <!-- ══════════════════════════════════════════════════════════
                  ABA 1 – WINDOWS UPDATE
@@ -355,13 +355,28 @@
                     </Grid.RowDefinitions>
 
                     <!-- Info banner -->
-                    <InfoBar Grid.Row="0"
-                             x:Name="InfoUninstall"
-                             IsOpen="True"
-                             IsClosable="True"
-                             Severity="Informational"
-                             Title="Desinstalação Limpa via Winget"
-                             Message="O Winget remove o software e os registros do sistema sem sobras, de forma silenciosa." />
+                    <Border Grid.Row="0"
+                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            CornerRadius="8" Padding="14,10" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="Desinstalação Limpa (Deep Clean)"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <TextBlock Text="Remove sobras de arquivos temporários, cache e pastas do sistema após a desinstalação."
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1"
+                                          IsOn="{x:Bind ViewModel.DeepCleanEnabled, Mode=TwoWay}"
+                                          VerticalAlignment="Center"
+                                          Margin="12,0,0,0" />
+                        </Grid>
+                    </Border>
 
                     <!-- Toolbar -->
                     <Grid Grid.Row="1">
