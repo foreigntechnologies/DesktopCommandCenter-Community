@@ -30,6 +30,11 @@ public sealed partial class FutureShellWindow : Window
 
         appWindow.Title = "FutureShell";
         var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "FutureShell.ico");
+        if (!File.Exists(iconPath))
+        {
+            iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
+        }
+        
         if (File.Exists(iconPath))
         {
             appWindow.SetIcon(iconPath);

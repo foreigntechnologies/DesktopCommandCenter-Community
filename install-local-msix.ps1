@@ -71,7 +71,15 @@ Write-Host "Assinando o pacote localmente..." -ForegroundColor Gray
 $signCmd = "& `"$($SignTool.FullName)`" sign /fd SHA256 /a /f `"$PfxPath`" /p `"1234`" `"$($MsixPath.FullName)`""
 Invoke-Expression $signCmd
 
-# 4. Instalar o pacote!
+# 4. Fechar o app se estiver aberto e Instalar o pacote!
+Write-Host "Verificando se o aplicativo está em execução..." -ForegroundColor Gray
+$process = Get-Process -Name "DesktopCommandCenter.UI" -ErrorAction SilentlyContinue
+if ($process) {
+    Write-Host "O aplicativo está aberto. Fechando para uma instalação limpa..." -ForegroundColor Yellow
+    Stop-Process -Name "DesktopCommandCenter.UI" -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
+}
+
 Write-Host "Instalando o aplicativo no Windows..." -ForegroundColor Cyan
 Add-AppxPackage -Path $MsixPath.FullName -ForceUpdateFromAnyVersion
 

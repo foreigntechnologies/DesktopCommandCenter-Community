@@ -86,6 +86,11 @@ public sealed partial class MainPage : Page
                 App.IsProUnlocked = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                 WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             }
+            else
+            {
+                App.IsProUnlocked = false;
+                WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(false));
+            }
         }
         catch { }
     }

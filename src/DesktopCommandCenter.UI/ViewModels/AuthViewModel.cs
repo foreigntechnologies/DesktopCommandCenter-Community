@@ -85,7 +85,14 @@ public partial class AuthViewModel : ObservableObject
         // Escuta mudanças de licença do sistema (ex: ao voltar do Stripe)
         WeakReferenceMessenger.Default.Register<Messages.LicenseChangedMessage>(this, (r, m) =>
         {
-            _ = CheckInitialStateAsync();
+            // Apenas atualiza a UI se o valor for diferente, para evitar loop infinito
+            if (App.IsProUnlocked != m.Value) 
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    CurrentPlan = m.Value ? "pro" : "free";
+                });
+            }
         });
 
         // Set initial synchronous state based on cached data to avoid logged-out UI flickering
@@ -108,6 +115,7 @@ public partial class AuthViewModel : ObservableObject
         {
             CurrentPlan = "free";
             StatusMessage = string.Empty;
+            App.IsProUnlocked = false;
         }
     }
 
@@ -124,9 +132,13 @@ public partial class AuthViewModel : ObservableObject
         _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            App.IsProUnlocked = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
             
-            // Notifica todos os listeners (Dashboard, MainPage, etc.) que o estado de licença mudou
+            App.IsProUnlocked = newIsPro;
+            
+            // Notifica listeners APENAS se não estourar loop (mesmo que seja mesmo valor, os listeners como MainPage cuidam de si)
+            // Para evitar o loop do CheckInitialStateAsync, removemos temporariamente o listening ou filtramos.
+            // Aqui, enviamos sempre que o login atualiza o plano com sucesso.
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             
             UserEmail  = user.Email;

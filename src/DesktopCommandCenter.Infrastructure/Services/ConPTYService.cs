@@ -66,7 +66,9 @@ public class ConPTYService : ITerminalService
         var pSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
         var tSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
 
-        var cmdBuilder = new StringBuilder(commandLine);
+        string psPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");
+        var cmdBuilder = new StringBuilder(commandLine.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase) ? psPath : commandLine);
+        string cwd = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         bool created = TerminalNativeMethods.CreateProcess(
             null!,
@@ -76,7 +78,7 @@ public class ConPTYService : ITerminalService
             false,
             TerminalNativeMethods.EXTENDED_STARTUPINFO_PRESENT,
             IntPtr.Zero,
-            null!,
+            cwd,
             ref startupInfo,
             out _processInfo);
 

@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <Image Source="ms-appx:///Assets/FutureShell.png" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+            <Image Source="/Assets/FutureShell.png" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="FutureShell" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
         </Grid>
 
