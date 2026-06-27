@@ -97,10 +97,11 @@ exports.stripeWebhookCheckout = functions.runWith({
     }
   } 
   
-  // Tratamento para quando a assinatura é cancelada ou expira por falta de pagamento
-  if (event.type === 'customer.subscription.deleted') {
+  // Tratamento para quando a assinatura é atualizada, pausada, cancelada ou expira
+  if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.paused') {
     const subscription = event.data.object;
     const customerId = subscription.customer;
+    const status = subscription.status; // 'active', 'paused', 'canceled', 'trialing', etc.
 
     if (customerId) {
       try {
@@ -112,14 +113,21 @@ exports.stripeWebhookCheckout = functions.runWith({
 
         if (!usersSnapshot.empty) {
           const userDoc = usersSnapshot.docs[0];
-          // Rebaixa o usuário para o plano grátis
-          await userDoc.ref.set({ plan: 'free' }, { merge: true });
-          console.log(`🚫 Assinatura cancelada! Usuário ${userDoc.id} rebaixado para free.`);
+          
+          if (event.type === 'customer.subscription.deleted' || (status !== 'active' && status !== 'trialing')) {
+            // Rebaixa o usuário para o plano grátis se não estiver pago ou no período de teste
+            await userDoc.ref.set({ plan: 'free' }, { merge: true });
+            console.log(`🚫 Assinatura ${status}! Usuário ${userDoc.id} rebaixado para free.`);
+          } else if (status === 'active' || status === 'trialing') {
+            // Garante que retorne/mantenha o pro caso a assinatura esteja ativa ou em trial
+            await userDoc.ref.set({ plan: 'pro' }, { merge: true });
+            console.log(`✅ Assinatura ${status}! Usuário ${userDoc.id} atualizado/restaurado para pro.`);
+          }
         } else {
-          console.log(`⚠️ Assinatura cancelada, mas não achamos o usuário com o customerId ${customerId}.`);
+          console.log(`⚠️ Evento de assinatura recebido, mas não achamos o usuário com o customerId ${customerId}.`);
         }
       } catch (error) {
-        console.error('Erro ao cancelar assinatura do usuário:', error);
+        console.error('Erro ao gerenciar status da assinatura do usuário:', error);
         return res.status(500).send('Erro interno');
       }
     }

@@ -55,7 +55,20 @@ Write-Host "-> Identidade do pacote parece OK." -ForegroundColor Green
 $manifest.Package.Identity.Version = "$CleanVersion.0"
 $manifest.Save($ManifestFile)
 
-# 2. Prepara os diretórios
+# 2. Executa os Testes
+Write-Host "Executando Testes Unitários..." -ForegroundColor Gray
+dotnet test tests/DesktopCommandCenter.UnitTests
+if ($LASTEXITCODE -ne 0) { Write-Error "Testes Unitários falharam!" }
+
+Write-Host "Executando Testes de Integração..." -ForegroundColor Gray
+dotnet test tests/DesktopCommandCenter.IntegrationTests
+if ($LASTEXITCODE -ne 0) { Write-Error "Testes de Integração falharam!" }
+
+Write-Host "Executando Testes End-to-End..." -ForegroundColor Gray
+dotnet test tests/DesktopCommandCenter.UITests
+if ($LASTEXITCODE -ne 0) { Write-Error "Testes End-to-End falharam!" }
+
+# 3. Prepara os diretórios
 if (!(Test-Path $ReleasesDir)) {
     New-Item -ItemType Directory -Path $ReleasesDir | Out-Null
 }
@@ -74,7 +87,7 @@ Write-Host "Iniciando compilação MSIX via dotnet publish..." -ForegroundColor 
 # /p:UapAppxPackageBuildMode=StoreUpload -> Gera o arquivo ideal para Partner Center (.msixupload)
 # /p:AppxBundle=Always -> Opcional, cria pacote para múltiplas arquiteturas
 
-$PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 /p:WindowsPackageType=MSIX /p:AppxPackageSigningEnabled=false /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Always /p:GenerateAppxPackageOnBuild=true /p:Version=$CleanVersion"
+$PublishCmd = "dotnet publish $ProjectFile -c Release -r win-x64 /p:WindowsPackageType=MSIX /p:AppxPackageSigningEnabled=false /p:AppxSymbolPackageEnabled=false /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Always /p:GenerateAppxPackageOnBuild=true /p:Version=$CleanVersion"
 
 Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
