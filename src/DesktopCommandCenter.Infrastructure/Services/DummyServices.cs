@@ -18,6 +18,7 @@ public class DummyAuthService : IAuthService
     public Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password) => Task.FromResult(new AuthUser { Uid = "dummy", Email = email });
     public Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false) => Task.FromResult<AuthUser?>(null);
     public void Logout() { }
+    public void CancelLogin() { }
 }
 
 public class DummyLicenseService : ILicenseService

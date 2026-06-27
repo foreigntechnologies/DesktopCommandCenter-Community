@@ -102,9 +102,9 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Cancel the close, hide instead so the app keeps running in the background for hotkeys
-        args.Handled = true;
-        this.AppWindow.Hide();
+        // Ao fechar (X), realmente fecha o app.
+        // O ícone da bandeja será destruído junto.
+        Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }

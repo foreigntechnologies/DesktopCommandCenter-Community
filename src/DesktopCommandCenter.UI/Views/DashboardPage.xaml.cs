@@ -96,10 +96,9 @@ public sealed partial class DashboardPage : Page
         await dialog.ShowAsync();
     }
 
-    private async void BtnUpgradePro_Click(object sender, RoutedEventArgs e)
+    private void BtnUpgradePro_Click(object sender, RoutedEventArgs e)
     {
-        await Windows.System.Launcher.LaunchUriAsync(
-            new Uri("https://foreigntechnologies.com.br/projects/windows/desktop-command-center"));
+        WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Auth"));
     }
 
     private async void StripeMonthly_Click(object sender, RoutedEventArgs e)
@@ -130,7 +129,7 @@ public sealed partial class DashboardPage : Page
                 XamlRoot = this.XamlRoot
             };
             await dialog.ShowAsync();
-            WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("AuthPage"));
+            WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Auth"));
             return;
         }
 

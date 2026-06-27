@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="DesktopCommandCenter.UI.Views.AuthPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -34,6 +34,7 @@
                                    HorizontalAlignment="Center"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    FontSize="12" />
+                        <HyperlinkButton Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
 
                     <Border x:Name="ErrorPanel" CornerRadius="8" Padding="12,10"
@@ -205,7 +206,7 @@
                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
                         <!-- Ações PRO / Free -->
-                        <StackPanel x:Name="FreeActionsPanel" Spacing="20" x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                        <StackPanel x:Name="FreeActionsPanel" Spacing="20" Visibility="{x:Bind ViewModel.FreePlanVisibility, Mode=OneWay}">
                             <TextBlock x:Name="TxtProAdTitle" Text="🚀 Desbloqueie o Poder do PRO"
                                        FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" 
                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
@@ -252,7 +253,7 @@
                         </StackPanel>
 
                         <!-- Plano PRO ativo -->
-                        <StackPanel x:Name="ProActivePanel" Spacing="16" x:Load="{x:Bind ViewModel.IsProPlan, Mode=OneWay}"
+                        <StackPanel x:Name="ProActivePanel" Spacing="16" Visibility="{x:Bind ViewModel.ProPlanVisibility, Mode=OneWay}"
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
@@ -266,6 +267,25 @@
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE9E9;" FontSize="14" />
                                     <TextBlock x:Name="TxtProManage" Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Plano Pausado -->
+                        <StackPanel x:Name="PausedActivePanel" Spacing="16" Visibility="{x:Bind ViewModel.PausedPlanVisibility, Mode=OneWay}"
+                                    HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE769;" FontSize="24" Foreground="Orange" />
+                                <TextBlock x:Name="TxtPausedActiveTitle" Text="Plano Pausado" FontWeight="Bold" FontSize="16" />
+                            </StackPanel>
+                            <TextBlock x:Name="TxtPausedActiveDesc" Text="Sua assinatura está pausada. Retome-a no portal para voltar a ter acesso PRO." FontSize="13"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                            <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
+                                    HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <FontIcon Glyph="&#xE9E9;" FontSize="14" />
+                                    <TextBlock x:Name="TxtPausedManage" Text="Gerenciar Assinatura" FontWeight="SemiBold" FontSize="13" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>

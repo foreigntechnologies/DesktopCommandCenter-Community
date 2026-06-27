@@ -97,11 +97,20 @@ exports.stripeWebhookCheckout = functions.runWith({
     }
   } 
   
-  // Tratamento para quando a assinatura é atualizada, pausada, cancelada ou expira
-  if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.paused') {
-    const subscription = event.data.object;
-    const customerId = subscription.customer;
-    const status = subscription.status; // 'active', 'paused', 'canceled', 'trialing', etc.
+  // Tratamento para quando a assinatura é atualizada, pausada, cancelada ou expira, ou cliente deletado
+  if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.paused' || event.type === 'customer.deleted') {
+    const obj = event.data.object;
+    
+    let customerId;
+    let status;
+    
+    if (event.type === 'customer.deleted') {
+      customerId = obj.id;
+      status = 'deleted'; // Força status deletado para rebaixar para free
+    } else {
+      customerId = obj.customer;
+      status = obj.status; // 'active', 'paused', 'canceled', 'trialing', etc.
+    }
 
     if (customerId) {
       try {
@@ -114,10 +123,13 @@ exports.stripeWebhookCheckout = functions.runWith({
         if (!usersSnapshot.empty) {
           const userDoc = usersSnapshot.docs[0];
           
-          if (event.type === 'customer.subscription.deleted' || (status !== 'active' && status !== 'trialing')) {
-            // Rebaixa o usuário para o plano grátis se não estiver pago ou no período de teste
+          if (event.type === 'customer.subscription.deleted' || event.type === 'customer.deleted' || (status !== 'active' && status !== 'trialing' && status !== 'paused')) {
+            // Rebaixa o usuário para o plano grátis
             await userDoc.ref.set({ plan: 'free' }, { merge: true });
-            console.log(`🚫 Assinatura ${status}! Usuário ${userDoc.id} rebaixado para free.`);
+            console.log(`🚫 Assinatura/Cliente ${status}! Usuário ${userDoc.id} rebaixado para free.`);
+          } else if (status === 'paused') {
+            await userDoc.ref.set({ plan: 'paused' }, { merge: true });
+            console.log(`⏸ Assinatura ${status}! Usuário ${userDoc.id} pausado.`);
           } else if (status === 'active' || status === 'trialing') {
             // Garante que retorne/mantenha o pro caso a assinatura esteja ativa ou em trial
             await userDoc.ref.set({ plan: 'pro' }, { merge: true });

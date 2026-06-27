@@ -34,13 +34,24 @@ public partial class AuthViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(IsPausedPlan))]
+    [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private bool _isLoggedIn;
 
     public bool IsNotLoggedIn => !IsLoggedIn;
 
+    private CancellationTokenSource? _pollingCts;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(IsPausedPlan))]
+    [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private string _currentPlan = "free";
 
@@ -72,9 +83,15 @@ public partial class AuthViewModel : ObservableObject
     public bool CanLinkGitHub => !HasGitHubLinked;
     public bool HasNoGoogleLinked => !HasGoogleLinked;
 
-    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) && !CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : "Plano Community (Gratuito)";
+    public bool IsPausedPlan => IsLoggedIn && CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
+    
+    public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility ProPlanVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility PausedPlanVisibility => IsPausedPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    
+    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : (IsPausedPlan ? "⏸ Plano Pausado" : "Plano Community (Gratuito)");
 
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
@@ -253,14 +270,24 @@ public partial class AuthViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void CancelLogin()
+    {
+        _authService.CancelLogin();
+        _pollingCts?.Cancel();
+        IsLoading = false;
+        StatusMessage = "Processo interrompido.";
+    }
+
+    [RelayCommand]
     public async Task UpgradeMonthlyAsync()
     {
         var user = await _authService.GetCurrentUserAsync();
         if (user == null) return;
         
-        // O UID é passado no client_reference_id para o webhook atualizar o banco!
         string url = $"https://buy.stripe.com/14AeVf9Q46Gz5nY9ttf3a0p?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        
+        StartPollingForPlanChange("pro");
     }
 
     [RelayCommand]
@@ -271,13 +298,65 @@ public partial class AuthViewModel : ObservableObject
         
         string url = $"https://buy.stripe.com/7sYbJ3e6k3uncQq499f3a0q?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+
+        StartPollingForPlanChange("pro");
     }
 
     [RelayCommand]
-    public void OpenCustomerPortal()
+    public async Task OpenCustomerPortalAsync()
     {
-        // Redireciona para o Customer Portal do Stripe
         string url = "https://billing.stripe.com/p/login/7sY7sN6DS9SL5nY6hhf3a00";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+
+        StartPollingForPlanChange();
+    }
+
+    private async void StartPollingForPlanChange(string? expectedNewPlan = null)
+    {
+        if (IsLoading) return;
+        IsLoading = true;
+        StatusMessage = expectedNewPlan == "pro" ? "Aguardando confirmação de pagamento... (Finalize no navegador)" : "Aguardando alterações na assinatura... (Finalize no navegador)";
+        _pollingCts?.Cancel();
+        _pollingCts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        
+        string startingPlan = CurrentPlan;
+
+        try 
+        {
+            while (!_pollingCts.Token.IsCancellationRequested)
+            {
+                await Task.Delay(3000, _pollingCts.Token);
+                var currentDbPlan = await _licenseService.GetCurrentPlanAsync();
+                
+                // Se o plano no banco mudou em relação ao que tínhamos
+                if (currentDbPlan != startingPlan)
+                {
+                    _dispatcherQueue.TryEnqueue(() =>
+                    {
+                        CurrentPlan = currentDbPlan;
+                        App.IsProUnlocked = currentDbPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                        WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+                        StatusMessage = "Plano atualizado com sucesso!";
+                        IsLoading = false;
+                    });
+                    break;
+                }
+            }
+        }
+        catch (TaskCanceledException) 
+        { 
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                StatusMessage = "Verificação interrompida.";
+                IsLoading = false;
+            });
+        }
+        catch 
+        { 
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsLoading = false;
+            });
+        }
     }
 }

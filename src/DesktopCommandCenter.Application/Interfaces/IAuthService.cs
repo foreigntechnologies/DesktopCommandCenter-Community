@@ -12,6 +12,7 @@ public interface IAuthService
     Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password);
     Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false);
     void Logout();
+    void CancelLogin();
     bool IsAuthenticated { get; }
     string? CurrentUserUid { get; }
 }
