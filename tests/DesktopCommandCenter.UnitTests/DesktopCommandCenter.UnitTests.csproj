@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\..\src\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
   </ItemGroup>
 
 </Project>
