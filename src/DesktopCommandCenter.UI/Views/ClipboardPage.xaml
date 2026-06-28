@@ -46,7 +46,7 @@
                         
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                             <Button ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent"/>
-                            <Button ToolTipService.ToolTip="Excluir" Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding DataContext.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}" />
+                            <Button ToolTipService.ToolTip="Excluir" Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding ViewModel.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
