@@ -1,4 +1,5 @@
 <Page
+    x:Name="RootPage"
     x:Class="DesktopCommandCenter.UI.Views.ClipboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -43,7 +44,10 @@
                         <TextBlock Text="{Binding Content}" TextWrapping="Wrap" MaxLines="3" VerticalAlignment="Center" Visibility="{x:Bind Type, Converter={StaticResource TextVisibilityConverter}}" />
                         <Image Source="{Binding ImagePath}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" Visibility="{x:Bind Type, Converter={StaticResource ImageVisibilityConverter}}" />
                         
-                        <Button Grid.Column="1" ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <Button ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent"/>
+                            <Button ToolTipService.ToolTip="Excluir" Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding ViewModel.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

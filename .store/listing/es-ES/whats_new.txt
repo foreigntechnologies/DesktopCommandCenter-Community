@@ -1,0 +1,32 @@
+🆕 Novedades de esta versión
+
+▶ Update Center — Nuevo módulo unificado de actualizaciones de Windows y software
+• Comprueba e instala Actualizaciones de Windows directamente desde la barra lateral, con un solo clic.
+• Visualiza todo tu software desactualizado (a través de Winget) en una única lista, con la versión actual y la nueva una al lado de la otra.
+• Desinstala aplicaciones de forma limpia, sin dejar residuos en el registro ni archivos temporales — gracias al Windows Package Manager (Winget).
+• Actualización Automática en Segundo Plano: activa el interruptor y DCC verificará e instalará las actualizaciones de Windows de forma silenciosa durante los horarios de inactividad.
+• Indicador visual de progreso durante las instalaciones y desinstalaciones — siempre sabrás qué está pasando.
+
+▶ Búsqueda Universal — Encuentra cualquier cosa, al instante
+• Nueva barra de búsqueda global (Ctrl+Espacio) que busca en apps, configuración del sistema, reglas de automatización, notas, historial del portapapeles y aplicaciones instaladas — todo a la vez.
+• Los resultados aparecen en tiempo real mientras escribes, sin ningún retraso.
+
+▶ Rediseño del Dashboard — Tu centro de mando, de un vistazo
+• El Dashboard principal ahora muestra tarjetas en vivo para todas las herramientas, incluyendo una tarjeta dedicada del Update Center con el conteo de actualizaciones pendientes.
+• Navegación más rápida: haz clic en cualquier tarjeta para ir directamente a la herramienta.
+
+▶ Administrador de Procesos Avanzado
+• Monitorea todos los procesos en ejecución con uso de CPU y memoria en tiempo real.
+• Termina procesos no responsivos directamente desde la barra lateral.
+
+▶ Reglas de Automatización
+• Crea reglas condicionales que activan acciones automáticas en segundo plano (ej.: abrir una app al conectarse a Wi-Fi, ejecutar un script al inicio).
+
+▶ Optimización de Inicio Rápido
+• Visualiza y deshabilita los programas de inicio para acelerar el tiempo de arranque de tu Windows.
+
+▶ Reporte de Errores (integrado)
+• ¿Encontraste un problema? Envía un reporte de error directamente desde la app en segundos.
+
+▶ Estabilidad y Mejoras
+• Decenas de correcciones de interfaz, mejoras de rendimiento y actualizaciones de traducción en Inglés, Portugués (Brasil) y Español.

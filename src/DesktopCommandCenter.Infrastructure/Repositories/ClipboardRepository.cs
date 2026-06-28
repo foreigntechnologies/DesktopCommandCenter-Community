@@ -28,7 +28,7 @@ public class ClipboardRepository : IClipboardRepository
         return item;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(System.Guid id)
     {
         var item = await _context.ClipboardItems.FindAsync(id);
         if (item != null)

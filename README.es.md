@@ -24,6 +24,7 @@ Diseñado para profesionales, desarrolladores, creadores de contenido, analistas
 - 📋 **Smart Clipboard**: Un servicio en segundo plano que captura silenciosamente tu historial de portapapeles, permitiéndote buscar y recuperar copias anteriores al instante.
 - 📝 **Notas Rápidas**: Un bloc de notas increíblemente rápido integrado en la barra lateral.
 - 🌍 **Localización en Tiempo Real**: Interfaz completamente traducida (Inglés, Portugués, Español).
+- 💻 **FutureShell**: Un terminal robusto PTY (Pseudo Console) integrado, capaz de ejecutar PowerShell, CMD, Bash y cualquier CLI global instalada en su sistema. Soporta un sistema de ayuda inteligente personalizado escribiendo `help` o `principal-commands`.
 
 ## Arquitectura y Tecnologías
 - **Framework**: .NET 9, Windows App SDK (WinUI 3)

@@ -1,0 +1,23 @@
+END-USER LICENSE AGREEMENT (EULA) - DESKTOP COMMAND CENTER (DCC)
+
+Please read this End-User License Agreement ("Agreement") carefully before clicking the "I Agree" button, installing or using the Desktop Command Center ("DCC") application.
+
+1. GRANT OF LICENSE
+Foreign Technologies LTDA grants you a personal, revocable, non-exclusive, and non-transferable license to download, install, and use the DCC application strictly in accordance with the terms of this Agreement.
+
+2. RESTRICTIONS
+You agree not to, and you will not permit others to:
+- License, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the application in any unauthorized manner.
+- Reverse engineer, decompile, or disassemble any part of the application.
+- Modify or create derivative works based on the application.
+
+3. PRIVACY AND DATA (LOCAL-FIRST)
+DCC is designed under a "Local-First" philosophy. All personal notes, clipboard history, and configured data remain strictly on your local machine in an SQLite database. No personal usage information is transmitted to external servers. The cloud connection (Firebase) is used solely and exclusively for license authentication.
+
+4. COPYRIGHTS
+The application and all copyrights, trademarks, and other associated intellectual property rights are the exclusive property of Foreign Technologies LTDA.
+
+5. DISCLAIMER OF WARRANTIES
+The application is provided "AS IS" and "AS AVAILABLE", without warranties of any kind, express or implied.
+
+By continuing with the installation, you acknowledge that you have read, understood, and agreed to all the terms described above.

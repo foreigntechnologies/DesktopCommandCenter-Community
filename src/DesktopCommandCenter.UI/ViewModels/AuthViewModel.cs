@@ -11,15 +11,19 @@ public partial class AuthViewModel : ObservableObject
 {
     private readonly IAuthService _authService;
     private readonly ILicenseService _licenseService;
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotLoading))]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    [NotifyPropertyChangedFor(nameof(HasSuccess))]
     private bool _isLoading;
 
     public bool IsNotLoading => !IsLoading;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasError))]
+    [NotifyPropertyChangedFor(nameof(HasSuccess))]
     private string _statusMessage = string.Empty;
 
     public bool HasError => !string.IsNullOrEmpty(StatusMessage) && !IsLoading && !StatusMessage.Contains("sucesso", StringComparison.OrdinalIgnoreCase);
@@ -30,28 +34,95 @@ public partial class AuthViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(IsPausedPlan))]
+    [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private bool _isLoggedIn;
 
     public bool IsNotLoggedIn => !IsLoggedIn;
 
+    private CancellationTokenSource? _pollingCts;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(IsPausedPlan))]
+    [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private string _currentPlan = "free";
 
     [ObservableProperty]
     private string _userEmail = string.Empty;
 
-    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasUserName))]
+    private string _userName = string.Empty;
+
+    public bool HasUserName => !string.IsNullOrEmpty(UserName);
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanLinkGoogle))]
+    [NotifyPropertyChangedFor(nameof(HasNoGoogleLinked))]
+    private bool _hasGoogleLinked;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanLinkGitHub))]
+    private bool _hasGitHubLinked;
+
+    [ObservableProperty]
+    private string _linkedEmailsText = string.Empty;
+
+    [ObservableProperty]
+    private string _googleEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _gitHubEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _profilePhotoUrl = string.Empty;
+
+    public bool CanLinkGoogle => !HasGoogleLinked;
+    public bool CanLinkGitHub => !HasGitHubLinked;
+    public bool HasNoGoogleLinked => !HasGoogleLinked;
+
+    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) && !CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO Enterprise ativo" : "Plano Community (Gratuito)";
+    public bool IsPausedPlan => IsLoggedIn && CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
+    
+    public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility ProPlanVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility PausedPlanVisibility => IsPausedPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    
+    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : (IsPausedPlan ? "⏸ Plano Pausado" : "Plano Community (Gratuito)");
 
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
         _authService = authService;
         _licenseService = licenseService;
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
         
+        // Escuta mudanças de licença do sistema (ex: ao voltar do Stripe)
+        WeakReferenceMessenger.Default.Register<Messages.LicenseChangedMessage>(this, (r, m) =>
+        {
+            // Apenas atualiza a UI se o valor for diferente, para evitar loop infinito
+            if (App.IsProUnlocked != m.Value) 
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    CurrentPlan = m.Value ? "pro" : "free";
+                });
+            }
+        });
+
+        // Set initial synchronous state based on cached data to avoid logged-out UI flickering
+        IsLoggedIn = !string.IsNullOrEmpty(App.GetCachedEmail());
+        UserEmail = App.GetCachedEmail();
+        CurrentPlan = App.GetProCached() ? "pro" : "free";
+
         // Verifica o estado atual de login e licença em background ao iniciar a ViewModel
         _ = CheckInitialStateAsync();
     }
@@ -67,20 +138,42 @@ public partial class AuthViewModel : ObservableObject
         {
             CurrentPlan = "free";
             StatusMessage = string.Empty;
+            App.IsProUnlocked = false;
         }
     }
 
     // ── Helper compartilhado pós-login ──────────────────────────────────────
     private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user)
     {
+        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) para evitar
+        //    que o status da conta anterior vaze para a nova sessão.
+        App.IsProUnlocked = false;
+        App.SaveProCached(false);
+
         var plan = await _licenseService.GetCurrentPlanAsync();
         
-        App.Current.MainWindow?.DispatcherQueue.TryEnqueue(() =>
+        _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            App.IsProUnlocked = App.IsProBuild && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            
+            App.IsProUnlocked = newIsPro;
+            
+            // Notifica listeners APENAS se não estourar loop (mesmo que seja mesmo valor, os listeners como MainPage cuidam de si)
+            // Para evitar o loop do CheckInitialStateAsync, removemos temporariamente o listening ou filtramos.
+            // Aqui, enviamos sempre que o login atualiza o plano com sucesso.
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            
             UserEmail  = user.Email;
+            UserName   = user.DisplayName;
+            ProfilePhotoUrl = user.PhotoUrl;
+            
+            HasGoogleLinked = user.Providers.Contains("google.com");
+            HasGitHubLinked = user.Providers.Contains("github.com");
+            
+            if (HasGoogleLinked && user.LinkedEmails.TryGetValue("google.com", out var gEmail)) GoogleEmail = gEmail; else GoogleEmail = string.Empty;
+            if (HasGitHubLinked && user.LinkedEmails.TryGetValue("github.com", out var ghEmail)) GitHubEmail = ghEmail; else GitHubEmail = string.Empty;
+
             IsLoggedIn = true;
             StatusMessage = string.Empty;
 
@@ -94,6 +187,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LoginWithGoogleAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
@@ -111,6 +205,7 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LoginWithGitHubAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
@@ -128,12 +223,14 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LinkGoogleAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
         {
             var user = await _authService.LinkWithGoogleAsync();
             StatusMessage = "Conta do Google vinculada com sucesso!";
+            await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
@@ -145,12 +242,14 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task LinkGitHubAsync()
     {
+        if (IsLoading) return;
         StatusMessage = string.Empty;
         IsLoading = true;
         try
         {
             var user = await _authService.LinkWithGitHubAsync();
             StatusMessage = "Conta do GitHub vinculada com sucesso!";
+            await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
@@ -163,12 +262,28 @@ public partial class AuthViewModel : ObservableObject
     public void Logout()
     {
         _authService.Logout();
+        App.SaveCachedEmail(string.Empty);
         IsLoggedIn    = false;
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
+        UserName      = string.Empty;
+        LinkedEmailsText = string.Empty;
+        GoogleEmail   = string.Empty;
+        GitHubEmail   = string.Empty;
+        HasGoogleLinked = false;
+        HasGitHubLinked = false;
         StatusMessage = string.Empty;
         App.IsProUnlocked = false;
         WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    [RelayCommand]
+    public void CancelLogin()
+    {
+        _authService.CancelLogin();
+        _pollingCts?.Cancel();
+        IsLoading = false;
+        StatusMessage = "Processo interrompido.";
     }
 
     [RelayCommand]
@@ -177,9 +292,10 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user == null) return;
         
-        // O UID é passado no client_reference_id para o webhook atualizar o banco!
         string url = $"https://buy.stripe.com/14AeVf9Q46Gz5nY9ttf3a0p?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        
+        StartPollingForPlanChange("pro");
     }
 
     [RelayCommand]
@@ -190,13 +306,65 @@ public partial class AuthViewModel : ObservableObject
         
         string url = $"https://buy.stripe.com/7sYbJ3e6k3uncQq499f3a0q?client_reference_id={user.Uid}";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+
+        StartPollingForPlanChange("pro");
     }
 
     [RelayCommand]
-    public void OpenCustomerPortal()
+    public async Task OpenCustomerPortalAsync()
     {
-        // Redireciona para o Customer Portal do Stripe
-        string url = "https://billing.stripe.com/p/login/SEU_ID_DO_PORTAL";
+        string url = "https://billing.stripe.com/p/login/7sY7sN6DS9SL5nY6hhf3a00";
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+
+        StartPollingForPlanChange();
+    }
+
+    private async void StartPollingForPlanChange(string? expectedNewPlan = null)
+    {
+        if (IsLoading) return;
+        IsLoading = true;
+        StatusMessage = expectedNewPlan == "pro" ? "Aguardando confirmação de pagamento... (Finalize no navegador)" : "Aguardando alterações na assinatura... (Finalize no navegador)";
+        _pollingCts?.Cancel();
+        _pollingCts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        
+        string startingPlan = CurrentPlan;
+
+        try 
+        {
+            while (!_pollingCts.Token.IsCancellationRequested)
+            {
+                await Task.Delay(3000, _pollingCts.Token);
+                var currentDbPlan = await _licenseService.GetCurrentPlanAsync();
+                
+                // Se o plano no banco mudou em relação ao que tínhamos
+                if (currentDbPlan != startingPlan)
+                {
+                    _dispatcherQueue.TryEnqueue(() =>
+                    {
+                        CurrentPlan = currentDbPlan;
+                        App.IsProUnlocked = currentDbPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                        WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+                        StatusMessage = "Plano atualizado com sucesso!";
+                        IsLoading = false;
+                    });
+                    break;
+                }
+            }
+        }
+        catch (TaskCanceledException) 
+        { 
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                StatusMessage = "Verificação interrompida.";
+                IsLoading = false;
+            });
+        }
+        catch 
+        { 
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsLoading = false;
+            });
+        }
     }
 }

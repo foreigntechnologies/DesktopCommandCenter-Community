@@ -28,7 +28,65 @@ public sealed partial class SettingsPage : Page
             ProBadge.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             CommunityBadge.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
         }
+        
+        UpdateTranslations();
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, args) => UpdateTranslations();
     }
+
+    private void UpdateTranslations()
+    {
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+
+        TxtSettingsTitle.Text = loc.GetString("Settings_Title");
+        TxtAppearanceTitle.Text = loc.GetString("Settings_AppearanceTitle");
+        CmbTheme.Header = loc.GetString("Settings_Theme");
+        CmbThemeItem1.Content = loc.GetString("Settings_ThemeLight");
+        CmbThemeItem2.Content = loc.GetString("Settings_ThemeDark");
+        CmbThemeItem3.Content = loc.GetString("Settings_ThemeSystem");
+        CmbTimeFormat.Header = loc.GetString("Settings_TimeFormat");
+        CmbTime1.Content = loc.GetString("Settings_Time1");
+        CmbTime2.Content = loc.GetString("Settings_Time2");
+        CmbTime3.Content = loc.GetString("Settings_Time3");
+        CmbTime4.Content = loc.GetString("Settings_Time4");
+        CmbDateFormat.Header = loc.GetString("Settings_DateFormat");
+        CmbDate1.Content = loc.GetString("Settings_Date1");
+        CmbDate2.Content = loc.GetString("Settings_Date2");
+        CmbDate3.Content = loc.GetString("Settings_Date3");
+        CmbDate4.Content = loc.GetString("Settings_Date4");
+
+        if (CmbLanguage != null)
+        {
+            CmbLanguage.Header = loc.GetString("Settings_Language");
+            CmbLang1.Content = loc.GetString("Settings_Lang1");
+            CmbLang2.Content = loc.GetString("Settings_Lang2");
+            CmbLang3.Content = loc.GetString("Settings_Lang3");
+        }
+
+        TxtThemeDesc.Text = loc.GetString("Settings_ThemeDesc");
+        TxtHotkeysTitle.Text = loc.GetString("Settings_HotkeysTitle");
+        TxtHotkeysDesc.Text = loc.GetString("Settings_HotkeysDesc");
+        
+        if (TxtAITitle != null)
+        {
+            TxtAITitle.Text = loc.GetString("Settings_AiTitle");
+            TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
+        }
+        TxtSubscriptionTitle.Text = loc.GetString("Settings_SubTitle");
+        TxtCommunityTitle.Text = loc.GetString("Settings_CommTitle");
+        TxtCommunitySubtitle.Text = loc.GetString("Settings_CommSub");
+        TxtCommunityDesc.Text = loc.GetString("Settings_CommDesc");
+        TxtCommunityBtn.Text = loc.GetString("Settings_CommBtn");
+        TxtProBadgeTitle.Text = loc.GetString("Settings_ProBadge");
+        TxtProRecommended.Text = loc.GetString("Settings_ProRec");
+        TxtProSubtitle.Text = loc.GetString("Settings_ProSub");
+        TxtProDesc.Text = loc.GetString("Settings_ProDesc");
+        TxtProBtnNotLogged.Text = loc.GetString("Settings_ProNotLogged");
+        TxtProBtnFree.Text = loc.GetString("Settings_ProFree");
+        TxtProBtnActive.Text = loc.GetString("Settings_ProActive");
+        TxtProBtnManage.Text = loc.GetString("Settings_ProManage");
+        BtnLogoutSettings.Content = loc.GetString("Auth_Logout");
+    }
+
 
     private HotkeyConfigItemViewModel? _editingItem;
     private uint _tempModifiers = 0;
@@ -52,6 +110,11 @@ public sealed partial class SettingsPage : Page
         }
     }
 
+    private void EditHotkeyDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+    {
+        HotkeyPreviewText.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+    }
+
     private void EditHotkeyDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         if (_editingItem != null)
@@ -70,7 +133,7 @@ public sealed partial class SettingsPage : Page
     private void EditHotkeyDialog_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
     {
         e.Handled = true;
-        var virtualKey = e.Key;
+        var virtualKey = e.OriginalKey;
 
         // Capture current modifiers state
         var ctrl = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);

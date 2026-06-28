@@ -98,4 +98,18 @@ public partial class ClipboardViewModel : ObservableObject
             // Tratamento de erro
         }
     }
+
+    [RelayCommand]
+    public async Task DeleteItemAsync(ClipboardItem item)
+    {
+        try
+        {
+            if (item != null)
+            {
+                await _mediator.Send(new DeleteClipboardItemCommand(item.Id));
+                Items.Remove(item);
+            }
+        }
+        catch { }
+    }
 }
