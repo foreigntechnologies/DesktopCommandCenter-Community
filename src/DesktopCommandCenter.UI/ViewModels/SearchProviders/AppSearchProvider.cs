@@ -8,7 +8,6 @@ namespace DesktopCommandCenter.UI.ViewModels.SearchProviders;
 public class AppSearchProvider : ISearchProvider
 {
     private readonly SearchResultItem[] _localApps = {
-        new() { Title = "Calculadora", Description = "Acessar modo padrão, física ou química.", Type = "App", ActionPath = "Calculadora" },
         new() { Title = "Always On Top", Description = "Fixar janela atual acima das outras.", Type = "App", ActionPath = "AlwaysOnTop" },
         new() { Title = "Awake", Description = "Manter PC acordado.", Type = "App", ActionPath = "Awake" },
         new() { Title = "Color Picker", Description = "Copiar cores HEX/RGB da tela.", Type = "App", ActionPath = "ColorPicker" },

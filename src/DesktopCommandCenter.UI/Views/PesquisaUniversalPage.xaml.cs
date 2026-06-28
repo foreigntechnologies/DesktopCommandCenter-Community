@@ -52,7 +52,6 @@ public sealed partial class PesquisaUniversalPage : Page
         {
             switch (item.ActionPath)
             {
-                case "Calculadora": this.Frame.Navigate(typeof(CalculadoraPage)); break;
                 case "AlwaysOnTop": this.Frame.Navigate(typeof(AlwaysOnTopPage)); break;
                 case "Awake": this.Frame.Navigate(typeof(AwakePage)); break;
                 case "ColorPicker": this.Frame.Navigate(typeof(ColorPickerPage)); break;

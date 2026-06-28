@@ -59,6 +59,12 @@ public partial class AuthViewModel : ObservableObject
     private string _userEmail = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasUserName))]
+    private string _userName = string.Empty;
+
+    public bool HasUserName => !string.IsNullOrEmpty(UserName);
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanLinkGoogle))]
     [NotifyPropertyChangedFor(nameof(HasNoGoogleLinked))]
     private bool _hasGoogleLinked;
@@ -159,6 +165,7 @@ public partial class AuthViewModel : ObservableObject
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             
             UserEmail  = user.Email;
+            UserName   = user.DisplayName;
             ProfilePhotoUrl = user.PhotoUrl;
             
             HasGoogleLinked = user.Providers.Contains("google.com");
@@ -259,6 +266,7 @@ public partial class AuthViewModel : ObservableObject
         IsLoggedIn    = false;
         CurrentPlan   = "free";
         UserEmail     = string.Empty;
+        UserName      = string.Empty;
         LinkedEmailsText = string.Empty;
         GoogleEmail   = string.Empty;
         GitHubEmail   = string.Empty;

@@ -110,6 +110,11 @@ public sealed partial class SettingsPage : Page
         }
     }
 
+    private void EditHotkeyDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+    {
+        HotkeyPreviewText.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+    }
+
     private void EditHotkeyDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         if (_editingItem != null)
@@ -128,7 +133,7 @@ public sealed partial class SettingsPage : Page
     private void EditHotkeyDialog_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
     {
         e.Handled = true;
-        var virtualKey = e.Key;
+        var virtualKey = e.OriginalKey;
 
         // Capture current modifiers state
         var ctrl = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);

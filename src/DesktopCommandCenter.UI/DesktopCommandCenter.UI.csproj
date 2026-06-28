@@ -110,6 +110,10 @@
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
+  </ItemGroup>
+
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
     Explorer "Package and Publish" context menu entry to be enabled for this project even if

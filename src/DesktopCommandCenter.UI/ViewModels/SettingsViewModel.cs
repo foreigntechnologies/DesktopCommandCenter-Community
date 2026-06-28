@@ -94,6 +94,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private string _userEmail = string.Empty;
 
+    [ObservableProperty]
+    private string _userName = string.Empty;
+
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
 
@@ -224,11 +227,13 @@ public partial class SettingsViewModel : ObservableObject
         if (IsLoggedIn)
         {
             UserEmail   = user!.Email;
+            UserName    = user!.DisplayName;
             CurrentPlan = await _licenseService.GetCurrentPlanAsync();
         }
         else
         {
             UserEmail   = string.Empty;
+            UserName    = string.Empty;
             CurrentPlan = "free";
         }
 

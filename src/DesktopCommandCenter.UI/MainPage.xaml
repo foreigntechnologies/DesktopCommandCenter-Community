@@ -34,7 +34,6 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />
-                <NavigationViewItem x:Name="NavCalculator" Tag="Calculadora" Icon="Calculator" Content="Calculadora" />
                 <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador" />
                 <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
                 <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela" />
