@@ -108,11 +108,6 @@
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
-    <ProjectReference Include="..\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Content</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
   </ItemGroup>
 
   <!--
