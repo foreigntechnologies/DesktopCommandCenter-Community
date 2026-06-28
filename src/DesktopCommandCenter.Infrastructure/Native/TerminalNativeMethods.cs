@@ -9,6 +9,7 @@ internal static class TerminalNativeMethods
     internal const int S_OK = 0;
     internal const int STARTF_USESTDHANDLES = 0x00000100;
     internal const int EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+    internal const uint CREATE_NO_WINDOW = 0x08000000;
     internal const int PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE = 0x00020016;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -25,13 +26,13 @@ internal static class TerminalNativeMethods
         public IntPtr lpAttributeList;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct STARTUPINFO
     {
         public int cb;
-        public string lpReserved;
-        public string lpDesktop;
-        public string lpTitle;
+        public IntPtr lpReserved;
+        public IntPtr lpDesktop;
+        public IntPtr lpTitle;
         public int dwX;
         public int dwY;
         public int dwXSize;

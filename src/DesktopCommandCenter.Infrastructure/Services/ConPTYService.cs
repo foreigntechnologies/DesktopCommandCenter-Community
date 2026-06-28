@@ -76,7 +76,7 @@ public class ConPTYService : ITerminalService
             ref pSec,
             ref tSec,
             false,
-            TerminalNativeMethods.EXTENDED_STARTUPINFO_PRESENT,
+            (uint)TerminalNativeMethods.EXTENDED_STARTUPINFO_PRESENT | TerminalNativeMethods.CREATE_NO_WINDOW,
             IntPtr.Zero,
             cwd,
             ref startupInfo,
@@ -95,8 +95,8 @@ public class ConPTYService : ITerminalService
         _hInputRead.Dispose();
         _hOutputWrite.Dispose();
 
-        _inputStream = new FileStream(_hInputWrite, FileAccess.Write, 4096, true);
-        _outputStream = new FileStream(_hOutputRead, FileAccess.Read, 4096, true);
+        _inputStream = new FileStream(_hInputWrite, FileAccess.Write, 4096, false);
+        _outputStream = new FileStream(_hOutputRead, FileAccess.Read, 4096, false);
 
         _readerThread = new Thread(ReadOutputLoop) { IsBackground = true };
         _readerThread.Start();
