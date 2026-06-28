@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="DesktopCommandCenter.UI.Views.QuickAccessWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -87,12 +87,6 @@
                     </Button>
 
                     <!-- Linha 2 -->
-                    <Button x:Name="BtnCalculadora" Grid.Row="1" Grid.Column="0" Click="Tool_Click" Tag="Calculadora" Style="{StaticResource QuickToolButtonStyle}">
-                        <StackPanel Spacing="6" HorizontalAlignment="Center">
-                            <FontIcon Glyph="&#xE8EF;" FontSize="28" Foreground="#4CAF50" />
-                            <TextBlock Text="Calculadora" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
-                        </StackPanel>
-                    </Button>
 
                     <Button x:Name="BtnTradutor" Grid.Row="1" Grid.Column="1" Click="Tool_Click" Tag="Tradutor" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">

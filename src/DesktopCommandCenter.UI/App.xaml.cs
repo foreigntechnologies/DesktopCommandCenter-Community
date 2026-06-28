@@ -605,7 +605,6 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.ClipboardViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.SettingsViewModel>();
         services.AddSingleton<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
-        services.AddTransient<DesktopCommandCenter.UI.ViewModels.CalculadoraViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.AwakeViewModel>();
         services.AddTransient<DesktopCommandCenter.UI.ViewModels.AlwaysOnTopViewModel>();
         

@@ -57,7 +57,7 @@ public sealed partial class MainPage : Page
         NavAwake.Content = loc.GetString("Nav_Awake");
         NavCliCommands.Content = loc.GetString("Nav_CliCommands");
         NavClipboard.Content = loc.GetString("Nav_Clipboard");
-        NavCalculator.Content = loc.GetString("Nav_Calculator");
+
         NavTimer.Content = loc.GetString("Nav_Timer");
         NavCapture.Content = loc.GetString("Nav_Capture");
         NavTranslator.Content = loc.GetString("Nav_Translator");
@@ -145,7 +145,7 @@ public sealed partial class MainPage : Page
             "Dashboard" => typeof(Views.DashboardPage),
             "Notes" => typeof(Views.NotesPage),
             "Clipboard" => typeof(Views.ClipboardPage),
-            "Calculadora" => typeof(Views.CalculadoraPage),
+
             "ColorPicker" => typeof(Views.ColorPickerPage),
             "Awake" => typeof(Views.AwakePage),
             "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
@@ -217,7 +217,7 @@ public sealed partial class MainPage : Page
                 "ProcessManager" => typeof(Views.ProcessManagerPage),
                 "Notes" => typeof(Views.NotesPage),
                 "Clipboard" => typeof(Views.ClipboardPage),
-                "Calculadora" => typeof(Views.CalculadoraPage),
+
                 "ColorPicker" => typeof(Views.ColorPickerPage),
                 "Awake" => typeof(Views.AwakePage),
                 "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),

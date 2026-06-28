@@ -123,9 +123,10 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invés de fechar o app, cancela o fechamento e apenas esconde a janela (minimiza para a bandeja)
-        args.Handled = true;
-        this.AppWindow.Hide();
+        // Durante o desenvolvimento, é melhor fechar o app completamente para não travar o `dotnet run`.
+        // Caso queira que ele minimize para a bandeja no futuro, basta voltar o código anterior:
+        // args.Handled = true; this.AppWindow.Hide();
+        Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }

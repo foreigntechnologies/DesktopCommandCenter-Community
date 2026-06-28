@@ -49,7 +49,6 @@ public class HotkeyConfigManager : IHotkeyConfigManager
         {
             // ── Community ──────────────────────────────────────────────────
             new HotkeyConfig { ActionId = "Dashboard",         DisplayName = "Dashboard",                Modifiers = 0, VirtualKey = 0 },
-            new HotkeyConfig { ActionId = "Calculadora",       DisplayName = "Calculadora",              Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Temporizador",      DisplayName = "Temporizador",             Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Notes",             DisplayName = "Notas Rápidas",            Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Clipboard",         DisplayName = "Smart Clipboard",          Modifiers = 0, VirtualKey = 0 },
