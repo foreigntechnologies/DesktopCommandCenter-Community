@@ -135,6 +135,7 @@
     "Updates_Apps_Loading": "Loading installed software...",
     "Updates_Apps_Found": "{0} installed software(s)",
     "Updates_Apps_Uninstalling": "Uninstalling {0}...",
-    "Updates_Apps_DeepCleaning": "Cleaning leftovers of {0}...",
-    "Updates_Apps_Done": "✅ {0} software(s) removed!"
+    "Updates_Apps_DeepCleaning": "Deep cleaning leftovers of {0}...",
+    "Updates_Apps_Done": "✅ {0} software(s) removed!",
+    "ChatFT_WelcomeMessage": "To use ChatFT locally, you need to have Ollama installed on your machine! Or use a secret key from Gemini (Google AI Studio), Claude, or OpenAI."
 }
