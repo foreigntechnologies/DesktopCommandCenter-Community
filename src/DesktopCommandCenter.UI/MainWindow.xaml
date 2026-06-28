@@ -18,7 +18,7 @@
 
         <tb:TaskbarIcon
             x:Name="TrayIcon"
-            IconSource="/Assets/AppIcon.ico"
+            IconSource="/Assets/DCCAppIcon.ico"
             ToolTipText="Desktop Command Center"
             LeftClickCommand="{x:Bind TrayQuickAccessCommand}"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
@@ -48,7 +48,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="Assets/AppIcon.ico" Width="16" Height="16" Margin="12,0,12,0" VerticalAlignment="Center" />
+            <Image Source="Assets/DCCAppIcon.ico" Width="16" Height="16" Margin="12,0,12,0" VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="DCC - Desktop Command Center" VerticalAlignment="Center" FontSize="12" />
         </Grid>
 

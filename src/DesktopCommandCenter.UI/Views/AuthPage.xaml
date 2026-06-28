@@ -30,10 +30,10 @@
                     <StackPanel x:Name="LoadingPanel" Spacing="12" HorizontalAlignment="Center"
                                 x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
                         <ProgressRing IsActive="True" Width="32" Height="32" HorizontalAlignment="Center" />
-                        <TextBlock x:Name="TxtLoading" Text="Processando requisição..."
+                        <TextBlock x:Name="TxtLoading" Text="Processando requisição... (se você fechou o navegador, clique em Cancelar)"
                                    HorizontalAlignment="Center"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   FontSize="12" />
+                                   FontSize="12" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" />
                         <HyperlinkButton Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
 

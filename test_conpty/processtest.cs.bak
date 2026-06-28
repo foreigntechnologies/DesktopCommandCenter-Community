@@ -1,0 +1,35 @@
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = "powershell.exe",
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+        var p = Process.Start(psi);
+        
+        var readTask = Task.Run(async () => {
+            var buffer = new char[1024];
+            while (true) {
+                int count = await p.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
+                if (count == 0) break;
+                Console.WriteLine($"[OUT] {new string(buffer, 0, count)}");
+            }
+        });
+        
+        await Task.Delay(2000);
+        await p.StandardInput.WriteAsync("echo 'test'\r");
+        await p.StandardInput.FlushAsync();
+        await Task.Delay(2000);
+        p.Kill();
+    }
+}

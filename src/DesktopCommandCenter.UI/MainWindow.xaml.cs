@@ -17,6 +17,9 @@ namespace DesktopCommandCenter.UI;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
+    [DllImport("shell32.dll", SetLastError = true)]
+    static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
+
     public MainWindow()
     {
         TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
@@ -38,8 +41,13 @@ public sealed partial class MainWindow : Window
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-
-        AppWindow.SetIcon("Assets/AppIcon.ico");
+        
+        try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
+        var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
+        if (System.IO.File.Exists(iconPath))
+        {
+            AppWindow.SetIcon(iconPath);
+        }
 
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
@@ -49,6 +57,19 @@ public sealed partial class MainWindow : Window
         // Iniciar maximizado apenas após a janela ser ativada
         this.Activated += MainWindow_Activated;
         this.Activated += MainWindow_FocusChanged;
+        this.AppWindow.Changed += AppWindow_Changed;
+    }
+
+    private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
+    {
+        if (args.DidPresenterChange)
+        {
+            if (sender.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter && 
+                presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
+            {
+                sender.Hide();
+            }
+        }
     }
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -102,9 +123,9 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao fechar (X), realmente fecha o app.
-        // O ícone da bandeja será destruído junto.
-        Microsoft.UI.Xaml.Application.Current.Exit();
+        // Ao invés de fechar o app, cancela o fechamento e apenas esconde a janela (minimiza para a bandeja)
+        args.Handled = true;
+        this.AppWindow.Hide();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }

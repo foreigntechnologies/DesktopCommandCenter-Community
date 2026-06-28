@@ -1,30 +1,112 @@
 using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Win32.SafeHandles;
 using DesktopCommandCenter.Application.Interfaces;
-using DesktopCommandCenter.Infrastructure.Native;
 
 namespace DesktopCommandCenter.Infrastructure.Services;
 
 public class ConPTYService : ITerminalService
 {
-    private IntPtr _pseudoConsole = IntPtr.Zero;
-    private TerminalNativeMethods.PROCESS_INFORMATION _processInfo;
-    
-    private SafeFileHandle _hInputRead = null!;
-    private SafeFileHandle _hInputWrite = null!;
-    private SafeFileHandle _hOutputRead = null!;
-    private SafeFileHandle _hOutputWrite = null!;
+    [StructLayout(LayoutKind.Sequential)]
+    private struct COORD
+    {
+        public short X;
+        public short Y;
+    }
 
-    private FileStream _inputStream = null!;
-    private FileStream _outputStream = null!;
-    
-    private Thread _readerThread = null!;
-    private CancellationTokenSource _cts = null!;
+    [StructLayout(LayoutKind.Sequential)]
+    private struct STARTUPINFOEX
+    {
+        public STARTUPINFO StartupInfo;
+        public IntPtr lpAttributeList;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct STARTUPINFO
+    {
+        public int cb;
+        public string lpReserved;
+        public string lpDesktop;
+        public string lpTitle;
+        public int dwX;
+        public int dwY;
+        public int dwXSize;
+        public int dwYSize;
+        public int dwXCountChars;
+        public int dwYCountChars;
+        public int dwFillAttribute;
+        public int dwFlags;
+        public short wShowWindow;
+        public short cbReserved2;
+        public IntPtr lpReserved2;
+        public IntPtr hStdInput;
+        public IntPtr hStdOutput;
+        public IntPtr hStdError;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PROCESS_INFORMATION
+    {
+        public IntPtr hProcess;
+        public IntPtr hThread;
+        public int dwProcessId;
+        public int dwThreadId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct SECURITY_ATTRIBUTES
+    {
+        public int nLength;
+        public IntPtr lpSecurityDescriptor;
+        public bool bInheritHandle;
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern int CreatePseudoConsole(COORD size, IntPtr hInput, IntPtr hOutput, uint dwFlags, out IntPtr phPC);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern int ResizePseudoConsole(IntPtr hPC, COORD size);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern void ClosePseudoConsole(IntPtr hPC);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool InitializeProcThreadAttributeList(IntPtr lpAttributeList, int dwAttributeCount, int dwFlags, ref IntPtr lpSize);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool UpdateProcThreadAttribute(IntPtr lpAttributeList, uint dwFlags, IntPtr Attribute, IntPtr lpValue, IntPtr cbSize, IntPtr lpPreviousValue, IntPtr lpReturnSize);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern void DeleteProcThreadAttributeList(IntPtr lpAttributeList);
+
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool CreateProcess(string? lpApplicationName, string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes, ref SECURITY_ATTRIBUTES lpThreadAttributes, bool bInheritHandles, uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, ref STARTUPINFOEX lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool CloseHandle(IntPtr hObject);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
+
+    private const int S_OK = 0;
+    private const int EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+    private const int PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE = 0x00020016;
+
+    private IntPtr _pseudoConsole;
+    private PROCESS_INFORMATION _processInfo;
+    private NamedPipeServerStream? _serverIn;
+    private NamedPipeServerStream? _serverOut;
+    private StreamReader? _reader;
+    private StreamWriter? _writer;
+    private CancellationTokenSource? _cts;
 
     public event EventHandler<string>? OutputDataReceived;
     public event EventHandler? ProcessExited;
@@ -33,125 +115,113 @@ public class ConPTYService : ITerminalService
     {
         _cts = new CancellationTokenSource();
 
-        CreatePipes();
+        string pipeInName = $"dcc_in_{Guid.NewGuid():N}";
+        string pipeOutName = $"dcc_out_{Guid.NewGuid():N}";
 
-        var size = new TerminalNativeMethods.COORD { X = (short)columns, Y = (short)rows };
-        int hr = TerminalNativeMethods.CreatePseudoConsole(size, _hInputRead, _hOutputWrite, 0, out _pseudoConsole);
-        if (hr != TerminalNativeMethods.S_OK)
+        _serverIn = new NamedPipeServerStream(pipeInName, PipeDirection.Out, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+        var clientIn = new NamedPipeClientStream(".", pipeInName, PipeDirection.In, PipeOptions.None);
+        
+        _serverOut = new NamedPipeServerStream(pipeOutName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+        var clientOut = new NamedPipeClientStream(".", pipeOutName, PipeDirection.Out, PipeOptions.None);
+
+        clientIn.Connect();
+        _serverIn.WaitForConnection();
+
+        clientOut.Connect();
+        _serverOut.WaitForConnection();
+
+        var size = new COORD { X = (short)columns, Y = (short)rows };
+        int hr = CreatePseudoConsole(size, clientIn.SafePipeHandle.DangerousGetHandle(), clientOut.SafePipeHandle.DangerousGetHandle(), 0, out _pseudoConsole);
+        if (hr != S_OK)
         {
-            throw new Exception($"CreatePseudoConsole failed with HRESULT {hr:X}");
+            throw new Exception($"Failed to create Pseudo Console. HR: {hr}");
         }
 
-        var startupInfo = new TerminalNativeMethods.STARTUPINFOEX();
-        startupInfo.StartupInfo.cb = Marshal.SizeOf<TerminalNativeMethods.STARTUPINFOEX>();
+        var startupInfo = new STARTUPINFOEX();
+        startupInfo.StartupInfo.cb = Marshal.SizeOf<STARTUPINFOEX>();
 
         IntPtr attrListSize = IntPtr.Zero;
-        TerminalNativeMethods.InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref attrListSize);
-        
+        InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref attrListSize);
         startupInfo.lpAttributeList = Marshal.AllocHGlobal(attrListSize);
-        TerminalNativeMethods.InitializeProcThreadAttributeList(startupInfo.lpAttributeList, 1, 0, ref attrListSize);
+        InitializeProcThreadAttributeList(startupInfo.lpAttributeList, 1, 0, ref attrListSize);
 
-        IntPtr hPcPtr = Marshal.AllocHGlobal(IntPtr.Size);
-        Marshal.WriteIntPtr(hPcPtr, _pseudoConsole);
-        
-        TerminalNativeMethods.UpdateProcThreadAttribute(
-            startupInfo.lpAttributeList,
-            0,
-            (IntPtr)TerminalNativeMethods.PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE,
-            hPcPtr,
-            (IntPtr)IntPtr.Size,
-            IntPtr.Zero,
-            IntPtr.Zero);
+        UpdateProcThreadAttribute(startupInfo.lpAttributeList, 0, (IntPtr)PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE, _pseudoConsole, (IntPtr)IntPtr.Size, IntPtr.Zero, IntPtr.Zero);
 
-        var pSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
-        var tSec = new TerminalNativeMethods.SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>() };
+        var pSec = new SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<SECURITY_ATTRIBUTES>() };
+        var tSec = new SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<SECURITY_ATTRIBUTES>() };
 
         string psPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");
-        var cmdBuilder = new StringBuilder(commandLine.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase) ? psPath : commandLine);
+        string executable = commandLine.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase) ? psPath : commandLine;
         string cwd = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        bool created = TerminalNativeMethods.CreateProcess(
-            null!,
-            cmdBuilder,
-            ref pSec,
-            ref tSec,
-            false,
-            (uint)TerminalNativeMethods.EXTENDED_STARTUPINFO_PRESENT | TerminalNativeMethods.CREATE_NO_WINDOW,
-            IntPtr.Zero,
-            cwd,
-            ref startupInfo,
-            out _processInfo);
-
-        TerminalNativeMethods.DeleteProcThreadAttributeList(startupInfo.lpAttributeList);
+        bool created = CreateProcess(null, executable, ref pSec, ref tSec, false, EXTENDED_STARTUPINFO_PRESENT, IntPtr.Zero, cwd, ref startupInfo, out _processInfo);
+        
+        DeleteProcThreadAttributeList(startupInfo.lpAttributeList);
         Marshal.FreeHGlobal(startupInfo.lpAttributeList);
-        Marshal.FreeHGlobal(hPcPtr);
 
         if (!created)
         {
-            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+            throw new Exception("Failed to create process attached to pseudo console.");
         }
 
-        // We can close our ends of the pipes that the pseudo console uses
-        _hInputRead.Dispose();
-        _hOutputWrite.Dispose();
+        // Close our handles to the client ends as ConHost now owns them
+        clientIn.Dispose();
+        clientOut.Dispose();
 
-        _inputStream = new FileStream(_hInputWrite, FileAccess.Write, 4096, false);
-        _outputStream = new FileStream(_hOutputRead, FileAccess.Read, 4096, false);
+        _reader = new StreamReader(_serverOut, Encoding.UTF8);
+        _writer = new StreamWriter(_serverIn, new UTF8Encoding(false)) { AutoFlush = true };
 
-        _readerThread = new Thread(ReadOutputLoop) { IsBackground = true };
-        _readerThread.Start();
+        _ = Task.Run(() => ReadStreamLoop(_reader, _cts.Token));
+        _ = Task.Run(() => MonitorProcess(_processInfo.hProcess, _cts.Token));
 
         return Task.CompletedTask;
     }
 
-    private void CreatePipes()
+    private void MonitorProcess(IntPtr hProcess, CancellationToken token)
     {
-        var sa = new TerminalNativeMethods.SECURITY_ATTRIBUTES
+        while (!token.IsCancellationRequested)
         {
-            nLength = Marshal.SizeOf<TerminalNativeMethods.SECURITY_ATTRIBUTES>(),
-            bInheritHandle = 1,
-            lpSecurityDescriptor = IntPtr.Zero
-        };
-
-        if (!TerminalNativeMethods.CreatePipe(out _hInputRead, out _hInputWrite, ref sa, 0))
-            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
-
-        if (!TerminalNativeMethods.CreatePipe(out _hOutputRead, out _hOutputWrite, ref sa, 0))
-            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+            uint result = WaitForSingleObject(hProcess, 500);
+            if (result == 0) // WAIT_OBJECT_0
+            {
+                ProcessExited?.Invoke(this, EventArgs.Empty);
+                break;
+            }
+        }
     }
 
-    private void ReadOutputLoop()
+    private async Task ReadStreamLoop(StreamReader reader, CancellationToken token)
     {
-        byte[] buffer = new byte[4096];
         try
         {
-            while (!_cts.Token.IsCancellationRequested)
+            char[] buffer = new char[4096];
+            while (!token.IsCancellationRequested)
             {
-                int bytesRead = _outputStream.Read(buffer, 0, buffer.Length);
-                if (bytesRead == 0) break; // EOF
+                int count = await reader.ReadAsync(buffer, 0, buffer.Length);
+                if (count == 0) break;
 
-                string text = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                string text = new string(buffer, 0, count);
                 OutputDataReceived?.Invoke(this, text);
             }
         }
         catch (Exception)
         {
-            // Usually means stream closed or task canceled
-        }
-        finally
-        {
-            ProcessExited?.Invoke(this, EventArgs.Empty);
-            Stop();
+            // Stream closed or disposed
         }
     }
 
     public async Task WriteInputAsync(string data)
     {
-        if (_inputStream != null && _inputStream.CanWrite)
+        if (_writer != null)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-            await _inputStream.WriteAsync(bytes, 0, bytes.Length);
-            await _inputStream.FlushAsync();
+            try
+            {
+                await _writer.WriteAsync(data);
+            }
+            catch (Exception)
+            {
+                // Pipe closed
+            }
         }
     }
 
@@ -159,8 +229,8 @@ public class ConPTYService : ITerminalService
     {
         if (_pseudoConsole != IntPtr.Zero)
         {
-            var size = new TerminalNativeMethods.COORD { X = (short)columns, Y = (short)rows };
-            TerminalNativeMethods.ResizePseudoConsole(_pseudoConsole, size);
+            var size = new COORD { X = (short)columns, Y = (short)rows };
+            ResizePseudoConsole(_pseudoConsole, size);
         }
     }
 
@@ -168,25 +238,29 @@ public class ConPTYService : ITerminalService
     {
         _cts?.Cancel();
 
-        _inputStream?.Dispose();
-        _outputStream?.Dispose();
-
         if (_processInfo.hProcess != IntPtr.Zero)
         {
-            TerminalNativeMethods.CloseHandle(_processInfo.hThread);
-            TerminalNativeMethods.CloseHandle(_processInfo.hProcess);
-            _processInfo.hProcess = IntPtr.Zero;
+            // Optional: Terminate process if it hasn't exited
+            CloseHandle(_processInfo.hThread);
+            CloseHandle(_processInfo.hProcess);
+            _processInfo = default;
         }
 
         if (_pseudoConsole != IntPtr.Zero)
         {
-            TerminalNativeMethods.ClosePseudoConsole(_pseudoConsole);
+            ClosePseudoConsole(_pseudoConsole);
             _pseudoConsole = IntPtr.Zero;
         }
+
+        _reader?.Dispose();
+        _writer?.Dispose();
+        _serverIn?.Dispose();
+        _serverOut?.Dispose();
     }
 
     public void Dispose()
     {
         Stop();
+        _cts?.Dispose();
     }
 }

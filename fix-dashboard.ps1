@@ -1,106 +1,16 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Page
-    x:Class="DesktopCommandCenter.UI.Views.DashboardPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converters="using:DesktopCommandCenter.UI.Converters"
-    mc:Ignorable="d"
-    Background="Transparent">
-    
+$xaml = Get-Content -Raw "src\DesktopCommandCenter.UI\Views\DashboardPage.xaml"
+$startToken = "<!-- ══ FERRAMENTAS EM DESTAQUE (Grid de Cards) ══ -->"
+$endToken = "<!-- ══ RODAPÉ: Links do app ══ -->"
 
+$idxStart = $xaml.IndexOf($startToken)
+$idxEnd = $xaml.IndexOf($endToken)
 
-    <Grid Padding="28,20,28,28">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+if ($idxStart -ge 0 -and $idxEnd -gt $idxStart) {
+    $before = $xaml.Substring(0, $idxStart)
+    $after = $xaml.Substring($idxEnd)
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16" Padding="0,0,16,0">
-            <StackPanel Spacing="20" MaxWidth="1400">
-
-            <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Spacing="2">
-                    <TextBlock
-                        x:Name="TxtGreeting"
-                        Style="{StaticResource TitleLargeTextBlockStyle}"
-                        FontWeight="SemiBold" />
-                    <TextBlock
-                        Text="{x:Bind ViewModel.CurrentDate, Mode=OneWay}"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
-                        <Ellipse Width="6" Height="6" Fill="#4CAF50" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtVersion" Text="v2.0.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Relógio -->
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Spacing="4">
-                    <TextBlock
-                        Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontWeight="SemiBold"
-                        HorizontalAlignment="Right"
-                        FontFamily="Consolas" />
-
-                </StackPanel>
-            </Grid>
-
-            <!-- ══ MÉTRICAS RÁPIDAS (4 Cards) ══ -->
-            <Grid ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <!-- Card 1: Ferramentas disponíveis -->
-                <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE74C;" FontSize="20" Foreground="#00BCD4" />
-                        <TextBlock Text="12" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock Text="Ferramentas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 2: Notas -->
-                <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
-                        <TextBlock x:Name="TxtNotesCount" Text="0" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock Text="Notas salvas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 3: Itens no Clipboard -->
-                <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
-                        <TextBlock x:Name="TxtClipCount" Text="0" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock Text="No Clipboard" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 4: Plano -->
-                <Border Grid.Column="3" x:Name="PlanCard" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE734;" FontSize="20" Foreground="#FF9800" />
-                        <TextBlock x:Name="TxtPlanBadge" Text="Community" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" FontSize="18" />
-                        <TextBlock Text="Plano atual" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- ══ FERRAMENTAS DA COMUNIDADE (GRATUITO) ══ -->
+    $newXaml = @"
+<!-- ══ FERRAMENTAS DA COMUNIDADE (GRATUITO) ══ -->
             <StackPanel Spacing="12">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -132,8 +42,8 @@
                                 <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -145,8 +55,8 @@
                                 <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -158,8 +68,8 @@
                                 <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Notas" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Anotações rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Notas" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Anotações rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -171,8 +81,8 @@
                                 <FontIcon Glyph="&#xE8EF;" FontSize="20" Foreground="#4CAF50" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Calculadora" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Científica, física, química" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Calculadora" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Científica, física, química" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -185,8 +95,8 @@
                                 <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -198,8 +108,8 @@
                                 <FontIcon Glyph="&#xE898;" FontSize="20" Foreground="#4FC3F7" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Sempre no Topo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Fixa janelas na frente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Sempre no Topo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Fixa janelas na frente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -211,8 +121,8 @@
                                 <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -224,8 +134,8 @@
                                 <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -238,8 +148,8 @@
                                 <FontIcon Glyph="&#xE895;" FontSize="20" Foreground="#E53935" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Update Center" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Atualizações de apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Update Center" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Atualizações de apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -251,8 +161,8 @@
                                 <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -264,8 +174,8 @@
                                 <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#EF5350" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -274,11 +184,11 @@
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE943;" FontSize="20" Foreground="#7B68EE" />
+                                <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#7B68EE" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
+                                <TextBlock Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -293,7 +203,6 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Recursos PRO (IA &amp; Automação)" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="1" x:Name="TxtProBadge" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,24,0" />
                 </Grid>
 
                 <Grid ColumnSpacing="12" RowSpacing="12">
@@ -321,7 +230,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -334,12 +243,12 @@
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -357,7 +266,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -375,7 +284,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -393,7 +302,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -402,41 +311,11 @@
         </StackPanel>
     </ScrollViewer>
 
-    <!-- ══ RODAPÉ: Links do app ══ --><!-- ══ RODAPÉ: Links do app ══ -->
-        <Border Grid.Row="1"
-            MaxWidth="1400"
-            HorizontalAlignment="Stretch"
-            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
-            CornerRadius="10"
-            Padding="16,10">
-            <Grid>
-                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
-                    <HyperlinkButton Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
-                    <TextBlock x:Name="SeparatorBugReport" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
-                    <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
-                        <DropDownButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
-                                <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
-                            </MenuFlyout>
-                        </DropDownButton.Flyout>
-                    </DropDownButton>
-                </StackPanel>
-                <TextBlock
-                    x:Name="TxtCopyright"
-                    Text="© 2026 Foreign Technologies®. All rights reserved"
-                    FontSize="11"
-                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center" />
-            </Grid>
-        </Border>
-    </Grid>
-</Page>
+    <!-- ══ RODAPÉ: Links do app ══ -->
+"@
 
+    Set-Content -Path "src\DesktopCommandCenter.UI\Views\DashboardPage.xaml" -Value ($before + $newXaml + $after)
+    Write-Output "Dashboard atualizado com sucesso."
+} else {
+    Write-Output "Tokens não encontrados."
+}

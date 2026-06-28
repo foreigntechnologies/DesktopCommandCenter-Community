@@ -30,7 +30,7 @@
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE756;" />
+                        <FontIcon Glyph="&#xE943;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />

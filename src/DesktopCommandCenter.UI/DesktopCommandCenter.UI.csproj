@@ -17,7 +17,7 @@
     <Nullable>enable</Nullable>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
     <!-- Versão e nome do executável -->
@@ -38,13 +38,14 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-48_altform-lightunplated.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\AppIcon.ico">
+    <Content Include="Assets\DCCAppIcon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\FutureShell.png">
+
+    <Content Include="Assets\FutureShell-IconSemTexto.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\FutureShell.ico">
+    <Content Include="Assets\Terminal\FutureShellInit.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />

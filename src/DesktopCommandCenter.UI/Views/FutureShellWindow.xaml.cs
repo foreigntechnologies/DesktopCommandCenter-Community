@@ -29,7 +29,7 @@ public sealed partial class FutureShellWindow : Window
         try { SetCurrentProcessExplicitAppUserModelID("DCC.FutureShell"); } catch { }
 
         appWindow.Title = "FutureShell";
-        var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "FutureShell.ico");
+        var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "FutureShell-IconSemTexto.ico");
         if (!File.Exists(iconPath))
         {
             iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
@@ -53,6 +53,7 @@ public sealed partial class FutureShellWindow : Window
         // Initialize Terminal Service
         _terminalService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITerminalService>();
         _terminalService.OutputDataReceived += TerminalService_OutputDataReceived;
+        _terminalService.ProcessExited += TerminalService_ProcessExited;
 
         _hudTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
         _hudTimer.Tick += HudTimer_Tick;
@@ -105,10 +106,18 @@ public sealed partial class FutureShellWindow : Window
 
     private async void TerminalWebView_NavigationCompleted(Microsoft.UI.Xaml.Controls.WebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
     {
+        // Display Startup Banner natively through PowerShell
+        var isPt = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("pt", StringComparison.OrdinalIgnoreCase);
+        string banner = isPt 
+            ? "O Future Shell foi desenvolvido por Foreign Technologies..." 
+            : "The FutureShell was developed by Foreign Technologies...";
+            
         // Start PowerShell backend once UI is loaded
         try 
         {
-            await _terminalService.StartAsync("powershell.exe", 100, 30);
+            var initScriptPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Terminal", "FutureShellInit.ps1");
+            var pshCommand = $"powershell.exe -NoLogo -NoExit -ExecutionPolicy Bypass -File \"{initScriptPath}\"";
+            await _terminalService.StartAsync(pshCommand, 100, 30);
         }
         catch (Exception ex)
         {
@@ -129,6 +138,13 @@ public sealed partial class FutureShellWindow : Window
                 if (type == "input" && root.TryGetProperty("data", out var dataProp))
                 {
                     await _terminalService.WriteInputAsync(dataProp.GetString() ?? "");
+                }
+                else if (type == "resize")
+                {
+                    if (root.TryGetProperty("cols", out var colsProp) && root.TryGetProperty("rows", out var rowsProp))
+                    {
+                        _terminalService.Resize(colsProp.GetInt32(), rowsProp.GetInt32());
+                    }
                 }
             }
         }
@@ -152,6 +168,14 @@ public sealed partial class FutureShellWindow : Window
                 } 
                 catch { }
             }
+        });
+    }
+
+    private void TerminalService_ProcessExited(object? sender, EventArgs e)
+    {
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            this.Close();
         });
     }
 

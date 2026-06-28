@@ -429,7 +429,67 @@ public partial class App : Microsoft.UI.Xaml.Application
         Services = ConfigureServices();
         InitializeComponent();
         
+        EnsureFutureShellShortcuts();
+        
         Log.Information("DCC Inicializado com sucesso.");
+    }
+
+    private void EnsureFutureShellShortcuts()
+    {
+        try
+        {
+            var startMenu = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Desktop Command Center");
+            Directory.CreateDirectory(startMenu);
+            var startMenuLink = Path.Combine(startMenu, "FutureShell.lnk");
+            
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var desktopLink = Path.Combine(desktop, "FutureShell.lnk");
+
+            CreateShortcut(startMenuLink);
+            CreateShortcut(desktopLink);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Falha ao criar atalhos do FutureShell.");
+        }
+    }
+
+    private void CreateShortcut(string shortcutPath)
+    {
+        if (System.IO.File.Exists(shortcutPath)) return;
+        
+        Type? t = Type.GetTypeFromProgID("WScript.Shell");
+        if (t != null)
+        {
+            dynamic? shell = Activator.CreateInstance(t);
+            if (shell != null)
+            {
+                var shortcut = shell.CreateShortcut(shortcutPath);
+                
+                string exePath = Environment.ProcessPath ?? "";
+                string arguments = "--futureshell";
+                
+                if (!string.IsNullOrEmpty(exePath))
+                {
+                    string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(exePath)) ?? "";
+                    string updateExe = Path.Combine(parentDir, "Update.exe");
+                    if (File.Exists(updateExe))
+                    {
+                        shortcut.TargetPath = updateExe;
+                        arguments = $"--processStart \"{Path.GetFileName(exePath)}\" --processStartArgs \"--futureshell\"";
+                    }
+                    else
+                    {
+                        shortcut.TargetPath = exePath;
+                    }
+                }
+                
+                shortcut.Arguments = arguments;
+                shortcut.WorkingDirectory = AppContext.BaseDirectory;
+                shortcut.IconLocation = Path.Combine(AppContext.BaseDirectory, "Assets", "FutureShell-IconSemTexto.ico");
+                shortcut.Save();
+            }
+        }
     }
 
     private void RegisterAllHotkeys()
@@ -498,18 +558,17 @@ public partial class App : Microsoft.UI.Xaml.Application
                         Category TEXT NOT NULL,
                         Content TEXT NOT NULL
                     );");
-                
-                // Start Smart Clipboard Monitoring
-                var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
-                clipboardService.StartMonitoring();
-
                 // Start Automation Engine
                 var automationEngine = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAutomationEngine>();
                 automationEngine.Start();
 
-                // Register Dynamic Hotkeys
+                // Register Dynamic Hotkeys and UI-thread services
                 dispatcherQueue?.TryEnqueue(() =>
                 {
+                    // Start Smart Clipboard Monitoring
+                    var clipboardService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IClipboardService>();
+                    clipboardService.StartMonitoring();
+
                     RegisterAllHotkeys();
                     var configManager = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IHotkeyConfigManager>();
                     configManager.ConfigsChanged += (s, e) => RegisterAllHotkeys();
