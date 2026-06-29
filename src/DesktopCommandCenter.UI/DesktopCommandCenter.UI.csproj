@@ -18,6 +18,7 @@
     <NoWarn>$(NoWarn);MVVMTK0045;MVVMTK0034</NoWarn>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PublishReadyToRun>false</PublishReadyToRun>
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
