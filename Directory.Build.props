@@ -1,4 +1,8 @@
 <Project>
-  <!-- Import the root Directory.Build.props from the Enterprise parent directory so all projects share the same BaseOutputPath and Platforms -->
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <PropertyGroup>
+    <ParentDirectoryBuildProps>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</ParentDirectoryBuildProps>
+  </PropertyGroup>
+
+  <!-- Import the root Directory.Build.props from the Enterprise parent directory if it exists -->
+  <Import Project="$(ParentDirectoryBuildProps)" Condition="'$(ParentDirectoryBuildProps)' != ''" />
 </Project>
