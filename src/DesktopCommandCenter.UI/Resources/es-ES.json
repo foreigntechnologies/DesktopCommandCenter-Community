@@ -1,4 +1,4 @@
-﻿{
+{
     "Nav_Dashboard":  "Dashboard",
     "Nav_ProcessManager":  "Administrador de Tareas",
     "Nav_Notes":  "Notas Rápidas",
@@ -150,5 +150,14 @@
     "ChatFT_BtnDownloadPhi3": "Descargar Phi-3 (Rápido - 2.3 GB)",
     "ChatFT_BtnDownloadLlama31": "Descargar Llama 3.1 (Inteligente - 4.7 GB)",
     "ChatFT_BtnDownloadGemma2": "Descargar Gemma 2 (Ligero - 1.6 GB)",
-    "ChatFT_DownloadingMsg": "Descargando modelo... Esto puede tardar dependiendo de tu conexión a internet."
+    "ChatFT_DownloadingMsg": "Descargando modelo... Esto puede tardar dependiendo de tu conexión a internet.",
+    "Chat_EmptyStateTitle": "¿Qué hay en la agenda de hoy?",
+    "Chat_ChipWriteTitle": "Escribir o Editar",
+    "Chat_ChipWriteSub": "Pide ayuda con textos",
+    "Chat_ChipSearchTitle": "Buscar Algo",
+    "Chat_ChipSearchSub": "Haz preguntas e investiga",
+    "Chat_FlyoutSummarize": "Resumir",
+    "Chat_FlyoutExplain": "Explicar",
+    "Chat_FlyoutDraft": "Borrador de Correo",
+    "Chat_FlyoutWebSearch": "Buscar en la Web"
 }

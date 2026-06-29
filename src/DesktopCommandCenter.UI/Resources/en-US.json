@@ -1,4 +1,4 @@
-﻿{
+{
     "Nav_Dashboard":  "Dashboard",
     "Nav_ProcessManager":  "Process Manager",
     "Nav_Notes":  "Quick Notes",
@@ -150,5 +150,14 @@
     "ChatFT_BtnDownloadPhi3": "Download Phi-3 (Fast - 2.3 GB)",
     "ChatFT_BtnDownloadLlama31": "Download Llama 3.1 (Smart - 4.7 GB)",
     "ChatFT_BtnDownloadGemma2": "Download Gemma 2 (Lightweight - 1.6 GB)",
-    "ChatFT_DownloadingMsg": "Downloading model... This may take a while depending on your internet connection."
+    "ChatFT_DownloadingMsg": "Downloading model... This may take a while depending on your internet connection.",
+    "Chat_EmptyStateTitle": "What's on the agenda today?",
+    "Chat_ChipWriteTitle": "Write or Edit",
+    "Chat_ChipWriteSub": "Ask for help with text",
+    "Chat_ChipSearchTitle": "Search for Something",
+    "Chat_ChipSearchSub": "Ask questions and research",
+    "Chat_FlyoutSummarize": "Summarize",
+    "Chat_FlyoutExplain": "Explain",
+    "Chat_FlyoutDraft": "Email Draft",
+    "Chat_FlyoutWebSearch": "Search the Web"
 }

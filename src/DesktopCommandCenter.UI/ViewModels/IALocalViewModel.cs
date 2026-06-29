@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DesktopCommandCenter.Application.Interfaces;
@@ -10,19 +12,36 @@ namespace DesktopCommandCenter.UI.ViewModels;
 
 public partial class ChatMessage : ObservableObject
 {
+    public ChatMessage()
+    {
+        // Notify HasSources when items are added/removed from the collection
+        SearchSources.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasSources));
+    }
+
     public string Role { get; set; } = string.Empty;
     
     [ObservableProperty]
     private string _content = string.Empty;
     
-    public bool IsUser => !Role.StartsWith("ChatFT");
+    public bool IsUserBool => !Role.StartsWith("ChatFT");
+    public bool IsAIBool => Role.StartsWith("ChatFT");
+    
+    // Visibility helpers for x:Bind (no converter needed)
+    public Microsoft.UI.Xaml.Visibility IsUser => IsUserBool ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility IsAI => IsAIBool ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    
     public string? ImagePath { get; set; } = null;
-    public bool HasImage => !string.IsNullOrEmpty(ImagePath);
+    public Microsoft.UI.Xaml.Visibility HasImage => !string.IsNullOrEmpty(ImagePath) ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+
+    // Web search sources attached to this AI message
+    public System.Collections.ObjectModel.ObservableCollection<DesktopCommandCenter.Application.Interfaces.WebSearchResult> SearchSources { get; } = new();
+    public Microsoft.UI.Xaml.Visibility HasSources => SearchSources.Count > 0 ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 
     [ObservableProperty]
     private bool _hasDownloadAction = false;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ThinkingVisibility))]
     private bool _isThinking = false;
     
     public Microsoft.UI.Xaml.Visibility ThinkingVisibility => IsThinking ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
@@ -32,6 +51,7 @@ public partial class IALocalViewModel : ObservableObject
 {
     private readonly IIAAgentService _agentService;
     private readonly IWhisperTranscriptionService _whisperService;
+    private readonly IWebSearchService _webSearchService;
 
     [ObservableProperty]
     private string _currentPrompt = "";
@@ -63,21 +83,36 @@ public partial class IALocalViewModel : ObservableObject
     [ObservableProperty]
     private string _selectedModel = "";
 
+    public bool IsChatEmpty => Messages.Count == 0;
+    public bool IsChatNotEmpty => Messages.Count > 0;
+
+    [ObservableProperty]
+    private bool _isWebSearchMode = true; // Default: always search the web
+
+    [ObservableProperty]
+    private bool _isEditMenuOpen = false;
+
+    [ObservableProperty]
+    private bool _showNoModelsWarning = false;
+
     [ObservableProperty]
     private string _userName = "User";
 
     private readonly IAuthService _authService;
 
-    public IALocalViewModel(IIAAgentService agentService, IWhisperTranscriptionService whisperService, IAuthService authService)
+    public IALocalViewModel(IIAAgentService agentService, IWhisperTranscriptionService whisperService, IAuthService authService, IWebSearchService webSearchService)
     {
         _agentService = agentService;
         _whisperService = whisperService;
         _authService = authService;
+        _webSearchService = webSearchService;
         _agentService.ClearHistory();
-        
-        var welcomeMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_WelcomeMessage");
-        if (string.IsNullOrEmpty(welcomeMsg)) welcomeMsg = "Para utilizar o ChatFT localmente, é necessário ter o Ollama instalado em sua máquina! Ou utilizar uma secret key do Gemini (Google AI Studio), Claude ou OpenAI.";
-        Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = welcomeMsg });
+
+        Messages.CollectionChanged += (s, e) => 
+        {
+            OnPropertyChanged(nameof(IsChatEmpty));
+            OnPropertyChanged(nameof(IsChatNotEmpty));
+        };
 
         _ = LoadModelsAsync();
         _ = LoadUserNameAsync();
@@ -123,14 +158,11 @@ public partial class IALocalViewModel : ObservableObject
             {
                 SelectedModel = AvailableModels[0];
             }
+            ShowNoModelsWarning = false;
         }
         else
         {
-            var noModelMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_NoModelsMessage");
-            if (string.IsNullOrEmpty(noModelMsg)) 
-                noModelMsg = "Nenhum modelo local encontrado. Para usar o ChatFT, você precisa baixar um modelo de Inteligência Artificial. Qual você deseja baixar?";
-
-            Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = noModelMsg, HasDownloadAction = true });
+            ShowNoModelsWarning = true;
         }
     }
 
@@ -158,14 +190,7 @@ public partial class IALocalViewModel : ObservableObject
                 SelectedModel = modelName;
             }
 
-            foreach (var msg in Messages)
-            {
-                msg.HasDownloadAction = false;
-            }
-
-            var successMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_DownloadSuccess");
-            if (string.IsNullOrEmpty(successMsg)) successMsg = "Modelo {modelName} baixado com sucesso! Agora você já pode conversar.";
-            Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = successMsg });
+            ShowNoModelsWarning = false;
         }
         catch (Exception ex)
         {
@@ -274,6 +299,28 @@ public partial class IALocalViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ToggleWebSearchMode()
+    {
+        IsWebSearchMode = !IsWebSearchMode;
+    }
+
+    [RelayCommand]
+    private void SetPrompt(string prompt)
+    {
+        CurrentPrompt = prompt;
+    }
+
+    [RelayCommand]
+    private void ClearChat()
+    {
+        Messages.Clear();
+        _agentService.ClearHistory();
+        CurrentPrompt = "";
+        AttachedImagePath = "";
+        StatusMessage = "Pronto.";
+    }
+
+    [RelayCommand]
     private void SendMessage()
     {
         if (string.IsNullOrWhiteSpace(CurrentPrompt) && string.IsNullOrEmpty(AttachedImagePath)) return;
@@ -285,6 +332,9 @@ public partial class IALocalViewModel : ObservableObject
             ImagePath = AttachedImagePath
         };
         Messages.Add(userMsg);
+        
+        bool isWebSearch = IsWebSearchMode;
+        // Keep web search mode ON after sending (persistent, like ChatGPT)
         
         var promptBackup = CurrentPrompt;
         var imageBackup = AttachedImagePath;
@@ -302,7 +352,63 @@ public partial class IALocalViewModel : ObservableObject
         {
             try
             {
-                await foreach (var token in _agentService.SendMessageStreamAsync(promptBackup, imageBackup).ConfigureAwait(false))
+                string effectivePrompt = promptBackup;
+
+                // If web search mode, search the web first and inject results
+                if (isWebSearch)
+                {
+                    dispatcher.TryEnqueue(() =>
+                    {
+                        StatusMessage = "Buscando na web...";
+                        aiMsg.Content = "⏳ Buscando na web...";
+                        aiMsg.IsThinking = false;
+                    });
+
+                    var searchResults = await _webSearchService.SearchAsync(promptBackup, maxResults: 5);
+
+                    if (searchResults.Count > 0)
+                    {
+                        var now = DateTime.Now;
+                        var ctx = new StringBuilder();
+                        ctx.AppendLine($"Data e hora atual: {now:dddd, dd 'de' MMMM 'de' yyyy, HH:mm} (horário de Brasília)");
+                        ctx.AppendLine();
+                        ctx.AppendLine("INSTRUÇÃO CRÍTICA: Você está atuando como assistente com acesso à web. Os dados abaixo foram obtidos de uma busca na internet realizada AGORA, em tempo real. Estes dados são mais recentes e confiáveis do que qualquer coisa no seu treinamento.");
+                        ctx.AppendLine("REGRA: Baseie sua resposta UNICAMENTE nas fontes abaixo. Se as fontes afirmam uma data específica, cite essa data exatamente. NÃO diga 'ainda em desenvolvimento' se as fontes indicam uma data confirmada.");
+                        ctx.AppendLine();
+                        foreach (var (r, i) in searchResults.Select((r, i) => (r, i + 1)))
+                        {
+                            ctx.AppendLine($"--- FONTE {i}: {r.Title} ---");
+                            ctx.AppendLine(r.Snippet);
+                            if (!string.IsNullOrEmpty(r.Url)) ctx.AppendLine($"Origem: {r.Url}");
+                            ctx.AppendLine();
+                        }
+                        ctx.AppendLine($"PERGUNTA DO USUÁRIO: {promptBackup}");
+                        ctx.AppendLine();
+                        ctx.AppendLine("Responda de forma direta, completa e em português do Brasil. Inclua datas, nomes e detalhes específicos que aparecem nas fontes. Seja preciso como o ChatGPT.");
+                        effectivePrompt = ctx.ToString();
+
+                        // Store sources on the message for display
+                        dispatcher.TryEnqueue(() =>
+                        {
+                            StatusMessage = $"Encontrei {searchResults.Count} resultado(s). Analisando...";
+                            aiMsg.Content = "";
+                            aiMsg.IsThinking = true;
+                            foreach (var r in searchResults)
+                                aiMsg.SearchSources.Add(r);
+                        });
+                    }
+                    else
+                    {
+                        dispatcher.TryEnqueue(() =>
+                        {
+                            StatusMessage = "Nenhum resultado encontrado. Respondendo com conhecimento local...";
+                            aiMsg.Content = "";
+                            aiMsg.IsThinking = true;
+                        });
+                    }
+                }
+
+                await foreach (var token in _agentService.SendMessageStreamAsync(effectivePrompt, imageBackup).ConfigureAwait(false))
                 {
                     dispatcher.TryEnqueue(() => 
                     {
@@ -326,10 +432,15 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     IsGenerating = false;
                     aiMsg.IsThinking = false;
+                    StatusMessage = "Pronto. Ollama + Semantic Kernel.";
                 });
             }
         });
     }
 
-    public string GetString(string key) => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString(key);
+    public string GetString(string key, string fallback = "") 
+    {
+        var result = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString(key);
+        return string.IsNullOrEmpty(result) || result == key ? fallback : result;
+    }
 }

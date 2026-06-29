@@ -39,12 +39,13 @@ public sealed partial class SystemUpdatesPage : Page
 
     private async void MainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (MainPivot.SelectedItem == PivotApps && !ViewModel.InstalledApps.Any() && !ViewModel.IsLoadingInstalledApps)
+        var selectedItem = MainPivot.SelectedItem as PivotItem;
+        if (selectedItem == PivotApps && !ViewModel.InstalledApps.Any() && !ViewModel.IsLoadingInstalledApps)
         {
             await ViewModel.LoadInstalledAppsAsync();
             UpdateEmptyStates();
         }
-        else if (MainPivot.SelectedItem == PivotSW && !ViewModel.SoftwareUpdates.Any() && !ViewModel.IsLoadingSoftwareUpdates)
+        else if (selectedItem == PivotSW && !ViewModel.SoftwareUpdates.Any() && !ViewModel.IsLoadingSoftwareUpdates)
         {
             await ViewModel.CheckSoftwareUpdatesAsync();
             UpdateEmptyStates();

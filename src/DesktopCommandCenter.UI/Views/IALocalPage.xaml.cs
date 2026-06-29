@@ -22,12 +22,6 @@ public sealed partial class IALocalPage : Page
 
     private void UpdateTranslations()
     {
-        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-        TooltipAttachImage.Content = loc.GetString("Chat_AttachImage");
-        TooltipAttachAudio.Content = loc.GetString("Chat_TranscribeAudio");
-        TooltipMic.Content = loc.GetString("Chat_SpeakMic");
-        TxtPromptInput.PlaceholderText = loc.GetString("Chat_Placeholder");
-        TooltipSend.Content = loc.GetString("Chat_Send");
-        CmbModels.PlaceholderText = loc.GetString("Chat_SelectModel");
+        // Traduções agora devem ser aplicadas diretamente via x:Bind no XAML
     }
 }

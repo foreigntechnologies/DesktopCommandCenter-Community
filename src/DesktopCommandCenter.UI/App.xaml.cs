@@ -429,12 +429,12 @@ public partial class App : Microsoft.UI.Xaml.Application
         Services = ConfigureServices();
         InitializeComponent();
         
-        EnsureFutureShellShortcuts();
+        EnsureAppShortcuts();
         
         Log.Information("DCC Inicializado com sucesso.");
     }
 
-    private void EnsureFutureShellShortcuts()
+    private void EnsureAppShortcuts()
     {
         try
         {
@@ -445,16 +445,22 @@ public partial class App : Microsoft.UI.Xaml.Application
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var desktopLink = Path.Combine(desktop, "FutureShell.lnk");
 
-            CreateShortcut(startMenuLink);
-            CreateShortcut(desktopLink);
+            CreateShortcut(startMenuLink, "--futureshell", "FutureShell-IconSemTexto.ico");
+            CreateShortcut(desktopLink, "--futureshell", "FutureShell-IconSemTexto.ico");
+
+            var chatFtStartMenuLink = Path.Combine(startMenu, "ChatFT.lnk");
+            var chatFtDesktopLink = Path.Combine(desktop, "ChatFT.lnk");
+
+            CreateShortcut(chatFtStartMenuLink, "--chatft", "@ChatFT-LogoSemTexto.ico");
+            CreateShortcut(chatFtDesktopLink, "--chatft", "@ChatFT-LogoSemTexto.ico");
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Falha ao criar atalhos do FutureShell.");
+            Log.Error(ex, "Falha ao criar atalhos do app.");
         }
     }
 
-    private void CreateShortcut(string shortcutPath)
+    private void CreateShortcut(string shortcutPath, string argumentsOverride, string iconName)
     {
         if (System.IO.File.Exists(shortcutPath)) return;
         
@@ -467,7 +473,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                 var shortcut = shell.CreateShortcut(shortcutPath);
                 
                 string exePath = Environment.ProcessPath ?? "";
-                string arguments = "--futureshell";
+                string arguments = argumentsOverride;
                 
                 if (!string.IsNullOrEmpty(exePath))
                 {
@@ -476,7 +482,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                     if (File.Exists(updateExe))
                     {
                         shortcut.TargetPath = updateExe;
-                        arguments = $"--processStart \"{Path.GetFileName(exePath)}\" --processStartArgs \"--futureshell\"";
+                        arguments = $"--processStart \"{Path.GetFileName(exePath)}\" --processStartArgs \"{argumentsOverride}\"";
                     }
                     else
                     {
@@ -486,7 +492,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                 
                 shortcut.Arguments = arguments;
                 shortcut.WorkingDirectory = AppContext.BaseDirectory;
-                shortcut.IconLocation = Path.Combine(AppContext.BaseDirectory, "Assets", "FutureShell-IconSemTexto.ico");
+                shortcut.IconLocation = Path.Combine(AppContext.BaseDirectory, "Assets", iconName);
                 shortcut.Save();
             }
         }
@@ -510,6 +516,34 @@ public partial class App : Microsoft.UI.Xaml.Application
                     var colorVm = Services.GetRequiredService<DesktopCommandCenter.UI.ViewModels.ColorPickerViewModel>();
                     colorVm.TogglePicking();
                 }
+                else if (config.ActionId == "ChatFT")
+                {
+                    var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                    if (!string.IsNullOrEmpty(exePath))
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = exePath,
+                            Arguments = "--chatft",
+                            UseShellExecute = true,
+                            WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                        });
+                    }
+                }
+                else if (config.ActionId == "FutureShell")
+                {
+                    var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                    if (!string.IsNullOrEmpty(exePath))
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = exePath,
+                            Arguments = "--futureshell",
+                            UseShellExecute = true,
+                            WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                        });
+                    }
+                }
                 else
                 {
                     App.Current.MainWindow?.AppWindow.Show();
@@ -524,15 +558,24 @@ public partial class App : Microsoft.UI.Xaml.Application
     {
         var cmdArgs = Environment.GetCommandLineArgs();
         bool isFutureShell = false;
+        bool isChatFT = false;
         foreach (var arg in cmdArgs)
         {
             if (arg.Equals("--futureshell", StringComparison.OrdinalIgnoreCase))
                 isFutureShell = true;
+            else if (arg.Equals("--chatft", StringComparison.OrdinalIgnoreCase))
+                isChatFT = true;
         }
 
         if (isFutureShell)
         {
             MainWindow = new Views.FutureShellWindow();
+            MainWindow.Activate();
+            return;
+        }
+        else if (isChatFT)
+        {
+            MainWindow = new Views.ChatFTWindow();
             MainWindow.Activate();
             return;
         }

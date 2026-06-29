@@ -38,7 +38,7 @@ public sealed partial class AutomacoesPage : Page
 
         if (!string.IsNullOrEmpty(trigger) && !string.IsNullOrEmpty(action))
         {
-            ViewModel.AddNovaRegra(trigger, action, triggerParam, actionParam, actionLinguagem);
+            ViewModel.AddNovaRegra(trigger, action, triggerParam ?? "", actionParam ?? "", actionLinguagem ?? "");
         }
     }
 
@@ -76,13 +76,11 @@ public sealed partial class AutomacoesPage : Page
         ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.NoWrap;
         ActionParamTextBox.MinHeight = 0;
         
-        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-
         if (action == "Executar script personalizado")
         {
             LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            ActionParamTextBox.Header = loc.GetString("Auto_ScriptHeader") ?? "Código do Script";
-            ActionParamTextBox.PlaceholderText = loc.GetString("Auto_ScriptPlaceholder") ?? "Cole ou escreva seu script aqui...";
+            ActionParamTextBox.Header = "Código do Script";
+            ActionParamTextBox.PlaceholderText = "Cole ou escreva seu script aqui...";
             ActionParamTextBox.AcceptsReturn = true;
             ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap;
             ActionParamTextBox.MinHeight = 150;
@@ -91,8 +89,8 @@ public sealed partial class AutomacoesPage : Page
         }
         else if (action == "Abrir programa")
         {
-            ActionParamTextBox.Header = loc.GetString("Auto_ProgramHeader") ?? "Caminho ou nome do executável";
-            ActionParamTextBox.PlaceholderText = loc.GetString("Auto_ProgramPlaceholder") ?? "Ex: C:\\Windows\\notepad.exe ou notepad";
+            ActionParamTextBox.Header = "Caminho ou nome do executável";
+            ActionParamTextBox.PlaceholderText = "Ex: C:\\Windows\\notepad.exe ou notepad";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do executável");
         }
