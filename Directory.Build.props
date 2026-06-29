@@ -1,32 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <!-- Define as novas configurações disponíveis para toda a solution -->
-    <Configurations>Debug;Release;DebugCommunity;ReleaseCommunity;DebugPro;ReleasePro</Configurations>
-  </PropertyGroup>
-
-  <!-- Lógica de compilação PRO -->
-  <PropertyGroup Condition="$(Configuration.Contains('Pro'))">
-    <DefineConstants>$(DefineConstants);PRO_VERSION</DefineConstants>
-    <!-- Pode ser usado no código C# ou em outros lugares no MSBuild -->
-    <IsProBuild>true</IsProBuild>
-  </PropertyGroup>
-
-  <!-- Lógica de compilação Community -->
-  <PropertyGroup Condition="$(Configuration.Contains('Community'))">
-    <DefineConstants>$(DefineConstants);COMMUNITY_VERSION</DefineConstants>
-    <IsProBuild>false</IsProBuild>
-  </PropertyGroup>
-
-  <!-- Lógica padrão do Debug -->
-  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-
-  <!-- Lógica padrão do Release -->
-  <PropertyGroup Condition="$(Configuration.Contains('Release'))">
-    <Optimize>true</Optimize>
-    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
-  </PropertyGroup>
+  <!-- Import the root Directory.Build.props from the Enterprise parent directory so all projects share the same BaseOutputPath and Platforms -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 </Project>
