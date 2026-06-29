@@ -134,6 +134,11 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
+
   <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
