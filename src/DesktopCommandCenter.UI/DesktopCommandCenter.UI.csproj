@@ -24,6 +24,8 @@
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
+    <!-- Encurtar o caminho do pacote MSIX para evitar o erro do limite MAX_PATH de 260 caracteres do Windows -->
+    <AppxPackageDir>$(MSBuildThisFileDirectory)..\..\..\.packages\</AppxPackageDir>
     <!-- Versão e nome do executável -->
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
