@@ -5,4 +5,10 @@
 
   <!-- Import the root Directory.Build.props from the Enterprise parent directory if it exists -->
   <Import Project="$(ParentDirectoryBuildProps)" Condition="'$(ParentDirectoryBuildProps)' != ''" />
+
+  <!-- Encurtar caminhos intermediários apenas do projeto de UI para evitar MSB4023 / MAX_PATH -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'DesktopCommandCenter.UI'">
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\.b\ui\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\.o\ui\</BaseIntermediateOutputPath>
+  </PropertyGroup>
 </Project>
