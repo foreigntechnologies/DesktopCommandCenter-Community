@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Define as novas configurações disponíveis para toda a solution -->
-    <Configurations>DebugCommunity;ReleaseCommunity;DebugPro;ReleasePro</Configurations>
+    <Configurations>Debug;Release;DebugCommunity;ReleaseCommunity;DebugPro;ReleasePro</Configurations>
   </PropertyGroup>
 
   <!-- Lógica de compilação PRO -->
