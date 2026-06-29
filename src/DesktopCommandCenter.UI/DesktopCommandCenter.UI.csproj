@@ -9,7 +9,8 @@
     <!-- RIDs plurais para habilitar as caixinhas no Assistente do Visual Studio -->
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <!-- Fallback for CLI/CI builds (like GitHub Actions) to prevent NETSDK1134 or missing Architecture errors -->
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' and '$(GITHUB_ACTIONS)' == 'true'">win-$(Platform)</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And ('$(Platform)' == 'AnyCPU' Or '$(Platform)' == 'Any CPU')">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Platform)' != 'AnyCPU' And '$(Platform)' != 'Any CPU'">win-$(Platform)</RuntimeIdentifier>
     <PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <WinUISDKReferences>false</WinUISDKReferences>
@@ -23,7 +24,11 @@
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
-    <!-- Versão e nome do executável -->
+    <!-- Encurtar o caminho do pacote MSIX final -->
+    <AppxPackageDir>$(MSBuildProjectDirectory)\AppPackages\</AppxPackageDir>
+    <!-- Substituir a saída base geral apenas deste projeto de UI, pois a subpasta /Upload/ do MSIX passa dos 260 caracteres -->
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\..\..\.b\ui\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\..\.o\ui\</BaseIntermediateOutputPath>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
@@ -111,6 +116,7 @@
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
