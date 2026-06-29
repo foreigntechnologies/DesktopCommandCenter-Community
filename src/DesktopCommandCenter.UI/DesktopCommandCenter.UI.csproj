@@ -25,7 +25,7 @@
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
     <!-- Encurtar o caminho do pacote MSIX final -->
-    <AppxPackageDir>$(MSBuildThisFileDirectory)..\..\..\.packages\</AppxPackageDir>
+    <AppxPackageDir>$(MSBuildProjectDirectory)\AppPackages\</AppxPackageDir>
     <!-- Substituir a saída base geral apenas deste projeto de UI, pois a subpasta /Upload/ do MSIX passa dos 260 caracteres -->
     <BaseOutputPath>$(MSBuildThisFileDirectory)..\..\..\.b\ui\</BaseOutputPath>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\..\.o\ui\</BaseIntermediateOutputPath>
