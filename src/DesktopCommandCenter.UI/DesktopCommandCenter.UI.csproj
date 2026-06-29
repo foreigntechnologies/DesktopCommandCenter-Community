@@ -15,8 +15,10 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <WindowsPackageType>None</WindowsPackageType>
+    <NoWarn>$(NoWarn);MVVMTK0045;MVVMTK0034</NoWarn>
+    <WindowsPackageType>MSIX</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <PublishReadyToRun>false</PublishReadyToRun>
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -25,9 +27,10 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyName>Desktop Command Center</AssemblyName>
+    <PackageId>DesktopCommandCenter</PackageId>
     <Product>Desktop Command Center</Product>
     <Company>Foreign Technologies</Company>
-    <Copyright>© 2026 Foreign Technologies®. All rights reserved.</Copyright>
+    <Copyright>© 2026 Foreign Technologies®. Todos os direitos reservados.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +46,12 @@
     </Content>
 
     <Content Include="Assets\FutureShell-IconSemTexto.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ChatFT-LogoSemTexto.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ChatFT-LogoSemTexto.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Terminal\FutureShellInit.ps1">
@@ -104,20 +113,17 @@
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ProjectReference>
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
   </ItemGroup>
-  
-  <!-- Conditional reference for Enterprise Submodule Architecture -->
-  <ItemGroup Condition="Exists('..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
-    <ProjectReference Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
-  </ItemGroup>
 
-  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
-  </ItemGroup>
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
@@ -131,7 +137,7 @@
   <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="!$(Configuration.Contains('Debug'))">True</PublishReadyToRun>
+    <PublishReadyToRun Condition="!$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
     <PublishTrimmed>False</PublishTrimmed>
   </PropertyGroup>
 </Project>

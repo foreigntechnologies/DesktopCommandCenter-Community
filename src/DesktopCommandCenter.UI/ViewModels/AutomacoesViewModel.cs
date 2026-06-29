@@ -28,6 +28,9 @@ public partial class AutomacaoRegra : ObservableObject
     [NotifyPropertyChangedFor(nameof(AcaoCompleta))]
     private string _acaoParametro = string.Empty;
 
+    [ObservableProperty]
+    private string _acaoLinguagem = string.Empty;
+
     [ObservableProperty] private bool _isAtivo = true;
 
     public string GatilhoCompleto => string.IsNullOrEmpty(GatilhoParametro) ? Gatilho : $"{Gatilho} ({GatilhoParametro})";
@@ -51,12 +54,24 @@ public partial class AutomacoesViewModel : ObservableObject
 
     public ObservableCollection<string> AvailableActions { get; } = new()
     {
+        "Abrir programa",
+        "Executar script personalizado",
         "Extrair ID do vídeo",
         "Extrair texto de imagem via OCR",
         "Falar texto (Text-to-Speech)",
         "Executar script PowerShell ou CMD",
         "Limpar Área de Transferência",
         "Exibir notificação do sistema (Toast)"
+    };
+
+    public ObservableCollection<string> AvailableLanguages { get; } = new()
+    {
+        "PowerShell",
+        "Bash",
+        "Python",
+        "JavaScript",
+        "Java",
+        "Golang"
     };
 
     public ObservableCollection<AutomacaoRegra> Regras { get; } = new();
@@ -130,7 +145,7 @@ public partial class AutomacoesViewModel : ObservableObject
         }
     }
 
-    public void AddNovaRegra(string gatilho, string acao, string gatilhoParam, string acaoParam)
+    public void AddNovaRegra(string gatilho, string acao, string gatilhoParam, string acaoParam, string acaoLinguagem = "")
     {
         if (!string.IsNullOrEmpty(gatilho) && !string.IsNullOrEmpty(acao))
         {
@@ -140,6 +155,7 @@ public partial class AutomacoesViewModel : ObservableObject
                 Acao = acao,
                 GatilhoParametro = gatilhoParam ?? string.Empty,
                 AcaoParametro = acaoParam ?? string.Empty,
+                AcaoLinguagem = acaoLinguagem ?? string.Empty,
                 IsAtivo = true
             };
             nova.PropertyChanged += OnRegraPropertyChanged;

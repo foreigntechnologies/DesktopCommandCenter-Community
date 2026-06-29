@@ -1,9 +1,14 @@
 <Page
+    x:Name="RootPage"
     x:Class="DesktopCommandCenter.UI.Views.IALocalPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
+    xmlns:controls="using:DesktopCommandCenter.UI.Controls"
+    xmlns:interfaces="using:DesktopCommandCenter.Application.Interfaces"
     Background="Transparent">
+    
     <Grid Padding="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -11,28 +16,205 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-            <TextBlock Text="ChatFT" Style="{StaticResource TitleTextBlockStyle}" />
-            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" VerticalAlignment="Bottom" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        <!-- Top Bar -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                <TextBlock Text="ChatFT" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" VerticalAlignment="Bottom" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" MaxWidth="300" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="{x:Bind ViewModel.GetString('Chat_NewChat', 'Novo Chat')}" Command="{x:Bind ViewModel.ClearChatCommand}" Style="{StaticResource DefaultButtonStyle}">
+                    <Button.ContentTransitions>
+                        <TransitionCollection />
+                    </Button.ContentTransitions>
+                </Button>
+                <ComboBox x:Name="CmbModels" ItemsSource="{x:Bind ViewModel.AvailableModels, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedModel, Mode=TwoWay}" Width="180" />
+            </StackPanel>
+        </Grid>
+
+        <!-- EMPTY STATE (Centered) -->
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" 
+                    Visibility="{x:Bind ViewModel.IsChatEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="24">
+            
+            <TextBlock Text="{x:Bind ViewModel.GetString('Chat_EmptyStateTitle', 'O que tem na agenda de hoje?')}" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" />
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="24" Padding="12,8,12,8" HorizontalAlignment="Stretch" Width="700">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Content="+" Command="{x:Bind ViewModel.AttachImageCommand}" Style="{StaticResource SubtleButtonStyle}" CornerRadius="20" Width="40" Height="40" FontSize="18" Padding="0" ToolTipService.ToolTip="{x:Bind ViewModel.GetString('Chat_AttachImage', 'Anexar arquivo')}" />
+                    
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0">
+                        <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.IsWebSearchMode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Spacing="4" Margin="0,0,8,0">
+                            <FontIcon Glyph="&#xE12B;" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontSize="14" />
+                            <TextBlock Text="{x:Bind ViewModel.GetString('Chat_WebSearchBadge', 'Busca na web')}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" VerticalAlignment="Center" />
+                            <Border Width="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="4,4" />
+                        </StackPanel>
+                        
+                        <TextBox Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 PlaceholderText="{x:Bind ViewModel.GetString('Chat_Placeholder', 'Pergunte alguma coisa')}" 
+                                 AcceptsReturn="True" MaxHeight="150" BorderThickness="0" Background="Transparent" VerticalAlignment="Center" MinWidth="400"
+                                 IsSpellCheckEnabled="False">
+                            <TextBox.Resources>
+                                <SolidColorBrush x:Key="TextControlBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
+                                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
+                                <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                                <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                        <Button Command="{x:Bind ViewModel.ToggleRecordingCommand}" Style="{StaticResource SubtleButtonStyle}" CornerRadius="20" Width="36" Height="36" Padding="0" ToolTipService.ToolTip="{x:Bind ViewModel.GetString('Chat_SpeakMic', 'Falar no microfone')}">
+                            <FontIcon Glyph="&#xE720;" FontSize="14"/>
+                        </Button>
+                        <Button Command="{x:Bind ViewModel.SendMessageCommand}" Style="{StaticResource AccentButtonStyle}" CornerRadius="20" Width="36" Height="36" Padding="0" ToolTipService.ToolTip="{x:Bind ViewModel.GetString('Chat_Send', 'Enviar')}">
+                            <FontIcon Glyph="&#xE72A;" FontSize="14" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Action Chips -->
+            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                <Button Style="{StaticResource SubtleButtonStyle}" CornerRadius="16" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xEB9F;" FontSize="14" />
+                        <TextBlock Text="{x:Bind ViewModel.GetString('Chat_ChipImage', 'Crie uma imagem')}" />
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SubtleButtonStyle}" CornerRadius="16" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE70F;" FontSize="14" />
+                        <TextBlock Text="{x:Bind ViewModel.GetString('Chat_ChipEdit', 'Escreva ou edite')}" />
+                    </StackPanel>
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                            <MenuFlyoutItem Text="{x:Bind ViewModel.GetString('Chat_FlyoutOutline', 'Transforme ideias em um esboço')}" Command="{x:Bind ViewModel.SetPromptCommand}" CommandParameter="{x:Bind ViewModel.GetString('Chat_FlyoutOutlinePrompt', 'Transforme estas ideias em um esboço: ')}" />
+                            <MenuFlyoutItem Text="{x:Bind ViewModel.GetString('Chat_FlyoutSummarize', 'Resumir um trecho')}" Command="{x:Bind ViewModel.SetPromptCommand}" CommandParameter="{x:Bind ViewModel.GetString('Chat_FlyoutSummarizePrompt', 'Resuma o seguinte texto: ')}" />
+                            <MenuFlyoutItem Text="{x:Bind ViewModel.GetString('Chat_FlyoutTone', 'Melhorar o tom')}" Command="{x:Bind ViewModel.SetPromptCommand}" CommandParameter="{x:Bind ViewModel.GetString('Chat_FlyoutTonePrompt', 'Melhore o tom deste texto para ficar mais profissional: ')}" />
+                            <MenuFlyoutItem Text="{x:Bind ViewModel.GetString('Chat_FlyoutArgument', 'Reforce um argumento')}" Command="{x:Bind ViewModel.SetPromptCommand}" CommandParameter="{x:Bind ViewModel.GetString('Chat_FlyoutArgumentPrompt', 'Reforce o argumento deste texto: ')}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <!-- Web search toggle -->
+                <ToggleButton IsChecked="{x:Bind ViewModel.IsWebSearchMode, Mode=TwoWay}"
+                              CornerRadius="16" BorderThickness="1" Padding="14,6">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE12B;" FontSize="14" />
+                        <TextBlock Text="Busca na web" FontWeight="SemiBold" />
+                    </StackPanel>
+                </ToggleButton>
+            </StackPanel>
+
+            <!-- No Models Warning (if applicable) -->
+            <StackPanel Visibility="{x:Bind ViewModel.ShowNoModelsWarning, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,32,0,0" Spacing="12" HorizontalAlignment="Center">
+                <TextBlock Text="{x:Bind ViewModel.GetString('Chat_NoModelsWarning', 'Nenhum modelo local encontrado. Baixe um para continuar:')}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                    <Button Content="phi3" Command="{x:Bind ViewModel.DownloadModelCommand}" CommandParameter="phi3" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotDownloadingModel, Mode=OneWay}" />
+                    <Button Content="llama3.1" Command="{x:Bind ViewModel.DownloadModelCommand}" CommandParameter="llama3.1" IsEnabled="{x:Bind ViewModel.IsNotDownloadingModel, Mode=OneWay}" />
+                    <Button Content="gemma2:2b" Command="{x:Bind ViewModel.DownloadModelCommand}" CommandParameter="gemma2:2b" IsEnabled="{x:Bind ViewModel.IsNotDownloadingModel, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Visibility="{x:Bind ViewModel.IsDownloadingModel, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,8,0,0" Spacing="8">
+                    <TextBlock Text="{x:Bind ViewModel.GetString('Chat_DownloadingModel', 'Baixando modelo...')}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" HorizontalAlignment="Center"/>
+                    <ProgressBar Value="{x:Bind ViewModel.DownloadProgressValue, Mode=OneWay}" Maximum="100" Width="300" Height="6" CornerRadius="3" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Messages, Mode=OneWay}" SelectionMode="None">
+        <!-- POPULATED CHAT STATE (ListView) -->
+        <ListView x:Name="ChatListView" Grid.Row="1" ItemsSource="{x:Bind ViewModel.Messages, Mode=OneWay}" SelectionMode="None"
+                  Visibility="{x:Bind ViewModel.IsChatNotEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                  Padding="0,0,0,8">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodels:ChatMessage">
-                    <Grid Margin="0,8">
-                        <Border CornerRadius="8" Padding="16" MaxWidth="600" HorizontalAlignment="Left" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                    <Grid Margin="0,6" Padding="8,0">
+                        <!-- User message: alinhado à direita, cor discreta -->
+                        <Border CornerRadius="16,4,16,16" Padding="14,10" MaxWidth="540"
+                                HorizontalAlignment="Right"
+                                Visibility="{x:Bind IsUser}">
+                            <Border.Background>
+                                <SolidColorBrush Color="#1F4E79" />
+                            </Border.Background>
                             <StackPanel>
-                                <TextBlock Text="{x:Bind Role}" FontWeight="Bold" Margin="0,0,0,4" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
-                                <Image Source="{x:Bind ImagePath}" MaxWidth="300" MaxHeight="300" HorizontalAlignment="Left" Margin="0,0,0,8" Visibility="{x:Bind HasImage}" />
-                                <TextBlock Text="{x:Bind Content}" TextWrapping="Wrap" />
+                                <TextBlock Text="{x:Bind Content, Mode=OneWay}" TextWrapping="Wrap"
+                                           Foreground="White" IsTextSelectionEnabled="True" />
+                                <Image Source="{Binding ImagePath, TargetNullValue={x:Null}}" MaxWidth="280" MaxHeight="280"
+                                       HorizontalAlignment="Left" Margin="0,6,0,0" Visibility="{x:Bind HasImage}" />
                             </StackPanel>
                         </Border>
+                        <!-- AI message: alinhado à esquerda com Markdown + fontes -->
+                        <StackPanel HorizontalAlignment="Left" MaxWidth="640"
+                                    Visibility="{x:Bind IsAI}">
+                            <TextBlock Text="{x:Bind Role}" FontSize="11" FontWeight="SemiBold" Margin="4,0,0,4"
+                                       Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
+                            <Border CornerRadius="4,16,16,16" Padding="14,10"
+                                    Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                <StackPanel>
+                                    <controls:MarkdownTextBlock Text="{x:Bind Content, Mode=OneWay}" />
+                                    <ProgressRing IsActive="{x:Bind IsThinking, Mode=OneWay}" Visibility="{x:Bind ThinkingVisibility, Mode=OneWay}"
+                                                  Width="20" Height="20" HorizontalAlignment="Left" Margin="0,6,0,0" />
+                                </StackPanel>
+                            </Border>
+                            <!-- Web Sources -->
+                            <ItemsControl ItemsSource="{x:Bind SearchSources, Mode=OneWay}"
+                                          Visibility="{x:Bind HasSources, Mode=OneWay}"
+                                          Margin="4,6,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="interfaces:WebSearchResult">
+                                        <HyperlinkButton NavigateUri="{x:Bind Url}" Padding="0" Margin="0,2">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="&#xE12B;" FontSize="10" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" VerticalAlignment="Center" />
+                                                <TextBlock Text="{x:Bind Title}" FontSize="11"
+                                                           Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+                                                           TextDecorations="Underline" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </HyperlinkButton>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <Border Grid.Row="2" Margin="0,16,0,0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="24" Padding="12,8,12,8" HorizontalAlignment="Stretch" MaxWidth="900">
+        <!-- POPULATED CHAT STATE (Bottom Input Box) -->
+        <Border Grid.Row="2" Margin="0,16,0,0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="24" Padding="12,8,12,8" HorizontalAlignment="Stretch" MaxWidth="900"
+                Visibility="{x:Bind ViewModel.IsChatNotEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -43,19 +225,19 @@
                 <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Bottom" Margin="0,0,8,0">
                     <Button Command="{x:Bind ViewModel.AttachImageCommand}" Style="{StaticResource SubtleButtonStyle}" CornerRadius="20" Width="40" Height="40" Padding="0">
                         <ToolTipService.ToolTip>
-                            <ToolTip x:Name="TooltipAttachImage" Content="Anexar Imagem" />
+                            <ToolTip Content="{x:Bind ViewModel.GetString('Chat_AttachImage', 'Anexar Imagem')}" />
                         </ToolTipService.ToolTip>
                         <FontIcon Glyph="&#xEB9F;" FontSize="16"/>
                     </Button>
                     <Button Command="{x:Bind ViewModel.AttachAudioCommand}" Style="{StaticResource SubtleButtonStyle}" CornerRadius="20" Width="40" Height="40" Padding="0">
                         <ToolTipService.ToolTip>
-                            <ToolTip x:Name="TooltipAttachAudio" Content="Transcrever Áudio" />
+                            <ToolTip Content="{x:Bind ViewModel.GetString('Chat_TranscribeAudio', 'Transcrever Áudio')}" />
                         </ToolTipService.ToolTip>
                         <FontIcon Glyph="&#xE8D6;" FontSize="16" />
                     </Button>
                     <Button Command="{x:Bind ViewModel.ToggleRecordingCommand}" Style="{StaticResource SubtleButtonStyle}" CornerRadius="20" Width="40" Height="40" Padding="0" Foreground="{ThemeResource SystemControlForegroundAccentBrush}">
                         <ToolTipService.ToolTip>
-                            <ToolTip x:Name="TooltipMic" Content="Falar no Microfone" />
+                            <ToolTip Content="{x:Bind ViewModel.GetString('Chat_SpeakMic', 'Falar no Microfone')}" />
                         </ToolTipService.ToolTip>
                         <FontIcon Glyph="&#xE720;" FontSize="16"/>
                     </Button>
@@ -63,15 +245,30 @@
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,8,0">
                     <TextBlock Text="{x:Bind ViewModel.AttachedImagePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="11" Margin="4,0,0,4" />
-                    <TextBox x:Name="TxtPromptInput" Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                             PlaceholderText="Escreva seu prompt aqui, fale ao microfone ou anexe uma imagem..." 
-                             AcceptsReturn="True" MaxHeight="150" BorderThickness="0" Background="Transparent" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.IsWebSearchMode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Spacing="4" Margin="4,0,0,4">
+                        <FontIcon Glyph="&#xE12B;" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontSize="12" />
+                        <TextBlock Text="{x:Bind ViewModel.GetString('Chat_WebSearchBadge', 'Busca na web')}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontSize="12" />
+                    </StackPanel>
+                    <TextBox Text="{x:Bind ViewModel.CurrentPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             PlaceholderText="{x:Bind ViewModel.GetString('Chat_Placeholder', 'Pergunte alguma coisa')}" 
+                             AcceptsReturn="True" MaxHeight="150" BorderThickness="0" Background="Transparent" VerticalAlignment="Center" TextWrapping="Wrap">
+                        <TextBox.Resources>
+                            <SolidColorBrush x:Key="TextControlBackground" Color="Transparent"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
+                            <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                            <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                        </TextBox.Resources>
+                    </TextBox>
                 </StackPanel>
                          
-                <Button x:Name="BtnSend" Grid.Column="2" Command="{x:Bind ViewModel.SendMessageCommand}" 
+                <Button Grid.Column="2" Command="{x:Bind ViewModel.SendMessageCommand}" 
                         Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" CornerRadius="20" Width="40" Height="40" Padding="0">
                     <ToolTipService.ToolTip>
-                        <ToolTip x:Name="TooltipSend" Content="Enviar" />
+                        <ToolTip Content="{x:Bind ViewModel.GetString('Chat_Send', 'Enviar')}" />
                     </ToolTipService.ToolTip>
                     <FontIcon Glyph="&#xE72A;" FontSize="16" />
                 </Button>
