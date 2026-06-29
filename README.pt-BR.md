@@ -19,12 +19,13 @@ Projetado para profissionais, desenvolvedores, criadores de conteúdo, analistas
 
 ## Funcionalidades
 - ✨ **Fluent Design System**: Construído nativamente para Windows 11, com fundo translúcido (Mica) e animações suaves.
-- 🤖 **ChatFT (Agente IA)**: Um agente autônomo "Local First" alimentado pelo Microsoft Semantic Kernel e Ollama. Capaz de invocar plugins C# locais (ler seus arquivos, checar hora do sistema) de forma 100% offline.
+- 🤖 **ChatFT (Agente IA)**: Um agente autônomo "Local First" alimentado pelo Microsoft Semantic Kernel e Ollama. Ele detecta automaticamente e permite que você alterne livremente entre todos os seus modelos instalados. Capaz de invocar plugins C# locais (ler seus arquivos, checar hora do sistema) de forma 100% offline.
 - 🎙️ **Voz e Visão**: Transcrição local de áudio (microfone e arquivos mp3/wav) usando Whisper.net e suporte a múltiplas modalidades (Visão) analisando imagens via Ollama.
 - 📋 **Smart Clipboard**: Um serviço em background que captura silenciosamente seu histórico de cópias (Ctrl+C), permitindo buscar e reutilizar textos anteriores instantaneamente.
 - 📝 **Notas Rápidas**: Um bloco de notas incrivelmente rápido embutido na barra lateral.
 - 🌍 **Internacionalização em Tempo Real**: Interface totalmente traduzida (Inglês, Português, Espanhol).
 - 💻 **FutureShell**: Um terminal robusto PTY (Pseudo Console) embutido, capaz de rodar PowerShell, CMD, Bash, e qualquer CLI global instalada no seu sistema. Suporta o sistema de ajuda personalizado inteligente digitando `help` ou `principal-commands`.
+- ⚙️ **Automações Avançadas**: Crie automações baseadas em regras para abrir programas ou executar scripts personalizados em múltiplas linguagens (PowerShell, Bash, Python, Node.js, Java, Golang).
 
 ## Arquitetura e Tecnologias
 - **Framework**: .NET 9, Windows App SDK (WinUI 3)
@@ -81,3 +82,7 @@ Este projeto utiliza o Firebase para Gestão de Identidade. **Não comite** chav
 
 ## Licença
 Software Proprietário. Todos os direitos reservados.
+
+
+### 🤖 Modelos de IA sob Demanda
+O ChatFT agora detecta automaticamente se você possui modelos instalados no Ollama. Caso seja sua primeira vez, o próprio Desktop Command Center oferecerá opções para baixar e instalar os modelos recomendados (como Phi-3, Llama 3.1 e Gemma 2) com apenas um clique e exibirá o progresso diretamente no chat, sem precisar tocar no terminal!
