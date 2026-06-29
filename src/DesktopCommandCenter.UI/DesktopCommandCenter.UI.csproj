@@ -133,10 +133,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Any CPU'" />
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|Any CPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
 
   <!-- Publish Properties -->
