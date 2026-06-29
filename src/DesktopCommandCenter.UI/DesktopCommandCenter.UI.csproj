@@ -29,7 +29,7 @@
     <AssemblyName>Desktop Command Center</AssemblyName>
     <Product>Desktop Command Center</Product>
     <Company>Foreign Technologies</Company>
-    <Copyright>© 2026 Foreign Technologies®. All rights reserved.</Copyright>
+    <Copyright>© 2026 Foreign Technologies</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
