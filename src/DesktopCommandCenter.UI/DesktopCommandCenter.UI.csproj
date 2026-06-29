@@ -3,6 +3,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <!-- Shorten output path to prevent MSB4023 Long Path Exception during MSIX Packaging -->
+    <BaseOutputPath>..\..\..\..\.build\bin\UI\</BaseOutputPath>
+    <BaseIntermediateOutputPath>..\..\..\..\.build\obj\UI\</BaseIntermediateOutputPath>
     <RootNamespace>DCC_Community_UI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;x86;ARM64</Platforms>
