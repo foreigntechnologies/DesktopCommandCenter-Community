@@ -9,6 +9,7 @@ public class AutomacaoRegra : EntityBase
     public string Acao { get; set; } = string.Empty;
     public string GatilhoParametro { get; set; } = string.Empty;
     public string AcaoParametro { get; set; } = string.Empty;
+    public string AcaoLinguagem { get; set; } = string.Empty;
     public bool IsAtivo { get; set; } = true;
 
     // Construtor padrão para uso interno do app
@@ -18,7 +19,7 @@ public class AutomacaoRegra : EntityBase
 
     // Construtor para desserialização do JSON preservando as propriedades do EntityBase
     [JsonConstructor]
-    public AutomacaoRegra(Guid id, DateTime createdAt, DateTime? updatedAt, string gatilho, string acao, string gatilhoParametro, string acaoParametro, bool isAtivo)
+    public AutomacaoRegra(Guid id, DateTime createdAt, DateTime? updatedAt, string gatilho, string acao, string gatilhoParametro, string acaoParametro, string acaoLinguagem, bool isAtivo)
     {
         Id = id;
         CreatedAt = createdAt;
@@ -27,6 +28,7 @@ public class AutomacaoRegra : EntityBase
         Acao = acao;
         GatilhoParametro = gatilhoParametro;
         AcaoParametro = acaoParametro;
+        AcaoLinguagem = acaoLinguagem;
         IsAtivo = isAtivo;
     }
 }

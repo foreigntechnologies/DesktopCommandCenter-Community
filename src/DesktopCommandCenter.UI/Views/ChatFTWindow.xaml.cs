@@ -1,0 +1,108 @@
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+
+namespace DesktopCommandCenter.UI.Views;
+
+public sealed partial class ChatFTWindow : Window
+{
+    [DllImport("shell32.dll", SetLastError = true)]
+    public static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
+
+    public ChatFTWindow()
+    {
+        this.InitializeComponent();
+
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+        var appWindow = AppWindow.GetFromWindowId(windowId);
+
+        try { SetCurrentProcessExplicitAppUserModelID("DCC.ChatFT"); } catch { }
+
+        appWindow.Title = "ChatFT";
+        var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "ChatFT-LogoSemTexto.ico");
+        if (!File.Exists(iconPath))
+        {
+            iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
+        }
+
+        if (File.Exists(iconPath))
+        {
+            appWindow.SetIcon(iconPath);
+        }
+
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+            AppTitleBar.Loaded += AppTitleBar_Loaded;
+        }
+        else
+        {
+            AppTitleBar.Visibility = Visibility.Collapsed;
+        }
+
+        // Apply theme
+        var theme = App.GetTheme();
+        if (this.Content is FrameworkElement frameworkElement)
+        {
+            frameworkElement.RequestedTheme = theme switch
+            {
+                "Light" => ElementTheme.Light,
+                "Dark" => ElementTheme.Dark,
+                _ => ElementTheme.Default
+            };
+
+            var isDark = frameworkElement.RequestedTheme == ElementTheme.Dark;
+            if (frameworkElement.RequestedTheme == ElementTheme.Default)
+            {
+                isDark = App.Current.RequestedTheme == ApplicationTheme.Dark;
+            }
+
+            if (appWindow.TitleBar != null)
+            {
+                try
+                {
+                    appWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+                    appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
+                    appWindow.TitleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+                }
+                catch { }
+            }
+        }
+
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
+        }
+
+        try
+        {
+            var lang = App.GetAppLanguage();
+            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>(App.Current.Services);
+            _ = tService.SetLanguageAsync(lang);
+        }
+        catch { }
+
+        RootFrame.Navigate(typeof(IALocalPage));
+    }
+
+    private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
+    {
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+        var appWindow = AppWindow.GetFromWindowId(windowId);
+        
+        if (AppWindowTitleBar.IsCustomizationSupported())
+        {
+            appWindow.TitleBar.SetDragRectangles(new[] {
+                new Windows.Graphics.RectInt32(0, 0, (int)AppTitleBar.ActualWidth, (int)AppTitleBar.ActualHeight)
+            });
+        }
+    }
+}

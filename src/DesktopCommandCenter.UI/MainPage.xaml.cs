@@ -109,15 +109,24 @@ public sealed partial class MainPage : Page
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
-        else if (actionId == "FutureShell")
+        else if (actionId == "FutureShell" || actionId == "IALocal")
         {
+            if (actionId == "IALocal")
+            {
+                if (!App.IsProUnlocked && string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                {
+                    ShowProRequiredDialog("IALocal");
+                    return;
+                }
+            }
+
             var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
             if (!string.IsNullOrEmpty(exePath))
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
                     FileName = exePath,
-                    Arguments = "--futureshell",
+                    Arguments = actionId == "IALocal" ? "--chatft" : "--futureshell",
                     UseShellExecute = true,
                     WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
                 });
@@ -126,18 +135,11 @@ public sealed partial class MainPage : Page
             return;
         }
 
-        bool isProFeature = actionId == "IALocal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
+        bool isProFeature = actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
         if (isProFeature && !App.IsProUnlocked)
         {
-            if (actionId == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
-            {
-                // Permitido se tiver chave de API própria
-            }
-            else
-            {
-                ShowProRequiredDialog(actionId);
-                return;
-            }
+            ShowProRequiredDialog(actionId);
+            return;
         }
 
         Type? pageType = actionId switch
@@ -153,7 +155,6 @@ public sealed partial class MainPage : Page
             "SystemUpdates" => typeof(Views.SystemUpdatesPage),
             "Captura" => typeof(Views.CapturaPage),
             "Tradutor" => typeof(Views.TradutorPage),
-            "IALocal" => typeof(Views.IALocalPage),
             "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
             "Prompts" => typeof(Views.PromptsPage),
             "Automacoes" => typeof(Views.AutomacoesPage),
@@ -194,15 +195,25 @@ public sealed partial class MainPage : Page
         {
             var tag = args.InvokedItemContainer.Tag?.ToString();
 
-            if (tag == "FutureShell")
+            if (tag == "FutureShell" || tag == "IALocal")
             {
+                if (tag == "IALocal")
+                {
+                    if (!App.IsProUnlocked && string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                    {
+                        ShowProRequiredDialog("IALocal");
+                        sender.SelectedItem = null;
+                        return;
+                    }
+                }
+
                 var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
                 if (!string.IsNullOrEmpty(exePath))
                 {
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = exePath,
-                        Arguments = "--futureshell",
+                        Arguments = tag == "IALocal" ? "--chatft" : "--futureshell",
                         UseShellExecute = true,
                         WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
                     });
@@ -224,30 +235,22 @@ public sealed partial class MainPage : Page
                 "Temporizador" => typeof(Views.TemporizadorPage),
                 "SystemUpdates" => typeof(Views.SystemUpdatesPage),
                 "Captura" => typeof(Views.CapturaPage),
-                "Tradutor" => typeof(Views.TradutorPage),
-                "IALocal" => typeof(Views.IALocalPage),
-                "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
-                "Prompts" => typeof(Views.PromptsPage),
-                "Automacoes" => typeof(Views.AutomacoesPage),
-                "Auth" => typeof(Views.AuthPage),
-                "CliCommands" => typeof(Views.CliCommandsPage),
-                _ => typeof(Views.ComingSoonPage)
-            };
+            "Tradutor" => typeof(Views.TradutorPage),
+            "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
+            "Prompts" => typeof(Views.PromptsPage),
+            "Automacoes" => typeof(Views.AutomacoesPage),
+            "Auth" => typeof(Views.AuthPage),
+            "CliCommands" => typeof(Views.CliCommandsPage),
+            _ => typeof(Views.ComingSoonPage)
+        };
 
-            bool isProFeature = tag == "IALocal" || tag == "PesquisaUniversal" || tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
+        bool isProFeature = tag == "PesquisaUniversal" || tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
 
-            if (isProFeature && !App.IsProUnlocked)
-            {
-                if (tag == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
-                {
-                    // Permitido se tiver chave própria
-                }
-                else
-                {
-                    ShowProRequiredDialog(tag ?? "Recurso PRO");
-                    return;
-                }
-            }
+        if (isProFeature && !App.IsProUnlocked)
+        {
+            ShowProRequiredDialog(tag ?? "Recurso PRO");
+            return;
+        }
 
             if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
             {

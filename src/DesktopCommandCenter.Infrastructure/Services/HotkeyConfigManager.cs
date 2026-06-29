@@ -49,8 +49,10 @@ public class HotkeyConfigManager : IHotkeyConfigManager
         {
             // ── Community ──────────────────────────────────────────────────
             new HotkeyConfig { ActionId = "Dashboard",         DisplayName = "Dashboard",                Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "ProcessManager",    DisplayName = "Processos",                Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Temporizador",      DisplayName = "Temporizador",             Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Notes",             DisplayName = "Notas Rápidas",            Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "SystemUpdates",     DisplayName = "Update Center",            Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Clipboard",         DisplayName = "Smart Clipboard",          Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "ColorPicker",       DisplayName = "Color Picker",             Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "AlwaysOnTop",       DisplayName = "Always On Top",            Modifiers = 0, VirtualKey = 0 },
@@ -58,6 +60,7 @@ public class HotkeyConfigManager : IHotkeyConfigManager
             new HotkeyConfig { ActionId = "Captura",           DisplayName = "Captura de Tela",          Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Tradutor",          DisplayName = "Tradutor",                 Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "CliCommands",       DisplayName = "Comandos CLI",             Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "FutureShell",       DisplayName = "FutureShell",              Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Settings",          DisplayName = "Configurações",            Modifiers = 2, VirtualKey = 0xDE },
             // ── PRO (Enterprise) ──────────────────────────────────────────
             new HotkeyConfig { ActionId = "ChatFT",            DisplayName = "ChatFT",                   Modifiers = 0, VirtualKey = 0 },

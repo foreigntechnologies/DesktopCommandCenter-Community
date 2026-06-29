@@ -42,6 +42,15 @@ public class DummyIAAgentService : IIAAgentService
 #pragma warning restore CS1998
 
     public void ClearHistory() { }
+
+    public Task<List<string>> GetAvailableModelsAsync() => Task.FromResult(new List<string> { "PRO Feature Only" });
+    
+    public void SetModel(string modelId) { }
+
+    public Task PullModelAsync(string modelName, System.IProgress<double>? progress = null, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
 }
 
 public class DummyWhisperTranscriptionService : IWhisperTranscriptionService
