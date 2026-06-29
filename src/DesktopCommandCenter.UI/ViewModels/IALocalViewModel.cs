@@ -13,7 +13,7 @@ public partial class ChatMessage : ObservableObject
     public string Role { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public bool IsUser => Role == "User";
-    public string ImagePath { get; set; } = string.Empty;
+    public string? ImagePath { get; set; } = null;
     public bool HasImage => !string.IsNullOrEmpty(ImagePath);
 }
 
