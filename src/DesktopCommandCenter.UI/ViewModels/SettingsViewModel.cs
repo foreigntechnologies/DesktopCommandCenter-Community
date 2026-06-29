@@ -25,6 +25,42 @@ public partial class SettingsViewModel : ObservableObject
     private int _selectedTimeFormatIndex;
 
     [ObservableProperty]
+    private int _selectedLanguageIndex;
+
+    // ── Configurações de IA ──────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsApiKeyVisible))]
+    [NotifyPropertyChangedFor(nameof(ModelPlaceholderText))]
+    private int _selectedAIProviderIndex;
+
+    [ObservableProperty]
+    private string _aiAgentApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _openAIApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _geminiApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _claudeApiKey = string.Empty;
+
+    [ObservableProperty]
+    private string _aiAgentModel = string.Empty;
+
+    public bool IsApiKeyVisible => SelectedAIProviderIndex != 0;
+
+    public string ModelPlaceholderText => SelectedAIProviderIndex switch
+    {
+        0 => "Deixe em branco para o padrão local (llama3)",
+        1 => "Deixe em branco para o padrão (gpt-4o)",
+        2 => "Deixe em branco para o padrão (gemini-1.5-pro)",
+        3 => "Deixe em branco para o padrão (claude-3-5-sonnet-20240620)",
+        _ => "Deixe em branco para o padrão"
+    };
+
+    [ObservableProperty]
     private int _selectedDateFormatIndex;
 
     // ── Hotkeys ────────────────────────────────────────────────────────────────
@@ -37,9 +73,14 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsNotLoggedIn))]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
     [NotifyPropertyChangedFor(nameof(IsProPlan))]
+    [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
+    [NotifyPropertyChangedFor(nameof(PlanBadgeText))]
+    [NotifyPropertyChangedFor(nameof(PlanBadgeColor))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     private bool _isLoggedIn;
 
     public bool IsNotLoggedIn => !IsLoggedIn;
+    public Visibility InverseProVisibility => IsProPlan ? Visibility.Collapsed : Visibility.Visible;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFreePlan))]
@@ -47,16 +88,20 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     [NotifyPropertyChangedFor(nameof(PlanBadgeText))]
     [NotifyPropertyChangedFor(nameof(PlanBadgeColor))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     private string _currentPlan = "free";
 
     [ObservableProperty]
     private string _userEmail = string.Empty;
 
+    [ObservableProperty]
+    private string _userName = string.Empty;
+
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
 
     public string PlanDisplayText => IsProPlan
-        ? "✔ Plano PRO Enterprise ativo"
+        ? "✔ Plano PRO ativo"
         : "Plano Community (Gratuito)";
 
     public string PlanBadgeText => IsProPlan ? "PRO" : "FREE";
@@ -77,6 +122,14 @@ public partial class SettingsViewModel : ObservableObject
         // Aparência
         string themeStr = App.GetTheme();
         SelectedThemeIndex = themeStr == "Light" ? 0 : themeStr == "Dark" ? 1 : 2;
+
+        string appLanguage = App.GetAppLanguage();
+        SelectedLanguageIndex = appLanguage switch
+        {
+            "en-US" => 1,
+            "es-ES" => 2,
+            _ => 0
+        };
 
         string timeFormat = App.GetTimeFormat();
         SelectedTimeFormatIndex = timeFormat switch
@@ -100,11 +153,32 @@ public partial class SettingsViewModel : ObservableObject
 
         LoadHotkeys();
 
+        // Configurações de IA
+        string aiProvider = App.GetAIAgentProvider();
+        SelectedAIProviderIndex = aiProvider switch
+        {
+            "Ollama" => 0,
+            "OpenAI" => 1,
+            "Gemini" => 2,
+            "Claude" => 3,
+            _        => 0
+        };
+        AiAgentApiKey = App.GetAIAgentApiKey();
+        OpenAIApiKey = App.GetOpenAIApiKey();
+        GeminiApiKey = App.GetGeminiApiKey();
+        ClaudeApiKey = App.GetClaudeApiKey();
+        AiAgentModel = App.GetAIAgentModel();
+
         // Escuta mudanças de licença do AuthViewModel (ex: login, logout)
         WeakReferenceMessenger.Default.Register<LicenseChangedMessage>(this, (r, m) =>
         {
             _ = RefreshAccountStateAsync();
         });
+
+        // Set initial synchronous state based on cached data
+        IsLoggedIn = !string.IsNullOrEmpty(App.GetCachedEmail());
+        UserEmail = App.GetCachedEmail();
+        CurrentPlan = App.GetProCached() ? "pro" : "free";
 
         _ = RefreshAccountStateAsync();
     }
@@ -153,11 +227,13 @@ public partial class SettingsViewModel : ObservableObject
         if (IsLoggedIn)
         {
             UserEmail   = user!.Email;
+            UserName    = user!.DisplayName;
             CurrentPlan = await _licenseService.GetCurrentPlanAsync();
         }
         else
         {
             UserEmail   = string.Empty;
+            UserName    = string.Empty;
             CurrentPlan = "free";
         }
 
@@ -202,10 +278,11 @@ public partial class SettingsViewModel : ObservableObject
     public void Logout()
     {
         _authService.Logout();
+        App.SaveCachedEmail(string.Empty);
         IsLoggedIn  = false;
         UserEmail   = string.Empty;
         CurrentPlan = "free";
-        App.IsProUnlocked = App.IsProBuild;
+        App.IsProUnlocked = false;
         WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
 
         foreach (var h in Hotkeys)
@@ -219,6 +296,18 @@ public partial class SettingsViewModel : ObservableObject
         string themeStr = value switch { 0 => "Light", 1 => "Dark", _ => "Default" };
         App.SaveTheme(themeStr);
         App.ApplyTheme(themeStr);
+    }
+
+    partial void OnSelectedLanguageIndexChanged(int value)
+    {
+        string lang = value switch { 1 => "en-US", 2 => "es-ES", _ => "pt-BR" };
+        App.SaveAppLanguage(lang);
+        
+        var translationService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetService(typeof(ITranslationService)) as ITranslationService;
+        if (translationService != null)
+        {
+            _ = translationService.SetLanguageAsync(lang);
+        }
     }
 
     partial void OnSelectedTimeFormatIndexChanged(int value)
@@ -238,5 +327,48 @@ public partial class SettingsViewModel : ObservableObject
             _ => "dddd, dd MMMM yyyy"
         };
         App.SaveDateFormat(format);
+    }
+
+    partial void OnSelectedAIProviderIndexChanged(int value)
+    {
+        string provider = value switch
+        {
+            0 => "Ollama",
+            1 => "OpenAI",
+            2 => "Gemini",
+            3 => "Claude",
+            _ => "Ollama"
+        };
+        App.SaveAIAgentProvider(provider);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnAiAgentApiKeyChanged(string value)
+    {
+        App.SaveAIAgentApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnOpenAIApiKeyChanged(string value)
+    {
+        App.SaveOpenAIApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnGeminiApiKeyChanged(string value)
+    {
+        App.SaveGeminiApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnClaudeApiKeyChanged(string value)
+    {
+        App.SaveClaudeApiKey(value);
+        WeakReferenceMessenger.Default.Send(new LicenseChangedMessage(App.IsProUnlocked));
+    }
+
+    partial void OnAiAgentModelChanged(string value)
+    {
+        App.SaveAIAgentModel(value);
     }
 }

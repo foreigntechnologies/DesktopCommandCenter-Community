@@ -44,6 +44,10 @@ public partial class IALocalViewModel : ObservableObject
         _agentService = agentService;
         _whisperService = whisperService;
         _agentService.ClearHistory();
+        
+        var welcomeMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_WelcomeMessage");
+        if (string.IsNullOrEmpty(welcomeMsg)) welcomeMsg = "Para utilizar o ChatFT localmente, é necessário ter o Ollama instalado em sua máquina! Ou utilizar uma secret key do Gemini (Google AI Studio), Claude ou OpenAI.";
+        Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = welcomeMsg });
     }
 
     [RelayCommand]

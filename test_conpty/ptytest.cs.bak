@@ -1,0 +1,26 @@
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Pty.Net;
+
+class Program
+{
+    static async Task Main()
+    {
+        var options = new PtyOptions { 
+            App = "powershell.exe", 
+            Cwd = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            CommandLine = new string[0],
+            ForceWinPty = false 
+        };
+        var pty = await PtyProvider.SpawnAsync(options, CancellationToken.None);
+        var reader = new StreamReader(pty.ReaderStream);
+        
+        var buffer = new char[1024];
+        int count = await reader.ReadAsync(buffer, 0, buffer.Length);
+        Console.WriteLine($"Read {count} bytes");
+        Console.WriteLine(new string(buffer, 0, count));
+        pty.Kill();
+    }
+}

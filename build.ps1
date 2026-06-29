@@ -43,7 +43,7 @@ Write-Host "Executando: $PublishCmd" -ForegroundColor DarkGray
 Invoke-Expression $PublishCmd
 
 # Copia a DLL ProFeatures para o pacote
-$ProPublishCmd = "dotnet publish src/DesktopCommandCenter.ProFeatures/DesktopCommandCenter.ProFeatures.csproj -c Release -o $PublishDir"
+$ProPublishCmd = "dotnet publish src/DesktopCommandCenter.ProFeatures/DesktopCommandCenter.ProFeatures.csproj -c Release -p:Version=$CleanVersion -o $PublishDir"
 Write-Host "Compilando e copiando DesktopCommandCenter.ProFeatures.dll..." -ForegroundColor DarkGray
 Invoke-Expression $ProPublishCmd
 

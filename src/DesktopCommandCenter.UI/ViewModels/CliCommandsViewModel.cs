@@ -120,7 +120,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd("Histórico Simplificado", "git log --oneline", "Exibe o histórico de commits de forma compacta (uma linha por commit).", catGit);
         AddCmd("Diferenças nos Arquivos", "git diff", "Mostra as diferenças entre os arquivos modificados e o último commit.", catGit);
         AddCmd("Listar Tags", "git tag", "Lista as tags (marcas de versão) do repositório.", catGit);
-        AddCmd("Criar Tag", "git tag v1.0.0", "Cria uma tag leve chamada 'v1.0.0'.", catGit);
+        AddCmd("Criar Tag", "git tag v1.0.0.0", "Cria uma tag leve chamada 'v1.0.0.0'.", catGit);
         AddCmd("Listar Remotos", "git remote -v", "Mostra as URLs dos repositórios remotos configurados.", catGit);
         AddCmd("Cherry-pick Commit", "git cherry-pick HASH", "Aplica o commit correspondente ao HASH na branch atual.", catGit);
 
@@ -138,7 +138,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd("Listar Issues", "gh issue list", "Exibe a lista de Issues ativas do repositório.", catGh);
         AddCmd("Listar Workflows (Actions)", "gh workflow list", "Lista os workflows do GitHub Actions configurados.", catGh);
         AddCmd("Executar Workflow manualmente", "gh workflow run workflow.yml", "Dispara manualmente a execução de um workflow do Actions.", catGh);
-        AddCmd("Criar Nova Release", "gh release create v1.0.0", "Cria uma nova versão (Release) no repositório.", catGh);
+        AddCmd("Criar Nova Release", "gh release create v1.0.0.0", "Cria uma nova versão (Release) no repositório.", catGh);
         AddCmd("Listar Releases", "gh release list", "Lista as releases existentes no repositório remoto.", catGh);
 
         // --- GitLab CLI ---

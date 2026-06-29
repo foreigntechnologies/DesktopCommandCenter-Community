@@ -1,10 +1,10 @@
 {
   "profiles": {
-    "DCC.Community.UI (Package)": {
-      "commandName": "MsixPackage"
-    },
     "DCC.Community.UI (Unpackaged)": {
       "commandName": "Project"
+    },
+    "DCC.Community.UI (Package)": {
+      "commandName": "MsixPackage"
     }
   }
 }

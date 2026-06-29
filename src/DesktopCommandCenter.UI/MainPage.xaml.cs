@@ -11,9 +11,14 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
+        this.Loaded += MainPage_Loaded;
         
-        AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+        // Removed broken x:Bind DataContext
+        // AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
         
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        UpdateTranslations();
+
         // Navigate to Dashboard by default
         ContentFrame.Navigate(typeof(Views.DashboardPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
         AppNavigationView.SelectedItem = AppNavigationView.MenuItems[0];
@@ -39,6 +44,34 @@ public sealed partial class MainPage : Page
         _ = ValidateProLicenseAsync();
     }
 
+    private void UpdateTranslations()
+    {
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+
+        NavDashboard.Content = loc.GetString("Nav_Dashboard");
+        NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
+        NavNotes.Content = loc.GetString("Nav_Notes");
+        HeaderSysUtils.Content = loc.GetString("Nav_SysUtils");
+        NavSystemUpdates.Content = loc.GetString("Nav_SystemUpdates");
+        NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
+        NavAwake.Content = loc.GetString("Nav_Awake");
+        NavCliCommands.Content = loc.GetString("Nav_CliCommands");
+        NavClipboard.Content = loc.GetString("Nav_Clipboard");
+
+        NavTimer.Content = loc.GetString("Nav_Timer");
+        NavCapture.Content = loc.GetString("Nav_Capture");
+        NavTranslator.Content = loc.GetString("Nav_Translator");
+        HeaderPro.Content = loc.GetString("Nav_ProFeatures");
+        NavIALocal.Content = loc.GetString("Nav_ChatFT");
+        NavSearch.Content = loc.GetString("Nav_Search");
+        NavPrompts.Content = loc.GetString("Nav_Prompts");
+        NavAutomations.Content = loc.GetString("Nav_Automations");
+        NavMarketplace.Content = loc.GetString("Nav_Marketplace");
+        NavAuth.Content = loc.GetString("Nav_Auth");
+
+        UpdateNavigationLocks();
+    }
+
     private async System.Threading.Tasks.Task ValidateProLicenseAsync()
     {
         try
@@ -50,8 +83,13 @@ public sealed partial class MainPage : Page
             if (user != null)
             {
                 var plan = await licenseService.GetCurrentPlanAsync();
-                App.IsProUnlocked = App.IsProBuild && plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                App.IsProUnlocked = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                 WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
+            }
+            else
+            {
+                App.IsProUnlocked = false;
+                WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(false));
             }
         }
         catch { }
@@ -71,17 +109,48 @@ public sealed partial class MainPage : Page
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
+        else if (actionId == "FutureShell")
+        {
+            var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            if (!string.IsNullOrEmpty(exePath))
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = "--futureshell",
+                    UseShellExecute = true,
+                    WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                });
+            }
+            AppNavigationView.SelectedItem = null;
+            return;
+        }
+
+        bool isProFeature = actionId == "IALocal" || actionId == "Prompts" || actionId == "Automacoes" || actionId == "Marketplace";
+        if (isProFeature && !App.IsProUnlocked)
+        {
+            if (actionId == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+            {
+                // Permitido se tiver chave de API própria
+            }
+            else
+            {
+                ShowProRequiredDialog(actionId);
+                return;
+            }
+        }
 
         Type? pageType = actionId switch
         {
             "Dashboard" => typeof(Views.DashboardPage),
             "Notes" => typeof(Views.NotesPage),
             "Clipboard" => typeof(Views.ClipboardPage),
-            "Calculadora" => typeof(Views.CalculadoraPage),
+
             "ColorPicker" => typeof(Views.ColorPickerPage),
             "Awake" => typeof(Views.AwakePage),
             "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
             "Temporizador" => typeof(Views.TemporizadorPage),
+            "SystemUpdates" => typeof(Views.SystemUpdatesPage),
             "Captura" => typeof(Views.CapturaPage),
             "Tradutor" => typeof(Views.TradutorPage),
             "IALocal" => typeof(Views.IALocalPage),
@@ -90,6 +159,7 @@ public sealed partial class MainPage : Page
             "Automacoes" => typeof(Views.AutomacoesPage),
             "Auth" => typeof(Views.AuthPage),
             "CliCommands" => typeof(Views.CliCommandsPage),
+            "ProcessManager" => typeof(Views.ProcessManagerPage),
             _ => typeof(Views.ComingSoonPage)
         };
 
@@ -124,16 +194,35 @@ public sealed partial class MainPage : Page
         {
             var tag = args.InvokedItemContainer.Tag?.ToString();
 
+            if (tag == "FutureShell")
+            {
+                var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                if (!string.IsNullOrEmpty(exePath))
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = "--futureshell",
+                        UseShellExecute = true,
+                        WorkingDirectory = System.IO.Path.GetDirectoryName(exePath)
+                    });
+                }
+                sender.SelectedItem = null;
+                return;
+            }
+
             Type? pageType = tag switch
             {
                 "Dashboard" => typeof(Views.DashboardPage),
+                "ProcessManager" => typeof(Views.ProcessManagerPage),
                 "Notes" => typeof(Views.NotesPage),
                 "Clipboard" => typeof(Views.ClipboardPage),
-                "Calculadora" => typeof(Views.CalculadoraPage),
+
                 "ColorPicker" => typeof(Views.ColorPickerPage),
                 "Awake" => typeof(Views.AwakePage),
                 "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
                 "Temporizador" => typeof(Views.TemporizadorPage),
+                "SystemUpdates" => typeof(Views.SystemUpdatesPage),
                 "Captura" => typeof(Views.CapturaPage),
                 "Tradutor" => typeof(Views.TradutorPage),
                 "IALocal" => typeof(Views.IALocalPage),
@@ -149,8 +238,15 @@ public sealed partial class MainPage : Page
 
             if (isProFeature && !App.IsProUnlocked)
             {
-                ShowProRequiredDialog(tag ?? "Recurso PRO");
-                return;
+                if (tag == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                {
+                    // Permitido se tiver chave própria
+                }
+                else
+                {
+                    ShowProRequiredDialog(tag ?? "Recurso PRO");
+                    return;
+                }
             }
 
             if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
@@ -164,15 +260,18 @@ public sealed partial class MainPage : Page
     {
         var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
         bool isLoggedIn = authService.IsAuthenticated;
+        var t = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
 
         var dialog = new ContentDialog
         {
-            Title = "Recurso PRO Necessário",
+            Title = t.GetString("Dialog_ProRequired_Title") ?? "Recurso PRO Necessário",
             Content = isLoggedIn 
-                ? $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Assine agora para liberar!"
-                : $"O recurso '{featureTag}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!",
-            PrimaryButtonText = isLoggedIn ? "Assinar" : "Entrar / Assinar",
-            CloseButtonText = "Cancelar",
+                ? string.Format(t.GetString("Dialog_ProRequired_Content_LoggedIn") ?? "O recurso '{0}' está disponível apenas para assinantes PRO. Assine agora para liberar!", featureTag)
+                : string.Format(t.GetString("Dialog_ProRequired_Content_LoggedOut") ?? "O recurso '{0}' está disponível apenas para assinantes PRO. Faça login ou assine agora para liberar!", featureTag),
+            PrimaryButtonText = isLoggedIn 
+                ? (t.GetString("Dialog_ProRequired_Primary_LoggedIn") ?? "Assinar") 
+                : (t.GetString("Dialog_ProRequired_Primary_LoggedOut") ?? "Entrar / Assinar"),
+            CloseButtonText = t.GetString("Dialog_Cancel") ?? "Cancelar",
             XamlRoot = this.XamlRoot
         };
 
@@ -192,7 +291,7 @@ public sealed partial class MainPage : Page
 
     public void UpdateNavigationLocks()
     {
-        var proFeatures = new[] { "IALocal", "PesquisaUniversal", "Prompts", "Automacoes", "Marketplace" };
+        var proFeatures = new[] { "IALocal", "Prompts", "Automacoes", "Marketplace" };
         foreach (var item in AppNavigationView.MenuItems)
         {
             if (item is NavigationViewItem navItem)
@@ -200,7 +299,13 @@ public sealed partial class MainPage : Page
                 var tag = navItem.Tag?.ToString();
                 if (string.IsNullOrEmpty(tag)) continue;
                 
-                if (System.Array.Exists(proFeatures, f => f == tag) && !App.IsProUnlocked)
+                bool isLocked = System.Array.Exists(proFeatures, f => f == tag) && !App.IsProUnlocked;
+                if (isLocked && tag == "IALocal" && !string.IsNullOrEmpty(App.GetAIAgentApiKey()))
+                {
+                    isLocked = false; // Desbloqueia se tiver chave própria
+                }
+
+                if (isLocked)
                 {
                     // Locked state
                     if (navItem.Content != null)
@@ -217,6 +322,37 @@ public sealed partial class MainPage : Page
                     }
                 }
             }
+        }
+    }
+
+    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
+        var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
+        if (!System.IO.File.Exists(filePath))
+        {
+            FirstLaunchLanguageDialog.XamlRoot = this.XamlRoot;
+            await FirstLaunchLanguageDialog.ShowAsync();
+        }
+    }
+
+    private void CmbFirstLaunchLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        FirstLaunchLanguageDialog.IsPrimaryButtonEnabled = CmbFirstLaunchLanguage.SelectedItem != null;
+    }
+
+    private void FirstLaunchLanguageDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    {
+        if (CmbFirstLaunchLanguage.SelectedItem is ComboBoxItem item && item.Tag is string lang)
+        {
+            App.SaveAppLanguage(lang);
+            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>((App.Current as App).Services);
+            _ = tService.SetLanguageAsync(lang);
+            UpdateTranslations();
+            
+            // Also force update the dialog UI itself using LocalizationHelper
+            var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+            FirstLaunchLanguageDialog.Title = loc.GetString("Settings_Language"); 
         }
     }
 }

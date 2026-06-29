@@ -1,0 +1,52 @@
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
+
+namespace test_conpty
+{
+    public interface ITerminalService : IDisposable
+    {
+        event EventHandler<string> OutputDataReceived;
+        event EventHandler ProcessExited;
+        Task StartAsync(string commandLine, int columns, int rows);
+        Task WriteInputAsync(string data);
+        void Resize(int columns, int rows);
+        void Stop();
+    }
+
+    class Program2
+    {
+        static async Task Main()
+        {
+            Console.WriteLine("Testing ConPTY output...");
+            var service = new ConPTYService();
+            service.OutputDataReceived += (s, e) => {
+                Console.WriteLine($"[OUT] {e}");
+            };
+            service.ProcessExited += (s, e) => {
+                Console.WriteLine("[EXIT]");
+            };
+            
+            try 
+            {
+                await service.StartAsync("cmd.exe", 80, 25);
+                Console.WriteLine("Started. Waiting for output (10s max)...");
+                
+                for (int i=0; i<10; i++)
+                {
+                    await Task.Delay(1000);
+                    await service.WriteInputAsync("echo hello\r\n");
+                }
+                service.Stop();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+    }
+}

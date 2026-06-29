@@ -15,7 +15,7 @@
         <TextBlock Text="Obrigado por ajudar a melhorar o DCC! Por favor, descreva o problema que você encontrou com o máximo de detalhes possível." 
                    TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-        <TextBox x:Name="TitleTextBox" Header="Título do Problema" PlaceholderText="Ex: App fecha ao tentar usar a calculadora" />
+        <TextBox x:Name="TitleTextBox" Header="Título do Problema" PlaceholderText="Ex: App fecha ao abrir as anotações" />
 
         <TextBox x:Name="DescriptionTextBox" Header="Descrição Detalhada" 
                  PlaceholderText="Passos para reproduzir o erro, o que era esperado vs o que aconteceu..." 

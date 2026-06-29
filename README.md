@@ -24,6 +24,7 @@ Targeted at professionals, developers, content creators, analysts, and power use
 - 📋 **Smart Clipboard**: A background service that silently captures and stores your clipboard history, allowing you to search and retrieve previous copies instantly.
 - 📝 **Quick Notes**: A lightning-fast notepad embedded in the sidebar.
 - 🌍 **Real-Time Localization**: Fully translated interface (English, Portuguese, Spanish).
+- 💻 **FutureShell**: A robust built-in PTY (Pseudo Console) terminal capable of running PowerShell, CMD, Bash, and any global CLI installed on your system. Supports a custom smart help system by typing `help` or `principal-commands`.
 
 ## Architecture & Technologies
 - **Framework**: .NET 9, Windows App SDK (WinUI 3)
