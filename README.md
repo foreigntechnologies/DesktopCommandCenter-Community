@@ -19,12 +19,13 @@ Targeted at professionals, developers, content creators, analysts, and power use
 
 ## Features
 - ✨ **Fluent Design System**: Built natively for Windows 11 with seamless transparent Mica backdrops and Fluent UI animations.
-- 🤖 **ChatFT (AI Agent)**: A local-first autonomous agent powered by Microsoft Semantic Kernel and Ollama. It can execute local C# plugins (e.g. read your files, get system time) completely offline.
+- 🤖 **ChatFT (AI Agent)**: A local-first autonomous agent powered by Microsoft Semantic Kernel and Ollama. It automatically detects and lets you switch between all your installed local models. It can execute local C# plugins (e.g. read your files, get system time) completely offline.
 - 🎙️ **Voice & Vision**: Includes Whisper.net for offline audio transcription (microphone and files) and multi-modal Vision support using Ollama.
 - 📋 **Smart Clipboard**: A background service that silently captures and stores your clipboard history, allowing you to search and retrieve previous copies instantly.
 - 📝 **Quick Notes**: A lightning-fast notepad embedded in the sidebar.
 - 🌍 **Real-Time Localization**: Fully translated interface (English, Portuguese, Spanish).
 - 💻 **FutureShell**: A robust built-in PTY (Pseudo Console) terminal capable of running PowerShell, CMD, Bash, and any global CLI installed on your system. Supports a custom smart help system by typing `help` or `principal-commands`.
+- ⚙️ **Advanced Automations**: Create rule-based automations to open programs or execute custom scripts seamlessly across multiple languages (PowerShell, Bash, Python, Node.js, Java, Golang).
 
 ## Architecture & Technologies
 - **Framework**: .NET 9, Windows App SDK (WinUI 3)
@@ -87,3 +88,7 @@ This project uses Firebase for Identity Management. **Do not commit** Firebase S
 
 ## License
 Proprietary software. All rights reserved.
+
+
+### 🤖 On-Demand AI Models
+ChatFT now automatically detects if you have models installed in Ollama. If it's your first time, Desktop Command Center will offer options to download and install recommended models (like Phi-3, Llama 3.1, and Gemma 2) with a single click and will display the progress directly in the chat, without needing to touch the terminal!

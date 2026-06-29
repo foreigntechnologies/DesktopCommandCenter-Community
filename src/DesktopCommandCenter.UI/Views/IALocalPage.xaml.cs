@@ -28,5 +28,6 @@ public sealed partial class IALocalPage : Page
         TooltipMic.Content = loc.GetString("Chat_SpeakMic");
         TxtPromptInput.PlaceholderText = loc.GetString("Chat_Placeholder");
         TooltipSend.Content = loc.GetString("Chat_Send");
+        CmbModels.PlaceholderText = loc.GetString("Chat_SelectModel");
     }
 }

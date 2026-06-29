@@ -11,10 +11,21 @@ namespace DesktopCommandCenter.UI.ViewModels;
 public partial class ChatMessage : ObservableObject
 {
     public string Role { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
-    public bool IsUser => Role == "User";
+    
+    [ObservableProperty]
+    private string _content = string.Empty;
+    
+    public bool IsUser => !Role.StartsWith("ChatFT");
     public string? ImagePath { get; set; } = null;
     public bool HasImage => !string.IsNullOrEmpty(ImagePath);
+
+    [ObservableProperty]
+    private bool _hasDownloadAction = false;
+
+    [ObservableProperty]
+    private bool _isThinking = false;
+    
+    public Microsoft.UI.Xaml.Visibility ThinkingVisibility => IsThinking ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 }
 
 public partial class IALocalViewModel : ObservableObject
@@ -37,17 +48,137 @@ public partial class IALocalViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = "Pronto. Ollama + Semantic Kernel.";
 
-    public ObservableCollection<ChatMessage> Messages { get; } = new();
+    [ObservableProperty]
+    private bool _isDownloadingModel = false;
 
-    public IALocalViewModel(IIAAgentService agentService, IWhisperTranscriptionService whisperService)
+    [ObservableProperty]
+    private double _downloadProgressValue = 0;
+
+    public bool IsNotDownloadingModel => !IsDownloadingModel;
+
+    public ObservableCollection<ChatMessage> Messages { get; } = new();
+    
+    public ObservableCollection<string> AvailableModels { get; } = new();
+
+    [ObservableProperty]
+    private string _selectedModel = "";
+
+    [ObservableProperty]
+    private string _userName = "User";
+
+    private readonly IAuthService _authService;
+
+    public IALocalViewModel(IIAAgentService agentService, IWhisperTranscriptionService whisperService, IAuthService authService)
     {
         _agentService = agentService;
         _whisperService = whisperService;
+        _authService = authService;
         _agentService.ClearHistory();
         
         var welcomeMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_WelcomeMessage");
         if (string.IsNullOrEmpty(welcomeMsg)) welcomeMsg = "Para utilizar o ChatFT localmente, é necessário ter o Ollama instalado em sua máquina! Ou utilizar uma secret key do Gemini (Google AI Studio), Claude ou OpenAI.";
         Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = welcomeMsg });
+
+        _ = LoadModelsAsync();
+        _ = LoadUserNameAsync();
+    }
+
+    partial void OnSelectedModelChanged(string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            _agentService.SetModel(value);
+        }
+    }
+
+    private async Task LoadUserNameAsync()
+    {
+        try
+        {
+            var user = await _authService.GetCurrentUserAsync();
+            if (user != null && !string.IsNullOrEmpty(user.DisplayName))
+            {
+                UserName = user.DisplayName;
+            }
+        }
+        catch { }
+    }
+
+    private async Task LoadModelsAsync()
+    {
+        var models = await _agentService.GetAvailableModelsAsync();
+        AvailableModels.Clear();
+        foreach (var m in models)
+        {
+            AvailableModels.Add(m);
+        }
+
+        if (AvailableModels.Count > 0)
+        {
+            if (AvailableModels.Contains("phi3"))
+            {
+                SelectedModel = "phi3";
+            }
+            else
+            {
+                SelectedModel = AvailableModels[0];
+            }
+        }
+        else
+        {
+            var noModelMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_NoModelsMessage");
+            if (string.IsNullOrEmpty(noModelMsg)) 
+                noModelMsg = "Nenhum modelo local encontrado. Para usar o ChatFT, você precisa baixar um modelo de Inteligência Artificial. Qual você deseja baixar?";
+
+            Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = noModelMsg, HasDownloadAction = true });
+        }
+    }
+
+    [RelayCommand]
+    private async Task DownloadModelAsync(string modelName)
+    {
+        if (IsDownloadingModel || string.IsNullOrWhiteSpace(modelName)) return;
+
+        IsDownloadingModel = true;
+        DownloadProgressValue = 0;
+        OnPropertyChanged(nameof(IsNotDownloadingModel));
+
+        try
+        {
+            var progress = new Progress<double>(percent =>
+            {
+                DownloadProgressValue = percent;
+            });
+
+            await _agentService.PullModelAsync(modelName, progress);
+            
+            await LoadModelsAsync();
+            if (AvailableModels.Contains(modelName))
+            {
+                SelectedModel = modelName;
+            }
+
+            foreach (var msg in Messages)
+            {
+                msg.HasDownloadAction = false;
+            }
+
+            var successMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_DownloadSuccess");
+            if (string.IsNullOrEmpty(successMsg)) successMsg = "Modelo {modelName} baixado com sucesso! Agora você já pode conversar.";
+            Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = successMsg });
+        }
+        catch (Exception ex)
+        {
+            var errorMsg = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_DownloadError");
+            if (string.IsNullOrEmpty(errorMsg)) errorMsg = "Erro ao baixar modelo.";
+            Messages.Add(new ChatMessage { Role = "ChatFT (Sistema)", Content = $"{errorMsg} {ex.Message}" });
+        }
+        finally
+        {
+            IsDownloadingModel = false;
+            DownloadProgressValue = 0;
+            OnPropertyChanged(nameof(IsNotDownloadingModel));
+        }
     }
 
     [RelayCommand]
@@ -143,13 +274,13 @@ public partial class IALocalViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SendMessageAsync()
+    private void SendMessage()
     {
         if (string.IsNullOrWhiteSpace(CurrentPrompt) && string.IsNullOrEmpty(AttachedImagePath)) return;
 
         var userMsg = new ChatMessage 
         { 
-            Role = "User", 
+            Role = _userName, 
             Content = CurrentPrompt,
             ImagePath = AttachedImagePath
         };
@@ -161,27 +292,44 @@ public partial class IALocalViewModel : ObservableObject
         CurrentPrompt = "";
         AttachedImagePath = "";
         IsGenerating = true;
-        StatusMessage = "A IA está pensando (Acessando ferramentas...)...";
 
-        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "" };
+        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true };
         Messages.Add(aiMsg);
 
-        try
+        var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+        _ = Task.Run(async () =>
         {
-            await foreach (var token in _agentService.SendMessageStreamAsync(promptBackup, imageBackup))
+            try
             {
-                aiMsg.Content += token;
+                await foreach (var token in _agentService.SendMessageStreamAsync(promptBackup, imageBackup).ConfigureAwait(false))
+                {
+                    dispatcher.TryEnqueue(() => 
+                    {
+                        aiMsg.IsThinking = false;
+                        aiMsg.Content += token;
+                    });
+                }
             }
-            StatusMessage = "Pronto.";
-        }
-        catch (Exception ex)
-        {
-            aiMsg.Content += $"\n[Erro: {ex.Message}]";
-            StatusMessage = "Erro ao contatar IA.";
-        }
-        finally
-        {
-            IsGenerating = false;
-        }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ChatFT Error] {ex}");
+                dispatcher.TryEnqueue(() => 
+                {
+                    aiMsg.Content += $"\n[Erro: {ex.Message}]";
+                    StatusMessage = "Erro ao contatar IA.";
+                });
+            }
+            finally
+            {
+                dispatcher.TryEnqueue(() => 
+                {
+                    IsGenerating = false;
+                    aiMsg.IsThinking = false;
+                });
+            }
+        });
     }
+
+    public string GetString(string key) => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString(key);
 }

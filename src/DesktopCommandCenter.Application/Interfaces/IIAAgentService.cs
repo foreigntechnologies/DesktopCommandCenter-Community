@@ -27,4 +27,19 @@ public interface IIAAgentService
     /// Clears the chat history context.
     /// </summary>
     void ClearHistory();
+
+    /// <summary>
+    /// Gets a list of available AI models installed locally (e.g., from Ollama).
+    /// </summary>
+    Task<List<string>> GetAvailableModelsAsync();
+
+    /// <summary>
+    /// Sets the active AI model to be used by the agent.
+    /// </summary>
+    void SetModel(string modelId);
+
+    /// <summary>
+    /// Pulls (downloads) an AI model from the registry (e.g., Ollama).
+    /// </summary>
+    Task PullModelAsync(string modelName, IProgress<double>? progress = null, CancellationToken cancellationToken = default);
 }

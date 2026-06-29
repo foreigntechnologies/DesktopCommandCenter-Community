@@ -19,6 +19,8 @@ public sealed partial class AutomacoesPage : Page
         ActionsCombo.SelectedIndex = -1;
         TriggerParamTextBox.Text = string.Empty;
         TriggerParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+        LanguageCombo.SelectedIndex = -1;
+        LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         ActionParamTextBox.Text = string.Empty;
         ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
 
@@ -32,10 +34,11 @@ public sealed partial class AutomacoesPage : Page
         var action = ActionsCombo.SelectedItem as string;
         var triggerParam = TriggerParamTextBox.Text;
         var actionParam = ActionParamTextBox.Text;
+        var actionLinguagem = LanguageCombo.SelectedItem as string;
 
         if (!string.IsNullOrEmpty(trigger) && !string.IsNullOrEmpty(action))
         {
-            ViewModel.AddNovaRegra(trigger, action, triggerParam, actionParam);
+            ViewModel.AddNovaRegra(trigger, action, triggerParam, actionParam, actionLinguagem);
         }
     }
 
@@ -66,7 +69,34 @@ public sealed partial class AutomacoesPage : Page
     private void ActionsCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var action = ActionsCombo.SelectedItem as string;
-        if (action == "Falar texto (Text-to-Speech)")
+        
+        // Reset defaults
+        LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+        ActionParamTextBox.AcceptsReturn = false;
+        ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.NoWrap;
+        ActionParamTextBox.MinHeight = 0;
+        
+        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
+
+        if (action == "Executar script personalizado")
+        {
+            LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            ActionParamTextBox.Header = loc.GetString("Auto_ScriptHeader") ?? "Código do Script";
+            ActionParamTextBox.PlaceholderText = loc.GetString("Auto_ScriptPlaceholder") ?? "Cole ou escreva seu script aqui...";
+            ActionParamTextBox.AcceptsReturn = true;
+            ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap;
+            ActionParamTextBox.MinHeight = 150;
+            ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Código do script personalizado");
+        }
+        else if (action == "Abrir programa")
+        {
+            ActionParamTextBox.Header = loc.GetString("Auto_ProgramHeader") ?? "Caminho ou nome do executável";
+            ActionParamTextBox.PlaceholderText = loc.GetString("Auto_ProgramPlaceholder") ?? "Ex: C:\\Windows\\notepad.exe ou notepad";
+            ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do executável");
+        }
+        else if (action == "Falar texto (Text-to-Speech)")
         {
             ActionParamTextBox.Header = "Mensagem falada";
             ActionParamTextBox.PlaceholderText = "Ex: Processamento concluído!";
