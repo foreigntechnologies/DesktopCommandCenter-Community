@@ -114,9 +114,9 @@ public class AutomationEngine : IAutomationEngine
         // Regras default se não existir arquivo
         _regras = new List<AutomacaoRegra>
         {
-            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao copiar um link do YouTube", "Extrair ID do vídeo", "", "", true),
-            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao tirar um printscreen", "Extrair texto de imagem via OCR", "", "", false),
-            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao plugar Pendrive", "Exibir notificação do sistema (Toast)", "", "Novo dispositivo USB conectado!", true)
+            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao copiar um link do YouTube", "Extrair ID do vídeo", "", "", "", true),
+            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao tirar um printscreen", "Extrair texto de imagem via OCR", "", "", "", false),
+            new AutomacaoRegra(Guid.NewGuid(), DateTime.UtcNow, null, "Ao plugar Pendrive", "Exibir notificação do sistema (Toast)", "", "Novo dispositivo USB conectado!", "", true)
         };
         SaveRules();
     }
@@ -299,6 +299,14 @@ public class AutomationEngine : IAutomationEngine
             
             switch (rule.Acao)
             {
+                case "Abrir programa":
+                    ActionOpenProgram(rule.AcaoParametro);
+                    break;
+
+                case "Executar script personalizado":
+                    ActionRunCustomScript(rule.AcaoLinguagem, rule.AcaoParametro);
+                    break;
+
                 case "Extrair ID do vídeo":
                     await ActionExtractYouTubeId(triggerValue);
                     break;
@@ -454,6 +462,92 @@ public class AutomationEngine : IAutomationEngine
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Erro ao rodar script: {scriptPath}");
+        }
+    }
+
+    private void ActionOpenProgram(string programPath)
+    {
+        if (string.IsNullOrWhiteSpace(programPath)) return;
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = programPath,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Erro ao abrir programa: {programPath}");
+        }
+    }
+
+    private void ActionRunCustomScript(string language, string code)
+    {
+        if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(language)) return;
+        try
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), "DCC_Scripts");
+            Directory.CreateDirectory(tempDir);
+            var fileId = Guid.NewGuid().ToString("N");
+            
+            string extension = ".txt";
+            string fileName = "";
+            string arguments = "";
+
+            switch (language)
+            {
+                case "PowerShell":
+                    extension = ".ps1";
+                    fileName = "powershell.exe";
+                    arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{{0}}\"";
+                    break;
+                case "Bash":
+                    extension = ".sh";
+                    fileName = "bash.exe";
+                    arguments = $"\"{0}\"";
+                    break;
+                case "Python":
+                    extension = ".py";
+                    fileName = "python.exe";
+                    arguments = $"\"{0}\"";
+                    break;
+                case "JavaScript":
+                    extension = ".js";
+                    fileName = "node.exe";
+                    arguments = $"\"{0}\"";
+                    break;
+                case "Java":
+                    extension = ".java";
+                    fileName = "java.exe";
+                    arguments = $"\"{0}\"";
+                    break;
+                case "Golang":
+                    extension = ".go";
+                    fileName = "go.exe";
+                    arguments = $"run \"{{0}}\"";
+                    break;
+            }
+
+            var filePath = Path.Combine(tempDir, $"script_{fileId}{extension}");
+            File.WriteAllText(filePath, code);
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var args = arguments.Replace("{0}", filePath);
+                var startInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = fileName,
+                    Arguments = args,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                System.Diagnostics.Process.Start(startInfo);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Erro ao executar script customizado ({language})");
         }
     }
 

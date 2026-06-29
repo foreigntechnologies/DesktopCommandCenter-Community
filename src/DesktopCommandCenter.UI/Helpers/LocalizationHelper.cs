@@ -27,6 +27,9 @@ public class LocalizationHelper : INotifyPropertyChanged
     // pois {x:Bind helpers:LocalizationHelper.Instance['Chave']} causa erro WMC9999.
     public string GetString(string key) => _translationService.Get(key);
 
+    // Método estático para evitar erro WMC9999 ao invocar método de instância via propriedade estática no XAML
+    public static string GetLocalized(string key) => Instance.GetString(key);
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void OnPropertyChanged(string propertyName)

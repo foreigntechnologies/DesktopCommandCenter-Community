@@ -62,14 +62,7 @@ public sealed partial class MainWindow : Window
 
     private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
     {
-        if (args.DidPresenterChange)
-        {
-            if (sender.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter && 
-                presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
-            {
-                sender.Hide();
-            }
-        }
+        // Removido o sender.Hide() para que o botão minimizar "-" apenas minimize para a barra de tarefas normalmente.
     }
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -123,10 +116,9 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Durante o desenvolvimento, é melhor fechar o app completamente para não travar o `dotnet run`.
-        // Caso queira que ele minimize para a bandeja no futuro, basta voltar o código anterior:
-        // args.Handled = true; this.AppWindow.Hide();
-        Microsoft.UI.Xaml.Application.Current.Exit();
+        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
+        args.Handled = true;
+        this.AppWindow.Hide();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }
