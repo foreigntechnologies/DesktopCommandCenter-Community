@@ -148,6 +148,7 @@
 
   <!-- Publish Properties -->
   <PropertyGroup>
+    <GenerateAppxPackageOnBuild>False</GenerateAppxPackageOnBuild>
     <PublishReadyToRun Condition="$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
     <PublishReadyToRun Condition="!$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
     <PublishTrimmed>False</PublishTrimmed>
