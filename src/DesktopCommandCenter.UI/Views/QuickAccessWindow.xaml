@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
+    helpers:Translate.Key="QuickAccess_Title"
     Title="DCC - Acesso Rápido">
 
     <Grid Background="Transparent">
@@ -32,6 +34,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         Grid.Column="0"
+                        helpers:Translate.Key="QuickAccess_Header"
                         Text="Acesso rápido"
                         FontSize="15"
                         FontWeight="SemiBold"
@@ -45,7 +48,7 @@
                         CornerRadius="6"
                         Padding="12,5">
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Text="Mais" FontSize="13" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_BtnMore" Text="Mais" FontSize="13" />
                             <FontIcon Glyph="&#xE76C;" FontSize="11" />
                         </StackPanel>
                     </Button>
@@ -68,21 +71,21 @@
                     <Button x:Name="BtnColorPicker" Grid.Row="0" Grid.Column="0" Click="Tool_Click" Tag="ColorPicker" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xEF3C;" FontSize="28" Foreground="#0099DA" />
-                            <TextBlock Text="Seletor de Cores" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_ColorPicker" Text="Seletor de Cores" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="BtnClipboard" Grid.Row="0" Grid.Column="1" Click="Tool_Click" Tag="Clipboard" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xF0E3;" FontSize="28" Foreground="#7B68EE" />
-                            <TextBlock Text="Clipboard" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Clipboard" Text="Clipboard" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="BtnNotes" Grid.Row="0" Grid.Column="2" Click="Tool_Click" Tag="Notes" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE70B;" FontSize="28" Foreground="#FFB347" />
-                            <TextBlock Text="Notas" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Notes" Text="Notas" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
@@ -91,14 +94,14 @@
                     <Button x:Name="BtnTradutor" Grid.Row="1" Grid.Column="1" Click="Tool_Click" Tag="Tradutor" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xF2B7;" FontSize="28" Foreground="#26C6DA" />
-                            <TextBlock Text="Tradutor" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Translator" Text="Tradutor" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="BtnTemporizador" Grid.Row="1" Grid.Column="2" Click="Tool_Click" Tag="Temporizador" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE916;" FontSize="28" Foreground="#FF7043" />
-                            <TextBlock Text="Temporizador" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Timer" Text="Temporizador" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
@@ -106,21 +109,21 @@
                     <Button x:Name="BtnPrompts" Grid.Row="2" Grid.Column="0" Click="Tool_Click" Tag="Prompts" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE8BD;" FontSize="28" Foreground="#AB47BC" />
-                            <TextBlock Text="Prompts IA" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Prompts" Text="Prompts IA" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="BtnPesquisa" Grid.Row="2" Grid.Column="1" Click="Tool_Click" Tag="PesquisaUniversal" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE721;" FontSize="28" Foreground="#42A5F5" />
-                            <TextBlock Text="Pesquisa" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Search" Text="Pesquisa" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
 
                     <Button x:Name="BtnAutomacoes" Grid.Row="2" Grid.Column="2" Click="Tool_Click" Tag="Automacoes" Style="{StaticResource QuickToolButtonStyle}">
                         <StackPanel Spacing="6" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE9F5;" FontSize="28" Foreground="#EF5350" />
-                            <TextBlock Text="Automações" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
+                            <TextBlock helpers:Translate.Key="QuickAccess_Automation" Text="Automações" TextWrapping="Wrap" TextAlignment="Center" FontSize="11.5" />
                         </StackPanel>
                     </Button>
                 </Grid>
@@ -141,13 +144,22 @@
 
                         <!-- Atalhos de ação -->
                         <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
-                            <Button x:Name="BtnDocs" Click="BtnDocs_Click" Style="{StaticResource QuickBarButtonStyle}" ToolTipService.ToolTip="Documentação">
+                            <Button x:Name="BtnDocs" Click="BtnDocs_Click" Style="{StaticResource QuickBarButtonStyle}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip helpers:Translate.Key="QuickAccess_ToolTipDocs" Content="Documentação" />
+                                </ToolTipService.ToolTip>
                                 <FontIcon Glyph="&#xE7C3;" FontSize="16" />
                             </Button>
-                            <Button x:Name="BtnBug" Click="BtnBug_Click" Style="{StaticResource QuickBarButtonStyle}" ToolTipService.ToolTip="Reportar bug">
+                            <Button x:Name="BtnBug" Click="BtnBug_Click" Style="{StaticResource QuickBarButtonStyle}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip helpers:Translate.Key="QuickAccess_ToolTipBug" Content="Reportar bug" />
+                                </ToolTipService.ToolTip>
                                 <FontIcon Glyph="&#xEBE8;" FontSize="16" />
                             </Button>
-                            <Button x:Name="BtnSettings" Click="BtnSettings_Click" Style="{StaticResource QuickBarButtonStyle}" ToolTipService.ToolTip="Configurações">
+                            <Button x:Name="BtnSettings" Click="BtnSettings_Click" Style="{StaticResource QuickBarButtonStyle}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip helpers:Translate.Key="QuickAccess_ToolTipSettings" Content="Configurações" />
+                                </ToolTipService.ToolTip>
                                 <FontIcon Glyph="&#xE713;" FontSize="16" />
                             </Button>
                         </StackPanel>
