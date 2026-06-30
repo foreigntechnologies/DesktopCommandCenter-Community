@@ -29,6 +29,40 @@ public sealed partial class DashboardPage : Page
         TxtPro3Desc.Text = loc.GetString("Dash_ProFeature4Desc");
         TxtPro4Title.Text = loc.GetString("Dash_ProFeature3"); // Perfis
         TxtPro4Desc.Text = loc.GetString("Dash_ProFeature3Desc");
+
+        // Top Metrics
+        TxtDashTools.Text = loc.GetString("Dash_Tools");
+        TxtDashNotes.Text = loc.GetString("Dash_Notes");
+        TxtDashClip.Text = loc.GetString("Dash_Clipboard");
+        TxtDashPlan.Text = loc.GetString("Dash_Plan");
+
+        // Sections
+        TxtDashCommSection.Text = loc.GetString("Dash_CommSection");
+        TxtDashProSection.Text = loc.GetString("Dash_ProSection");
+
+        // Community Tools
+        TxtToolColorTitle.Text = loc.GetString("Dash_ToolColorTitle");
+        TxtToolColorDesc.Text = loc.GetString("Dash_ToolColorDesc");
+        TxtToolClipTitle.Text = loc.GetString("Dash_ToolClipTitle");
+        TxtToolClipDesc.Text = loc.GetString("Dash_ToolClipDesc");
+        TxtToolNotesTitle.Text = loc.GetString("Dash_ToolNotesTitle");
+        TxtToolNotesDesc.Text = loc.GetString("Dash_ToolNotesDesc");
+        TxtToolAwakeTitle.Text = loc.GetString("Dash_ToolAwakeTitle");
+        TxtToolAwakeDesc.Text = loc.GetString("Dash_ToolAwakeDesc");
+        TxtToolTopTitle.Text = loc.GetString("Dash_ToolTopTitle");
+        TxtToolTopDesc.Text = loc.GetString("Dash_ToolTopDesc");
+        TxtToolTransTitle.Text = loc.GetString("Dash_ToolTransTitle");
+        TxtToolTransDesc.Text = loc.GetString("Dash_ToolTransDesc");
+        TxtToolTimerTitle.Text = loc.GetString("Dash_ToolTimerTitle");
+        TxtToolTimerDesc.Text = loc.GetString("Dash_ToolTimerDesc");
+        TxtToolUpdateTitle.Text = loc.GetString("Dash_ToolUpdateTitle");
+        TxtToolUpdateDesc.Text = loc.GetString("Dash_ToolUpdateDesc");
+        TxtToolSearchTitle.Text = loc.GetString("Dash_ToolSearchTitle");
+        TxtToolSearchDesc.Text = loc.GetString("Dash_ToolSearchDesc");
+        TxtToolPalleteTitle.Text = loc.GetString("Dash_ToolPalleteTitle");
+        TxtToolPalleteDesc.Text = loc.GetString("Dash_ToolPalleteDesc");
+        TxtToolShellTitle.Text = loc.GetString("Dash_ToolShellTitle");
+        TxtToolShellDesc.Text = loc.GetString("Dash_ToolShellDesc");
     }
 
     private async void DashboardPage_Loaded(object sender, RoutedEventArgs e)
@@ -74,7 +108,7 @@ public sealed partial class DashboardPage : Page
         // Badge do plano
         bool isPro = App.IsProUnlocked;
         TxtPlanBadge.Text = isPro ? "PRO ✨" : "Community";
-        TxtProBadge.Text  = isPro ? "" : "Upgrade para PRO para desbloquear mais ferramentas";
+        TxtProBadge.Text  = isPro ? "" : loc.GetString("Dash_ProBadge");
         BtnUpgradePro.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
