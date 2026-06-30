@@ -95,6 +95,7 @@
   -->
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.4" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.*">
@@ -145,6 +146,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|Any CPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
+  
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <EnableMsixTooling>false</EnableMsixTooling>
+  </PropertyGroup>
 
   <!-- Publish Properties -->
   <PropertyGroup>

@@ -74,6 +74,10 @@ public partial class AuthViewModel : ObservableObject
     private bool _hasGitHubLinked;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanLinkMicrosoft))]
+    private bool _hasMicrosoftLinked;
+
+    [ObservableProperty]
     private string _linkedEmailsText = string.Empty;
 
     [ObservableProperty]
@@ -83,10 +87,14 @@ public partial class AuthViewModel : ObservableObject
     private string _gitHubEmail = string.Empty;
 
     [ObservableProperty]
+    private string _microsoftEmail = string.Empty;
+
+    [ObservableProperty]
     private string _profilePhotoUrl = string.Empty;
 
     public bool CanLinkGoogle => !HasGoogleLinked;
     public bool CanLinkGitHub => !HasGitHubLinked;
+    public bool CanLinkMicrosoft => !HasMicrosoftLinked;
     public bool HasNoGoogleLinked => !HasGoogleLinked;
 
     public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) && !CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
@@ -170,9 +178,11 @@ public partial class AuthViewModel : ObservableObject
             
             HasGoogleLinked = user.Providers.Contains("google.com");
             HasGitHubLinked = user.Providers.Contains("github.com");
+            HasMicrosoftLinked = user.Providers.Contains("microsoft.com") || user.Providers.Contains("hotmail.com");
             
             if (HasGoogleLinked && user.LinkedEmails.TryGetValue("google.com", out var gEmail)) GoogleEmail = gEmail; else GoogleEmail = string.Empty;
             if (HasGitHubLinked && user.LinkedEmails.TryGetValue("github.com", out var ghEmail)) GitHubEmail = ghEmail; else GitHubEmail = string.Empty;
+            if (HasMicrosoftLinked && user.LinkedEmails.TryGetValue("microsoft.com", out var msEmail)) MicrosoftEmail = msEmail; else MicrosoftEmail = string.Empty;
 
             IsLoggedIn = true;
             StatusMessage = string.Empty;
@@ -221,6 +231,24 @@ public partial class AuthViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public async Task LoginWithMicrosoftAsync()
+    {
+        if (IsLoading) return;
+        StatusMessage = string.Empty;
+        IsLoading = true;
+        try
+        {
+            var user = await _authService.LoginWithMicrosoftAsync();
+            await OnLoginSuccessAsync(user);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = ex.Message;
+        }
+        finally { IsLoading = false; }
+    }
+
+    [RelayCommand]
     public async Task LinkGoogleAsync()
     {
         if (IsLoading) return;
@@ -249,6 +277,25 @@ public partial class AuthViewModel : ObservableObject
         {
             var user = await _authService.LinkWithGitHubAsync();
             StatusMessage = "Conta do GitHub vinculada com sucesso!";
+            await OnLoginSuccessAsync(user);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao vincular: {ex.Message}";
+        }
+        finally { IsLoading = false; }
+    }
+
+    [RelayCommand]
+    public async Task LinkMicrosoftAsync()
+    {
+        if (IsLoading) return;
+        StatusMessage = string.Empty;
+        IsLoading = true;
+        try
+        {
+            var user = await _authService.LinkWithMicrosoftAsync();
+            StatusMessage = "Conta da Microsoft vinculada com sucesso!";
             await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
