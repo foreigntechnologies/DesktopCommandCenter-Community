@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Grid x:Name="AppTitleBar" Height="32" Background="Transparent" Padding="12,0">
+        <Grid x:Name="AppTitleBar" MinHeight="40" VerticalAlignment="Top" Background="Transparent" Padding="12,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
