@@ -48,25 +48,25 @@
                             <ComboBoxItem x:Name="CmbLang3" Content="Español" />
                         </ComboBox>
 
-                        <ComboBox x:Name="CmbTimeFormat" Header="Formato da Hora (Início)"
+                        <ComboBox x:Name="CmbTimeFormat" helpers:Translate.Key="Settings_TimeFormat" Header="Formato da Hora (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem x:Name="CmbTime1" Content="24 Horas (HH:mm) - Ex: 15:30" />
-                            <ComboBoxItem x:Name="CmbTime2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
-                            <ComboBoxItem x:Name="CmbTime3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
-                            <ComboBoxItem x:Name="CmbTime4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
+                            <ComboBoxItem x:Name="CmbTime1" helpers:Translate.Key="Settings_Time1" Content="24 Horas (HH:mm) - Ex: 15:30" />
+                            <ComboBoxItem x:Name="CmbTime2" helpers:Translate.Key="Settings_Time2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
+                            <ComboBoxItem x:Name="CmbTime3" helpers:Translate.Key="Settings_Time3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
+                            <ComboBoxItem x:Name="CmbTime4" helpers:Translate.Key="Settings_Time4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
                         </ComboBox>
 
-                        <ComboBox x:Name="CmbDateFormat" Header="Formato da Data (Início)"
+                        <ComboBox x:Name="CmbDateFormat" helpers:Translate.Key="Settings_DateFormat" Header="Formato da Data (Início)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem x:Name="CmbDate1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
-                            <ComboBoxItem x:Name="CmbDate2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
-                            <ComboBoxItem x:Name="CmbDate3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
-                            <ComboBoxItem x:Name="CmbDate4" Content="Inglês - Ex: Jun 10, 2026" />
+                            <ComboBoxItem x:Name="CmbDate1" helpers:Translate.Key="Settings_Date1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
+                            <ComboBoxItem x:Name="CmbDate2" helpers:Translate.Key="Settings_Date2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
+                            <ComboBoxItem x:Name="CmbDate3" helpers:Translate.Key="Settings_Date3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
+                            <ComboBoxItem x:Name="CmbDate4" helpers:Translate.Key="Settings_Date4" Content="Inglês - Ex: Jun 10, 2026" />
                         </ComboBox>
 
-                        <TextBlock x:Name="TxtThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
+                        <TextBlock x:Name="TxtThemeDesc" helpers:Translate.Key="Settings_ThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    TextWrapping="Wrap"/>
                     </StackPanel>
@@ -349,7 +349,7 @@
                     </Grid>
                 </Border>
 
-                <TextBlock Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar."
+                <TextBlock helpers:Translate.Key="Settings_HotkeyHint" Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar."
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap" FontSize="12" />
             </StackPanel>

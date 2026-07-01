@@ -341,5 +341,26 @@
   "Tray_Documentation": "Documentaci\u00f3n",
   "Tray_ReportBug": "Reportar error",
   "Tray_Exit": "Cerrar",
-  "MainWindow_NewCommand": "+ Nuevo Comando"
+  "MainWindow_NewCommand": "+ Nuevo Comando",
+  "Settings_HotkeyHint": "Presiona la nueva combinación de teclas deseada (ej. Ctrl + Alt + P) en tu teclado. El diálogo capturará las teclas automáticamente. Presiona ENTER para confirmar.",
+  "Nav_ProcessManager": "Procesos",
+  "Nav_Dashboard": "Panel central",
+  "Nav_Notes": "Notas rápidas",
+  "Nav_SystemUpdates": "Centro de actualizaciones",
+  "Nav_Clipboard": "Portapapeles inteligente",
+  "Nav_ColorPicker": "Selector de color",
+  "Nav_AlwaysOnTop": "Siempre visible",
+  "Nav_Awake": "Awake (Cafeína)",
+  "Nav_Captura": "Captura de pantalla",
+  "Nav_Tradutor": "Traductor",
+  "Nav_CliCommands": "Comandos CLI",
+  "Nav_FutureShell": "FutureShell",
+  "Nav_Settings": "Configuraciones",
+  "Nav_ChatFT": "ChatFT",
+  "Nav_PesquisaUniversal": "Búsqueda universal",
+  "Nav_Prompts": "Biblioteca de Prompts",
+  "Nav_Automacoes": "Automatizaciones",
+  "Nav_Marketplace": "Marketplace y Plugins",
+  "Nav_Temporizador": "Temporizador"
+}
 }
