@@ -111,26 +111,6 @@
                         </Grid>
                     </Button>
 
-                    <!-- Microsoft -->
-                    <Button Command="{x:Bind ViewModel.LoginWithMicrosoftCommand}"
-                            IsEnabled="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
-                            HorizontalAlignment="Stretch" Padding="14,12"
-                            CornerRadius="8">
-                        <Grid HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="36" />
-                                <ColumnDefinition Width="190" />
-                            </Grid.ColumnDefinitions>
-                            <Viewbox Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
-                                </Canvas>
-                            </Viewbox>
-                            <TextBlock Grid.Column="1" x:Name="TxtMicrosoft" helpers:Translate.Key="Auth_BtnMicrosoft" Text="Continuar com a Microsoft" VerticalAlignment="Center" HorizontalAlignment="Left"
-                                       FontWeight="SemiBold" FontSize="14" />
-                        </Grid>
-                    </Button>
-
                     <!-- Botões de login movidos para cima para manter os erros abaixo -->
 
                     <!-- Nota de privacidade -->
