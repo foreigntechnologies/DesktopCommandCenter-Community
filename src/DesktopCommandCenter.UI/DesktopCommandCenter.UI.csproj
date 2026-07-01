@@ -172,5 +172,9 @@
     <AppxBundle>Never</AppxBundle>
     <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <!-- Suppresses the mspdbcmf.exe FastLink PDB conversion step which only
+         exists inside Visual Studio and fails when building via dotnet CLI -->
+    <_EnableMsixToolingSymbolsPackage>false</_EnableMsixToolingSymbolsPackage>
+    <_SkipWinAppSdkCheckFastlinkPdb>true</_SkipWinAppSdkCheckFastlinkPdb>
   </PropertyGroup>
 </Project>
