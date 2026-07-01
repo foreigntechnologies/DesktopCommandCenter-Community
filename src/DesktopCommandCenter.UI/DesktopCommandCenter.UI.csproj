@@ -7,7 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;x86;ARM64</Platforms>
     <!-- RIDs plurais para habilitar as caixinhas no Assistente do Visual Studio -->
-    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
     <!-- Fallback for CLI/CI builds (like GitHub Actions) to prevent NETSDK1134 or missing Architecture errors -->
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And ('$(Platform)' == 'AnyCPU' Or '$(Platform)' == 'Any CPU')">win-x64</RuntimeIdentifier>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Platform)' != 'AnyCPU' And '$(Platform)' != 'Any CPU'">win-$(Platform)</RuntimeIdentifier>
@@ -23,7 +23,7 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <DefaultLanguage>pt-BR</DefaultLanguage>
     <!-- Encurtar o caminho do pacote MSIX final -->
     <AppxPackageDir>$(MSBuildProjectDirectory)\AppPackages\</AppxPackageDir>
     <Version>1.0.0</Version>
@@ -124,8 +124,12 @@
     <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
+  <ItemGroup Condition="'$(IsProBuild)'=='true' And Exists('..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
+    <ProjectReference Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
+      <SetPlatform>Platform=$(Platform)</SetPlatform>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
-    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
@@ -176,7 +180,7 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
-    <AppxBundle>Never</AppxBundle>
+    <AppxBundle>Always</AppxBundle>
     <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <!-- Disables _GenerateAppxUploadSymbolPackage target that requires
