@@ -37,8 +37,8 @@
   "Auth_Privacy": "Pol\u00edtica de Privacidad",
   "Auth_TermsSuffix": ".",
   "Auth_LinkTitle": "Vincular cuentas adicionales:",
-  "Auth_LinkGoogle": "\ud83d\udd17 Vincular Google",
-  "Auth_LinkGitHub": "\ud83d\udd17 Vincular GitHub",
+  "Auth_LinkGoogle": "Vincular Google",
+  "Auth_LinkGitHub": "Vincular GitHub",
   "Auth_LinkDesc": "Al vincular, podr\u00e1s ingresar a tu cuenta con cualquiera de los proveedores asociados.",
   "Auth_ProAdTitle": "\ud83d\ude80 Desbloquea el Poder de PRO",
   "Auth_ProAd1": "IA Aut\u00f3noma (Semantic Kernel + Ollama)",
@@ -202,9 +202,9 @@
   "Auth_TermsLink": "T\u00e9rminos de Uso",
   "Auth_PrivacyLink": "Pol\u00edtica de Privacidad",
   "Auth_LinkAccountsTitle": "Vincular cuentas adicionales:",
-  "Auth_BtnLinkGoogle": "\ud83d\udd17 Vincular Google",
-  "Auth_BtnLinkGitHub": "\ud83d\udd17 Vincular GitHub",
-  "Auth_BtnLinkMicrosoft": "\ud83d\udd17 Vincular Microsoft",
+  "Auth_BtnLinkGoogle": "Vincular Google",
+  "Auth_BtnLinkGitHub": "Vincular GitHub",
+  "Auth_BtnLinkMicrosoft": "Vincular Microsoft",
   "Auth_PausedTitle": "Plan Pausado",
   "Auth_PausedDesc": "Tu suscripci\u00f3n est\u00e1 pausada. Rean\u00fadala en el portal para recuperar el acceso PRO.",
   "Auth_PausedManage": "Administrar Suscripci\u00f3n",
@@ -341,7 +341,5 @@
   "Tray_Documentation": "Documentaci\u00f3n",
   "Tray_ReportBug": "Reportar error",
   "Tray_Exit": "Cerrar",
-  "MainWindow_NewCommand": "+ Nuevo Comando",
-  "Auth_BtnMicrosoft": "Continuar con Microsoft",
-  "Auth_BtnLinkMicrosoft": "\ud83d\udd17 Vincular Microsoft"
+  "MainWindow_NewCommand": "+ Nuevo Comando"
 }

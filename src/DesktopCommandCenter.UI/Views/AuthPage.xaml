@@ -242,23 +242,6 @@
                                         <TextBlock Grid.Column="1" x:Name="TxtLinkGitHub" helpers:Translate.Key="Auth_BtnLinkGitHub" Text="Vincular GitHub" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
                                     </Grid>
                                 </Button>
-
-                                <Button Command="{x:Bind ViewModel.LinkMicrosoftCommand}" 
-                                        Visibility="{x:Bind ViewModel.CanLinkMicrosoft, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" 
-                                        HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
-                                    <Grid HorizontalAlignment="Center">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="28" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Viewbox Grid.Column="0" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                            <Canvas Width="24" Height="24">
-                                                <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
-                                            </Canvas>
-                                        </Viewbox>
-                                        <TextBlock Grid.Column="1" x:Name="TxtLinkMicrosoft" helpers:Translate.Key="Auth_BtnLinkMicrosoft" Text="Vincular Microsoft" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                    </Grid>
-                                </Button>
                             </StackPanel>
                             <TextBlock x:Name="TxtLinkDesc" helpers:Translate.Key="Auth_LinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
                                        FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"

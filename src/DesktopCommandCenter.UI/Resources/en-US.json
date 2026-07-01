@@ -37,8 +37,8 @@
   "Auth_Privacy": "Privacy Policy",
   "Auth_TermsSuffix": ".",
   "Auth_LinkTitle": "Link additional accounts:",
-  "Auth_LinkGoogle": "\ud83d\udd17 Link Google",
-  "Auth_LinkGitHub": "\ud83d\udd17 Link GitHub",
+  "Auth_LinkGoogle": "Link Google",
+  "Auth_LinkGitHub": "Link GitHub",
   "Auth_LinkDesc": "By linking, you can log in to your account with any of the associated providers.",
   "Auth_ProAdTitle": "\ud83d\ude80 Unlock the Power of PRO",
   "Auth_ProAd1": "Autonomous AI (Semantic Kernel + Ollama)",
@@ -202,9 +202,9 @@
   "Auth_TermsLink": "Terms of Use",
   "Auth_PrivacyLink": "Privacy Policy",
   "Auth_LinkAccountsTitle": "Link additional accounts:",
-  "Auth_BtnLinkGoogle": "\ud83d\udd17 Link Google",
-  "Auth_BtnLinkGitHub": "\ud83d\udd17 Link GitHub",
-  "Auth_BtnLinkMicrosoft": "\ud83d\udd17 Link Microsoft",
+  "Auth_BtnLinkGoogle": "Link Google",
+  "Auth_BtnLinkGitHub": "Link GitHub",
+  "Auth_BtnLinkMicrosoft": "Link Microsoft",
   "Auth_PausedTitle": "Plan Paused",
   "Auth_PausedDesc": "Your subscription is paused. Resume it in the portal to regain PRO access.",
   "Auth_PausedManage": "Manage Subscription",
@@ -341,7 +341,5 @@
   "Tray_Documentation": "Documentation",
   "Tray_ReportBug": "Report bug",
   "Tray_Exit": "Close",
-  "MainWindow_NewCommand": "+ New Command",
-  "Auth_BtnMicrosoft": "Continue with Microsoft",
-  "Auth_BtnLinkMicrosoft": "\ud83d\udd17 Link Microsoft"
+  "MainWindow_NewCommand": "+ New Command"
 }
