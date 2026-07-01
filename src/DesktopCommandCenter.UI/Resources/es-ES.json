@@ -1,4 +1,4 @@
-{
+﻿{
   "Nav_Dashboard": "Dashboard",
   "Nav_ProcessManager": "Procesos",
   "Nav_Notes": "Notas",
@@ -96,6 +96,7 @@
   "Settings_AIEngines_Save": "Guardar Claves API",
   "Dialog_LoginRequired_Title": "Requiere Iniciar Sesi\u00f3n",
   "Dialog_LoginRequired_Content": "Debes iniciar sesi\u00f3n en la aplicaci\u00f3n antes de proceder con la suscripci\u00f3n para vincular tu perfil a la licencia.",
+  "Dialog_Wait": "Espere...",
   "Dialog_GotIt": "Entendido",
   "Dialog_ProRequired_Title": "Funci\u00f3n PRO Requerida",
   "Dialog_ProRequired_Content_LoggedIn": "La funci\u00f3n '{0}' solo est\u00e1 disponible para suscriptores PRO. \u00a1Suscr\u00edbete ahora para desbloquearla!",
@@ -350,3 +351,4 @@
   "Dash_BugButton": "Reportar Bug",
   "Dash_Copyright": "© 2026 Foreign Technologies. Todos los derechos reservados."
 }
+

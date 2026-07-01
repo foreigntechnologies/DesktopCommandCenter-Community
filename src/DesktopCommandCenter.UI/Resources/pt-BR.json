@@ -1,4 +1,4 @@
-{
+﻿{
   "Nav_Dashboard": "Dashboard",
   "Nav_ProcessManager": "Gerenciador de Processos",
   "Nav_Notes": "Notas Rápidas",
@@ -191,8 +191,8 @@
   "Dash_ProBadge": "Upgrade para PRO para desbloquear mais ferramentas",
   "AlwaysOnTop_PageTitle": "Always On Top",
   "AlwaysOnTop_SubTitle": "Fixar janela no topo",
-  "AlwaysOnTop_Desc": "O utilitÃ¡rio Always On Top permite que o Desktop Command Center fique fixado sempre visÃ­vel por cima de qualquer outra janela do Windows. Ã‰ excelente se vocÃª quiser manter anotaÃ§Ãµes visÃ­veis enquanto trabalha em outro software.",
-  "AlwaysOnTop_Toggle": "Manter Janela VisÃ­vel (Topmost)",
+  "AlwaysOnTop_Desc": "O utilitário Always On Top permite que o Desktop Command Center fique fixado sempre visível por cima de qualquer outra janela do Windows. É excelente se você quiser manter anotações visíveis enquanto trabalha em outro software.",
+  "AlwaysOnTop_Toggle": "Manter Janela Visível (Topmost)",
   "Auth_PageTitle": "Licenciamento &amp; Nuvem",
   "Auth_PageDesc": "O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO.",
   "Auth_TxtLoading": "Processando requisição... (se você fechou o navegador, clique em Cancelar)",
@@ -221,7 +221,7 @@
   "Auto_ComboLang": "Linguagem do Script",
   "Awake_PageTitle": "Awake",
   "Awake_SubTitle": "Mantenha o seu computador acordado",
-  "Awake_Desc": "O Awake Ã© uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. Ã‰ Ãºtil quando vocÃª estÃ¡ executando tarefas longas que nÃ£o requerem interaÃ§Ã£o com o mouse/teclado.",
+  "Awake_Desc": "O Awake é uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. É útil quando você está executando tarefas longas que não requerem interação com o mouse/teclado.",
   "Awake_Toggle": "Manter Desperto",
   "BugReport_Title": "Reportar um Problema",
   "BugReport_Desc": "Obrigado por ajudar a melhorar o DCC! Por favor, descreva o problema que você encontrou com o máximo de detalhes possível.",
@@ -272,10 +272,10 @@
   "Prompts_ToolTipEdit": "Editar",
   "Prompts_ToolTipDelete": "Excluir",
   "Prompts_EmptyTitle": "Nenhum prompt salvo ainda.",
-  "Prompts_EmptyDesc": "Crie um novo prompt usando o formulÃ¡rio Ã  direita.",
-  "Prompts_InputTitle": "TÃ­tulo",
+  "Prompts_EmptyDesc": "Crie um novo prompt usando o formulário à direita.",
+  "Prompts_InputTitle": "Título",
   "Prompts_InputCat": "Categoria",
-  "Prompts_InputContent": "ConteÃºdo do Prompt",
+  "Prompts_InputContent": "Conteúdo do Prompt",
   "QuickAccess_Title": "DCC - Acesso Rápido",
   "QuickAccess_Header": "Acesso rápido",
   "QuickAccess_BtnMore": "Mais",
@@ -351,3 +351,5 @@
   "Dash_BugButton": "Reportar Bug",
   "Dash_Copyright": "© 2026 Foreign Technologies. Todos os direitos reservados."
 }
+
+

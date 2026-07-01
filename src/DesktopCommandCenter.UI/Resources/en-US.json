@@ -1,4 +1,4 @@
-{
+﻿{
   "Nav_Dashboard": "Dashboard",
   "Nav_ProcessManager": "Processes",
   "Nav_Notes": "Notes",
@@ -96,6 +96,7 @@
   "Settings_AIEngines_Save": "Save API Keys",
   "Dialog_LoginRequired_Title": "Login Required",
   "Dialog_LoginRequired_Content": "You need to log into the application before proceeding with the subscription to link your profile to the license.",
+  "Dialog_Wait": "Wait...",
   "Dialog_GotIt": "Got it",
   "Dialog_ProRequired_Title": "PRO Feature Required",
   "Dialog_ProRequired_Content_LoggedIn": "The '{0}' feature is available only for PRO subscribers. Subscribe now to unlock!",
