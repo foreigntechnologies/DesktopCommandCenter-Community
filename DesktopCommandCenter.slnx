@@ -1,4 +1,15 @@
 <Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+    <Platform Name="ARM64" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="DebugCommunity" />
+    <BuildType Name="ReleaseCommunity" />
+    <BuildType Name="DebugPro" />
+    <BuildType Name="ReleasePro" />
+  </Configurations>
   <Folder Name="/src/">
     <Project Path="src/DesktopCommandCenter.Application/DesktopCommandCenter.Application.csproj" />
     <Project Path="src/DesktopCommandCenter.CLI/DesktopCommandCenter.CLI.csproj" />
