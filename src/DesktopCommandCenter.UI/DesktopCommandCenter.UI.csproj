@@ -181,6 +181,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|ARM64</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <!-- Disables _GenerateAppxUploadSymbolPackage target that requires
