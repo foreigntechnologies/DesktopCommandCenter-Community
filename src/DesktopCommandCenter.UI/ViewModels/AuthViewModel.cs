@@ -339,7 +339,11 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user == null) return;
         
-        string url = $"https://buy.stripe.com/14AeVf9Q46Gz5nY9ttf3a0p?client_reference_id={user.Uid}";
+        bool trialUsed = await _licenseService.HasUsedTrialAsync();
+        string url = trialUsed 
+            ? $"https://buy.stripe.com/4gM8wRd2gfd54jUgVVf3a0r?client_reference_id={user.Uid}" 
+            : $"https://buy.stripe.com/14AeVf9Q46Gz5nY9ttf3a0p?client_reference_id={user.Uid}";
+            
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
         
         StartPollingForPlanChange("pro");
@@ -351,7 +355,11 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user == null) return;
         
-        string url = $"https://buy.stripe.com/7sYbJ3e6k3uncQq499f3a0q?client_reference_id={user.Uid}";
+        bool trialUsed = await _licenseService.HasUsedTrialAsync();
+        string url = trialUsed 
+            ? $"https://buy.stripe.com/cNi3cx0fud4X3fQ499f3a0s?client_reference_id={user.Uid}" 
+            : $"https://buy.stripe.com/7sYbJ3e6k3uncQq499f3a0q?client_reference_id={user.Uid}";
+
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
 
         StartPollingForPlanChange("pro");

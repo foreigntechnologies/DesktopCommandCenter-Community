@@ -27,6 +27,7 @@ public class DummyLicenseService : ILicenseService
 {
     public Task<bool> IsProUserAsync() => Task.FromResult(false);
     public Task<string> GetCurrentPlanAsync() => Task.FromResult("free");
+    public Task<bool> HasUsedTrialAsync() => Task.FromResult(false);
 }
 
 public class DummyIAAgentService : IIAAgentService
