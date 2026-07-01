@@ -3,7 +3,7 @@
   <Identity Name="ForeignTechnologies.DCC-DesktopCommandCenter" Publisher="CN=5850431E-5DBE-4D29-A9A7-3B20FEB17297" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="714F4A21-A499-43DA-B801-AE3D7ADDEE6C" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Desktop Command Center</DisplayName>
+    <DisplayName>DCC - Desktop Command Center</DisplayName>
     <PublisherDisplayName>Foreign Technologies</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -16,7 +16,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
-      <uap:VisualElements DisplayName="Desktop Command Center" Description="O aplicativo de produtividade definitiva para Windows." BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
+      <uap:VisualElements DisplayName="DCC - Desktop Command Center" Description="O aplicativo de produtividade definitiva para Windows." BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>

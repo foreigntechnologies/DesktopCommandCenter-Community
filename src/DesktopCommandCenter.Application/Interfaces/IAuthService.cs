@@ -6,8 +6,10 @@ public interface IAuthService
 {
     Task<AuthUser> LoginWithGoogleAsync();
     Task<AuthUser> LoginWithGitHubAsync();
+    Task<AuthUser> LoginWithMicrosoftAsync();
     Task<AuthUser> LinkWithGoogleAsync();
     Task<AuthUser> LinkWithGitHubAsync();
+    Task<AuthUser> LinkWithMicrosoftAsync();
     Task<AuthUser> LoginWithEmailAndPasswordAsync(string email, string password);
     Task<AuthUser> RegisterWithEmailAndPasswordAsync(string email, string password);
     Task<AuthUser?> GetCurrentUserAsync(bool forceRefresh = false);

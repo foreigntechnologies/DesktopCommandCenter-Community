@@ -1,16 +1,17 @@
-﻿<Page
+<Page
     x:Class="DesktopCommandCenter.UI.Views.ColorPickerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
     <Grid Padding="24">
         <StackPanel Spacing="16" VerticalAlignment="Center" MaxWidth="400" HorizontalAlignment="Center">
             
-            <TextBlock Text="Color Picker" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+            <TextBlock helpers:Translate.Key="ColorPicker_PageTitle" Text="Color Picker" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
 
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" HorizontalAlignment="Stretch">
                 <StackPanel Spacing="16" HorizontalAlignment="Center">
@@ -28,7 +29,11 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Header="HEX" Text="{x:Bind ViewModel.CurrentHex, Mode=OneWay}" IsReadOnly="True" />
-                <Button Grid.Column="1" VerticalAlignment="Bottom" ToolTipService.ToolTip="Copiar HEX" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Command="{x:Bind ViewModel.CopyHexCommand}" />
+                <Button Grid.Column="1" VerticalAlignment="Bottom" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Command="{x:Bind ViewModel.CopyHexCommand}">
+                    <ToolTipService.ToolTip>
+                        <ToolTip helpers:Translate.Key="ColorPicker_ToolTipCopyHex" Content="Copiar HEX" />
+                    </ToolTipService.ToolTip>
+                </Button>
             </Grid>
 
             <Grid ColumnSpacing="8">
@@ -37,15 +42,19 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Header="RGB" Text="{x:Bind ViewModel.CurrentRgb, Mode=OneWay}" IsReadOnly="True" />
-                <Button Grid.Column="1" VerticalAlignment="Bottom" ToolTipService.ToolTip="Copiar RGB" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Command="{x:Bind ViewModel.CopyRgbCommand}" />
+                <Button Grid.Column="1" VerticalAlignment="Bottom" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Command="{x:Bind ViewModel.CopyRgbCommand}">
+                    <ToolTipService.ToolTip>
+                        <ToolTip helpers:Translate.Key="ColorPicker_ToolTipCopyRgb" Content="Copiar RGB" />
+                    </ToolTipService.ToolTip>
+                </Button>
             </Grid>
 
-            <ToggleButton Content="Ativar Conta-gotas (Mouse)" 
+            <ToggleButton helpers:Translate.Key="ColorPicker_BtnToggle" Content="Ativar Conta-gotas (Mouse)" 
                           IsChecked="{x:Bind ViewModel.IsPicking, Mode=TwoWay}"
                           HorizontalAlignment="Stretch" 
                           Margin="0,16,0,0" />
                           
-            <TextBlock Text="Mova o mouse pela tela para capturar cores de qualquer janela. Clique em copiar para salvar." TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock helpers:Translate.Key="ColorPicker_Desc" Text="Mova o mouse pela tela para capturar cores de qualquer janela. Clique em copiar para salvar." TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
         </StackPanel>
     </Grid>
 </Page>

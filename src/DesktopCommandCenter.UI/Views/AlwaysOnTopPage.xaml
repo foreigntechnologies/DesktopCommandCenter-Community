@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -14,14 +15,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Always On Top" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
+        <TextBlock helpers:Translate.Key="AlwaysOnTop_PageTitle" Text="Always On Top" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
 
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="600">
             <StackPanel Spacing="16">
-                <TextBlock Text="Fixar janela no topo" Style="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock Text="O utilitÃ¡rio Always On Top permite que o Desktop Command Center fique fixado sempre visÃ­vel por cima de qualquer outra janela do Windows. Ã‰ excelente se vocÃª quiser manter anotaÃ§Ãµes visÃ­veis enquanto trabalha em outro software." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                <TextBlock helpers:Translate.Key="AlwaysOnTop_SubTitle" Text="Fixar janela no topo" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock helpers:Translate.Key="AlwaysOnTop_Desc" Text="O utilitÃ¡rio Always On Top permite que o Desktop Command Center fique fixado sempre visÃ­vel por cima de qualquer outra janela do Windows. Ã‰ excelente se vocÃª quiser manter anotaÃ§Ãµes visÃ­veis enquanto trabalha em outro software." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
 
-                <ToggleSwitch Header="Manter Janela VisÃ­vel (Topmost)" IsOn="{x:Bind ViewModel.IsAlwaysOnTopEnabled, Mode=TwoWay}" Margin="0,16,0,0" />
+                <ToggleSwitch helpers:Translate.Key="AlwaysOnTop_Toggle" Header="Manter Janela VisÃ­vel (Topmost)" IsOn="{x:Bind ViewModel.IsAlwaysOnTopEnabled, Mode=TwoWay}" Margin="0,16,0,0" />
                 <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="SemiBold" TextWrapping="Wrap" />
             </StackPanel>
         </Grid>

@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
     xmlns:converters="using:DesktopCommandCenter.UI.Converters"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
     
@@ -17,7 +18,7 @@
 
                 <!-- Título -->
                 <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-                    <TextBlock x:Name="TxtSettingsTitle" Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtSettingsTitle" helpers:Translate.Key="Settings_PageTitle" Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
                     <Border x:Name="ProBadge" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
                         <TextBlock Text="PRO" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
                     </Border>
@@ -29,17 +30,17 @@
                 <!-- Aparência e Temas -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
-                        <TextBlock x:Name="TxtAppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Name="TxtAppearanceTitle" helpers:Translate.Key="Settings_AppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
 
-                        <ComboBox x:Name="CmbTheme" Header="Tema do Aplicativo"
+                        <ComboBox x:Name="CmbTheme" helpers:Translate.Key="Settings_ThemeLabel" Header="Tema do Aplicativo"
                                   SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
                                   Width="300">
-                            <ComboBoxItem x:Name="CmbThemeItem1" Content="Claro" />
-                            <ComboBoxItem x:Name="CmbThemeItem2" Content="Escuro" />
-                            <ComboBoxItem x:Name="CmbThemeItem3" Content="Padrão do Sistema (Contraste)" />
+                            <ComboBoxItem x:Name="CmbThemeItem1" helpers:Translate.Key="Settings_ThemeLight" Content="Claro" />
+                            <ComboBoxItem x:Name="CmbThemeItem2" helpers:Translate.Key="Settings_ThemeDark" Content="Escuro" />
+                            <ComboBoxItem x:Name="CmbThemeItem3" helpers:Translate.Key="Settings_ThemeSystem" Content="Padrão do Sistema (Contraste)" />
                         </ComboBox>
 
-                        <ComboBox x:Name="CmbLanguage" Header="Idioma do Aplicativo (Requer reinício)"
+                        <ComboBox x:Name="CmbLanguage" helpers:Translate.Key="Settings_LangLabel" Header="Idioma do Aplicativo (Requer reinício)"
                                   SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
                                   Width="300">
                             <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
@@ -74,8 +75,8 @@
                 <!-- Teclas de Atalho -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
                     <StackPanel Spacing="16">
-                        <TextBlock x:Name="TxtHotkeysTitle" Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock x:Name="TxtHotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows."
+                        <TextBlock x:Name="TxtHotkeysTitle" helpers:Translate.Key="Settings_HotkeysTitle" Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Name="TxtHotkeysDesc" helpers:Translate.Key="Settings_HotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
                         <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
@@ -127,10 +128,10 @@
                     <StackPanel Spacing="16">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <FontIcon Glyph="&#xECE4;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TxtAITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtAITitle" helpers:Translate.Key="Settings_AITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <TextBlock x:Name="TxtAIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="TxtAIDesc" helpers:Translate.Key="Settings_AIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
 
                         <Grid ColumnSpacing="20" RowSpacing="16">
                             <Grid.ColumnDefinitions>
@@ -160,11 +161,11 @@
                     <StackPanel Spacing="16">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <FontIcon Glyph="&#xE7BF;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TxtSubscriptionTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtSubscriptionTitle" helpers:Translate.Key="Settings_SubTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <!-- Info da conta (visível quando logado) -->
-                        <StackPanel x:Name="LoggedInAccountInfoPanel" Spacing="4" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
+                        <StackPanel x:Name="LoggedInAccountInfoPanel" Spacing="4" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -286,19 +287,19 @@
                                         <!-- Não logado -->
                                         <Button x:Name="NotLoggedInProButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.GoToLoginCommand}"
-                                                x:Load="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+                                                Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                                             <TextBlock x:Name="TxtProBtnNotLogged" Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano Free -->
                                         <Button x:Name="FreePlanUpgradeButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
                                                 Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                                x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
+                                                Visibility="{x:Bind ViewModel.IsFreePlan, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                                             <TextBlock x:Name="TxtProBtnFree" Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
                                         </Button>
 
                                         <!-- Logado, plano PRO -->
-                                        <StackPanel x:Name="ProPlanActivePanel" Spacing="6" x:Load="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
+                                        <StackPanel x:Name="ProPlanActivePanel" Spacing="6" Visibility="{x:Bind ViewModel.IsProPlan, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
                                                 <TextBlock x:Name="TxtProBtnActive" Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
@@ -314,8 +315,8 @@
                         </Grid>
 
                         <!-- Sair da conta -->
-                        <StackPanel x:Name="LogoutPanel" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
-                            <HyperlinkButton x:Name="BtnLogoutSettings" Command="{x:Bind ViewModel.LogoutCommand}"
+                        <StackPanel x:Name="LogoutPanel" Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Left">
+                            <HyperlinkButton x:Name="BtnLogoutSettings" helpers:Translate.Key="Settings_BtnLogout" Command="{x:Bind ViewModel.LogoutCommand}"
                                              Content="Sair da conta"
                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
@@ -327,6 +328,7 @@
         </ScrollViewer>
 
         <ContentDialog x:Name="EditHotkeyDialog"
+                       helpers:Translate.Key="Settings_DialogTitle"
                        Title="Editar Tecla de Atalho"
                        PrimaryButtonText="OK"
                        CloseButtonText="Cancelar"
@@ -343,7 +345,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="HotkeyPreviewText" Text="Nenhum" FontSize="20" FontWeight="Bold" FontFamily="Consolas" VerticalAlignment="Center" IsReadOnly="True" PreviewKeyDown="EditHotkeyDialog_KeyDown" />
-                        <Button Grid.Column="1" Content="Limpar" Click="ClearHotkeyButton_Click" VerticalAlignment="Center" />
+                        <Button Grid.Column="1" helpers:Translate.Key="Settings_BtnClear" Content="Limpar" Click="ClearHotkeyButton_Click" VerticalAlignment="Center" />
                     </Grid>
                 </Border>
 

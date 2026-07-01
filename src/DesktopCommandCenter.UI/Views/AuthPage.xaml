@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -17,10 +18,10 @@
                     <FontIcon Glyph="&#xE7BF;" FontSize="48"
                               Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                               HorizontalAlignment="Center" />
-                    <TextBlock x:Name="TxtAuthTitle" Text="Licenciamento &amp; Nuvem"
+                    <TextBlock x:Name="TxtAuthTitle" helpers:Translate.Key="Auth_PageTitle" Text="Licenciamento &amp; Nuvem"
                                Style="{StaticResource TitleTextBlockStyle}"
                                HorizontalAlignment="Center" />
-                    <TextBlock x:Name="TxtAuthDesc" Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO."
+                    <TextBlock x:Name="TxtAuthDesc" helpers:Translate.Key="Auth_PageDesc" Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO."
                                TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" />
                 </StackPanel>
@@ -28,18 +29,18 @@
                 <!-- Mensagens globais (Loading / Erro / Sucesso) -->
                 <StackPanel Spacing="12" Margin="0,0,0,20">
                     <StackPanel x:Name="LoadingPanel" Spacing="12" HorizontalAlignment="Center"
-                                x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+                                Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ProgressRing IsActive="True" Width="32" Height="32" HorizontalAlignment="Center" />
-                        <TextBlock x:Name="TxtLoading" Text="Processando requisição... (se você fechou o navegador, clique em Cancelar)"
+                        <TextBlock x:Name="TxtLoading" helpers:Translate.Key="Auth_TxtLoading" Text="Processando requisição... (se você fechou o navegador, clique em Cancelar)"
                                    HorizontalAlignment="Center"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    FontSize="12" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" />
-                        <HyperlinkButton Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <HyperlinkButton helpers:Translate.Key="Auth_BtnCancel" Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
 
                     <Border x:Name="ErrorPanel" CornerRadius="8" Padding="12,10"
                             Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
-                            x:Load="{x:Bind ViewModel.HasError, Mode=OneWay}">
+                            Visibility="{x:Bind ViewModel.HasError, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <FontIcon Glyph="&#xE783;" FontSize="16"
                                       Foreground="{ThemeResource SystemFillColorCriticalBrush}"
@@ -52,7 +53,7 @@
 
                     <Border x:Name="SuccessPanel" CornerRadius="8" Padding="12,10"
                             Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
-                            x:Load="{x:Bind ViewModel.HasSuccess, Mode=OneWay}">
+                            Visibility="{x:Bind ViewModel.HasSuccess, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <FontIcon Glyph="&#xE73E;" FontSize="16"
                                       Foreground="{ThemeResource SystemFillColorSuccessBrush}"
@@ -65,16 +66,20 @@
                 </StackPanel>
 
                 <!-- ══ PAINEL NÃO LOGADO ══ -->
-                <StackPanel x:Name="NotLoggedInPanel" Spacing="16" x:Load="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
+                <StackPanel x:Name="NotLoggedInPanel" Spacing="16" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
 
                     <!-- Google -->
                     <Button Command="{x:Bind ViewModel.LoginWithGoogleCommand}"
                             IsEnabled="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
                             HorizontalAlignment="Stretch" Padding="14,12"
                             CornerRadius="8">
-                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="190" />
+                            </Grid.ColumnDefinitions>
                             <!-- Google logo SVG -->
-                            <Viewbox Width="20" Height="20" VerticalAlignment="Center">
+                            <Viewbox Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <Canvas Width="24" Height="24">
                                     <Path Data="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" Fill="#4285F4"/>
                                     <Path Data="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" Fill="#34A853"/>
@@ -82,9 +87,9 @@
                                     <Path Data="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" Fill="#EA4335"/>
                                 </Canvas>
                             </Viewbox>
-                            <TextBlock x:Name="TxtGoogle" Text="Continuar com o Google" VerticalAlignment="Center"
+                            <TextBlock Grid.Column="1" x:Name="TxtGoogle" helpers:Translate.Key="Auth_BtnGoogle" Text="Continuar com o Google" VerticalAlignment="Center" HorizontalAlignment="Left"
                                        FontWeight="SemiBold" FontSize="14" />
-                        </StackPanel>
+                        </Grid>
                     </Button>
 
                     <!-- GitHub -->
@@ -92,14 +97,18 @@
                             IsEnabled="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
                             HorizontalAlignment="Stretch" Padding="14,12"
                             CornerRadius="8">
-                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
-                            <Viewbox Width="20" Height="20" VerticalAlignment="Center">
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="190" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
                                       Fill="{ThemeResource TextFillColorPrimaryBrush}" />
                             </Viewbox>
-                            <TextBlock x:Name="TxtGitHub" Text="Continuar com o GitHub" VerticalAlignment="Center"
+                            <TextBlock Grid.Column="1" x:Name="TxtGitHub" helpers:Translate.Key="Auth_BtnGitHub" Text="Continuar com o GitHub" VerticalAlignment="Center" HorizontalAlignment="Left"
                                        FontWeight="SemiBold" FontSize="14" />
-                        </StackPanel>
+                        </Grid>
                     </Button>
 
                     <!-- Botões de login movidos para cima para manter os erros abaixo -->
@@ -108,15 +117,15 @@
                     <TextBlock FontSize="11" TextWrapping="Wrap" TextAlignment="Center"
                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                Margin="0,8,0,0">
-                        <Run x:Name="TxtTermsPrefix">Ao continuar, você aceita os </Run>
+                        <Run x:Name="TxtTermsPrefix" helpers:Translate.Key="Auth_TermsPrefix">Ao continuar, você aceita os </Run>
                         <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/terms">
-                            <Run x:Name="HypTerms">Termos de Uso</Run>
+                            <Run x:Name="HypTerms" helpers:Translate.Key="Auth_TermsLink">Termos de Uso</Run>
                         </Hyperlink>
-                        <Run x:Name="TxtTermsMid"> e a </Run>
+                        <Run x:Name="TxtTermsMid" helpers:Translate.Key="Auth_TermsMid"> e a </Run>
                         <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/privacy">
-                            <Run x:Name="HypPrivacy">Política de Privacidade</Run>
+                            <Run x:Name="HypPrivacy" helpers:Translate.Key="Auth_PrivacyLink">Política de Privacidade</Run>
                         </Hyperlink>
-                        <Run x:Name="TxtTermsSuffix">.</Run>
+                        <Run x:Name="TxtTermsSuffix" helpers:Translate.Key="Auth_TermsSuffix">.</Run>
                     </TextBlock>
                 </StackPanel>
 
@@ -124,7 +133,7 @@
                 <Border x:Name="LoggedInPanel" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="16" Padding="32,32,32,24"
-                        x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                         MaxWidth="460">
                     <StackPanel Spacing="24">
 
@@ -140,17 +149,17 @@
                                 <TextBlock x:Name="TxtUserName" Text="{x:Bind ViewModel.UserName, Mode=OneWay}"
                                            FontWeight="Bold" HorizontalAlignment="Center" FontSize="18"
                                            TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"
-                                           x:Load="{x:Bind ViewModel.HasUserName, Mode=OneWay}" />
+                                           Visibility="{x:Bind ViewModel.HasUserName, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                                 <!-- Somente E-mail padrão (se não tiver nenhuma rede) -->
                                 <TextBlock x:Name="DefaultEmailText" Text="{x:Bind ViewModel.UserEmail, Mode=OneWay}"
                                            FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="15"
                                            TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           x:Load="{x:Bind ViewModel.HasNoGoogleLinked, Mode=OneWay}" />
+                                           Visibility="{x:Bind ViewModel.HasNoGoogleLinked, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                                 <!-- Google -->
-                                <StackPanel x:Name="GoogleEmailPanel" Orientation="Horizontal" Spacing="8" x:Load="{x:Bind ViewModel.HasGoogleLinked, Mode=OneWay}" HorizontalAlignment="Center">
+                                <StackPanel x:Name="GoogleEmailPanel" Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.HasGoogleLinked, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center">
                                     <Viewbox Width="18" Height="18">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" Fill="#4285F4"/>
@@ -163,12 +172,22 @@
                                 </StackPanel>
 
                                 <!-- GitHub -->
-                                <StackPanel x:Name="GitHubEmailPanel" Orientation="Horizontal" Spacing="8" x:Load="{x:Bind ViewModel.HasGitHubLinked, Mode=OneWay}" HorizontalAlignment="Center">
+                                <StackPanel x:Name="GitHubEmailPanel" Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.HasGitHubLinked, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center">
                                     <Viewbox Width="18" Height="18">
                                         <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
                                               Fill="{ThemeResource TextFillColorPrimaryBrush}" />
                                     </Viewbox>
                                     <TextBlock Text="{x:Bind ViewModel.GitHubEmail, Mode=OneWay}" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Microsoft -->
+                                <StackPanel x:Name="MicrosoftEmailPanel" Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.HasMicrosoftLinked, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center">
+                                    <Viewbox Width="18" Height="18">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{x:Bind ViewModel.MicrosoftEmail, Mode=OneWay}" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center" />
                                 </StackPanel>
                             </StackPanel>
                             
@@ -184,28 +203,47 @@
 
                         <!-- Vinculação de Contas -->
                         <StackPanel Spacing="16">
-                            <TextBlock x:Name="TxtLinkAccountsTitle" Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
+                            <TextBlock x:Name="TxtLinkAccountsTitle" helpers:Translate.Key="Auth_LinkAccountsTitle" Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
                             
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <Button Grid.Column="0" Command="{x:Bind ViewModel.LinkGoogleCommand}" 
-                                        IsEnabled="{x:Bind ViewModel.CanLinkGoogle, Mode=OneWay}" 
+                            <StackPanel Spacing="8">
+                                <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" 
+                                        Visibility="{x:Bind ViewModel.CanLinkGoogle, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" 
                                         HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
-                                    <TextBlock x:Name="TxtLinkGoogle" Text="🔗 Vincular Google" FontSize="13" FontWeight="SemiBold" />
+                                    <Grid HorizontalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Viewbox Grid.Column="0" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Data="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" Fill="#4285F4"/>
+                                                <Path Data="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" Fill="#34A853"/>
+                                                <Path Data="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" Fill="#FBBC05"/>
+                                                <Path Data="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" Fill="#EA4335"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGoogle" helpers:Translate.Key="Auth_BtnLinkGoogle" Text="Vincular Google" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </Grid>
                                 </Button>
                                 
-                                <Button Grid.Column="1" Command="{x:Bind ViewModel.LinkGitHubCommand}" 
-                                        IsEnabled="{x:Bind ViewModel.CanLinkGitHub, Mode=OneWay}" 
+                                <Button Command="{x:Bind ViewModel.LinkGitHubCommand}" 
+                                        Visibility="{x:Bind ViewModel.CanLinkGitHub, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" 
                                         HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
-                                    <TextBlock x:Name="TxtLinkGitHub" Text="🔗 Vincular GitHub" FontSize="13" FontWeight="SemiBold" />
+                                    <Grid HorizontalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Viewbox Grid.Column="0" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                                                  Fill="{ThemeResource TextFillColorPrimaryBrush}" />
+                                        </Viewbox>
+                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGitHub" helpers:Translate.Key="Auth_BtnLinkGitHub" Text="Vincular GitHub" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </Grid>
                                 </Button>
-                            </Grid>
-                            <TextBlock x:Name="TxtLinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
+                            </StackPanel>
+                            <TextBlock x:Name="TxtLinkDesc" helpers:Translate.Key="Auth_LinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
                                        FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                        TextWrapping="Wrap" TextAlignment="Center" />
                         </StackPanel>
@@ -214,7 +252,7 @@
 
                         <!-- Ações PRO / Free -->
                         <StackPanel x:Name="FreeActionsPanel" Spacing="20" Visibility="{x:Bind ViewModel.FreePlanVisibility, Mode=OneWay}">
-                            <TextBlock x:Name="TxtProAdTitle" Text="🚀 Desbloqueie o Poder do PRO"
+                            <TextBlock x:Name="TxtProAdTitle" helpers:Translate.Key="Auth_ProAdTitle" Text="🚀 Desbloqueie o Poder do PRO"
                                        FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" 
                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
                                        
@@ -225,19 +263,19 @@
                                 <StackPanel Spacing="14">
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd1" Text="IA Autônoma (Semantic Kernel + Ollama)" FontSize="13" FontWeight="Medium" />
+                                        <TextBlock x:Name="TxtProAd1" helpers:Translate.Key="Auth_ProAd1" Text="IA Autônoma (Semantic Kernel + Ollama)" FontSize="13" FontWeight="Medium" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd2" Text="Reconhecimento de Voz Offline (Whisper)" FontSize="13" FontWeight="Medium" />
+                                        <TextBlock x:Name="TxtProAd2" helpers:Translate.Key="Auth_ProAd2" Text="Reconhecimento de Voz Offline (Whisper)" FontSize="13" FontWeight="Medium" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd3" Text="Biblioteca de Prompts e Automações" FontSize="13" FontWeight="Medium" />
+                                        <TextBlock x:Name="TxtProAd3" helpers:Translate.Key="Auth_ProAd3" Text="Biblioteca de Prompts e Automações" FontSize="13" FontWeight="Medium" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd4" Text="Marketplace de Plugins (em breve)" FontSize="13" FontWeight="Medium" />
+                                        <TextBlock x:Name="TxtProAd4" helpers:Translate.Key="Auth_ProAd4" Text="Marketplace de Plugins (em breve)" FontSize="13" FontWeight="Medium" />
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
@@ -248,13 +286,13 @@
                                         HorizontalAlignment="Stretch" Padding="0,14" CornerRadius="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE73F;" FontSize="16" />
-                                        <TextBlock x:Name="TxtProMonthly" Text="Assinar PRO | R$ 39,90/mês" FontWeight="Bold" FontSize="14" />
+                                        <TextBlock x:Name="TxtProMonthly" helpers:Translate.Key="Auth_ProMonthly" Text="Assinar PRO | R$ 39,90/mês" FontWeight="Bold" FontSize="14" />
                                     </StackPanel>
                                 </Button>
                                 
                                 <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
                                         HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8">
-                                    <TextBlock x:Name="TxtProYearly" Text="Assinatura Anual | R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock x:Name="TxtProYearly" helpers:Translate.Key="Auth_ProYearly" Text="Assinatura Anual | R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
                                 </Button>
                             </StackPanel>
                         </StackPanel>
@@ -264,16 +302,16 @@
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
-                                <TextBlock x:Name="TxtProActiveTitle" Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16" />
+                                <TextBlock x:Name="TxtProActiveTitle" helpers:Translate.Key="Auth_ProActiveTitle" Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16" />
                             </StackPanel>
-                            <TextBlock x:Name="TxtProActiveDesc" Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13"
+                            <TextBlock x:Name="TxtProActiveDesc" helpers:Translate.Key="Auth_ProActiveDesc" Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        HorizontalAlignment="Center" />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
                                     HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE9E9;" FontSize="14" />
-                                    <TextBlock x:Name="TxtProManage" Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock x:Name="TxtProManage" helpers:Translate.Key="Auth_ProManage" Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -283,21 +321,21 @@
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE769;" FontSize="24" Foreground="Orange" />
-                                <TextBlock x:Name="TxtPausedActiveTitle" Text="Plano Pausado" FontWeight="Bold" FontSize="16" />
+                                <TextBlock x:Name="TxtPausedActiveTitle" helpers:Translate.Key="Auth_PausedTitle" Text="Plano Pausado" FontWeight="Bold" FontSize="16" />
                             </StackPanel>
-                            <TextBlock x:Name="TxtPausedActiveDesc" Text="Sua assinatura está pausada. Retome-a no portal para voltar a ter acesso PRO." FontSize="13"
+                            <TextBlock x:Name="TxtPausedActiveDesc" helpers:Translate.Key="Auth_PausedDesc" Text="Sua assinatura está pausada. Retome-a no portal para voltar a ter acesso PRO." FontSize="13"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
                                     HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE9E9;" FontSize="14" />
-                                    <TextBlock x:Name="TxtPausedManage" Text="Gerenciar Assinatura" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock x:Name="TxtPausedManage" helpers:Translate.Key="Auth_PausedManage" Text="Gerenciar Assinatura" FontWeight="SemiBold" FontSize="13" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
-                        <HyperlinkButton x:Name="BtnLogout" Content="Fazer Logout"
+                        <HyperlinkButton x:Name="BtnLogout" helpers:Translate.Key="Auth_BtnLogout" Content="Fazer Logout"
                                          Command="{x:Bind ViewModel.LogoutCommand}"
                                          HorizontalAlignment="Center"
                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"

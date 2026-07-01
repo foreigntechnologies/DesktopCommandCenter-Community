@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:DesktopCommandCenter.Domain.Entities"
     xmlns:converters="using:DesktopCommandCenter.UI.Converters"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -26,8 +27,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" Content="Limpar Histórico" Command="{x:Bind ViewModel.ClearHistoryCommand}" />
+            <TextBlock helpers:Translate.Key="Clip_PageTitle" Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" helpers:Translate.Key="Clip_BtnClear" Content="Limpar Histórico" Command="{x:Bind ViewModel.ClearHistoryCommand}" />
         </Grid>
 
         <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -45,8 +46,16 @@
                         <Image Source="{Binding ImagePath}" MaxHeight="150" HorizontalAlignment="Left" Stretch="Uniform" Visibility="{x:Bind Type, Converter={StaticResource ImageVisibilityConverter}}" />
                         
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                            <Button ToolTipService.ToolTip="Copiar novamente" Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent"/>
-                            <Button ToolTipService.ToolTip="Excluir" Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding ViewModel.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}" />
+                            <Button Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip helpers:Translate.Key="Clip_ToolTipCopy" Content="Copiar novamente" />
+                                </ToolTipService.ToolTip>
+                            </Button>
+                            <Button Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding ViewModel.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip helpers:Translate.Key="Clip_ToolTipDelete" Content="Excluir" />
+                                </ToolTipService.ToolTip>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

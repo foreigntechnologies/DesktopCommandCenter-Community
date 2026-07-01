@@ -678,3 +678,7 @@ $RECYCLE.BIN/
 build_pro.ps1
 installer_pro.nsi
 PRO_VERSION.md
+# Custom Output Paths
+.b/
+.o/
+.build/
