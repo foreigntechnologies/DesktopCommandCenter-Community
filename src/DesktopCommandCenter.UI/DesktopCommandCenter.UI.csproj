@@ -75,9 +75,6 @@
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
     <None Remove="Package.appxmanifest" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
@@ -125,7 +122,11 @@
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
+    <!-- SetPlatform ensures VS wizard propagates the correct arch (x64/x86/ARM64)
+         to the ProFeatures dependency instead of using the global 'Any CPU'. -->
+    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
+      <SetPlatform>Platform=$(Platform)</SetPlatform>
+    </ProjectReference>
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
@@ -158,6 +159,13 @@
     <EnableMsixTooling>false</EnableMsixTooling>
   </PropertyGroup>
 
+  <!-- Use portable PDB (not FastLink) so mspdbcmf.exe is never needed.
+       FastLink PDB only exists when building via MSBuild from VS and
+       causes WinAppSdkCheckFastlinkPdb to fail when using dotnet CLI. -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
   <!-- Publish Properties -->
   <PropertyGroup>
     <GenerateAppxPackageOnBuild>False</GenerateAppxPackageOnBuild>
@@ -172,8 +180,9 @@
     <AppxBundle>Never</AppxBundle>
     <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <!-- Suppresses the mspdbcmf.exe FastLink PDB conversion step which only
-         exists inside Visual Studio and fails when building via dotnet CLI -->
+    <!-- Disables _GenerateAppxUploadSymbolPackage target that requires
+         mspdbcmf.exe (only available inside VS, not in dotnet CLI path) -->
+    <AppxSymbolPackageEnabled>false</AppxSymbolPackageEnabled>
     <_EnableMsixToolingSymbolsPackage>false</_EnableMsixToolingSymbolsPackage>
     <_SkipWinAppSdkCheckFastlinkPdb>true</_SkipWinAppSdkCheckFastlinkPdb>
   </PropertyGroup>
