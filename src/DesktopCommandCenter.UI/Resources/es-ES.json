@@ -92,7 +92,6 @@
   "Settings_Lang1": "Portugu\u00eas - Brasil",
   "Settings_Lang2": "English",
   "Settings_Lang3": "Español",
-  "Settings_AiTitle": "Inteligencia Artificial (ChatFT)",
   "Settings_AIEngines_Save": "Guardar Claves API",
   "Dialog_LoginRequired_Title": "Requiere Iniciar Sesión",
   "Dialog_LoginRequired_Content": "Debes iniciar sesión en la aplicación antes de proceder con la suscripción para vincular tu perfil a la licencia.",
@@ -108,7 +107,6 @@
   "GreetingMorning": "Buenos días",
   "GreetingAfternoon": "Buenas tardes",
   "GreetingEvening": "Buenas noches",
-  "Settings_AiDesc": "Defina las claves de API de los proveedores deseados. Deje en blanco para usar Ollama (Local) gratis.",
   "ProcMgr_Title": "Administrador de Tareas",
   "ProcMgr_Search": "Buscar procesos por nombre...",
   "ProcMgr_Name": "Nombre del Proceso",
@@ -293,8 +291,6 @@
   "Settings_PageTitle": "Configuración",
   "Settings_ThemeLabel": "Tema de la Aplicación",
   "Settings_LangLabel": "Idioma de la Aplicación (Requiere reinicio)",
-  "Settings_AITitle": "Inteligencia Artificial (ChatFT)",
-  "Settings_AIDesc": "Configura las claves de API de los proveedores deseados. Déjalo en blanco si vas a usar Ollama (Local) de forma gratuita.",
   "Settings_BtnLogout": "Cerrar sesión",
   "Settings_DialogTitle": "Editar Tecla de Acceso Directo",
   "Settings_BtnClear": "Limpiar",
@@ -351,6 +347,8 @@
   "Dash_BugButton": "Reportar Bug",
   "Dash_Copyright": "© 2026 Foreign Technologies®. Todos los derechos reservados."
 }
+
+
 
 
 
