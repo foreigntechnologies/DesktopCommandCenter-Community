@@ -197,9 +197,9 @@ public partial class SettingsViewModel : ObservableObject
         {
             bool isPro = ProActionIds.Contains(config.ActionId);
             var localizedName = DesktopCommandCenter.UI.App.Current.Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.ITranslationService)) as DesktopCommandCenter.Application.Interfaces.ITranslationService;
-            string display = localizedName?.GetString($"Nav_{config.ActionId}") ?? config.DisplayName;
+            string display = localizedName?.Get($"Nav_{config.ActionId}") ?? config.DisplayName;
             // Fallback for settings if needed
-            if (display == $"Nav_{config.ActionId}") display = localizedName?.GetString($"Settings_{config.ActionId}") ?? config.DisplayName;
+            if (display == $"Nav_{config.ActionId}") display = localizedName?.Get($"Settings_{config.ActionId}") ?? config.DisplayName;
 
             Hotkeys.Add(new HotkeyConfigItemViewModel
             {
