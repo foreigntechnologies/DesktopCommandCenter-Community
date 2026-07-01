@@ -125,11 +125,7 @@
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <!-- SetPlatform ensures VS wizard propagates the correct arch (x64/x86/ARM64)
-         to the ProFeatures dependency instead of using the global 'Any CPU'. -->
-    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
-      <SetPlatform>Platform=$(Platform)</SetPlatform>
-    </ProjectReference>
+    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
