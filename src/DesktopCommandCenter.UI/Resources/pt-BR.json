@@ -393,6 +393,8 @@
   "Settings_ModelDefault": "Deixe em branco para o padrão",
   "Settings_PlanProActive": "✔ Plano PRO ativo",
   "Settings_PlanCommunity": "Plano Community (Gratuito)",
+  "Settings_AITitle": "Inteligência Artificial (ChatFT)",
+  "Settings_AIDesc": "Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente.",
   "Dash_ToolPromptsTitle": "Prompts de IA",
   "Dash_ToolPromptsDesc": "Biblioteca de prompts",
   "Dash_DocButton": "Documentação",

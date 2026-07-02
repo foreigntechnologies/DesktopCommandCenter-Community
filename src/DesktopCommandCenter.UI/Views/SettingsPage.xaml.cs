@@ -68,8 +68,8 @@ public sealed partial class SettingsPage : Page
         
         if (TxtAITitle != null)
         {
-            TxtAITitle.Text = loc.GetString("Settings_AiTitle");
-            TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
+            TxtAITitle.Text = loc.GetString("Settings_AITitle");
+            TxtAIDesc.Text = loc.GetString("Settings_AIDesc");
         }
 
         // Reload hotkey display names so they reflect the current language

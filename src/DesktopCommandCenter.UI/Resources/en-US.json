@@ -400,6 +400,8 @@
   "Settings_ModelDefault": "Leave blank for default",
   "Settings_PlanProActive": "✔ PRO Plan active",
   "Settings_PlanCommunity": "Community Plan (Free)",
+  "Settings_AITitle": "Artificial Intelligence (ChatFT)",
+  "Settings_AIDesc": "Set API keys for your preferred providers. Leave blank if you want to use Ollama (Local) for free.",
   "CliCmd_T_0": "Current Directory",
   "CliCmd_D_0": "Displays the current working directory path.",
   "CliCmd_T_1": "List Files",

@@ -13,36 +13,13 @@ public sealed partial class AuthPage : Page
         ViewModel = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<AuthViewModel>();
         InitializeComponent();
         Loaded += AuthPage_Loaded;
-        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        // Translate.Key on each XAML element handles live language updates automatically.
     }
 
     private void AuthPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        UpdateTranslations();
-    }
-
-    private void UpdateTranslations()
-    {
-        var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-        
-        TxtAuthTitle.Text = loc.GetString("Auth_Title");
-        TxtAuthDesc.Text = loc.GetString("Auth_Desc");
-        TxtLoading.Text = loc.GetString("Auth_Loading");
-        TxtGoogle.Text = loc.GetString("Auth_Google");
-        TxtGitHub.Text = loc.GetString("Auth_GitHub");
-        TxtTermsPrefix.Text = loc.GetString("Auth_TermsPrefix");
-        HypTerms.Text = loc.GetString("Auth_Terms");
-        TxtTermsMid.Text = loc.GetString("Auth_TermsMid");
-        HypPrivacy.Text = loc.GetString("Auth_Privacy");
-        TxtTermsSuffix.Text = loc.GetString("Auth_TermsSuffix");
-        TxtLinkAccountsTitle.Text = loc.GetString("Auth_LinkTitle");
-        TxtLinkGoogle.Text = loc.GetString("Auth_LinkGoogle");
-        TxtLinkGitHub.Text = loc.GetString("Auth_LinkGitHub");
-        TxtLinkDesc.Text = loc.GetString("Auth_LinkDesc");
-        TxtProActiveTitle.Text = loc.GetString("Auth_ProActiveTitle");
-        TxtProActiveDesc.Text = loc.GetString("Auth_ProActiveDesc");
-        TxtProManage.Text = loc.GetString("Auth_ProManage");
-        BtnLogout.Content = loc.GetString("Auth_Logout");
+        // Translations are handled automatically by helpers:Translate.Key on each XAML element.
+        // No manual UpdateTranslations() needed here.
     }
 
     public Microsoft.UI.Xaml.Media.ImageSource? ConvertToImageSource(string url)
