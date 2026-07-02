@@ -53,11 +53,11 @@ public partial class SettingsViewModel : ObservableObject
 
     public string ModelPlaceholderText => SelectedAIProviderIndex switch
     {
-        0 => "Deixe em branco para o padrão local (llama3)",
-        1 => "Deixe em branco para o padrão (gpt-4o)",
-        2 => "Deixe em branco para o padrão (gemini-1.5-pro)",
-        3 => "Deixe em branco para o padrão (claude-3-5-sonnet-20240620)",
-        _ => "Deixe em branco para o padrão"
+        0 => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_ModelLocal"),
+        1 => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_ModelGPT4"),
+        2 => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_ModelGemini"),
+        3 => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_ModelClaude"),
+        _ => DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_ModelDefault")
     };
 
     [ObservableProperty]
@@ -101,8 +101,8 @@ public partial class SettingsViewModel : ObservableObject
     public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
 
     public string PlanDisplayText => IsProPlan
-        ? "✔ Plano PRO ativo"
-        : "Plano Community (Gratuito)";
+        ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_PlanProActive")
+        : DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_PlanCommunity");
 
     public string PlanBadgeText => IsProPlan ? "PRO" : "FREE";
 

@@ -83,22 +83,22 @@
                             Visibility="{x:Bind ViewModel.EmptyMessageVisibility, Mode=OneWay}">
                     <SymbolIcon Symbol="OutlineStar" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock helpers:Translate.Key="Prompts_EmptyTitle" Text="Nenhum prompt salvo ainda." Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock helpers:Translate.Key="Prompts_EmptyDesc" Text="Crie um novo prompt usando o formulÃ¡rio Ã  direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock helpers:Translate.Key="Prompts_EmptyDesc" Text="Crie um novo prompt usando o formulário à direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
 
-            <!-- COLUNA DIREITA: FORMULÃRIO DE CADASTRO/EDIÃ‡ÃƒO -->
+            <!-- COLUNA DIREITA: FORMULÁRIO DE CADASTRO/EDIÇÃO -->
             <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="20" VerticalAlignment="Top">
                 <StackPanel Spacing="16">
                     <TextBlock Text="{x:Bind ViewModel.FormTitle, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
 
-                    <TextBox helpers:Translate.Key="Prompts_InputTitle" Header="TÃ­tulo" PlaceholderText="Ex: Revisar CÃ³digo" 
+                    <TextBox helpers:Translate.Key="Prompts_InputTitle" Header="Título" PlaceholderText="Ex: Revisar Código" 
                              Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBox helpers:Translate.Key="Prompts_InputCat" Header="Categoria" PlaceholderText="Ex: ProgramaÃ§Ã£o" 
+                    <TextBox helpers:Translate.Key="Prompts_InputCat" Header="Categoria" PlaceholderText="Ex: Programação" 
                              Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBox helpers:Translate.Key="Prompts_InputContent" Header="ConteÃºdo do Prompt" PlaceholderText="Por favor, revise o cÃ³digo abaixo..." 
+                    <TextBox helpers:Translate.Key="Prompts_InputContent" Header="Conteúdo do Prompt" PlaceholderText="Por favor, revise o código abaixo..." 
                              Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
@@ -108,10 +108,10 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
-                        <Button Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"
+                        <Button helpers:Translate.Key="Prompts_BtnSave" Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"
                                 Command="{x:Bind ViewModel.SavePromptCommand}"/>
                                 
-                        <Button Grid.Column="1" Content="Cancelar" HorizontalAlignment="Stretch"
+                        <Button Grid.Column="1" helpers:Translate.Key="Prompts_BtnCancel" Content="Cancelar" HorizontalAlignment="Stretch"
                                 Command="{x:Bind ViewModel.ClearFormCommand}"/>
                     </Grid>
                 </StackPanel>

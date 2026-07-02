@@ -71,20 +71,6 @@ public sealed partial class SettingsPage : Page
             TxtAITitle.Text = loc.GetString("Settings_AiTitle");
             TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
         }
-        TxtSubscriptionTitle.Text = loc.GetString("Settings_SubTitle");
-        TxtCommunityTitle.Text = loc.GetString("Settings_CommTitle");
-        TxtCommunitySubtitle.Text = loc.GetString("Settings_CommSub");
-        TxtCommunityDesc.Text = loc.GetString("Settings_CommDesc");
-        TxtCommunityBtn.Text = loc.GetString("Settings_CommBtn");
-        TxtProBadgeTitle.Text = loc.GetString("Settings_ProBadge");
-        TxtProRecommended.Text = loc.GetString("Settings_ProRec");
-        TxtProSubtitle.Text = loc.GetString("Settings_ProSub");
-        TxtProDesc.Text = loc.GetString("Settings_ProDesc");
-        TxtProBtnNotLogged.Text = loc.GetString("Settings_ProNotLogged");
-        TxtProBtnFree.Text = loc.GetString("Settings_ProFree");
-        TxtProBtnActive.Text = loc.GetString("Settings_ProActive");
-        TxtProBtnManage.Text = loc.GetString("Settings_ProManage");
-        BtnLogoutSettings.Content = loc.GetString("Auth_Logout");
     }
 
 

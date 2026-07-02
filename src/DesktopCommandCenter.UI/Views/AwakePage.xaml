@@ -20,7 +20,7 @@
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="600">
             <StackPanel Spacing="16">
                 <TextBlock helpers:Translate.Key="Awake_SubTitle" Text="Mantenha o seu computador acordado" Style="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock helpers:Translate.Key="Awake_Desc" Text="O Awake Ã© uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. Ã‰ Ãºtil quando vocÃª estÃ¡ executando tarefas longas que nÃ£o requerem interaÃ§Ã£o com o mouse/teclado." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                <TextBlock helpers:Translate.Key="Awake_Desc" Text="O Awake é uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. É útil quando você está executando tarefas longas que não requerem interação com o mouse/teclado." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
 
                 <ToggleSwitch helpers:Translate.Key="Awake_Toggle" Header="Manter Desperto" IsOn="{x:Bind ViewModel.IsAwakeEnabled, Mode=TwoWay}" Margin="0,16,0,0" />
                 <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="SemiBold" TextWrapping="Wrap" />

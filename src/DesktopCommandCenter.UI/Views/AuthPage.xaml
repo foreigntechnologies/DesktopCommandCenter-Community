@@ -10,8 +10,9 @@
 
     <Grid Padding="24">
         <ScrollViewer>
-            <StackPanel Spacing="0" HorizontalAlignment="Center" VerticalAlignment="Center"
-                        MaxWidth="480" Margin="0,40,0,40">
+            <StackPanel>
+                <StackPanel Spacing="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            MaxWidth="480" Margin="0,40,0,40">
 
                 <!-- Header -->
                 <StackPanel Spacing="8" HorizontalAlignment="Center" Margin="0,0,0,40">
@@ -250,53 +251,6 @@
 
                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
-                        <!-- Ações PRO / Free -->
-                        <StackPanel x:Name="FreeActionsPanel" Spacing="20" Visibility="{x:Bind ViewModel.FreePlanVisibility, Mode=OneWay}">
-                            <TextBlock x:Name="TxtProAdTitle" helpers:Translate.Key="Auth_ProAdTitle" Text="🚀 Desbloqueie o Poder do PRO"
-                                       FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" 
-                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
-                                       
-                            <!-- Lista de Funcionalidades PRO Premium -->
-                            <Border Background="{ThemeResource ControlFillColorTransparentBrush}" 
-                                    BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" 
-                                    BorderThickness="1" CornerRadius="12" Padding="20">
-                                <StackPanel Spacing="14">
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd1" helpers:Translate.Key="Auth_ProAd1" Text="IA Autônoma (Semantic Kernel + Ollama)" FontSize="13" FontWeight="Medium" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd2" helpers:Translate.Key="Auth_ProAd2" Text="Reconhecimento de Voz Offline (Whisper)" FontSize="13" FontWeight="Medium" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd3" helpers:Translate.Key="Auth_ProAd3" Text="Biblioteca de Prompts e Automações" FontSize="13" FontWeight="Medium" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#107C10" />
-                                        <TextBlock x:Name="TxtProAd4" helpers:Translate.Key="Auth_ProAd4" Text="Marketplace de Plugins (em breve)" FontSize="13" FontWeight="Medium" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-
-                            <StackPanel Spacing="8">
-                                <Button Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                        Style="{StaticResource AccentButtonStyle}"
-                                        HorizontalAlignment="Stretch" Padding="0,14" CornerRadius="8">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xE73F;" FontSize="16" />
-                                        <TextBlock x:Name="TxtProMonthly" helpers:Translate.Key="Auth_ProMonthly" Text="Assinar PRO | R$ 39,90/mês" FontWeight="Bold" FontSize="14" />
-                                    </StackPanel>
-                                </Button>
-                                
-                                <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}"
-                                        HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8">
-                                    <TextBlock x:Name="TxtProYearly" helpers:Translate.Key="Auth_ProYearly" Text="Assinatura Anual | R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
-                                </Button>
-                            </StackPanel>
-                        </StackPanel>
-
                         <!-- Plano PRO ativo -->
                         <StackPanel x:Name="ProActivePanel" Spacing="16" Visibility="{x:Bind ViewModel.ProPlanVisibility, Mode=OneWay}"
                                     HorizontalAlignment="Center">
@@ -343,6 +297,126 @@
                     </StackPanel>
                 </Border>
 
+            </StackPanel>
+
+            <!-- COMPARAÇÃO DE PLANOS (Movido de SettingsPage) -->
+            <StackPanel Spacing="16" Margin="0,40,0,40" MaxWidth="1000" HorizontalAlignment="Center">
+                <TextBlock helpers:Translate.Key="Settings_SubTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" />
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- COMMUNITY -->
+                    <Border Grid.Column="0" CornerRadius="8" Padding="20"
+                            BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Spacing="10">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                    <TextBlock Text="Open Source · Grátis para sempre"
+                                               Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                </StackPanel>
+                                <TextBlock Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap" FontSize="12" />
+
+                                <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                <StackPanel Spacing="7">
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF1B" FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run helpers:Translate.Key="Settings_CommF1D"> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF2B" FontWeight="SemiBold">Always On Top:</Run><Run helpers:Translate.Key="Settings_CommF2D"> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF3B" FontWeight="SemiBold">Awake (Caffeine):</Run><Run helpers:Translate.Key="Settings_CommF3D"> Impede suspensão da tela.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF4B" FontWeight="SemiBold">Clipboard Avançado:</Run><Run helpers:Translate.Key="Settings_CommF4D"> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF5B" FontWeight="SemiBold">Color Picker e Lupa:</Run><Run helpers:Translate.Key="Settings_CommF5D"> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF6B" FontWeight="SemiBold">Pesquisa Universal:</Run><Run helpers:Translate.Key="Settings_CommF6D"> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF7B" FontWeight="SemiBold">Temporizadores:</Run><Run helpers:Translate.Key="Settings_CommF7D"> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF8B" FontWeight="SemiBold">Notas Rápidas:</Run><Run helpers:Translate.Key="Settings_CommF8D"> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF9B" FontWeight="SemiBold">Automações e CLI:</Run><Run helpers:Translate.Key="Settings_CommF9D"> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF10B" FontWeight="SemiBold">Utilitários de Texto:</Run><Run helpers:Translate.Key="Settings_CommF10D"> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF11" FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF12" Text="Sem Integração de IA" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF13" Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF14" Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button Grid.Row="1" HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click" Margin="0,16,0,0">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE8A7;" FontSize="14" />
+                                    <TextBlock Text="Baixar Grátis (GitHub)" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- PRO -->
+                    <Border Grid.Column="1" CornerRadius="8" Padding="20"
+                            BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Spacing="10">
+                                <StackPanel Spacing="2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                        <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                            <TextBlock Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="Licença Nuvem · Atualizada automaticamente"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                </StackPanel>
+                                <TextBlock Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
+
+                                <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
+
+                                <StackPanel Spacing="7">
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF1" Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF2B" FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run helpers:Translate.Key="Settings_ProF2D"> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF3B" FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run helpers:Translate.Key="Settings_ProF3D"> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF4B" FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run helpers:Translate.Key="Settings_ProF4D"> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF5B" FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run helpers:Translate.Key="Settings_ProF5D"> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF6B" FontWeight="SemiBold">Respostas em Streaming:</Run><Run helpers:Translate.Key="Settings_ProF6D"> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF7B" FontWeight="SemiBold">Visão Computacional Local:</Run><Run helpers:Translate.Key="Settings_ProF7D"> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF8B" FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run helpers:Translate.Key="Settings_ProF8D"> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF9B" FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run helpers:Translate.Key="Settings_ProF9D"> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF10" FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF11" FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Botão único — muda conforme estado -->
+                            <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                                <!-- Logado, plano Free ou Deslogado -->
+                                <Button HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
+                                        Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
+                                        Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE73F;" FontSize="16" />
+                                        <TextBlock helpers:Translate.Key="Auth_ProMonthly" Text="Assinar PRO | R$ 39,90/mês" FontWeight="Bold" FontSize="14" />
+                                    </StackPanel>
+                                </Button>
+                                <!-- Assinatura Anual -->
+                                <Button Command="{x:Bind ViewModel.UpgradeYearlyCommand}" Margin="0,8,0,0"
+                                        Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}"
+                                        HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8">
+                                    <TextBlock helpers:Translate.Key="Auth_ProYearly" Text="Assinatura Anual | R$ 429,90/ano (Poupe 10%)" FontWeight="SemiBold" FontSize="13" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>
