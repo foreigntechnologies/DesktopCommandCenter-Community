@@ -71,6 +71,9 @@ public sealed partial class SettingsPage : Page
             TxtAITitle.Text = loc.GetString("Settings_AiTitle");
             TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
         }
+
+        // Reload hotkey display names so they reflect the current language
+        ViewModel?.ReloadHotkeys();
     }
 
 

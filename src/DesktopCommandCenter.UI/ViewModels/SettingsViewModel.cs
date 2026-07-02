@@ -190,16 +190,59 @@ public partial class SettingsViewModel : ObservableObject
         "ChatFT", "PesquisaUniversal", "Prompts", "Automacoes", "Marketplace"
     };
 
+    /// <summary>
+    /// Maps HotkeyConfig.ActionId values to their corresponding translation key suffixes
+    /// when the ActionId doesn't directly match the Nav_ or Settings_ key naming.
+    /// </summary>
+    private static readonly Dictionary<string, string> ActionIdToTranslationKey = new()
+    {
+        { "Temporizador",      "Nav_Timer"            },
+        { "AlwaysOnTop",       "AlwaysOnTop_PageTitle" },
+        { "Captura",           "Nav_Capture"          },
+        { "Tradutor",          "Nav_Translator"       },
+        { "PesquisaUniversal", "Nav_Search"           },
+        { "Automacoes",        "Nav_Automations"      },
+        { "CliCommands",       "Nav_CliCommands"      },
+    };
+
+    public void ReloadHotkeys() => LoadHotkeys();
+
     private void LoadHotkeys()
     {
         Hotkeys.Clear();
+        var translationService = DesktopCommandCenter.UI.App.Current.Services
+            .GetService(typeof(DesktopCommandCenter.Application.Interfaces.ITranslationService))
+            as DesktopCommandCenter.Application.Interfaces.ITranslationService;
+
         foreach (var config in _hotkeyManager.GetAllConfigs())
         {
             bool isPro = ProActionIds.Contains(config.ActionId);
-            var localizedName = DesktopCommandCenter.UI.App.Current.Services.GetService(typeof(DesktopCommandCenter.Application.Interfaces.ITranslationService)) as DesktopCommandCenter.Application.Interfaces.ITranslationService;
-            string display = localizedName?.Get($"Nav_{config.ActionId}") ?? config.DisplayName;
-            // Fallback for settings if needed
-            if (display == $"Nav_{config.ActionId}") display = localizedName?.Get($"Settings_{config.ActionId}") ?? config.DisplayName;
+
+            // Resolve display name: use explicit mapping first, then Nav_ActionId, then Settings_ActionId
+            string display = config.DisplayName;
+            if (translationService != null)
+            {
+                if (ActionIdToTranslationKey.TryGetValue(config.ActionId, out var mappedKey))
+                {
+                    var translated = translationService.Get(mappedKey);
+                    if (!string.IsNullOrEmpty(translated) && translated != mappedKey)
+                        display = translated;
+                }
+                else
+                {
+                    var navKey = $"Nav_{config.ActionId}";
+                    var translated = translationService.Get(navKey);
+                    if (!string.IsNullOrEmpty(translated) && translated != navKey)
+                        display = translated;
+                    else
+                    {
+                        var settingsKey = $"Settings_{config.ActionId}";
+                        var translated2 = translationService.Get(settingsKey);
+                        if (!string.IsNullOrEmpty(translated2) && translated2 != settingsKey)
+                            display = translated2;
+                    }
+                }
+            }
 
             Hotkeys.Add(new HotkeyConfigItemViewModel
             {
