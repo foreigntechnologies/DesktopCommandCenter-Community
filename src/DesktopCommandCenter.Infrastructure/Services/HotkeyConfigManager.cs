@@ -80,7 +80,18 @@ public class HotkeyConfigManager : IHotkeyConfigManager
             }
         }
 
-        if (changed) SaveToSettings();
+        // Remove orphaned configs (e.g. removed features like Calculadora)
+        var toRemove = _configs.Where(c => !defaults.Any(d => d.ActionId == c.ActionId)).ToList();
+        foreach (var rm in toRemove)
+        {
+            _configs.Remove(rm);
+            changed = true;
+        }
+
+        if (changed)
+        {
+            SaveToSettings();
+        }
     }
 
     private void SaveToSettings()
