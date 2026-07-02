@@ -29,6 +29,28 @@ public class TranslationService : ITranslationService
         return _translations.TryGetValue(key, out var value) ? value : key;
     }
 
+    /// <summary>Loads translations synchronously using blocking I/O — safe on any thread.</summary>
+    public void LoadLanguage(string cultureCode)
+    {
+        var filePath = Path.Combine(_resourcesPath, $"{cultureCode}.json");
+
+        if (!File.Exists(filePath))
+            filePath = Path.Combine(_resourcesPath, "en-US.json"); // fallback
+
+        if (File.Exists(filePath))
+        {
+            var json = File.ReadAllText(filePath, System.Text.Encoding.UTF8);
+            _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new();
+        }
+        else
+        {
+            _translations.Clear();
+        }
+
+        CurrentCulture = cultureCode;
+        LanguageChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     public async Task SetLanguageAsync(string cultureCode)
     {
         var filePath = Path.Combine(_resourcesPath, $"{cultureCode}.json");
@@ -38,14 +60,23 @@ public class TranslationService : ITranslationService
             var json = await File.ReadAllTextAsync(filePath);
             _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new();
             CurrentCulture = cultureCode;
-            LanguageChanged?.Invoke(this, EventArgs.Empty);
         }
         else
         {
-            // Fallback empty if not found, to avoid crash.
-            _translations.Clear();
+            // Fallback to en-US if requested culture not found
+            var fallbackPath = Path.Combine(_resourcesPath, "en-US.json");
+            if (File.Exists(fallbackPath))
+            {
+                var json = await File.ReadAllTextAsync(fallbackPath);
+                _translations = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new();
+            }
+            else
+            {
+                _translations.Clear();
+            }
             CurrentCulture = cultureCode;
-            LanguageChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        LanguageChanged?.Invoke(this, EventArgs.Empty);
     }
 }

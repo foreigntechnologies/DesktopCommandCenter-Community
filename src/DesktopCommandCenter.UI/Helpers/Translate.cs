@@ -88,8 +88,22 @@ public static class Translate
         }
         else if (d is TextBox textBox)
         {
-            if (key.EndsWith("_Placeholder")) textBox.PlaceholderText = text;
-            else textBox.Header = text;
+            if (key.EndsWith("_Placeholder")) 
+            {
+                textBox.PlaceholderText = text;
+            }
+            else 
+            {
+                textBox.Header = text;
+                
+                // Also attempt to get placeholder if it exists (e.g., Key + "_Placeholder")
+                var placeholderKey = key + "_Placeholder";
+                var placeholderText = LocalizationHelper.Instance.GetString(placeholderKey);
+                if (!string.IsNullOrEmpty(placeholderText) && placeholderText != placeholderKey)
+                {
+                    textBox.PlaceholderText = placeholderText;
+                }
+            }
         }
         else if (d is ComboBox comboBox)
         {
@@ -102,6 +116,16 @@ public static class Translate
         else if (d is ToggleSwitch toggleSwitch)
         {
             toggleSwitch.Header = text;
+            
+            // Localize On/Off labels using general Toggle_On / Toggle_Off keys
+            var onText = LocalizationHelper.Instance.GetString("Toggle_On");
+            var offText = LocalizationHelper.Instance.GetString("Toggle_Off");
+            
+            if (!string.IsNullOrEmpty(onText) && onText != "Toggle_On")
+                toggleSwitch.OnContent = onText;
+                
+            if (!string.IsNullOrEmpty(offText) && offText != "Toggle_Off")
+                toggleSwitch.OffContent = offText;
         }
     }
 }

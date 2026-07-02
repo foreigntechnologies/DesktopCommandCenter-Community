@@ -391,7 +391,8 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             UseShellExecute        = false,
             RedirectStandardOutput = true,
             RedirectStandardError  = true,
-            CreateNoWindow         = true
+            CreateNoWindow         = true,
+            StandardOutputEncoding = System.Text.Encoding.UTF8
         };
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start PowerShell.");
@@ -433,7 +434,8 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             UseShellExecute        = false,
             RedirectStandardOutput = true,
             RedirectStandardError  = true,
-            CreateNoWindow         = true
+            CreateNoWindow         = true,
+            StandardOutputEncoding = System.Text.Encoding.UTF8
         };
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("winget not found.");

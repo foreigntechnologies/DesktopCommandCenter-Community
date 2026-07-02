@@ -52,6 +52,7 @@ public partial class AuthViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
     [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
     [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private string _currentPlan = "free";
 
@@ -104,6 +105,7 @@ public partial class AuthViewModel : ObservableObject
     public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
     public Microsoft.UI.Xaml.Visibility ProPlanVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
     public Microsoft.UI.Xaml.Visibility PausedPlanVisibility => IsPausedPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility InverseProVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Collapsed : Microsoft.UI.Xaml.Visibility.Visible;
     
     public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : (IsPausedPlan ? "⏸ Plano Pausado" : "Plano Community (Gratuito)");
 

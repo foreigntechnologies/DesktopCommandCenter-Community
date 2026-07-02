@@ -35,8 +35,8 @@ public sealed partial class ChatFTWindow : Window
 
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            AppTitleBar.Loaded += AppTitleBar_Loaded;
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(AppTitleBar);
         }
         else
         {
@@ -90,19 +90,5 @@ public sealed partial class ChatFTWindow : Window
         catch { }
 
         RootFrame.Navigate(typeof(IALocalPage));
-    }
-
-    private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
-    {
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-        var appWindow = AppWindow.GetFromWindowId(windowId);
-        
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            appWindow.TitleBar.SetDragRectangles(new[] {
-                new Windows.Graphics.RectInt32(0, 0, (int)AppTitleBar.ActualWidth, (int)AppTitleBar.ActualHeight)
-            });
-        }
     }
 }

@@ -39,13 +39,6 @@ public sealed partial class AuthPage : Page
         TxtLinkGoogle.Text = loc.GetString("Auth_LinkGoogle");
         TxtLinkGitHub.Text = loc.GetString("Auth_LinkGitHub");
         TxtLinkDesc.Text = loc.GetString("Auth_LinkDesc");
-        TxtProAdTitle.Text = loc.GetString("Auth_ProAdTitle");
-        TxtProAd1.Text = loc.GetString("Auth_ProAd1");
-        TxtProAd2.Text = loc.GetString("Auth_ProAd2");
-        TxtProAd3.Text = loc.GetString("Auth_ProAd3");
-        TxtProAd4.Text = loc.GetString("Auth_ProAd4");
-        TxtProMonthly.Text = loc.GetString("Auth_ProMonthly");
-        TxtProYearly.Text = loc.GetString("Auth_ProYearly");
         TxtProActiveTitle.Text = loc.GetString("Auth_ProActiveTitle");
         TxtProActiveDesc.Text = loc.GetString("Auth_ProActiveDesc");
         TxtProManage.Text = loc.GetString("Auth_ProManage");
@@ -66,4 +59,8 @@ public sealed partial class AuthPage : Page
         }
     }
 
+    private async void OpenCommunityRepo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/KoglinDev/DesktopCommandCenter-Community"));
+    }
 }

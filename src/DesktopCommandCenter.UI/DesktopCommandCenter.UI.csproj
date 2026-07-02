@@ -26,9 +26,9 @@
     <DefaultLanguage>pt-BR</DefaultLanguage>
     <!-- Encurtar o caminho do pacote MSIX final -->
     <AppxPackageDir>$(MSBuildProjectDirectory)\AppPackages\</AppxPackageDir>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <AssemblyName>Desktop Command Center</AssemblyName>
     <PackageId>DesktopCommandCenter</PackageId>
     <Product>Desktop Command Center</Product>
@@ -124,11 +124,6 @@
     <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(IsProBuild)'=='true' And Exists('..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
-    <ProjectReference Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
-      <SetPlatform>Platform=$(Platform)</SetPlatform>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
@@ -150,12 +145,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Any CPU'" />
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|Any CPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
   
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">

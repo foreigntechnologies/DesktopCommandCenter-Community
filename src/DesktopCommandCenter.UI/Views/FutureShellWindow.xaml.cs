@@ -42,8 +42,8 @@ public sealed partial class FutureShellWindow : Window
 
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            AppTitleBar.Loaded += AppTitleBar_Loaded;
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(AppTitleBar);
         }
         else
         {
@@ -79,19 +79,7 @@ public sealed partial class FutureShellWindow : Window
         }
     }
 
-    private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
-    {
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-        var appWindow = AppWindow.GetFromWindowId(windowId);
-        
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            appWindow.TitleBar.SetDragRectangles(new[] {
-                new Windows.Graphics.RectInt32(0, 0, (int)AppTitleBar.ActualWidth, (int)AppTitleBar.ActualHeight)
-            });
-        }
-    }
+
 
     private async void InitializeTerminalAsync()
     {
@@ -116,7 +104,8 @@ public sealed partial class FutureShellWindow : Window
         try 
         {
             var initScriptPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Terminal", "FutureShellInit.ps1");
-            var pshCommand = $"powershell.exe -NoLogo -NoExit -ExecutionPolicy Bypass -File \"{initScriptPath}\"";
+            var lang = App.GetAppLanguage().Substring(0, 2);
+            var pshCommand = $"powershell.exe -NoLogo -NoExit -ExecutionPolicy Bypass -File \"{initScriptPath}\" \"{lang}\"";
             await _terminalService.StartAsync(pshCommand, 100, 30);
         }
         catch (Exception ex)

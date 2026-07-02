@@ -58,6 +58,8 @@ public sealed partial class MainPage : Page
         NavCliCommands.Content = loc.GetString("Nav_CliCommands");
         NavClipboard.Content = loc.GetString("Nav_Clipboard");
 
+
+
         NavTimer.Content = loc.GetString("Nav_Timer");
         NavCapture.Content = loc.GetString("Nav_Capture");
         NavTranslator.Content = loc.GetString("Nav_Translator");
@@ -68,6 +70,11 @@ public sealed partial class MainPage : Page
         NavAutomations.Content = loc.GetString("Nav_Automations");
         NavMarketplace.Content = loc.GetString("Nav_Marketplace");
         NavAuth.Content = loc.GetString("Nav_Auth");
+
+        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem navSettingsItem)
+        {
+            navSettingsItem.Content = loc.GetString("Nav_Settings");
+        }
 
         UpdateNavigationLocks();
     }
@@ -330,6 +337,8 @@ public sealed partial class MainPage : Page
 
     private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        UpdateTranslations(); // Garante que o SettingsItem seja traduzido, pois no construtor ele pode não estar instanciado ainda
+
         var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
         var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
         if (!System.IO.File.Exists(filePath))

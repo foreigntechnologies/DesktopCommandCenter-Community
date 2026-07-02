@@ -19,7 +19,9 @@ public partial class PromptsViewModel : ObservableObject
 
     public Visibility EmptyMessageVisibility => Prompts.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    public string FormTitle => IsEditing ? "Editar Prompt" : "Novo Prompt";
+    public string FormTitle => IsEditing 
+        ? (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Prompts_EditPrompt") ?? "Editar Prompt") 
+        : (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Prompts_NewPrompt") ?? "Novo Prompt");
 
     [ObservableProperty]
     private string _editTitle = string.Empty;
@@ -81,7 +83,8 @@ public partial class PromptsViewModel : ObservableObject
                 if (promptToUpdate != null)
                 {
                     promptToUpdate.Title = EditTitle.Trim();
-                    promptToUpdate.Category = string.IsNullOrWhiteSpace(EditCategory) ? "Geral" : EditCategory.Trim();
+                    var generalCat = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Prompts_CategoryGeneral") ?? "Geral";
+                    promptToUpdate.Category = string.IsNullOrWhiteSpace(EditCategory) ? generalCat : EditCategory.Trim();
                     promptToUpdate.Content = EditContent.Trim();
 
                     await repository.UpdateAsync(promptToUpdate);
@@ -89,10 +92,11 @@ public partial class PromptsViewModel : ObservableObject
             }
             else
             {
+                var generalCat = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Prompts_CategoryGeneral") ?? "Geral";
                 var newPrompt = new Prompt
                 {
                     Title = EditTitle.Trim(),
-                    Category = string.IsNullOrWhiteSpace(EditCategory) ? "Geral" : EditCategory.Trim(),
+                    Category = string.IsNullOrWhiteSpace(EditCategory) ? generalCat : EditCategory.Trim(),
                     Content = EditContent.Trim()
                 };
                 await repository.AddAsync(newPrompt);
