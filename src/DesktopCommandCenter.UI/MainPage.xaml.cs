@@ -337,6 +337,8 @@ public sealed partial class MainPage : Page
 
     private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        UpdateTranslations(); // Garante que o SettingsItem seja traduzido, pois no construtor ele pode não estar instanciado ainda
+
         var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
         var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
         if (!System.IO.File.Exists(filePath))
