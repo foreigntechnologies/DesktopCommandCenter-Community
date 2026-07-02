@@ -124,11 +124,6 @@
     <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(IsProBuild)'=='true' And Exists('..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj')">
-    <ProjectReference Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
-      <SetPlatform>Platform=$(Platform)</SetPlatform>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
