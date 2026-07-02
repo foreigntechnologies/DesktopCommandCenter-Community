@@ -17,6 +17,7 @@
   "Nav_Prompts": "Biblioteca de Prompts",
   "Nav_Automations": "Automatizaciones",
   "Nav_Marketplace": "Marketplace y Plugins",
+  "Nav_Settings": "Configuración",
   "Nav_Auth": "Mi Cuenta",
   "Dash_ProFeature1": "ChatFT",
   "Dash_ProFeature1Desc": "IA offline (Llama) y en la nube en un solo lugar.",
@@ -313,6 +314,8 @@
   "SystemUpdates_BtnLoadApps": "Listar Software",
   "SystemUpdates_BtnUninstall": "Desinstalar Seleccionados",
   "SystemUpdates_EmptyAppsMsg": "Haz clic en 'Listar Software' para ver las aplicaciones instaladas",
+  "Toggle_On": "Activado",
+  "Toggle_Off": "Desactivado",
   "Temporizador_PageTitle": "Temporizador (Pomodoro)",
   "Temporizador_InputYears": "Años",
   "Temporizador_InputMonths": "Meses",
@@ -1109,3 +1112,4 @@
   "CliCmd_T_Ext_9": "Instalar Homebrew",
   "CliCmd_D_Ext_9": "Descarga e instala el gestor de paquetes Homebrew en macOS."
 }
+

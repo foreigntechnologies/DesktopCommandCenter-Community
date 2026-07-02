@@ -57,12 +57,6 @@ public sealed partial class MainWindow : Window
         // Iniciar maximizado apenas após a janela ser ativada
         this.Activated += MainWindow_Activated;
         this.Activated += MainWindow_FocusChanged;
-        this.AppWindow.Changed += AppWindow_Changed;
-    }
-
-    private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
-    {
-        // Removido o sender.Hide() para que o botão minimizar "-" apenas minimize para a barra de tarefas normalmente.
     }
 
     private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)

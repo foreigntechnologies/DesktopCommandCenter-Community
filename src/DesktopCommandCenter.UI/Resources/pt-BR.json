@@ -17,6 +17,7 @@
   "Nav_Prompts": "Biblioteca de Prompts",
   "Nav_Automations": "Automações",
   "Nav_Marketplace": "Marketplace e Plugins",
+  "Nav_Settings": "Configurações",
   "Nav_Auth": "Minha Conta",
   "Dash_ProFeature1": "ChatFT",
   "Dash_ProFeature1Desc": "IA offline (Llama) e nuvem na mesma tela.",
@@ -312,7 +313,9 @@
   "SystemUpdates_DeepCleanDesc": "Remove sobras de arquivos temporários, cache e pastas do sistema após a desinstalação.",
   "SystemUpdates_BtnLoadApps": "Listar Softwares",
   "SystemUpdates_BtnUninstall": "Desinstalar Selecionados",
-  "SystemUpdates_EmptyAppsMsg": "Clique em 'Listar Softwares' para ver os apps instalados",
+  "SystemUpdates_EmptyAppsMsg": "Clique em 'Listar Softwares' para ver os aplicativos instalados",
+  "Toggle_On": "Ativado",
+  "Toggle_Off": "Desativado",
   "Temporizador_PageTitle": "Temporizador (Pomodoro)",
   "Temporizador_InputYears": "Anos",
   "Temporizador_InputMonths": "Meses",
@@ -1109,3 +1112,4 @@
   "CliCmd_T_Ext_9": "Instalar Homebrew",
   "CliCmd_D_Ext_9": "Baixa e instala o gerenciador de pacotes Homebrew no macOS."
 }
+

@@ -20,6 +20,9 @@ public sealed partial class SystemUpdatesPage : Page
 
     private async void SystemUpdatesPage_Loaded(object sender, RoutedEventArgs e)
     {
+        // Garante que o idioma terminou de carregar antes de exibir status traduzido
+        await Helpers.LocalizationHelper.Instance.WhenReady;
+
         UpdateEmptyStates();
         
         if (!ViewModel.WindowsUpdates.Any() && !ViewModel.IsLoadingWindowsUpdates)

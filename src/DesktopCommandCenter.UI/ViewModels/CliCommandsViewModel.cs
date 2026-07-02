@@ -26,7 +26,7 @@ public partial class CliCommandsViewModel : ObservableObject
     private string _searchQuery = string.Empty;
 
     [ObservableProperty]
-    private string _selectedCategory = "Todos";
+    private string _selectedCategory = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_All") ?? "Todos";
 
     public CliCommandsViewModel()
     {
@@ -92,7 +92,8 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_37"), "clear", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_37"), catBash);
 
         // --- Git ---
-        string catGit = "Git";
+        string catGit = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_Git") ?? "Git";
+        string catNet = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_Network") ?? "Rede";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_38"), "git init", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_38"), catGit);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_39"), "git clone URL", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_39"), catGit);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_Ext_3"), "git config --global user.name \"Seu Nome\"", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_Ext_3"), catGit);
@@ -485,7 +486,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_345"), "awk '{print $1}' arquivo.txt", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_345"), catLinux);
 
         // --- Categorias Iniciais ---
-        Categories.Add("Todos");
+        Categories.Add(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_All") ?? "Todos");
         foreach (var category in _allCommands.Select(c => c.Category).Distinct().OrderBy(c => c))
         {
             Categories.Add(category);

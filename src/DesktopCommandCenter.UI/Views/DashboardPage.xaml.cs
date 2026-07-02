@@ -113,7 +113,24 @@ public sealed partial class DashboardPage : Page
         TxtGreeting.Text = loc.GetString(greetingKey) + nameSuffix;
 
         // Versão do app
-        TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(4) ?? "1.0.0.0"}";
+        try
+        {
+            var v = Windows.ApplicationModel.Package.Current.Id.Version;
+            TxtVersion.Text = $"v{v.Major}.{v.Minor}.{v.Build}";
+        }
+        catch
+        {
+            var attr = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false);
+            if (attr.Length > 0)
+            {
+                var infoVer = ((System.Reflection.AssemblyInformationalVersionAttribute)attr[0]).InformationalVersion;
+                TxtVersion.Text = $"v{infoVer.Split('+')[0]}";
+            }
+            else
+            {
+                TxtVersion.Text = "v1.0.1";
+            }
+        }
 
         // Badge do plano
         bool isPro = App.IsProUnlocked;

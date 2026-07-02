@@ -58,6 +58,8 @@ public sealed partial class MainPage : Page
         NavCliCommands.Content = loc.GetString("Nav_CliCommands");
         NavClipboard.Content = loc.GetString("Nav_Clipboard");
 
+
+
         NavTimer.Content = loc.GetString("Nav_Timer");
         NavCapture.Content = loc.GetString("Nav_Capture");
         NavTranslator.Content = loc.GetString("Nav_Translator");
@@ -69,9 +71,9 @@ public sealed partial class MainPage : Page
         NavMarketplace.Content = loc.GetString("Nav_Marketplace");
         NavAuth.Content = loc.GetString("Nav_Auth");
 
-        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem settingsItem)
+        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem navSettingsItem)
         {
-            settingsItem.Content = loc.GetString("Settings_PageTitle");
+            navSettingsItem.Content = loc.GetString("Nav_Settings");
         }
 
         UpdateNavigationLocks();
