@@ -1110,7 +1110,15 @@
   "CliCmd_T_Ext_8": "Parar Processo Travado",
   "CliCmd_D_Ext_8": "Força o fechamento de um processo pelo nome.",
   "CliCmd_T_Ext_9": "Instalar Homebrew",
-  "CliCmd_D_Ext_9": "Baixa e instala o gerenciador de pacotes Homebrew no macOS."
+  "CliCmd_D_Ext_9": "Baixa e instala o gerenciador de pacotes Homebrew no macOS.",
+  "Settings_ProBadge": "Recomendado",
+  "Settings_ProSubtitle": "Licença Nuvem · Atualizada automaticamente",
+  "Settings_ProDesc": "Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:",
+  "Auth_ProMonthlyTitle": "Assinar PRO",
+  "Auth_ProMonthlySubtitle": "R$ 39,90 / mês · Cancele quando quiser",
+  "Auth_ProYearlyTitle": "Plano Anual",
+  "Auth_ProYearlySubtitle": "R$ 429,90 / ano · Equivale a R$ 35,83/mês",
+  "Auth_ProYearlyBadge": "Poupe 10%"
 }
 
 

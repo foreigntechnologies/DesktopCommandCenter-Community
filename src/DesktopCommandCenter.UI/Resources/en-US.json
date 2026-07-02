@@ -1110,6 +1110,14 @@
   "CliCmd_T_Ext_8": "Stop Stuck Process",
   "CliCmd_D_Ext_8": "Forces the closure of a process by name.",
   "CliCmd_T_Ext_9": "Install Homebrew",
-  "CliCmd_D_Ext_9": "Downloads and installs the Homebrew package manager on macOS."
+  "CliCmd_D_Ext_9": "Downloads and installs the Homebrew package manager on macOS.",
+  "Settings_ProBadge": "Recommended",
+  "Settings_ProSubtitle": "Cloud License · Automatically Updated",
+  "Settings_ProDesc": "Built for professionals. Includes ALL Community features, plus:",
+  "Auth_ProMonthlyTitle": "Subscribe PRO",
+  "Auth_ProMonthlySubtitle": "$39.90 / month · Cancel anytime",
+  "Auth_ProYearlyTitle": "Annual Plan",
+  "Auth_ProYearlySubtitle": "$429.90 / year · Equals $35.83/month",
+  "Auth_ProYearlyBadge": "Save 10%"
 }
 

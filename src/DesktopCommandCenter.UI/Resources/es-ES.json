@@ -1110,7 +1110,15 @@
   "CliCmd_T_Ext_8": "Detener Proceso Atascado",
   "CliCmd_D_Ext_8": "Fuerza el cierre de un proceso por nombre.",
   "CliCmd_T_Ext_9": "Instalar Homebrew",
-  "CliCmd_D_Ext_9": "Descarga e instala el gestor de paquetes Homebrew en macOS."
+  "CliCmd_D_Ext_9": "Descarga e instala el gestor de paquetes Homebrew en macOS.",
+  "Settings_ProBadge": "Recomendado",
+  "Settings_ProSubtitle": "Licencia en la Nube · Actualizada automáticamente",
+  "Settings_ProDesc": "Pensado para profesionales. Incluye TODAS las funciones Community, más:",
+  "Auth_ProMonthlyTitle": "Suscribirse PRO",
+  "Auth_ProMonthlySubtitle": "$39,90 / mes · Cancela cuando quieras",
+  "Auth_ProYearlyTitle": "Plan Anual",
+  "Auth_ProYearlySubtitle": "$429,90 / año · Equivale a $35,83/mes",
+  "Auth_ProYearlyBadge": "Ahorra 10%"
 }
 
 
