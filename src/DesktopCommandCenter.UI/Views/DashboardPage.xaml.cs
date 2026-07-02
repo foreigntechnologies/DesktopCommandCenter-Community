@@ -63,6 +63,16 @@ public sealed partial class DashboardPage : Page
         TxtToolPalleteDesc.Text = loc.GetString("Dash_ToolPalleteDesc");
         TxtToolShellTitle.Text = loc.GetString("Dash_ToolShellTitle");
         TxtToolShellDesc.Text = loc.GetString("Dash_ToolShellDesc");
+
+        // PRO Features missing items
+        TxtDashPromptsTitle.Text = loc.GetString("Dash_ToolPromptsTitle");
+        TxtDashPromptsDesc.Text = loc.GetString("Dash_ToolPromptsDesc");
+
+        // Footer links
+        BtnDashDoc.Content = loc.GetString("Dash_DocButton");
+        BtnDashGit.Content = loc.GetString("Dash_GitButton");
+        BtnDashBug.Content = loc.GetString("Dash_BugButton");
+        TxtCopyright.Text = loc.GetString("Dash_Copyright");
     }
 
     private async void DashboardPage_Loaded(object sender, RoutedEventArgs e)

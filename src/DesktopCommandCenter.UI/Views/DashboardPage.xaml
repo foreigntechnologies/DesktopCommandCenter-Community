@@ -321,12 +321,12 @@
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock x:Name="TxtDashPromptsTitle" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,1" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtDashPromptsDesc" Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -398,11 +398,11 @@
             Padding="16,10">
             <Grid>
                 <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
-                    <HyperlinkButton Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <HyperlinkButton x:Name="BtnDashDoc" Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
                     <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                    <HyperlinkButton x:Name="BtnDashGit" Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
                     <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnBugReport" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
+                    <HyperlinkButton x:Name="BtnDashBug" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
                     <TextBlock x:Name="SeparatorBugReport" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                     <HyperlinkButton x:Name="BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
                     <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />

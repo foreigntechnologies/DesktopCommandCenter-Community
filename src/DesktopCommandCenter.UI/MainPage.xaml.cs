@@ -69,6 +69,11 @@ public sealed partial class MainPage : Page
         NavMarketplace.Content = loc.GetString("Nav_Marketplace");
         NavAuth.Content = loc.GetString("Nav_Auth");
 
+        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem settingsItem)
+        {
+            settingsItem.Content = loc.GetString("Settings_PageTitle");
+        }
+
         UpdateNavigationLocks();
     }
 
