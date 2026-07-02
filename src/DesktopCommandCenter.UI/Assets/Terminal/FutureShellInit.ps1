@@ -1,5 +1,9 @@
-﻿Clear-Host
-$lang = (Get-Culture).TwoLetterISOLanguageName
+param(
+    [string]$LangArg = ""
+)
+
+Clear-Host
+$lang = if ([string]::IsNullOrWhiteSpace($LangArg)) { (Get-Culture).TwoLetterISOLanguageName } else { $LangArg }
 
 if ($lang -eq "pt") {
     $banner = "O Future Shell foi desenvolvido por Foreign Technologies..."

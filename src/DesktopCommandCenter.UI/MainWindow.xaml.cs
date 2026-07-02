@@ -53,17 +53,7 @@ public sealed partial class MainWindow : Window
         RootFrame.Navigate(typeof(MainPage));
 
         RootFrame.Loaded += RootFrame_Loaded;
-
-        // Iniciar maximizado apenas após a janela ser ativada
-        this.Activated += MainWindow_Activated;
         this.Activated += MainWindow_FocusChanged;
-    }
-
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
-    {
-        this.Activated -= MainWindow_Activated; // Executa apenas na primeira vez
-        var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
-        presenter?.Maximize();
     }
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
@@ -72,38 +62,39 @@ public sealed partial class MainWindow : Window
     {
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
-            // Debounce: Evita spammar o Firestore (limita a 1 check a cada 5 segundos)
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
             {
                 _lastFocusCheck = DateTime.Now;
-                var currentServices = App.Current.Services;
                 
-                _ = System.Threading.Tasks.Task.Run(async () =>
+                try
                 {
-                    try
-                    {
-                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
-                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
+                    var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
+                    var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
 
-                        var user = await authService.GetCurrentUserAsync();
-                        if (user != null)
+                    _ = System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try
                         {
-                            var plan = await licenseService.GetCurrentPlanAsync();
-                            bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                            
-                            // Se o plano mudou (ex: acabou de pagar no Stripe)
-                            if (App.IsProUnlocked != isPro)
+                            var user = await authService.GetCurrentUserAsync();
+                            if (user != null)
                             {
-                                App.IsProUnlocked = isPro;
-                                DispatcherQueue?.TryEnqueue(() =>
+                                var plan = await licenseService.GetCurrentPlanAsync();
+                                bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                                
+                                if (App.IsProUnlocked != isPro)
                                 {
-                                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                                });
+                                    App.IsProUnlocked = isPro;
+                                    DispatcherQueue?.TryEnqueue(() =>
+                                    {
+                                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
+                                    });
+                                }
                             }
                         }
-                    }
-                    catch { }
-                });
+                        catch { }
+                    });
+                }
+                catch { }
             }
         }
     }
@@ -390,6 +381,13 @@ public sealed partial class MainWindow : Window
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
+
+        try
+        {
+            var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+            presenter?.Maximize();
+        }
+        catch { }
 
         if (!App.HasAppLanguageCached() && RootFrame.Content is Microsoft.UI.Xaml.Controls.Page currentPage)
         {
