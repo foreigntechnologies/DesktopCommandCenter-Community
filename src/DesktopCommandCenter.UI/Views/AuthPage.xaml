@@ -298,14 +298,14 @@
                                 </Grid.RowDefinitions>
                                 
                                 <!-- Header -->
-                                <Border Grid.Row="0" CornerRadius="15,15,0,0" Height="100">
+                                <Border Grid.Row="0" CornerRadius="15,15,0,0" Height="110">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                             <GradientStop Color="#FF3A506B" Offset="0.0" />
                                             <GradientStop Color="#FF1C2541" Offset="1.0" />
                                         </LinearGradientBrush>
                                     </Border.Background>
-                                    <TextBlock x:Name="SettingsCommHeader" Text="COMMUNITY" Foreground="White" FontWeight="Black" FontSize="20" HorizontalAlignment="Center" Margin="0,24,0,0" CharacterSpacing="20" />
+                                    <TextBlock x:Name="SettingsCommHeader" Text="COMMUNITY" Foreground="White" FontWeight="Black" FontSize="20" HorizontalAlignment="Center" Margin="0,60,0,0" CharacterSpacing="20" />
                                 </Border>
 
                                 <!-- Body -->
@@ -356,14 +356,14 @@
                                 </Grid.RowDefinitions>
                                 
                                 <!-- Header -->
-                                <Border Grid.Row="0" CornerRadius="14,14,0,0" Height="100">
+                                <Border Grid.Row="0" CornerRadius="14,14,0,0" Height="110">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                             <GradientStop Color="#FF8A2BE2" Offset="0.0" />
                                             <GradientStop Color="#FFFF1493" Offset="1.0" />
                                         </LinearGradientBrush>
                                     </Border.Background>
-                                    <TextBlock x:Name="SettingsProHeader" Text="PREMIUM" Foreground="White" FontWeight="Black" FontSize="20" HorizontalAlignment="Center" Margin="0,24,0,0" CharacterSpacing="20" />
+                                    <TextBlock x:Name="SettingsProHeader" Text="PREMIUM" Foreground="White" FontWeight="Black" FontSize="20" HorizontalAlignment="Center" Margin="0,60,0,0" CharacterSpacing="20" />
                                 </Border>
 
                                 <!-- Body -->
@@ -388,12 +388,11 @@
 
                                 <!-- Footer (Pricing & CTA) -->
                                 <StackPanel Grid.Row="2" Spacing="16" Padding="24,0,24,24" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                    <Border Background="{ThemeResource ControlFillColorSecondaryBrush}" CornerRadius="20" Padding="4" HorizontalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal">
-                                            <RadioButton x:Name="AuthRadioMonthly" Content="Mensal" GroupName="Billing" FontSize="12" MinWidth="80" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
-                                            <RadioButton x:Name="AuthRadioYearly" Content="Anual" GroupName="Billing" IsChecked="{x:Bind ViewModel.IsYearlyPlan, Mode=TwoWay}" FontSize="12" MinWidth="80" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
-                                        </StackPanel>
-                                    </Border>
+                                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                                        <TextBlock x:Name="AuthRadioMonthly" Text="Mensal" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" />
+                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsYearlyPlan, Mode=TwoWay}" OffContent="" OnContent="" MinWidth="0" VerticalAlignment="Center" Margin="0,-4,0,0" />
+                                        <TextBlock x:Name="AuthRadioYearly" Text="Anual" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" />
+                                    </StackPanel>
                                     
                                     <Grid>
                                         <Button HorizontalAlignment="Stretch" Padding="0" CornerRadius="12" Command="{x:Bind ViewModel.SubscribeCommand}">

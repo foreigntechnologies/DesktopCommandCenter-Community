@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using DesktopCommandCenter.UI.ViewModels;
 
@@ -74,8 +74,8 @@ InitializeComponent();
         if (SettingsCommBubble != null) SettingsCommBubble.Text = loc.GetString("Settings_CommBubble");
         if (SettingsProHeader != null) SettingsProHeader.Text = loc.GetString("Settings_ProHeader");
         if (SettingsProDescNew != null) SettingsProDescNew.Text = loc.GetString("Settings_ProDescNew");
-        if (AuthRadioMonthly != null) AuthRadioMonthly.Content = loc.GetString("Auth_RadioMonthly");
-        if (AuthRadioYearly != null) AuthRadioYearly.Content = loc.GetString("Auth_RadioYearly");
+        if (AuthRadioMonthly != null) AuthRadioMonthly.Text = loc.GetString("Auth_RadioMonthly");
+        if (AuthRadioYearly != null) AuthRadioYearly.Text = loc.GetString("Auth_RadioYearly");
         if (AuthDiscountBadge != null) AuthDiscountBadge.Text = loc.GetString("Auth_DiscountBadge");
 
         // Funcionalidades
