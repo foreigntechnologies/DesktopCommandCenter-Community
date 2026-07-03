@@ -68,6 +68,7 @@ public sealed partial class DashboardPage : Page
 
         // Footer links
         BtnDashDoc.Content = loc.GetString("Dash_DocButton");
+        BtnDashProject.Content = loc.GetString("Dash_ProjectButton");
         BtnDashGit.Content = loc.GetString("Dash_GitButton");
         BtnDashBug.Content = loc.GetString("Dash_BugButton");
         TxtCopyright.Text = loc.GetString("Dash_Copyright");

@@ -109,12 +109,8 @@
                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                Margin="0,8,0,0">
                         <Run x:Name="TxtTermsPrefix" >Ao continuar, você aceita os </Run>
-                        <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/terms">
-                            <Run x:Name="HypTerms" >Termos de Uso</Run>
-                        </Hyperlink>
-                        <Run x:Name="TxtTermsMid" > e a </Run>
-                        <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/privacy">
-                            <Run x:Name="HypPrivacy" >Política de Privacidade</Run>
+                        <Hyperlink NavigateUri="https://foreigntechnologies.com.br/projects/windows/desktop-command-center/privacy-policy">
+                            <Run x:Name="HypTermsPrivacy" >Termos de Uso e a Política de Privacidade</Run>
                         </Hyperlink>
                         <Run x:Name="TxtTermsSuffix" >.</Run>
                     </TextBlock>
