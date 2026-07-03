@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -150,7 +150,7 @@ InitializeComponent();
 
         private void UpdateTranslations()
         {
-            // TODO: Implement translation for QuickAccessTitleElement of type Window
+            this.Title = Helpers.LocalizationHelper.Instance.GetString("QuickAccessTitleElement");
             QuickAccessHeaderElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Header");
             QuickAccessBtnMoreElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_BtnMore");
             QuickAccessColorPickerElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_ColorPicker");

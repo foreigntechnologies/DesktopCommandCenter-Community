@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
@@ -106,18 +106,18 @@ var deepCleanService = Microsoft.Extensions.DependencyInjection.ServiceProviderS
         {
             TxtPageTitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PageTitle");
             TxtPageSubtitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PageSubtitle");
-            // TODO: Implement translation for PivotWU of type PivotItem
+            PivotWU.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotWU");
             TxtBtnCheckWU.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnCheckUpdates");
             TxtBtnInstallWU.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnInstallUpdates");
             TxtAutoInstallTitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_AutoInstallTitle");
             TxtAutoInstallDesc.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_AutoInstallDesc");
             TxtWUEmptyMsg.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_EmptyWUMsg");
             
-            // TODO: Implement translation for PivotSW of type PivotItem
+            PivotSW.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotSW");
             TxtBtnCheckSW.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnCheckSW");
             TxtBtnUpdateSW.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnUpdateSW");
             TxtSWEmptyMsg.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_EmptySWMsg");
-            // TODO: Implement translation for PivotApps of type PivotItem
+            PivotApps.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotApps");
             SystemUpdatesDeepCleanTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_DeepCleanTitle");
             SystemUpdatesDeepCleanDescElement.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_DeepCleanDesc");
             TxtBtnLoadApps.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnLoadApps");
