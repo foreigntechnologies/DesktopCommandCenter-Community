@@ -109,6 +109,14 @@ public partial class AuthViewModel : ObservableObject
     
     public string PlanDisplayText => IsProPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanProActive") : (IsPausedPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanPaused") : DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanCommunity"));
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ProPlanPriceText))]
+    [NotifyPropertyChangedFor(nameof(ProPlanPeriodText))]
+    private bool _isYearlyPlan = true;
+
+    public string ProPlanPriceText => IsYearlyPlan ? "R$ 429,90" : "R$ 39,90";
+    public string ProPlanPeriodText => IsYearlyPlan ? "/ ano" : "/ mês";
+
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
         _authService = authService;
@@ -368,6 +376,15 @@ public partial class AuthViewModel : ObservableObject
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
 
         StartPollingForPlanChange("pro");
+    }
+
+    [RelayCommand]
+    public async Task SubscribeAsync()
+    {
+        if (IsYearlyPlan)
+            await UpgradeYearlyAsync();
+        else
+            await UpgradeMonthlyAsync();
     }
 
     [RelayCommand]

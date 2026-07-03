@@ -45,81 +45,70 @@ InitializeComponent();
     }
 
         private void UpdateTranslations()
-        {
-            TxtAuthTitle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_PageTitle");
-            TxtAuthDesc.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_PageDesc");
-            TxtLoading.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_TxtLoading");
-            if (AuthBtnCancelElement.Content is string || AuthBtnCancelElement.Content == null) AuthBtnCancelElement.Content = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnCancel");
-            TxtGoogle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnGoogle");
-            TxtGitHub.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnGitHub");
+    {
+        var loc = Helpers.LocalizationHelper.Instance;
+        TxtAuthTitle.Text = loc.GetString("Auth_PageTitle");
+        TxtAuthDesc.Text = loc.GetString("Auth_PageDesc");
+        TxtLoading.Text = loc.GetString("Auth_TxtLoading");
+        if (AuthBtnCancelElement.Content is string || AuthBtnCancelElement.Content == null) AuthBtnCancelElement.Content = loc.GetString("Auth_BtnCancel");
+        TxtGoogle.Text = loc.GetString("Auth_BtnGoogle");
+        TxtGitHub.Text = loc.GetString("Auth_BtnGitHub");
 
+        TxtLinkAccountsTitle.Text = loc.GetString("Auth_LinkAccountsTitle");
+        TxtLinkGoogle.Text = loc.GetString("Auth_BtnLinkGoogle");
+        TxtLinkGitHub.Text = loc.GetString("Auth_BtnLinkGitHub");
+        TxtLinkDesc.Text = loc.GetString("Auth_LinkDesc");
+        
+        TxtProActiveTitle.Text = loc.GetString("Auth_ProActiveTitle");
+        TxtProActiveDesc.Text = loc.GetString("Auth_ProActiveDesc");
+        TxtProManage.Text = loc.GetString("Auth_ProManage");
+        TxtPausedActiveTitle.Text = loc.GetString("Auth_PausedTitle");
+        TxtPausedActiveDesc.Text = loc.GetString("Auth_PausedDesc");
+        TxtPausedManage.Text = loc.GetString("Auth_PausedManage");
+        
+        if (BtnLogout.Content is string || BtnLogout.Content == null) BtnLogout.Content = loc.GetString("Auth_BtnLogout");
+        SettingsSubTitleElement.Text = loc.GetString("Settings_SubTitle");
 
+        // NOVO LAYOUT - Traduções:
+        if (SettingsCommHeader != null) SettingsCommHeader.Text = loc.GetString("Settings_CommHeader");
+        if (SettingsCommBubble != null) SettingsCommBubble.Text = loc.GetString("Settings_CommBubble");
+        if (SettingsProHeader != null) SettingsProHeader.Text = loc.GetString("Settings_ProHeader");
+        if (SettingsProDescNew != null) SettingsProDescNew.Text = loc.GetString("Settings_ProDescNew");
+        if (AuthRadioMonthly != null) AuthRadioMonthly.Content = loc.GetString("Auth_RadioMonthly");
+        if (AuthRadioYearly != null) AuthRadioYearly.Content = loc.GetString("Auth_RadioYearly");
+        if (AuthDiscountBadge != null) AuthDiscountBadge.Text = loc.GetString("Auth_DiscountBadge");
 
+        // Funcionalidades
+        if (SettingsCommDescElement != null) SettingsCommDescElement.Text = loc.GetString("Settings_CommDesc");
+        if (SettingsCommF1BElement != null) SettingsCommF1BElement.Text = loc.GetString("Settings_CommF1B");
+        if (SettingsCommF1DElement != null) SettingsCommF1DElement.Text = loc.GetString("Settings_CommF1D");
+        if (SettingsCommF2BElement != null) SettingsCommF2BElement.Text = loc.GetString("Settings_CommF2B");
+        if (SettingsCommF2DElement != null) SettingsCommF2DElement.Text = loc.GetString("Settings_CommF2D");
+        if (SettingsCommF3BElement != null) SettingsCommF3BElement.Text = loc.GetString("Settings_CommF3B");
+        if (SettingsCommF3DElement != null) SettingsCommF3DElement.Text = loc.GetString("Settings_CommF3D");
+        if (SettingsCommF4BElement != null) SettingsCommF4BElement.Text = loc.GetString("Settings_CommF4B");
+        if (SettingsCommF4DElement != null) SettingsCommF4DElement.Text = loc.GetString("Settings_CommF4D");
+        if (SettingsCommF5BElement != null) SettingsCommF5BElement.Text = loc.GetString("Settings_CommF5B");
+        if (SettingsCommF5DElement != null) SettingsCommF5DElement.Text = loc.GetString("Settings_CommF5D");
+        
+        if (SettingsCommF12Element != null) SettingsCommF12Element.Text = loc.GetString("Settings_CommF12");
+        if (SettingsCommF13Element != null) SettingsCommF13Element.Text = loc.GetString("Settings_CommF13");
+        if (SettingsCommF14Element != null) SettingsCommF14Element.Text = loc.GetString("Settings_CommF14");
 
-
-            TxtLinkAccountsTitle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_LinkAccountsTitle");
-            TxtLinkGoogle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnLinkGoogle");
-            TxtLinkGitHub.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnLinkGitHub");
-            TxtLinkDesc.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_LinkDesc");
-            TxtProActiveTitle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProActiveTitle");
-            TxtProActiveDesc.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProActiveDesc");
-            TxtProManage.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProManage");
-            TxtPausedActiveTitle.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_PausedTitle");
-            TxtPausedActiveDesc.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_PausedDesc");
-            TxtPausedManage.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_PausedManage");
-            if (BtnLogout.Content is string || BtnLogout.Content == null) BtnLogout.Content = Helpers.LocalizationHelper.Instance.GetString("Auth_BtnLogout");
-            SettingsSubTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_SubTitle");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SettingsCommF11Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_CommF11");
-            SettingsCommF13Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_CommF13");
-            SettingsCommF14Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_CommF14");
-            SettingsProBadgeElement.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProBadge");
-            SettingsProSubtitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProSubtitle");
-            SettingsProDescElement.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProDesc");
-            SettingsProF1Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProF1");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            SettingsProF10Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProF10");
-            SettingsProF11Element.Text = Helpers.LocalizationHelper.Instance.GetString("Settings_ProF11");
-            AuthProMonthlyTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProMonthlyTitle");
-            AuthProMonthlySubtitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProMonthlySubtitle");
-            AuthProYearlyTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProYearlyTitle");
-            AuthProYearlySubtitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProYearlySubtitle");
-            AuthProYearlyBadgeElement.Text = Helpers.LocalizationHelper.Instance.GetString("Auth_ProYearlyBadge");
-        }
+        if (SettingsProF1Element != null) SettingsProF1Element.Text = loc.GetString("Settings_ProF1");
+        if (SettingsProF2BElement != null) SettingsProF2BElement.Text = loc.GetString("Settings_ProF2B");
+        if (SettingsProF2DElement != null) SettingsProF2DElement.Text = loc.GetString("Settings_ProF2D");
+        if (SettingsProF3BElement != null) SettingsProF3BElement.Text = loc.GetString("Settings_ProF3B");
+        if (SettingsProF3DElement != null) SettingsProF3DElement.Text = loc.GetString("Settings_ProF3D");
+        if (SettingsProF4BElement != null) SettingsProF4BElement.Text = loc.GetString("Settings_ProF4B");
+        if (SettingsProF4DElement != null) SettingsProF4DElement.Text = loc.GetString("Settings_ProF4D");
+        if (SettingsProF5BElement != null) SettingsProF5BElement.Text = loc.GetString("Settings_ProF5B");
+        if (SettingsProF5DElement != null) SettingsProF5DElement.Text = loc.GetString("Settings_ProF5D");
+        
+        if (SettingsProF6Element != null) SettingsProF6Element.Text = loc.GetString("Settings_ProF6Element");
+        if (SettingsProF7Element != null) SettingsProF7Element.Text = loc.GetString("Settings_ProF7Element");
+        if (SettingsProF10Element != null) SettingsProF10Element.Text = loc.GetString("Settings_ProF10");
+    }
 }
 
 

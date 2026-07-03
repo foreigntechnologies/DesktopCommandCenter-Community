@@ -1371,5 +1371,14 @@
   "Settings_WindowsUpdate_Title": "Windows Update",
   "Settings_WindowsUpdate_Desc": "Configurações do Windows Update",
   "Dash_ToolCaptureTitle": "Captura de Tela",
-  "Dash_ToolCaptureDesc": "Capturas rápidas"
+  "Dash_ToolCaptureDesc": "Capturas rápidas",
+  "Settings_CommHeader": "COMMUNITY",
+  "Settings_CommBubble": "GRÁTIS",
+  "Settings_ProHeader": "PREMIUM",
+  "Settings_ProDescNew": "Acesse recursos profissionais. Sincronização, IA nativa, processamento local e ferramentas exclusivas.",
+  "Auth_RadioMonthly": "Mensal",
+  "Auth_RadioYearly": "Anual",
+  "Auth_DiscountBadge": "-10%",
+  "Settings_ProF6Element": "Streaming ultrarrápido de IA",
+  "Settings_ProF7Element": "Visão Computacional Local"
 }

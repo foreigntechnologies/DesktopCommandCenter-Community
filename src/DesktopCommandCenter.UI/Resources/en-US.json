@@ -1371,5 +1371,14 @@
   "Settings_WindowsUpdate_Title": "Windows Update",
   "Settings_WindowsUpdate_Desc": "Windows Update Settings",
   "Dash_ToolCaptureTitle": "Screen Capture",
-  "Dash_ToolCaptureDesc": "Quick screenshots"
+  "Dash_ToolCaptureDesc": "Quick screenshots",
+  "Settings_CommHeader": "COMMUNITY",
+  "Settings_CommBubble": "FREE",
+  "Settings_ProHeader": "PREMIUM",
+  "Settings_ProDescNew": "Access professional features. Cloud sync, native AI, local processing, and exclusive tools.",
+  "Auth_RadioMonthly": "Monthly",
+  "Auth_RadioYearly": "Yearly",
+  "Auth_DiscountBadge": "-10%",
+  "Settings_ProF6Element": "Ultra-fast AI streaming",
+  "Settings_ProF7Element": "Local Computer Vision"
 }
