@@ -45,12 +45,10 @@ public sealed partial class DashboardPage : Page
         TxtToolColorDesc.Text = loc.GetString("Dash_ToolColorDesc");
         TxtToolClipTitle.Text = loc.GetString("Dash_ToolClipTitle");
         TxtToolClipDesc.Text = loc.GetString("Dash_ToolClipDesc");
-        TxtToolNotesTitle.Text = loc.GetString("Dash_ToolNotesTitle");
-        TxtToolNotesDesc.Text = loc.GetString("Dash_ToolNotesDesc");
         TxtToolAwakeTitle.Text = loc.GetString("Dash_ToolAwakeTitle");
         TxtToolAwakeDesc.Text = loc.GetString("Dash_ToolAwakeDesc");
-        TxtToolTopTitle.Text = loc.GetString("Dash_ToolTopTitle");
-        TxtToolTopDesc.Text = loc.GetString("Dash_ToolTopDesc");
+        TxtToolCaptureTitle.Text = loc.GetString("Dash_ToolCaptureTitle");
+        TxtToolCaptureDesc.Text = loc.GetString("Dash_ToolCaptureDesc");
         TxtToolTransTitle.Text = loc.GetString("Dash_ToolTransTitle");
         TxtToolTransDesc.Text = loc.GetString("Dash_ToolTransDesc");
         TxtToolTimerTitle.Text = loc.GetString("Dash_ToolTimerTitle");
@@ -105,6 +103,7 @@ public sealed partial class DashboardPage : Page
         int hour = DateTime.Now.Hour;
         string greetingKey = hour switch
         {
+            < 5 => "GreetingEvening",
             < 12 => "GreetingMorning",
             < 18 => "GreetingAfternoon",
             _ => "GreetingEvening"

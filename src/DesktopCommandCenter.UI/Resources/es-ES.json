@@ -2,7 +2,7 @@
   "Nav_Dashboard": "Dashboard",
   "Nav_ProcessManager": "Procesos",
   "Nav_Notes": "Notas",
-  "Nav_SysUtils": "Utilidades del Sistema",
+  "Nav_SysUtils": "Herramientas de la Comunidad",
   "Nav_SystemUpdates": "Centro de Actualizaciones",
   "Nav_ColorPicker": "Selector de Color",
   "Nav_Awake": "Awake (Mantener PC Activo)",
@@ -332,7 +332,7 @@
   "Translator_BtnPaste": "Pegar",
   "Translator_BtnCopy": "Copiar",
   "Translator_TargetText": "Traducción...",
-  "Nav_HeaderSysUtils": "Utilidades del Sistema",
+  "Nav_HeaderSysUtils": "Herramientas de la Comunidad",
   "Nav_FutureShell": "FutureShell",
   "Nav_HeaderPro": "Funciones PRO (IA y Automatización)",
   "Tray_UpdateAvailable": "Actualización disponible",
@@ -1369,5 +1369,7 @@
   "Settings_Privacy_Title": "Privacidad y seguridad",
   "Settings_Privacy_Desc": "Configuraciones de Privacidad",
   "Settings_WindowsUpdate_Title": "Windows Update",
-  "Settings_WindowsUpdate_Desc": "Configuraciones de Windows Update"
+  "Settings_WindowsUpdate_Desc": "Configuraciones de Windows Update",
+  "Dash_ToolCaptureTitle": "Captura de Pantalla",
+  "Dash_ToolCaptureDesc": "Capturas rápidas"
 }

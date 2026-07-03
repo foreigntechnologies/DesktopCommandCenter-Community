@@ -126,100 +126,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Row 1 -->
-                    <Button Grid.Row="0" Grid.Column="0" Click="ToolCard_Click" Tag="ColorPicker" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A0099DA" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolColorTitle" Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolColorDesc" Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="0" Grid.Column="1" Click="ToolCard_Click" Tag="Clipboard" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolClipTitle" Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolClipDesc" Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="0" Grid.Column="2" Click="ToolCard_Click" Tag="Notes" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFFB347" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolNotesTitle" Text="Notas" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolNotesDesc" Text="Anotações rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <!-- Row 2 -->
-                    <Button Grid.Row="1" Grid.Column="0" Click="ToolCard_Click" Tag="Awake" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolAwakeTitle" Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolAwakeDesc" Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="1" Click="ToolCard_Click" Tag="AlwaysOnTop" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A4FC3F7" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE898;" FontSize="20" Foreground="#4FC3F7" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTopTitle" Text="Sempre no Topo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolTopDesc" Text="Fixa janelas na frente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="2" Click="ToolCard_Click" Tag="Tradutor" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A26C6DA" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTransTitle" Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolTransDesc" Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="3" Click="ToolCard_Click" Tag="Temporizador" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF7043" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTimerTitle" Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolTimerDesc" Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <!-- Row 3 -->
-                    <Button Grid.Row="2" Grid.Column="0" Click="ToolCard_Click" Tag="SystemUpdates" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button Grid.Row="0" Grid.Column="0" Click="ToolCard_Click" Tag="SystemUpdates" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE53935" Margin="0,0,12,0">
@@ -232,20 +139,33 @@
                         </Grid>
                     </Button>
 
-                    <Button Grid.Row="2" Grid.Column="1" Click="ToolCard_Click" Tag="PesquisaUniversal" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button Grid.Row="0" Grid.Column="1" Click="ToolCard_Click" Tag="ColorPicker" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A42A5F5" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A0099DA" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolSearchTitle" Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolSearchDesc" Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolColorTitle" Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolColorDesc" Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                         </Grid>
                     </Button>
 
-                    <Button Grid.Row="2" Grid.Column="2" Click="ToolCard_Click" Tag="CliCommands" Style="{StaticResource ToolCardButtonStyle}">
+                    <Button Grid.Row="0" Grid.Column="2" Click="ToolCard_Click" Tag="Awake" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolAwakeTitle" Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolAwakeDesc" Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="0" Grid.Column="3" Click="ToolCard_Click" Tag="CliCommands" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AEF5350" Margin="0,0,12,0">
@@ -258,7 +178,8 @@
                         </Grid>
                     </Button>
 
-                    <Button Grid.Row="2" Grid.Column="3" Click="ToolCard_Click" Tag="FutureShell" Style="{StaticResource ToolCardButtonStyle}">
+                    <!-- Row 2 -->
+                    <Button Grid.Row="1" Grid.Column="0" Click="ToolCard_Click" Tag="FutureShell" Style="{StaticResource ToolCardButtonStyle}">
                         <Grid Padding="16,14">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
@@ -270,7 +191,75 @@
                             </StackPanel>
                         </Grid>
                     </Button>
+
+                    <Button Grid.Row="1" Grid.Column="1" Click="ToolCard_Click" Tag="Clipboard" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolClipTitle" Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolClipDesc" Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="1" Grid.Column="2" Click="ToolCard_Click" Tag="Temporizador" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF7043" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolTimerTitle" Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolTimerDesc" Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="1" Grid.Column="3" Click="ToolCard_Click" Tag="PesquisaUniversal" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A42A5F5" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolSearchTitle" Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolSearchDesc" Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Row 3 -->
+                    <Button Grid.Row="2" Grid.Column="0" Click="ToolCard_Click" Tag="Captura" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A009688" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xE722;" FontSize="20" Foreground="#009688" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolCaptureTitle" Text="Captura de Tela" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolCaptureDesc" Text="Capturas rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Row="2" Grid.Column="1" Click="ToolCard_Click" Tag="Tradutor" Style="{StaticResource ToolCardButtonStyle}">
+                        <Grid Padding="16,14">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A26C6DA" Margin="0,0,12,0">
+                                <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="TxtToolTransTitle" Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolTransDesc" Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
                 </Grid>
+
+
             </StackPanel>
 
             <!-- ══ RECURSOS PRO ══ -->

@@ -95,7 +95,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             }
         }
         catch { }
-        return "HH:mm";
+        return "hh:mm:ss tt";
     }
 
     public static void SaveTimeFormat(string format)
