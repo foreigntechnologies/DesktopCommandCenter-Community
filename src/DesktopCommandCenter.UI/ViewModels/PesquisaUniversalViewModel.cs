@@ -25,6 +25,16 @@ public partial class SearchResultItem : ObservableObject
         "App" => "\xE71D",     // App window
         _ => "\xE71E"          // Search
     };
+
+    public string DisplayType => Type switch
+    {
+        "Setting" => Helpers.LocalizationHelper.Instance.GetString("Search_TypeSetting"),
+        "File" => Helpers.LocalizationHelper.Instance.GetString("Search_TypeFile"),
+        "Math" => Helpers.LocalizationHelper.Instance.GetString("Search_TypeMath"),
+        "Terminal" => Helpers.LocalizationHelper.Instance.GetString("Search_TypeTerminal"),
+        "App" => Helpers.LocalizationHelper.Instance.GetString("Search_TypeApp"),
+        _ => Type
+    };
 }
 
 public partial class PesquisaUniversalViewModel : ObservableObject

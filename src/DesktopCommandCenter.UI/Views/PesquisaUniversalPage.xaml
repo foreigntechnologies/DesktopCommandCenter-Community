@@ -51,7 +51,7 @@
                     
                     <TextBlock Text="{x:Bind ViewModel.SelectedItem.Title, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
                     
-                    <TextBlock Text="{x:Bind ViewModel.SelectedItem.Type, Mode=OneWay}" FontSize="14" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                    <TextBlock Text="{x:Bind ViewModel.SelectedItem.DisplayType, Mode=OneWay}" FontSize="14" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" />
                     
                     <TextBlock Text="{x:Bind ViewModel.SelectedItem.Description, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
                     
