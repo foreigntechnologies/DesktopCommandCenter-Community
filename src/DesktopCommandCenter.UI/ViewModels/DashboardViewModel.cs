@@ -15,7 +15,7 @@ public partial class DashboardViewModel : ObservableObject
     private string _currentDate = "";
 
     [ObservableProperty]
-    private string _welcomeMessage = "Bem-vindo de volta!";
+    private string _welcomeMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dashboard_Welcome") ?? "Bem-vindo de volta!";
 
     private readonly DispatcherTimer _timer;
 
@@ -25,8 +25,13 @@ public partial class DashboardViewModel : ObservableObject
 
     public Visibility InverseProVisibility => IsProUnlocked ? Visibility.Collapsed : Visibility.Visible;
 
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
+
     public DashboardViewModel()
     {
+        // Capture the UI DispatcherQueue at construction time (must be on UI thread)
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
         UpdateDateTime();
 
         _timer = new DispatcherTimer();
@@ -35,12 +40,25 @@ public partial class DashboardViewModel : ObservableObject
         _timer.Start();
 
         // Refresh date/time immediately when the user switches the app language.
-        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateDateTime();
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += OnLanguageChanged;
 
         WeakReferenceMessenger.Default.Register<DesktopCommandCenter.UI.Messages.LicenseChangedMessage>(this, (r, m) =>
         {
-            IsProUnlocked = m.Value;
+            // Ensure we update on the UI thread
+            _dispatcherQueue?.TryEnqueue(() => IsProUnlocked = m.Value);
         });
+    }
+
+    private void OnLanguageChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_dispatcherQueue?.HasThreadAccess == true)
+        {
+            UpdateDateTime();
+        }
+        else
+        {
+            _dispatcherQueue?.TryEnqueue(UpdateDateTime);
+        }
     }
 
     private void UpdateDateTime()
@@ -64,6 +82,7 @@ public partial class DashboardViewModel : ObservableObject
 
         CurrentTime = DateTime.Now.ToString(timeFormat, culture);
         CurrentDate = DateTime.Now.ToString(dateFormat, culture);
+        WelcomeMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dashboard_Welcome") ?? "Bem-vindo de volta!";
     }
 }
 

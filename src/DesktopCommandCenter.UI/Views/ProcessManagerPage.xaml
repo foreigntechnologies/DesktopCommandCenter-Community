@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:DesktopCommandCenter.Application.Models"
     xmlns:local="using:DesktopCommandCenter.UI.Views"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -18,10 +17,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Spacing="16" Margin="0,0,0,16">
-            <TextBlock x:Name="TxtTitle" helpers:Translate.Key="ProcMgr_PageTitle" Text="Gerenciador de Processos Avançado" Style="{StaticResource TitleLargeTextBlockStyle}" FontWeight="SemiBold" />
-            <AutoSuggestBox x:Name="BoxSearch" helpers:Translate.Key="ProcMgr_InputSearch_Placeholder" PlaceholderText="Pesquisar processos por nome..." QueryIcon="Find" 
-                            Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                            MaxWidth="400" HorizontalAlignment="Left" />
+            <TextBlock x:Name="TxtTitle" Text="Gerenciador de Processos Avançado" Style="{StaticResource TitleLargeTextBlockStyle}" FontWeight="SemiBold"  />
+            <AutoSuggestBox x:Name="BoxSearch" PlaceholderText="Pesquisar processos por nome..." QueryIcon="Find" Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="400" HorizontalAlignment="Left"  />
             
             <Grid Padding="12,8" Background="{ThemeResource SubtleFillColorSecondaryBrush}" CornerRadius="4">
                 <Grid.ColumnDefinitions>
@@ -31,11 +28,11 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="TxtHeaderName" Grid.Column="0" helpers:Translate.Key="ProcMgr_HeaderName" Text="Nome do Processo" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                <TextBlock x:Name="TxtHeaderPID" Grid.Column="1" helpers:Translate.Key="ProcMgr_HeaderPID" Text="PID" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                <TextBlock x:Name="TxtHeaderCPU" Grid.Column="2" helpers:Translate.Key="ProcMgr_HeaderCPU" Text="CPU (%)" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right"/>
-                <TextBlock x:Name="TxtHeaderRAM" Grid.Column="3" helpers:Translate.Key="ProcMgr_HeaderRAM" Text="RAM (MB)" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right"/>
-                <TextBlock x:Name="TxtHeaderStatus" Grid.Column="4" helpers:Translate.Key="ProcMgr_HeaderStatus" Text="Status" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right"/>
+                <TextBlock x:Name="TxtHeaderName" Grid.Column="0" Text="Nome do Processo" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock x:Name="TxtHeaderPID" Grid.Column="1" Text="PID" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock x:Name="TxtHeaderCPU" Grid.Column="2" Text="CPU (%)" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" />
+                <TextBlock x:Name="TxtHeaderRAM" Grid.Column="3" Text="RAM (MB)" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" />
+                <TextBlock x:Name="TxtHeaderStatus" Grid.Column="4" Text="Status" FontWeight="SemiBold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" />
             </Grid>
         </StackPanel>
 
@@ -53,11 +50,7 @@
                     <Grid>
                         <Grid.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem x:Name="FlyoutKillTree" helpers:Translate.Key="ProcMgr_KillTree" Text="Encerrar Árvore de Processos" 
-                                                Icon="Delete" 
-                                                Foreground="#EF5350"
-                                                Click="FlyoutKillTree_Click" 
-                                                Tag="{x:Bind Id}" />
+                                <MenuFlyoutItem x:Name="FlyoutKillTree" Text="Encerrar Árvore de Processos" Icon="Delete" Foreground="#EF5350" Click="FlyoutKillTree_Click" Tag="{x:Bind Id}"  />
                             </MenuFlyout>
                         </Grid.ContextFlyout>
 
@@ -81,7 +74,7 @@
                         
                         <Border Grid.Column="4" Background="#1AEF5350" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right" VerticalAlignment="Center"
                                 Visibility="{x:Bind local:ProcessManagerPage.BoolToVis(IsOrphan)}">
-                            <TextBlock helpers:Translate.Key="ProcMgr_Orphan" Text="Órfão" FontSize="11" FontWeight="SemiBold" Foreground="#EF5350" />
+                            <TextBlock x:Name="ProcMgrOrphanElement" Text="Órfão" FontSize="11" FontWeight="SemiBold" Foreground="#EF5350"  />
                         </Border>
                     </Grid>
                 </DataTemplate>

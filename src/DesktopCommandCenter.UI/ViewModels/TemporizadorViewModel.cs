@@ -44,7 +44,7 @@ public partial class TemporizadorViewModel : ObservableObject
         else
         {
             StopTimer();
-            TimeDisplay = "TEMPO ESGOTADO!";
+            TimeDisplay = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Temporizador_TimeUp");
         }
     }
 

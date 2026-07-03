@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d">
 
     <Grid Background="Transparent">
@@ -16,39 +15,39 @@
             
             <NavigationView.MenuItems>
                 <!-- FREE MODULES -->
-                <NavigationViewItem x:Name="NavDashboard" helpers:Translate.Key="Nav_Dashboard" Tag="Dashboard" Icon="Home" Content="Dashboard" />
-                <NavigationViewItem x:Name="NavProcessManager" helpers:Translate.Key="Nav_ProcessManager" Content="Processos" Tag="ProcessManager" Icon="List" />
-                <NavigationViewItem x:Name="NavNotes" helpers:Translate.Key="Nav_Notes" Tag="Notes" Icon="Document" Content="Notes" />
-                <NavigationViewItemHeader x:Name="HeaderSysUtils" helpers:Translate.Key="Nav_HeaderSysUtils" Content="Utilitários do Sistema" />
-                <NavigationViewItem x:Name="NavSystemUpdates" helpers:Translate.Key="Nav_SystemUpdates" Tag="SystemUpdates" Icon="Sync" Content="Update Center" />
-                <NavigationViewItem x:Name="NavColorPicker" helpers:Translate.Key="Nav_ColorPicker" Tag="ColorPicker" Content="Color Picker" Icon="Highlight" />
-                <NavigationViewItem x:Name="NavAwake" helpers:Translate.Key="Nav_Awake" Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street" />
-                <NavigationViewItem x:Name="NavCliCommands" helpers:Translate.Key="Nav_CliCommands" Tag="CliCommands" Content="Comandos CLI">
+                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="Home" Content="Dashboard"  />
+                <NavigationViewItem x:Name="NavProcessManager" Content="Processos" Tag="ProcessManager" Icon="List"  />
+                <NavigationViewItem x:Name="NavNotes" Tag="Notes" Icon="Document" Content="Notes"  />
+                <NavigationViewItemHeader x:Name="HeaderSysUtils" Content="Utilitários do Sistema"  />
+                <NavigationViewItem x:Name="NavSystemUpdates" Tag="SystemUpdates" Icon="Sync" Content="Update Center"  />
+                <NavigationViewItem x:Name="NavColorPicker" Tag="ColorPicker" Content="Color Picker" Icon="Highlight"  />
+                <NavigationViewItem x:Name="NavAwake" Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street"  />
+                <NavigationViewItem x:Name="NavCliCommands" Tag="CliCommands" Content="Comandos CLI">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE756;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NavFutureShell" helpers:Translate.Key="Nav_FutureShell" Tag="FutureShell" Content="FutureShell">
+                <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE943;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NavClipboard" helpers:Translate.Key="Nav_Clipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard" />
-                <NavigationViewItem x:Name="NavTimer" helpers:Translate.Key="Nav_Timer" Tag="Temporizador" Icon="Clock" Content="Temporizador" />
-                <NavigationViewItem x:Name="NavSearch" helpers:Translate.Key="Nav_Search" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" />
-                <NavigationViewItem x:Name="NavCapture" helpers:Translate.Key="Nav_Capture" Tag="Captura" Icon="Camera" Content="Captura de Tela" />
-                <NavigationViewItem x:Name="NavTranslator" helpers:Translate.Key="Nav_Translator" Tag="Tradutor" Icon="Character" Content="Tradutor" />
+                <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard"  />
+                <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador"  />
+                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal"  />
+                <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela"  />
+                <NavigationViewItem x:Name="NavTranslator" Tag="Tradutor" Icon="Character" Content="Tradutor"  />
 
                 <!-- PRO MODULES HEADER -->
-                <NavigationViewItemHeader x:Name="HeaderPro" helpers:Translate.Key="Nav_HeaderPro" Content="Recursos PRO (IA &amp; Automação)" />
-                <NavigationViewItem x:Name="NavIALocal" helpers:Translate.Key="Nav_ChatFT" Tag="IALocal" Icon="PreviewLink" Content="ChatFT" />
-                <NavigationViewItem x:Name="NavPrompts" helpers:Translate.Key="Nav_Prompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" />
-                <NavigationViewItem x:Name="NavAutomations" helpers:Translate.Key="Nav_Automations" Tag="Automacoes" Icon="RepeatAll" Content="Automações" />
-                <NavigationViewItem x:Name="NavMarketplace" helpers:Translate.Key="Nav_Marketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins" />
+                <NavigationViewItemHeader x:Name="HeaderPro" Content="Recursos PRO (IA &amp; Automação)"  />
+                <NavigationViewItem x:Name="NavIALocal" Tag="IALocal" Icon="PreviewLink" Content="ChatFT"  />
+                <NavigationViewItem x:Name="NavPrompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts"  />
+                <NavigationViewItem x:Name="NavAutomations" Tag="Automacoes" Icon="RepeatAll" Content="Automações"  />
+                <NavigationViewItem x:Name="NavMarketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins"  />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="NavAuth" helpers:Translate.Key="Nav_Auth" Tag="Auth" Icon="Contact" Content="Minha Conta" />
+                <NavigationViewItem x:Name="NavAuth" Tag="Auth" Icon="Contact" Content="Minha Conta"  />
             </NavigationView.FooterMenuItems>
 
             <Frame x:Name="ContentFrame" Margin="24">

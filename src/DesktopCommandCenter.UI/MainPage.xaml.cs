@@ -251,7 +251,7 @@ public sealed partial class MainPage : Page
             _ => typeof(Views.ComingSoonPage)
         };
 
-        bool isProFeature = tag == "PesquisaUniversal" || tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
+        bool isProFeature = tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
 
         if (isProFeature && !App.IsProUnlocked)
         {

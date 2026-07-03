@@ -107,7 +107,7 @@ public partial class AuthViewModel : ObservableObject
     public Microsoft.UI.Xaml.Visibility PausedPlanVisibility => IsPausedPlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
     public Microsoft.UI.Xaml.Visibility InverseProVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Collapsed : Microsoft.UI.Xaml.Visibility.Visible;
     
-    public string PlanDisplayText => IsProPlan ? "✔ Plano PRO ativo" : (IsPausedPlan ? "⏸ Plano Pausado" : "Plano Community (Gratuito)");
+    public string PlanDisplayText => IsProPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanProActive") : (IsPausedPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanPaused") : DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanCommunity"));
 
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
@@ -146,9 +146,12 @@ public partial class AuthViewModel : ObservableObject
         }
         else
         {
-            CurrentPlan = "free";
-            StatusMessage = string.Empty;
-            App.IsProUnlocked = false;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                CurrentPlan = "free";
+                StatusMessage = string.Empty;
+                App.IsProUnlocked = false;
+            });
         }
     }
 
@@ -259,12 +262,12 @@ public partial class AuthViewModel : ObservableObject
         try
         {
             var user = await _authService.LinkWithGoogleAsync();
-            StatusMessage = "Conta do Google vinculada com sucesso!";
+            StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkSuccessGoogle");
             await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Erro ao vincular: {ex.Message}";
+            StatusMessage = $"{DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkError")}{ex.Message}";
         }
         finally { IsLoading = false; }
     }
@@ -278,12 +281,12 @@ public partial class AuthViewModel : ObservableObject
         try
         {
             var user = await _authService.LinkWithGitHubAsync();
-            StatusMessage = "Conta do GitHub vinculada com sucesso!";
+            StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkSuccessGitHub");
             await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Erro ao vincular: {ex.Message}";
+            StatusMessage = $"{DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkError")}{ex.Message}";
         }
         finally { IsLoading = false; }
     }
@@ -297,12 +300,12 @@ public partial class AuthViewModel : ObservableObject
         try
         {
             var user = await _authService.LinkWithMicrosoftAsync();
-            StatusMessage = "Conta da Microsoft vinculada com sucesso!";
+            StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkSuccessMicrosoft");
             await OnLoginSuccessAsync(user);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Erro ao vincular: {ex.Message}";
+            StatusMessage = $"{DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_LinkError")}{ex.Message}";
         }
         finally { IsLoading = false; }
     }
@@ -332,7 +335,7 @@ public partial class AuthViewModel : ObservableObject
         _authService.CancelLogin();
         _pollingCts?.Cancel();
         IsLoading = false;
-        StatusMessage = "Processo interrompido.";
+        StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_ProcessInterrupted");
     }
 
     [RelayCommand]
@@ -380,7 +383,7 @@ public partial class AuthViewModel : ObservableObject
     {
         if (IsLoading) return;
         IsLoading = true;
-        StatusMessage = expectedNewPlan == "pro" ? "Aguardando confirmação de pagamento... (Finalize no navegador)" : "Aguardando alterações na assinatura... (Finalize no navegador)";
+        StatusMessage = expectedNewPlan == "pro" ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_WaitingPayment") : DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_WaitingSubChange");
         _pollingCts?.Cancel();
         _pollingCts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         
@@ -401,7 +404,7 @@ public partial class AuthViewModel : ObservableObject
                         CurrentPlan = currentDbPlan;
                         App.IsProUnlocked = currentDbPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
                         WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
-                        StatusMessage = "Plano atualizado com sucesso!";
+                        StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanUpdated");
                         IsLoading = false;
                     });
                     break;
@@ -412,7 +415,7 @@ public partial class AuthViewModel : ObservableObject
         { 
             _dispatcherQueue.TryEnqueue(() =>
             {
-                StatusMessage = "Verificação interrompida.";
+                StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_VerificationInterrupted");
                 IsLoading = false;
             });
         }

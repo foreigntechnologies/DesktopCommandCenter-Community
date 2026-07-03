@@ -15,6 +15,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IHotkeyConfigManager _hotkeyManager;
     private readonly IAuthService _authService;
     private readonly ILicenseService _licenseService;
+    private readonly Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
 
     // ── Aparência ──────────────────────────────────────────────────────────────
 
@@ -116,8 +117,9 @@ public partial class SettingsViewModel : ObservableObject
         ILicenseService licenseService)
     {
         _hotkeyManager = hotkeyManager;
-        _authService   = authService;
+        _authService = authService;
         _licenseService = licenseService;
+        _dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 
         // Aparência
         string themeStr = App.GetTheme();
@@ -187,7 +189,7 @@ public partial class SettingsViewModel : ObservableObject
 
     private static readonly string[] ProActionIds =
     {
-        "ChatFT", "PesquisaUniversal", "Prompts", "Automacoes", "Marketplace"
+        "ChatFT", "Prompts", "Automacoes", "Marketplace"
     };
 
     /// <summary>
@@ -270,24 +272,29 @@ public partial class SettingsViewModel : ObservableObject
     private async Task RefreshAccountStateAsync()
     {
         var user = await _authService.GetCurrentUserAsync();
-        IsLoggedIn = user != null;
+        var plan = user != null ? await _licenseService.GetCurrentPlanAsync() : "free";
 
-        if (IsLoggedIn)
+        _dispatcherQueue.TryEnqueue(() =>
         {
-            UserEmail   = user!.Email;
-            UserName    = user!.DisplayName;
-            CurrentPlan = await _licenseService.GetCurrentPlanAsync();
-        }
-        else
-        {
-            UserEmail   = string.Empty;
-            UserName    = string.Empty;
-            CurrentPlan = "free";
-        }
+            IsLoggedIn = user != null;
 
-        // Atualiza estado dos hotkeys PRO
-        foreach (var h in Hotkeys)
-            if (h.IsProFeature) h.IsEnabled = App.IsProUnlocked;
+            if (IsLoggedIn)
+            {
+                UserEmail   = user!.Email;
+                UserName    = user!.DisplayName;
+                CurrentPlan = plan;
+            }
+            else
+            {
+                UserEmail   = string.Empty;
+                UserName    = string.Empty;
+                CurrentPlan = "free";
+            }
+
+            // Atualiza estado dos hotkeys PRO
+            foreach (var h in Hotkeys)
+                if (h.IsProFeature) h.IsEnabled = App.IsProUnlocked;
+        });
     }
 
     [RelayCommand]

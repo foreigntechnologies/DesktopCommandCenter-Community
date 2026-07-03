@@ -74,22 +74,11 @@ public partial class App : Microsoft.UI.Xaml.Application
                 _ => Microsoft.UI.Xaml.ElementTheme.Default
             };
 
-            var isDark = frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
-            if (frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+            // Update caption button colors after the theme has been applied.
+            // ActualTheme resolves correctly after RequestedTheme is set.
+            if (mainWindow is MainWindow dccMainWindow)
             {
-                isDark = App.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
-            }
-
-            if (mainWindow.AppWindow?.TitleBar != null)
-            {
-                try
-                {
-                    mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
-                }
-                catch
-                {
-                    // Ignora exceções COM/ArgumentException que ocorrem ao maximizar no WinUI 3
-                }
+                dccMainWindow.UpdateTitleBarButtonColors();
             }
         }
     }

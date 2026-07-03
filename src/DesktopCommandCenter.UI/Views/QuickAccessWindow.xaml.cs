@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,7 +10,7 @@ namespace DesktopCommandCenter.UI.Views;
 
 public sealed partial class QuickAccessWindow : Window
 {
-    // ── Win32 P/Invoke ────────────────────────────────────────────────────────
+    // â”€â”€ Win32 P/Invoke â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     [DllImport("user32.dll")] private static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] private static extern IntPtr MonitorFromPoint(POINT pt, uint dwFlags);
     [DllImport("user32.dll")] private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
@@ -23,17 +23,20 @@ public sealed partial class QuickAccessWindow : Window
         public uint cbSize; public RECT rcMonitor; public RECT rcWork; public uint dwFlags;
     }
     private const uint MONITOR_DEFAULTTONEAREST = 2;
-    // ─────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private const int PanelWidth  = 380;
     private const int PanelHeight = 480;
 
     public QuickAccessWindow()
     {
-        InitializeComponent();
+InitializeComponent();
+            UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        
         AppWindow.SetIcon("Assets/AppIcon.ico");
 
-        // Remove a barra de título nativa
+        // Remove a barra de tÃ­tulo nativa
         ExtendsContentIntoTitleBar = true;
 
         // Acrylic backdrop
@@ -43,7 +46,7 @@ public sealed partial class QuickAccessWindow : Window
         }
         catch { }
 
-        // Sem botões de título, sem redimensionamento, sem maximizar
+        // Sem botÃµes de tÃ­tulo, sem redimensionamento, sem maximizar
         if (AppWindow.Presenter is OverlappedPresenter p)
         {
             p.IsResizable      = false;
@@ -62,12 +65,12 @@ public sealed partial class QuickAccessWindow : Window
             }
         };
 
-        // Versão no badge inferior
+        // VersÃ£o no badge inferior
         TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1"}";
     }
 
     /// <summary>
-    /// Posiciona e exibe o painel no canto inferior direito da tela onde está o cursor/bandeja.
+    /// Posiciona e exibe o painel no canto inferior direito da tela onde estÃ¡ o cursor/bandeja.
     /// </summary>
     public void ShowAtTray()
     {
@@ -81,17 +84,17 @@ public sealed partial class QuickAccessWindow : Window
         var hwnd = WindowNative.GetWindowHandle(this);
         double dpiScale = GetDpiForWindow(hwnd) / 96.0;
 
-        // Descobre o monitor onde fica a bandeja (usa o cursor como referência)
+        // Descobre o monitor onde fica a bandeja (usa o cursor como referÃªncia)
         GetCursorPos(out var pt);
         var hMonitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
         var mi = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
         GetMonitorInfo(hMonitor, ref mi);
 
-        // Área de trabalho do monitor (descontando a barra de tarefas)
+        // Ãrea de trabalho do monitor (descontando a barra de tarefas)
         int workRight  = mi.rcWork.Right;
         int workBottom = mi.rcWork.Bottom;
 
-        // Converte tamanho lógico do painel para físico (pixels)
+        // Converte tamanho lÃ³gico do painel para fÃ­sico (pixels)
         int physW = (int)(PanelWidth  * dpiScale);
         int physH = (int)(PanelHeight * dpiScale);
 
@@ -101,7 +104,7 @@ public sealed partial class QuickAccessWindow : Window
         AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(x, y, physW, physH));
     }
 
-    // ── Handlers de navegação ─────────────────────────────────────────────────
+    // â”€â”€ Handlers de navegaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void Tool_Click(object sender, RoutedEventArgs e)
     {
@@ -144,4 +147,23 @@ public sealed partial class QuickAccessWindow : Window
         App.Current.MainWindow?.AppWindow.Show();
         WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("Settings"));
     }
+
+        private void UpdateTranslations()
+        {
+            // TODO: Implement translation for QuickAccessTitleElement of type Window
+            QuickAccessHeaderElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Header");
+            QuickAccessBtnMoreElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_BtnMore");
+            QuickAccessColorPickerElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_ColorPicker");
+            QuickAccessClipboardElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Clipboard");
+            QuickAccessNotesElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Notes");
+            QuickAccessTranslatorElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Translator");
+            QuickAccessTimerElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Timer");
+            QuickAccessPromptsElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Prompts");
+            QuickAccessSearchElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Search");
+            QuickAccessAutomationElement.Text = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_Automation");
+            QuickAccessToolTipDocsElement.Content = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_ToolTipDocs");
+            QuickAccessToolTipBugElement.Content = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_ToolTipBug");
+            QuickAccessToolTipSettingsElement.Content = Helpers.LocalizationHelper.Instance.GetString("QuickAccess_ToolTipSettings");
+        }
 }
+

@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopCommandCenter.UI.Views;
@@ -9,8 +9,10 @@ public sealed partial class PesquisaUniversalPage : Page
 
     public PesquisaUniversalPage()
     {
-        ViewModel = App.Current.Services.GetRequiredService<ViewModels.PesquisaUniversalViewModel>();
+ViewModel = App.Current.Services.GetRequiredService<ViewModels.PesquisaUniversalViewModel>();
         this.InitializeComponent();
+        UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
     }
 
     private void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -63,4 +65,14 @@ public sealed partial class PesquisaUniversalPage : Page
             ViewModel.ExecuteItem(item);
         }
     }
+
+        private void UpdateTranslations()
+        {
+            SearchPageTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Search_PageTitle");
+            SearchInputPlaceholderElement.PlaceholderText = Helpers.LocalizationHelper.Instance.GetString("Search_Input_Placeholder");
+            if (BtnOpen.Content is string || BtnOpen.Content == null) BtnOpen.Content = Helpers.LocalizationHelper.Instance.GetString("Search_BtnOpen");
+            if (BtnSendToAI.Content is string || BtnSendToAI.Content == null) BtnSendToAI.Content = Helpers.LocalizationHelper.Instance.GetString("Search_BtnSendAI");
+        }
 }
+
+

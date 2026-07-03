@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -91,7 +91,7 @@ public sealed partial class SettingsPage : Page
 
             HotkeyDialogActionText.Text = $"Configure as teclas para: {item.DisplayName}";
             HotkeyPreviewText.Text = string.IsNullOrEmpty(item.CurrentHotkeyDisplay) || item.CurrentHotkeyDisplay == "None" 
-                ? "Nenhum" 
+                ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum" 
                 : item.CurrentHotkeyDisplay;
 
             EditHotkeyDialog.XamlRoot = this.XamlRoot;
@@ -116,7 +116,7 @@ public sealed partial class SettingsPage : Page
     {
         _tempModifiers = 0;
         _tempVirtualKey = 0;
-        HotkeyPreviewText.Text = "Nenhum";
+        HotkeyPreviewText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum";
     }
 
     private void EditHotkeyDialog_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -193,7 +193,7 @@ public sealed partial class SettingsPage : Page
         }
         else
         {
-            HotkeyPreviewText.Text = "Nenhum";
+            HotkeyPreviewText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum";
         }
     }
     private void OpenCommunityRepo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -203,3 +203,4 @@ public sealed partial class SettingsPage : Page
         { UseShellExecute = true });
     }
 }
+

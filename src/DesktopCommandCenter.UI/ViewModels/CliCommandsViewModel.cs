@@ -26,7 +26,7 @@ public partial class CliCommandsViewModel : ObservableObject
     private string _searchQuery = string.Empty;
 
     [ObservableProperty]
-    private string _selectedCategory = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_All") ?? "Todos";
+    private string _selectedCategory = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_All") ?? "All";
 
     public CliCommandsViewModel()
     {
@@ -288,7 +288,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_193"), "oc projects", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_193"), catK8s);
 
         // --- Terraform, OpenTofu & Pulumi ---
-        string catIaC = "Infraestrutura como Código";
+        string catIaC = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_IaC") ?? "Infrastructure as Code";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_194"), "terraform init", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_194"), catIaC);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_195"), "terraform plan", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_195"), catIaC);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_196"), "terraform apply", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_196"), catIaC);
@@ -315,7 +315,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_214"), "vagrant destroy", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_214"), catAutomation);
 
         // --- Cloud Providers (AWS, GCP, Azure) ---
-        string catCloud = "Provedores de Nuvem";
+        string catCloud = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_Cloud") ?? "Cloud Providers";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_215"), "aws configure", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_215"), catCloud);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_216"), "aws sts get-caller-identity", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_216"), catCloud);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_217"), "aws s3 ls", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_217"), catCloud);
@@ -331,7 +331,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_227"), "az storage account list", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_227"), catCloud);
 
         // --- PaaS & Serverless (Vercel, Netlify, Railway, Fly.io) ---
-        string catPaas = "PaaS & Deploy Rápido";
+        string catPaas = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_PaaS") ?? "PaaS & Quick Deploy";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_228"), "vercel login", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_228"), catPaas);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_229"), "vercel", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_229"), catPaas);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_230"), "vercel --prod", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_230"), catPaas);
@@ -358,7 +358,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_248"), "supabase migration new nome", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_248"), catBaas);
 
         // --- Databases (SQL & NoSQL) ---
-        string catDb = "Banco de Dados";
+        string catDb = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_DB") ?? "Databases";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_249"), "psql -U usuario -d banco", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_249"), catDb);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_250"), "\\l", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_250"), catDb);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_251"), "\\dt", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_251"), catDb);
@@ -391,7 +391,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_275"), "quarkus dev", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_275"), catJava);
 
         // --- Outros Frameworks Backend (NestJS, FastAPI, Django, Flask, Laravel) ---
-        string catBackends = "Outros Backends (Nest, Python, PHP)";
+        string catBackends = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_Backends") ?? "Other Backends (Nest, Python, PHP)";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_276"), "nest new projeto", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_276"), catBackends);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_277"), "nest generate module modulo", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_277"), catBackends);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_278"), "npm run start:dev", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_278"), catBackends);
@@ -425,7 +425,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_303"), "npx cap sync", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_303"), catMobile);
 
         // --- IA / LLMs (OpenAI, Ollama, Hugging Face, MLflow, W&B) ---
-        string catAi = "IA & LLMs";
+        string catAi = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_AI") ?? "AI & LLMs";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_304"), "openai api models.list", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_304"), catAi);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_305"), "ollama pull llama3", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_305"), catAi);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_306"), "ollama run llama3", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_306"), catAi);
@@ -438,7 +438,7 @@ public partial class CliCommandsViewModel : ObservableObject
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_313"), "wandb login", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_313"), catAi);
 
         // --- Observabilidade (Grafana, Prometheus, Datadog, New Relic) ---
-        string catObs = "Observabilidade";
+        string catObs = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_Obs") ?? "Observability";
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_314"), "grafana-cli plugins install id", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_314"), catObs);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_315"), "prometheus --config.file=config.yml", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_315"), catObs);
         AddCmd(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_T_316"), "datadog-agent status", DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_D_316"), catObs);
@@ -503,7 +503,7 @@ public partial class CliCommandsViewModel : ObservableObject
         
         foreach (var cmd in _allCommands)
         {
-            bool matchCategory = SelectedCategory == "Todos" || cmd.Category == SelectedCategory;
+            bool matchCategory = SelectedCategory == (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("CliCmd_Cat_All") ?? "All") || cmd.Category == SelectedCategory;
             bool matchQuery = string.IsNullOrEmpty(query) || 
                               cmd.Title.ToLowerInvariant().Contains(query) || 
                               cmd.Command.ToLowerInvariant().Contains(query) || 

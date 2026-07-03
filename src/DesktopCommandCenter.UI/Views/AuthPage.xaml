@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -19,12 +18,8 @@
                     <FontIcon Glyph="&#xE7BF;" FontSize="48"
                               Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                               HorizontalAlignment="Center" />
-                    <TextBlock x:Name="TxtAuthTitle" helpers:Translate.Key="Auth_PageTitle" Text="Licenciamento &amp; Nuvem"
-                               Style="{StaticResource TitleTextBlockStyle}"
-                               HorizontalAlignment="Center" />
-                    <TextBlock x:Name="TxtAuthDesc" helpers:Translate.Key="Auth_PageDesc" Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO."
-                               TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13" />
+                    <TextBlock x:Name="TxtAuthTitle" Text="Licenciamento &amp; Nuvem" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"  />
+                    <TextBlock x:Name="TxtAuthDesc" Text="O DCC funciona 100% offline e gratuito. Faça login apenas para desbloquear os recursos PRO." TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"  />
                 </StackPanel>
 
                 <!-- Mensagens globais (Loading / Erro / Sucesso) -->
@@ -32,11 +27,8 @@
                     <StackPanel x:Name="LoadingPanel" Spacing="12" HorizontalAlignment="Center"
                                 Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ProgressRing IsActive="True" Width="32" Height="32" HorizontalAlignment="Center" />
-                        <TextBlock x:Name="TxtLoading" helpers:Translate.Key="Auth_TxtLoading" Text="Processando requisição... (se você fechou o navegador, clique em Cancelar)"
-                                   HorizontalAlignment="Center"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   FontSize="12" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300" />
-                        <HyperlinkButton helpers:Translate.Key="Auth_BtnCancel" Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtLoading" Text="Processando requisição... (se você fechou o navegador, clique em Cancelar)" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="300"  />
+                        <HyperlinkButton x:Name="AuthBtnCancelElement" Content="Cancelar" Command="{x:Bind ViewModel.CancelLoginCommand}" HorizontalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  />
                     </StackPanel>
 
                     <Border x:Name="ErrorPanel" CornerRadius="8" Padding="12,10"
@@ -88,8 +80,7 @@
                                     <Path Data="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" Fill="#EA4335"/>
                                 </Canvas>
                             </Viewbox>
-                            <TextBlock Grid.Column="1" x:Name="TxtGoogle" helpers:Translate.Key="Auth_BtnGoogle" Text="Continuar com o Google" VerticalAlignment="Center" HorizontalAlignment="Left"
-                                       FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Grid.Column="1" x:Name="TxtGoogle" Text="Continuar com o Google" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="14"  />
                         </Grid>
                     </Button>
 
@@ -107,8 +98,7 @@
                                 <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
                                       Fill="{ThemeResource TextFillColorPrimaryBrush}" />
                             </Viewbox>
-                            <TextBlock Grid.Column="1" x:Name="TxtGitHub" helpers:Translate.Key="Auth_BtnGitHub" Text="Continuar com o GitHub" VerticalAlignment="Center" HorizontalAlignment="Left"
-                                       FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Grid.Column="1" x:Name="TxtGitHub" Text="Continuar com o GitHub" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="14"  />
                         </Grid>
                     </Button>
 
@@ -118,15 +108,15 @@
                     <TextBlock FontSize="11" TextWrapping="Wrap" TextAlignment="Center"
                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                Margin="0,8,0,0">
-                        <Run x:Name="TxtTermsPrefix" helpers:Translate.Key="Auth_TermsPrefix">Ao continuar, você aceita os </Run>
+                        <Run x:Name="TxtTermsPrefix" >Ao continuar, você aceita os </Run>
                         <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/terms">
-                            <Run x:Name="HypTerms" helpers:Translate.Key="Auth_TermsLink">Termos de Uso</Run>
+                            <Run x:Name="HypTerms" >Termos de Uso</Run>
                         </Hyperlink>
-                        <Run x:Name="TxtTermsMid" helpers:Translate.Key="Auth_TermsMid"> e a </Run>
+                        <Run x:Name="TxtTermsMid" > e a </Run>
                         <Hyperlink NavigateUri="https://foreigntechnologies.com.br/legal/privacy">
-                            <Run x:Name="HypPrivacy" helpers:Translate.Key="Auth_PrivacyLink">Política de Privacidade</Run>
+                            <Run x:Name="HypPrivacy" >Política de Privacidade</Run>
                         </Hyperlink>
-                        <Run x:Name="TxtTermsSuffix" helpers:Translate.Key="Auth_TermsSuffix">.</Run>
+                        <Run x:Name="TxtTermsSuffix" >.</Run>
                     </TextBlock>
                 </StackPanel>
 
@@ -204,8 +194,7 @@
 
                         <!-- Vinculação de Contas -->
                         <StackPanel Spacing="16">
-                            <TextBlock x:Name="TxtLinkAccountsTitle" helpers:Translate.Key="Auth_LinkAccountsTitle" Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="TxtLinkAccountsTitle" Text="Vincular contas adicionais:" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
                             
                             <StackPanel Spacing="8">
                                 <Button Command="{x:Bind ViewModel.LinkGoogleCommand}" 
@@ -224,7 +213,7 @@
                                                 <Path Data="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" Fill="#EA4335"/>
                                             </Canvas>
                                         </Viewbox>
-                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGoogle" helpers:Translate.Key="Auth_BtnLinkGoogle" Text="Vincular Google" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGoogle" Text="Vincular Google" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"  />
                                     </Grid>
                                 </Button>
                                 
@@ -240,13 +229,11 @@
                                             <Path Data="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
                                                   Fill="{ThemeResource TextFillColorPrimaryBrush}" />
                                         </Viewbox>
-                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGitHub" helpers:Translate.Key="Auth_BtnLinkGitHub" Text="Vincular GitHub" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" x:Name="TxtLinkGitHub" Text="Vincular GitHub" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"  />
                                     </Grid>
                                 </Button>
                             </StackPanel>
-                            <TextBlock x:Name="TxtLinkDesc" helpers:Translate.Key="Auth_LinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados."
-                                       FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextWrapping="Wrap" TextAlignment="Center" />
+                            <TextBlock x:Name="TxtLinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados." FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" TextAlignment="Center"  />
                         </StackPanel>
 
                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
@@ -256,16 +243,14 @@
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
-                                <TextBlock x:Name="TxtProActiveTitle" helpers:Translate.Key="Auth_ProActiveTitle" Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16" />
+                                <TextBlock x:Name="TxtProActiveTitle" Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16"  />
                             </StackPanel>
-                            <TextBlock x:Name="TxtProActiveDesc" helpers:Translate.Key="Auth_ProActiveDesc" Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       HorizontalAlignment="Center" />
+                            <TextBlock x:Name="TxtProActiveDesc" Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
                                     HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE9E9;" FontSize="14" />
-                                    <TextBlock x:Name="TxtProManage" helpers:Translate.Key="Auth_ProManage" Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock x:Name="TxtProManage" Text="Gerenciar ou Cancelar Assinatura" FontWeight="SemiBold" FontSize="13"  />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -275,25 +260,19 @@
                                     HorizontalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
                                 <FontIcon Glyph="&#xE769;" FontSize="24" Foreground="Orange" />
-                                <TextBlock x:Name="TxtPausedActiveTitle" helpers:Translate.Key="Auth_PausedTitle" Text="Plano Pausado" FontWeight="Bold" FontSize="16" />
+                                <TextBlock x:Name="TxtPausedActiveTitle" Text="Plano Pausado" FontWeight="Bold" FontSize="16"  />
                             </StackPanel>
-                            <TextBlock x:Name="TxtPausedActiveDesc" helpers:Translate.Key="Auth_PausedDesc" Text="Sua assinatura está pausada. Retome-a no portal para voltar a ter acesso PRO." FontSize="13"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                            <TextBlock x:Name="TxtPausedActiveDesc" Text="Sua assinatura está pausada. Retome-a no portal para voltar a ter acesso PRO." FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"  />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
                                     HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE9E9;" FontSize="14" />
-                                    <TextBlock x:Name="TxtPausedManage" helpers:Translate.Key="Auth_PausedManage" Text="Gerenciar Assinatura" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock x:Name="TxtPausedManage" Text="Gerenciar Assinatura" FontWeight="SemiBold" FontSize="13"  />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
 
-                        <HyperlinkButton x:Name="BtnLogout" helpers:Translate.Key="Auth_BtnLogout" Content="Fazer Logout"
-                                         Command="{x:Bind ViewModel.LogoutCommand}"
-                                         HorizontalAlignment="Center"
-                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                         Margin="0,8,0,0" />
+                        <HyperlinkButton x:Name="BtnLogout" Content="Fazer Logout" Command="{x:Bind ViewModel.LogoutCommand}" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"  />
                     </StackPanel>
                 </Border>
 
@@ -301,7 +280,7 @@
 
             <!-- COMPARAÇÃO DE PLANOS (Movido de SettingsPage) -->
             <StackPanel Spacing="16" Margin="0,40,0,40" MaxWidth="1000" HorizontalAlignment="Center">
-                <TextBlock helpers:Translate.Key="Settings_SubTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" />
+                <TextBlock x:Name="SettingsSubTitleElement" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center"  />
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -330,19 +309,19 @@
                                 <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
                                 <StackPanel Spacing="7">
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF1B" FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run helpers:Translate.Key="Settings_CommF1D"> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF2B" FontWeight="SemiBold">Always On Top:</Run><Run helpers:Translate.Key="Settings_CommF2D"> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF3B" FontWeight="SemiBold">Awake (Caffeine):</Run><Run helpers:Translate.Key="Settings_CommF3D"> Impede suspensão da tela.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF4B" FontWeight="SemiBold">Clipboard Avançado:</Run><Run helpers:Translate.Key="Settings_CommF4D"> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF5B" FontWeight="SemiBold">Color Picker e Lupa:</Run><Run helpers:Translate.Key="Settings_CommF5D"> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF6B" FontWeight="SemiBold">Pesquisa Universal:</Run><Run helpers:Translate.Key="Settings_CommF6D"> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF7B" FontWeight="SemiBold">Temporizadores:</Run><Run helpers:Translate.Key="Settings_CommF7D"> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF8B" FontWeight="SemiBold">Notas Rápidas:</Run><Run helpers:Translate.Key="Settings_CommF8D"> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF9B" FontWeight="SemiBold">Automações e CLI:</Run><Run helpers:Translate.Key="Settings_CommF9D"> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_CommF10B" FontWeight="SemiBold">Utilitários de Texto:</Run><Run helpers:Translate.Key="Settings_CommF10D"> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF11" FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF13" Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_CommF14" Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF1BElement" FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run x:Name="SettingsCommF1DElement" > Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF2BElement" FontWeight="SemiBold">Always On Top:</Run><Run x:Name="SettingsCommF2DElement" > Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF3BElement" FontWeight="SemiBold">Awake (Caffeine):</Run><Run x:Name="SettingsCommF3DElement" > Impede suspensão da tela.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF4BElement" FontWeight="SemiBold">Clipboard Avançado:</Run><Run x:Name="SettingsCommF4DElement" > Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF5BElement" FontWeight="SemiBold">Color Picker e Lupa:</Run><Run x:Name="SettingsCommF5DElement" > Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF6BElement" FontWeight="SemiBold">Pesquisa Universal:</Run><Run x:Name="SettingsCommF6DElement" > Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF7BElement" FontWeight="SemiBold">Temporizadores:</Run><Run x:Name="SettingsCommF7DElement" > Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF8BElement" FontWeight="SemiBold">Notas Rápidas:</Run><Run x:Name="SettingsCommF8DElement" > Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF9BElement" FontWeight="SemiBold">Automações e CLI:</Run><Run x:Name="SettingsCommF9DElement" > Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsCommF10BElement" FontWeight="SemiBold">Utilitários de Texto:</Run><Run x:Name="SettingsCommF10DElement" > Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF11Element" FontSize="12" Text="Suporte da Comunidade (GitHub)"  /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF13Element" Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"  /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF14Element" Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"  /></StackPanel>
                                 </StackPanel>
                             </StackPanel>
                             <!-- Sem botão no Community -->
@@ -362,29 +341,27 @@
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
                                         <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                            <TextBlock helpers:Translate.Key="Settings_ProBadge" Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                            <TextBlock x:Name="SettingsProBadgeElement" Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White"  />
                                         </Border>
                                     </StackPanel>
-                                    <TextBlock helpers:Translate.Key="Settings_ProSubtitle" Text="Licença Nuvem · Atualizada automaticamente"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                    <TextBlock x:Name="SettingsProSubtitleElement" Text="Licença Nuvem · Atualizada automaticamente" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"  />
                                 </StackPanel>
-                                <TextBlock helpers:Translate.Key="Settings_ProDesc" Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
+                                <TextBlock x:Name="SettingsProDescElement" Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12"  />
 
                                 <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
 
                                 <StackPanel Spacing="7">
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF1" Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12" /></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF2B" FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run helpers:Translate.Key="Settings_ProF2D"> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF3B" FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run helpers:Translate.Key="Settings_ProF3D"> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF4B" FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run helpers:Translate.Key="Settings_ProF4D"> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF5B" FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run helpers:Translate.Key="Settings_ProF5D"> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF6B" FontWeight="SemiBold">Respostas em Streaming:</Run><Run helpers:Translate.Key="Settings_ProF6D"> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF7B" FontWeight="SemiBold">Visão Computacional Local:</Run><Run helpers:Translate.Key="Settings_ProF7D"> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF8B" FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run helpers:Translate.Key="Settings_ProF8D"> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run helpers:Translate.Key="Settings_ProF9B" FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run helpers:Translate.Key="Settings_ProF9D"> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF10" FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock helpers:Translate.Key="Settings_ProF11" FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsProF1Element" Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12"  /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF2BElement" FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run x:Name="SettingsProF2DElement" > Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF3BElement" FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run x:Name="SettingsProF3DElement" > Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF4BElement" FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run x:Name="SettingsProF4DElement" > Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF5BElement" FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run x:Name="SettingsProF5DElement" > Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF6BElement" FontWeight="SemiBold">Respostas em Streaming:</Run><Run x:Name="SettingsProF6DElement" > A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF7BElement" FontWeight="SemiBold">Visão Computacional Local:</Run><Run x:Name="SettingsProF7DElement" > Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF8BElement" FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run x:Name="SettingsProF8DElement" > Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run x:Name="SettingsProF9BElement" FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run x:Name="SettingsProF9DElement" > Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsProF10Element" FontSize="12" Text="Atualizações Prioritárias via Store"  /></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsProF11Element" FontSize="12" Text="Suporte Dedicado via E-mail"  /></StackPanel>
                                 </StackPanel>
                             </StackPanel>
 
@@ -404,8 +381,8 @@
                                         </Grid.ColumnDefinitions>
                                         <FontIcon Grid.Column="0" Glyph="&#xE735;" FontSize="18" Margin="0,0,12,0" VerticalAlignment="Center" />
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                            <TextBlock helpers:Translate.Key="Auth_ProMonthlyTitle" Text="Assinar PRO" FontWeight="Bold" FontSize="15" />
-                                            <TextBlock helpers:Translate.Key="Auth_ProMonthlySubtitle" Text="R$ 39,90 / mês · Cancele quando quiser" FontSize="10" Opacity="0.85" />
+                                            <TextBlock x:Name="AuthProMonthlyTitleElement" Text="Assinar PRO" FontWeight="Bold" FontSize="15"  />
+                                            <TextBlock x:Name="AuthProMonthlySubtitleElement" Text="R$ 39,90 / mês · Cancele quando quiser" FontSize="10" Opacity="0.85"  />
                                         </StackPanel>
                                         <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="13" VerticalAlignment="Center" Margin="12,0,0,0" />
                                     </Grid>
@@ -424,9 +401,8 @@
                                             <FontIcon Grid.Column="0" Glyph="&#xE787;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"
                                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                                <TextBlock helpers:Translate.Key="Auth_ProYearlyTitle" Text="Plano Anual" FontWeight="SemiBold" FontSize="14" />
-                                                <TextBlock helpers:Translate.Key="Auth_ProYearlySubtitle" Text="R$ 429,90 / ano · Equivale a R$ 35,83/mês"
-                                                           FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock x:Name="AuthProYearlyTitleElement" Text="Plano Anual" FontWeight="SemiBold" FontSize="14"  />
+                                                <TextBlock x:Name="AuthProYearlySubtitleElement" Text="R$ 429,90 / ano · Equivale a R$ 35,83/mês" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  />
                                             </StackPanel>
                                             <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="12" VerticalAlignment="Center" Margin="12,0,0,0"
                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -437,7 +413,7 @@
                                             Margin="0,-8,-4,0"
                                             Background="{ThemeResource AccentFillColorDefaultBrush}"
                                             CornerRadius="20" Padding="7,3">
-                                        <TextBlock helpers:Translate.Key="Auth_ProYearlyBadge" Text="Poupe 10%" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                        <TextBlock x:Name="AuthProYearlyBadgeElement" Text="Poupe 10%" FontSize="10" FontWeight="Bold" Foreground="White"  />
                                     </Border>
                                 </Grid>
 
