@@ -1,7 +1,7 @@
 using DesktopCommandCenter.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DesktopCommandCenter.UI.Helpers;
 
@@ -12,13 +12,20 @@ public class LocalizationHelper : INotifyPropertyChanged
 
     private readonly ITranslationService _translationService;
 
+    /// <summary>Task que completa quando o idioma inicial terminar de carregar.</summary>
+    public Task WhenReady { get; }
+
     private LocalizationHelper()
     {
         _translationService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITranslationService>();
         _translationService.LanguageChanged += (s, e) => OnPropertyChanged("Item[]");
-        
-        // Carregar idioma padrão no início
-        _ = _translationService.SetLanguageAsync(App.GetAppLanguage());
+
+        // Carrega sincronamente sem risco de deadlock na thread de UI
+        var lang = App.GetAppLanguage();
+        _translationService.LoadLanguage(lang);
+
+        // WhenReady já está completo pois a carga é síncrona
+        WhenReady = Task.CompletedTask;
     }
 
     public string this[string key] => _translationService.Get(key);

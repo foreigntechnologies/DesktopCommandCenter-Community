@@ -79,6 +79,19 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
 
     public ObservableCollection<WindowsUpdateItem> WindowsUpdates { get; } = [];
 
+    private bool _selectAllWindowsUpdates = true;
+    public bool SelectAllWindowsUpdates
+    {
+        get => _selectAllWindowsUpdates;
+        set
+        {
+            if (SetProperty(ref _selectAllWindowsUpdates, value))
+            {
+                foreach (var item in WindowsUpdates) item.IsSelected = value;
+            }
+        }
+    }
+
     // ── Software Updates (Winget) ────────────────────────────────────
     [ObservableProperty] private bool   _isLoadingSoftwareUpdates;
     [ObservableProperty] private string _softwareUpdateStatus = string.Empty;
@@ -87,6 +100,32 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
 
     public ObservableCollection<SoftwareUpdateItem>  SoftwareUpdates  { get; } = [];
     public ObservableCollection<InstalledSoftwareItem> InstalledApps  { get; } = [];
+
+    private bool _selectAllSoftwareUpdates = true;
+    public bool SelectAllSoftwareUpdates
+    {
+        get => _selectAllSoftwareUpdates;
+        set
+        {
+            if (SetProperty(ref _selectAllSoftwareUpdates, value))
+            {
+                foreach (var item in SoftwareUpdates) item.IsSelected = value;
+            }
+        }
+    }
+
+    private bool _selectAllInstalledApps = false;
+    public bool SelectAllInstalledApps
+    {
+        get => _selectAllInstalledApps;
+        set
+        {
+            if (SetProperty(ref _selectAllInstalledApps, value))
+            {
+                foreach (var item in InstalledApps) item.IsSelected = value;
+            }
+        }
+    }
 
     // ── Shared ─────────────────────────────────────────────────────
     [ObservableProperty] private bool   _isLoadingInstalledApps;
@@ -391,7 +430,8 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             UseShellExecute        = false,
             RedirectStandardOutput = true,
             RedirectStandardError  = true,
-            CreateNoWindow         = true
+            CreateNoWindow         = true,
+            StandardOutputEncoding = System.Text.Encoding.UTF8
         };
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start PowerShell.");
@@ -433,7 +473,8 @@ public sealed partial class SystemUpdatesViewModel : ObservableObject
             UseShellExecute        = false,
             RedirectStandardOutput = true,
             RedirectStandardError  = true,
-            CreateNoWindow         = true
+            CreateNoWindow         = true,
+            StandardOutputEncoding = System.Text.Encoding.UTF8
         };
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("winget not found.");

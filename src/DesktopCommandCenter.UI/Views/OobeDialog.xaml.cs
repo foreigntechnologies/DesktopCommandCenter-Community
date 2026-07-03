@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage;
 
@@ -8,8 +8,10 @@ public sealed partial class OobeDialog : ContentDialog
 {
     public OobeDialog()
     {
+
         this.InitializeComponent();
-        
+        UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         this.PrimaryButtonClick += OobeDialog_PrimaryButtonClick;
     }
 
@@ -25,4 +27,16 @@ public sealed partial class OobeDialog : ContentDialog
         App.SaveTheme(themeStr);
         App.ApplyTheme(themeStr);
     }
+
+        private void UpdateTranslations()
+        {
+            OobeTitleElement.Title = Helpers.LocalizationHelper.Instance.GetString("Oobe_Title");
+            OobeDescElement.Text = Helpers.LocalizationHelper.Instance.GetString("Oobe_Desc");
+            OobeThemeLightElement.Content = Helpers.LocalizationHelper.Instance.GetString("Oobe_ThemeLight");
+            OobeThemeDarkElement.Content = Helpers.LocalizationHelper.Instance.GetString("Oobe_ThemeDark");
+            OobeThemeSystemElement.Content = Helpers.LocalizationHelper.Instance.GetString("Oobe_ThemeSystem");
+            OobeHintElement.Text = Helpers.LocalizationHelper.Instance.GetString("Oobe_Hint");
+        }
 }
+
+

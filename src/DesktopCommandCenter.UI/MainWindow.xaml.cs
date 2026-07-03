@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -22,9 +22,12 @@ public sealed partial class MainWindow : Window
 
     public MainWindow()
     {
+InitializeComponent();
+            UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
         TrayQuickAccessCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowQuickAccess);
-        InitializeComponent();
+        
         this.Closed += MainWindow_Closed;
         try
         {
@@ -53,23 +56,74 @@ public sealed partial class MainWindow : Window
         RootFrame.Navigate(typeof(MainPage));
 
         RootFrame.Loaded += RootFrame_Loaded;
-
-        // Iniciar maximizado apenas após a janela ser ativada
-        this.Activated += MainWindow_Activated;
         this.Activated += MainWindow_FocusChanged;
-        this.AppWindow.Changed += AppWindow_Changed;
+
+        // Set initial title bar button colors once the frame is ready.
+        // RootFrame is always a FrameworkElement so no cast needed.
+        RootFrame.Loaded += (s, e) => UpdateTitleBarButtonColors();
     }
 
-    private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
+    /// <summary>
+    /// Updates the caption button foreground/background colors to match the current theme.
+    /// Called once on load and again whenever the theme changes.
+    /// Safe to call only from the UI thread.
+    /// </summary>
+    public void UpdateTitleBarButtonColors()
     {
-        // Removido o sender.Hide() para que o botão minimizar "-" apenas minimize para a barra de tarefas normalmente.
+        DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+        {
+            try
+            {
+                if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
+
+                // Avoid fail-fast COM exception when updating AppWindow.TitleBar properties
+                // while the window is minimized or not fully initialized.
+                if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter && 
+                    presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
+                    return;
+
+                // Resolve actual theme (light/dark)
+                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+
+                var titleBar = AppWindow?.TitleBar;
+                if (titleBar == null) return;
+
+                if (isDark)
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+                else
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+
+                // Keep backgrounds transparent so Mica/Acrylic shows through
+                titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
+                titleBar.ButtonHoverBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                titleBar.ButtonPressedBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+
+                // Re-subscribe to ActualThemeChanged each time to avoid double-subscription
+                root.ActualThemeChanged -= Root_ActualThemeChanged;
+                root.ActualThemeChanged += Root_ActualThemeChanged;
+            }
+            catch { /* Silently ignore if AppWindow is in an invalid state */ }
+        });
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    private void Root_ActualThemeChanged(Microsoft.UI.Xaml.FrameworkElement sender, object args)
     {
-        this.Activated -= MainWindow_Activated; // Executa apenas na primeira vez
-        var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
-        presenter?.Maximize();
+        UpdateTitleBarButtonColors();
     }
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
@@ -78,45 +132,47 @@ public sealed partial class MainWindow : Window
     {
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
-            // Debounce: Evita spammar o Firestore (limita a 1 check a cada 5 segundos)
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
             {
                 _lastFocusCheck = DateTime.Now;
-                var currentServices = App.Current.Services;
                 
-                _ = System.Threading.Tasks.Task.Run(async () =>
+                try
                 {
-                    try
-                    {
-                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
-                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
+                    var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
+                    var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
+                    var dq = this.DispatcherQueue;
 
-                        var user = await authService.GetCurrentUserAsync();
-                        if (user != null)
+                    _ = System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try
                         {
-                            var plan = await licenseService.GetCurrentPlanAsync();
-                            bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                            
-                            // Se o plano mudou (ex: acabou de pagar no Stripe)
-                            if (App.IsProUnlocked != isPro)
+                            var user = await authService.GetCurrentUserAsync();
+                            if (user != null)
                             {
-                                App.IsProUnlocked = isPro;
-                                DispatcherQueue?.TryEnqueue(() =>
+                                var plan = await licenseService.GetCurrentPlanAsync();
+                                bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+                                
+                                if (App.IsProUnlocked != isPro)
                                 {
-                                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                                });
+                                    App.IsProUnlocked = isPro;
+                                    dq?.TryEnqueue(() =>
+                                    {
+                                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
+                                    });
+                                }
                             }
                         }
-                    }
-                    catch { }
-                });
+                        catch { }
+                    });
+                }
+                catch { }
             }
         }
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
+        // Ao invÃ©s de fechar (X), oculta o app para a bandeja do sistema
         args.Handled = true;
         this.AppWindow.Hide();
     }
@@ -124,7 +180,7 @@ public sealed partial class MainWindow : Window
     public System.Windows.Input.ICommand TrayShowCommand { get; }
     public System.Windows.Input.ICommand TrayQuickAccessCommand { get; }
 
-    // ── Quick Access Panel (singleton) ────────────────────────────────────────
+    // â”€â”€ Quick Access Panel (singleton) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private Views.QuickAccessWindow? _quickAccessWindow;
     private DesktopCommandCenter.Application.Interfaces.ITerminalService? _terminalService;
     private bool _isTerminalOpen = false;
@@ -238,7 +294,7 @@ public sealed partial class MainWindow : Window
 
     private async void AddQuickCommand_Click(object sender, RoutedEventArgs e)
     {
-        var titleBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Título (ex: Ping)", Margin = new Thickness(0, 0, 0, 8) };
+        var titleBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "TÃ­tulo (ex: Ping)", Margin = new Thickness(0, 0, 0, 8) };
         var cmdBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Comando (ex: ping google.com)" };
         var panel = new Microsoft.UI.Xaml.Controls.StackPanel();
         panel.Children.Add(titleBox);
@@ -246,7 +302,7 @@ public sealed partial class MainWindow : Window
 
         var dialog = new Microsoft.UI.Xaml.Controls.ContentDialog
         {
-            Title = "Novo Comando Rápido",
+            Title = "Novo Comando RÃ¡pido",
             Content = panel,
             PrimaryButtonText = "Salvar",
             CloseButtonText = "Cancelar",
@@ -286,14 +342,14 @@ public sealed partial class MainWindow : Window
     {
         try
         {
-            // Toggle: se já está visível, fecha
+            // Toggle: se jÃ¡ estÃ¡ visÃ­vel, fecha
             if (_quickAccessWindow != null && _quickAccessWindow.AppWindow.IsVisible)
             {
                 _quickAccessWindow.AppWindow.Hide();
                 return;
             }
 
-            // Recria se a janela foi destruída
+            // Recria se a janela foi destruÃ­da
             if (_quickAccessWindow == null)
             {
                 _quickAccessWindow = new Views.QuickAccessWindow();
@@ -304,10 +360,10 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Serilog.Log.Error(ex, "Erro ao abrir o painel de Acesso Rápido.");
+            Serilog.Log.Error(ex, "Erro ao abrir o painel de Acesso RÃ¡pido.");
         }
     }
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void ShowApp()
     {
@@ -330,7 +386,7 @@ public sealed partial class MainWindow : Window
         ShowApp();
         try
         {
-            // Verifica se está rodando como pacote MSIX (Microsoft Store)
+            // Verifica se estÃ¡ rodando como pacote MSIX (Microsoft Store)
             var currentPackage = Windows.ApplicationModel.Package.Current;
             if (currentPackage != null)
             {
@@ -397,11 +453,18 @@ public sealed partial class MainWindow : Window
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
 
+        try
+        {
+            var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+            presenter?.Maximize();
+        }
+        catch { }
+
         if (!App.HasAppLanguageCached() && RootFrame.Content is Microsoft.UI.Xaml.Controls.Page currentPage)
         {
             var combo = new Microsoft.UI.Xaml.Controls.ComboBox
             {
-                Items = { "Português - Brasil", "English", "Español" },
+                Items = { "PortuguÃªs - Brasil", "English", "EspaÃ±ol" },
                 SelectedIndex = 0,
                 HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch
             };
@@ -425,10 +488,10 @@ public sealed partial class MainWindow : Window
             _ = tService.SetLanguageAsync(lang);
         }
         
-        // Salva uma referência para usar dentro do Task.Run com segurança
+        // Salva uma referÃªncia para usar dentro do Task.Run com seguranÃ§a
         var currentServices = App.Current.Services;
         
-        // Verifica a licença no startup em background
+        // Verifica a licenÃ§a no startup em background
         _ = System.Threading.Tasks.Task.Run(async () =>
         {
             try
@@ -451,7 +514,7 @@ public sealed partial class MainWindow : Window
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, "Erro ao verificar a licença inicial no startup.");
+                Serilog.Log.Error(ex, "Erro ao verificar a licenÃ§a inicial no startup.");
             }
         });
         
@@ -543,4 +606,16 @@ public sealed partial class MainWindow : Window
             Serilog.Log.Error(ex, "Erro ao inicializar o Terminal (FutureShell).");
         }
     }
+
+        private void UpdateTranslations()
+        {
+            TrayUpdateAvailableElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_UpdateAvailable");
+            TrayQuickAccessElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_QuickAccess");
+            TraySettingsElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Settings");
+            TrayDocumentationElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Documentation");
+            TrayReportBugElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_ReportBug");
+            TrayExitElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Exit");
+            if (MainWindowNewCommandElement.Content is string || MainWindowNewCommandElement.Content == null) MainWindowNewCommandElement.Content = Helpers.LocalizationHelper.Instance.GetString("MainWindow_NewCommand");
+        }
 }
+

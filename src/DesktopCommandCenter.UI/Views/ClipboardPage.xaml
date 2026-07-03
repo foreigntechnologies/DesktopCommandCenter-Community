@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Name="RootPage"
     x:Class="DesktopCommandCenter.UI.Views.ClipboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:DesktopCommandCenter.Domain.Entities"
     xmlns:converters="using:DesktopCommandCenter.UI.Converters"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -27,8 +26,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock helpers:Translate.Key="Clip_PageTitle" Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" helpers:Translate.Key="Clip_BtnClear" Content="Limpar Histórico" Command="{x:Bind ViewModel.ClearHistoryCommand}" />
+            <TextBlock x:Name="ClipPageTitleElement" Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
+            <Button x:Name="ClipBtnClearElement" Grid.Column="1" Content="Limpar HistÃ³rico" Command="{x:Bind ViewModel.ClearHistoryCommand}"  />
         </Grid>
 
         <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -48,12 +47,12 @@
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                             <Button Content="&#xE8C8;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent">
                                 <ToolTipService.ToolTip>
-                                    <ToolTip helpers:Translate.Key="Clip_ToolTipCopy" Content="Copiar novamente" />
+                                    <ToolTip x:Name="ClipToolTipCopyElement" ToolTipService.ToolTip="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='Clipboard_BtnCopy'}" Content="Copiar novamente"  />
                                 </ToolTipService.ToolTip>
                             </Button>
                             <Button Content="&#xE74D;" FontFamily="Segoe Fluent Icons" Background="Transparent" BorderBrush="Transparent" Foreground="Red" Command="{Binding ViewModel.DeleteItemCommand, ElementName=RootPage}" CommandParameter="{Binding}">
                                 <ToolTipService.ToolTip>
-                                    <ToolTip helpers:Translate.Key="Clip_ToolTipDelete" Content="Excluir" />
+                                    <ToolTip x:Name="ClipToolTipDeleteElement" ToolTipService.ToolTip="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='Clipboard_BtnDelete'}" Content="Excluir"  />
                                 </ToolTipService.ToolTip>
                             </Button>
                         </StackPanel>
@@ -63,3 +62,4 @@
         </ListView>
     </Grid>
 </Page>
+

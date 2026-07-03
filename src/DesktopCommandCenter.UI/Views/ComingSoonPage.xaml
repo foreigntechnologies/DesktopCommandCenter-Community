@@ -4,18 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
     
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
             <FontIcon Glyph="&#xE946;" FontSize="64" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
-            <TextBlock helpers:Translate.Key="ComingSoon_Title" Text="Em Breve!" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" />
-            <TextBlock x:Name="SubtitleText" helpers:Translate.Key="ComingSoon_Subtitle" Text="Estamos construindo este módulo para você." 
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
-                       Style="{StaticResource BodyTextBlockStyle}" 
-                       HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap" />
+            <TextBlock x:Name="ComingSoonTitleElement" Text="Em Breve!" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"  />
+            <TextBlock x:Name="SubtitleText" Text="Estamos construindo este módulo para você." Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap"  />
         </StackPanel>
     </Grid>
 </Page>

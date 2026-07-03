@@ -2,7 +2,6 @@
     x:Class="DesktopCommandCenter.UI.Views.TemporizadorPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     Background="Transparent">
     <Grid Padding="24">
         <Grid.RowDefinitions>
@@ -10,20 +9,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock helpers:Translate.Key="Temporizador_PageTitle" Text="Temporizador (Pomodoro)" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
+        <TextBlock x:Name="TemporizadorPageTitleElement" Text="Temporizador (Pomodoro)" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
 
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="32" HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="800">
             <StackPanel Spacing="24" HorizontalAlignment="Center">
                 <TextBlock Text="{x:Bind ViewModel.TimeDisplay, Mode=OneWay}" FontSize="56" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                 
                 <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4" HorizontalAlignment="Center">
-                    <NumberBox helpers:Translate.Key="Temporizador_InputYears" Value="{x:Bind ViewModel.InputYears, Mode=TwoWay}" Header="Anos" Minimum="0" Maximum="99" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputMonths" Value="{x:Bind ViewModel.InputMonths, Mode=TwoWay}" Header="Meses" Minimum="0" Maximum="11" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputDays" Value="{x:Bind ViewModel.InputDays, Mode=TwoWay}" Header="Dias" Minimum="0" Maximum="30" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputHours" Value="{x:Bind ViewModel.InputHours, Mode=TwoWay}" Header="Horas" Minimum="0" Maximum="23" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputMinutes" Value="{x:Bind ViewModel.InputMinutes, Mode=TwoWay}" Header="Minutos" Minimum="0" Maximum="59" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputSeconds" Value="{x:Bind ViewModel.InputSeconds, Mode=TwoWay}" Header="Segundos" Minimum="0" Maximum="59" Width="100" Margin="8"/>
-                    <NumberBox helpers:Translate.Key="Temporizador_InputMilliseconds" Value="{x:Bind ViewModel.InputMilliseconds, Mode=TwoWay}" Header="Milissegundos" Minimum="0" Maximum="999" Width="120" Margin="8"/>
+                    <NumberBox x:Name="TemporizadorInputYearsElement" Value="{x:Bind ViewModel.InputYears, Mode=TwoWay}" Header="Anos" Minimum="0" Maximum="99" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputMonthsElement" Value="{x:Bind ViewModel.InputMonths, Mode=TwoWay}" Header="Meses" Minimum="0" Maximum="11" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputDaysElement" Value="{x:Bind ViewModel.InputDays, Mode=TwoWay}" Header="Dias" Minimum="0" Maximum="30" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputHoursElement" Value="{x:Bind ViewModel.InputHours, Mode=TwoWay}" Header="Horas" Minimum="0" Maximum="23" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputMinutesElement" Value="{x:Bind ViewModel.InputMinutes, Mode=TwoWay}" Header="Minutos" Minimum="0" Maximum="59" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputSecondsElement" Value="{x:Bind ViewModel.InputSeconds, Mode=TwoWay}" Header="Segundos" Minimum="0" Maximum="59" Width="100" Margin="8" />
+                    <NumberBox x:Name="TemporizadorInputMillisecondsElement" Value="{x:Bind ViewModel.InputMilliseconds, Mode=TwoWay}" Header="Milissegundos" Minimum="0" Maximum="999" Width="120" Margin="8" />
                 </VariableSizedWrapGrid>
 
                 <Grid ColumnSpacing="16" MaxWidth="400" HorizontalAlignment="Center">
@@ -32,9 +31,9 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button helpers:Translate.Key="Temporizador_BtnStart" Content="Iniciar" Command="{x:Bind ViewModel.StartTimerCommand}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotRunning, Mode=OneWay}" />
-                    <Button helpers:Translate.Key="Temporizador_BtnPause" Grid.Column="1" Content="Pausar" Command="{x:Bind ViewModel.StopTimerCommand}" HorizontalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay}" />
-                    <Button helpers:Translate.Key="Temporizador_BtnReset" Grid.Column="2" Content="Resetar" Command="{x:Bind ViewModel.ResetTimerCommand}" HorizontalAlignment="Stretch" />
+                    <Button x:Name="TemporizadorBtnStartElement" Content="Iniciar" Command="{x:Bind ViewModel.StartTimerCommand}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotRunning, Mode=OneWay}"  />
+                    <Button x:Name="TemporizadorBtnPauseElement" Grid.Column="1" Content="Pausar" Command="{x:Bind ViewModel.StopTimerCommand}" HorizontalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.IsRunning, Mode=OneWay}"  />
+                    <Button x:Name="TemporizadorBtnResetElement" Grid.Column="2" Content="Resetar" Command="{x:Bind ViewModel.ResetTimerCommand}" HorizontalAlignment="Stretch"  />
                 </Grid>
             </StackPanel>
         </Grid>

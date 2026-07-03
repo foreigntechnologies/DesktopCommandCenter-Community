@@ -1,30 +1,14 @@
-<ContentDialog
-    x:Class="DesktopCommandCenter.UI.Views.BugReportDialog"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
-    mc:Ignorable="d"
-    helpers:Translate.Key="BugReport_Title"
-    Title="Reportar um Problema"
-    PrimaryButtonText="Enviar Reporte"
-    CloseButtonText="Cancelar"
-    DefaultButton="Primary"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+<ContentDialog x:Name="BugReportTitleElement" x:Class="DesktopCommandCenter.UI.Views.BugReportDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" Title="Reportar um Problema" PrimaryButtonText="Enviar Reporte" CloseButtonText="Cancelar" DefaultButton="Primary" PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <StackPanel Spacing="16" Width="450" Margin="0,16,0,0">
-        <TextBlock helpers:Translate.Key="BugReport_Desc" Text="Obrigado por ajudar a melhorar o DCC! Por favor, descreva o problema que você encontrou com o máximo de detalhes possível." 
-                   TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        <TextBlock x:Name="BugReportDescElement" Text="Obrigado por ajudar a melhorar o DCC! Por favor, descreva o problema que você encontrou com o máximo de detalhes possível." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  />
 
-        <TextBox x:Name="TitleTextBox" helpers:Translate.Key="BugReport_InputTitle" Header="Título do Problema" PlaceholderText="Ex: App fecha ao abrir as anotações" />
+        <TextBox x:Name="TitleTextBox" Header="Título do Problema" PlaceholderText="Ex: App fecha ao abrir as anotações"  />
 
-        <TextBox x:Name="DescriptionTextBox" helpers:Translate.Key="BugReport_InputDesc" Header="Descrição Detalhada" 
-                 PlaceholderText="Passos para reproduzir o erro, o que era esperado vs o que aconteceu..." 
-                 AcceptsReturn="True" TextWrapping="Wrap" Height="120" />
+        <TextBox x:Name="DescriptionTextBox" Header="Descrição Detalhada" PlaceholderText="Passos para reproduzir o erro, o que era esperado vs o que aconteceu..." AcceptsReturn="True" TextWrapping="Wrap" Height="120"  />
 
         <StackPanel Spacing="8">
-            <TextBlock helpers:Translate.Key="BugReport_AttachTitle" Text="Anexar um Print (Opcional)" Style="{StaticResource BodyTextBlockStyle}" />
+            <TextBlock x:Name="BugReportAttachTitleElement" Text="Anexar um Print (Opcional)" Style="{StaticResource BodyTextBlockStyle}"  />
             <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="12">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -34,10 +18,10 @@
                     
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                         <FontIcon Glyph="&#xEB9F;" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock x:Name="AttachmentNameText" helpers:Translate.Key="BugReport_NoFile" Text="Nenhum arquivo anexado" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="AttachmentNameText" Text="Nenhum arquivo anexado" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  />
                     </StackPanel>
                     
-                    <Button Grid.Column="1" helpers:Translate.Key="BugReport_BtnBrowse" Content="Procurar..." Click="AttachButton_Click" />
+                    <Button x:Name="BugReportBtnBrowseElement" Grid.Column="1" Content="Procurar..." Click="AttachButton_Click"  />
                 </Grid>
             </Border>
         </StackPanel>

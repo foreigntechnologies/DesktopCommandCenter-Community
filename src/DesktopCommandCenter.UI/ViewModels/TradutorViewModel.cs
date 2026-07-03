@@ -15,37 +15,68 @@ public partial class TradutorViewModel : ObservableObject
 {
     private CancellationTokenSource? _debounceCts;
     private bool _isTranslating;
-    private readonly Dictionary<string, string> _langCodes = new()
+
+    // Maps localized display names → ISO language codes
+    private readonly Dictionary<string, string> _langCodes;
+
+    // ISO code → localized display name (for reverse lookup on swap)
+    private readonly Dictionary<string, string> _codesToNames;
+
+    private static string L(string key, string fallback) =>
+        Helpers.LocalizationHelper.Instance.GetString(key) ?? fallback;
+
+    public TradutorViewModel()
     {
-        { "Detectar Idioma (Auto)", "auto" },
-        { "Português", "pt" },
-        { "Inglês", "en" },
-        { "Espanhol", "es" },
-        { "Francês", "fr" },
-        { "Alemão", "de" },
-        { "Italiano", "it" },
-        { "Japonês", "ja" },
-        { "Chinês", "zh" },
-        { "Russo", "ru" },
-        { "Árabe", "ar" },
-        { "Coreano", "ko" },
-        { "Holandês", "nl" },
-        { "Polonês", "pl" },
-        { "Turco", "tr" },
-        { "Sueco", "sv" },
-        { "Norueguês", "no" },
-        { "Dinamarquês", "da" },
-        { "Finlandês", "fi" },
-        { "Grego", "el" },
-        { "Hebraico", "he" },
-        { "Hindi", "hi" },
-        { "Indonésio", "id" },
-        { "Vietnamita", "vi" },
-        { "Tcheco", "cs" },
-        { "Romeno", "ro" },
-        { "Húngaro", "hu" },
-        { "Ucraniano", "uk" }
-    };
+        // Build the localized language map at runtime
+        _langCodes = new Dictionary<string, string>
+        {
+            { L("Lang_Auto",       "Detect Language (Auto)"), "auto" },
+            { L("Lang_Portuguese", "Portuguese"),             "pt"   },
+            { L("Lang_English",    "English"),                "en"   },
+            { L("Lang_Spanish",    "Spanish"),                "es"   },
+            { L("Lang_French",     "French"),                 "fr"   },
+            { L("Lang_German",     "German"),                 "de"   },
+            { L("Lang_Italian",    "Italian"),                "it"   },
+            { L("Lang_Japanese",   "Japanese"),               "ja"   },
+            { L("Lang_Chinese",    "Chinese"),                "zh"   },
+            { L("Lang_Russian",    "Russian"),                "ru"   },
+            { L("Lang_Arabic",     "Arabic"),                 "ar"   },
+            { L("Lang_Korean",     "Korean"),                 "ko"   },
+            { L("Lang_Dutch",      "Dutch"),                  "nl"   },
+            { L("Lang_Polish",     "Polish"),                 "pl"   },
+            { L("Lang_Turkish",    "Turkish"),                "tr"   },
+            { L("Lang_Swedish",    "Swedish"),                "sv"   },
+            { L("Lang_Norwegian",  "Norwegian"),              "no"   },
+            { L("Lang_Danish",     "Danish"),                 "da"   },
+            { L("Lang_Finnish",    "Finnish"),                "fi"   },
+            { L("Lang_Greek",      "Greek"),                  "el"   },
+            { L("Lang_Hebrew",     "Hebrew"),                 "he"   },
+            { L("Lang_Hindi",      "Hindi"),                  "hi"   },
+            { L("Lang_Indonesian", "Indonesian"),             "id"   },
+            { L("Lang_Vietnamese", "Vietnamese"),             "vi"   },
+            { L("Lang_Czech",      "Czech"),                  "cs"   },
+            { L("Lang_Romanian",   "Romanian"),               "ro"   },
+            { L("Lang_Hungarian",  "Hungarian"),              "hu"   },
+            { L("Lang_Ukrainian",  "Ukrainian"),              "uk"   },
+        };
+
+        // Reverse map (code → display name) for swap
+        _codesToNames = new Dictionary<string, string>();
+        foreach (var kv in _langCodes)
+            _codesToNames[kv.Value] = kv.Key;
+
+        // Populate UI lists
+        foreach (var lang in _langCodes.Keys)
+        {
+            SourceLanguages.Add(lang);
+            if (_langCodes[lang] != "auto")
+                TargetLanguages.Add(lang);
+        }
+
+        // Set defaults using localized names
+        _sourceLanguage = L("Lang_Auto",       "Detect Language (Auto)");
+        _targetLanguage = L("Lang_Portuguese", "Portuguese");
+    }
 
     public ObservableCollection<string> SourceLanguages { get; } = new();
     public ObservableCollection<string> TargetLanguages { get; } = new();
@@ -57,23 +88,10 @@ public partial class TradutorViewModel : ObservableObject
     private string _translatedText = "";
 
     [ObservableProperty]
-    private string _sourceLanguage = "Detectar Idioma (Auto)";
+    private string _sourceLanguage = "";
 
     [ObservableProperty]
-    private string _targetLanguage = "Português";
-
-    public TradutorViewModel()
-    {
-        // Populate lists
-        foreach (var lang in _langCodes.Keys)
-        {
-            SourceLanguages.Add(lang);
-            if (lang != "Detectar Idioma (Auto)")
-            {
-                TargetLanguages.Add(lang);
-            }
-        }
-    }
+    private string _targetLanguage = "";
 
     partial void OnSourceTextChanged(string value) => DebounceTranslate(true);
     partial void OnTranslatedTextChanged(string value) => DebounceTranslate(false);
@@ -122,8 +140,8 @@ public partial class TradutorViewModel : ObservableObject
         {
             _isTranslating = true;
 
-            if (forward) TranslatedText = "Traduzindo...";
-            else SourceText = "Traduzindo...";
+            if (forward) TranslatedText = L("Translator_Translating", "Translating...");
+            else SourceText = L("Translator_Translating", "Translating...");
 
             string sl = forward 
                 ? (_langCodes.TryGetValue(SourceLanguage, out string? slCode1) ? slCode1 : "auto")
@@ -168,13 +186,13 @@ public partial class TradutorViewModel : ObservableObject
                     return;
                 }
             }
-            if (forward) TranslatedText = "Erro: Resposta inesperada do tradutor.";
-            else SourceText = "Erro: Resposta inesperada do tradutor.";
+            if (forward) TranslatedText = L("Translator_ErrorUnexpected", "Error: Unexpected translator response.");
+            else SourceText = L("Translator_ErrorUnexpected", "Error: Unexpected translator response.");
         }
         catch (Exception ex)
         {
-            if (forward) TranslatedText = $"Erro ao traduzir: {ex.Message}";
-            else SourceText = $"Erro ao traduzir: {ex.Message}";
+            if (forward) TranslatedText = L("Translator_ErrorPrefix", "Translation error: ") + ex.Message;
+            else SourceText = L("Translator_ErrorPrefix", "Translation error: ") + ex.Message;
         }
         finally
         {
@@ -188,10 +206,11 @@ public partial class TradutorViewModel : ObservableObject
         var tempSource = SourceLanguage;
         var tempTarget = TargetLanguage;
 
-        if (tempSource == "Detectar Idioma (Auto)")
+        // If source was "Auto", swap to English fallback
+        if (_langCodes.TryGetValue(tempSource, out var srcCode) && srcCode == "auto")
         {
             SourceLanguage = tempTarget;
-            TargetLanguage = "Inglês";
+            TargetLanguage = _codesToNames.TryGetValue("en", out var en) ? en : tempTarget;
         }
         else
         {

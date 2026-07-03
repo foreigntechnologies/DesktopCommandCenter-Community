@@ -1,10 +1,9 @@
-<Page
+﻿<Page
     x:Class="DesktopCommandCenter.UI.Views.PromptsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
     xmlns:domain="using:DesktopCommandCenter.Domain.Entities"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     x:Name="RootPage"
     Background="Transparent">
     
@@ -14,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock helpers:Translate.Key="Prompts_PageTitle" Text="Biblioteca de Prompts" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
+        <TextBlock x:Name="PromptsPageTitleElement" Text="Biblioteca de Prompts" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
 
         <Grid Grid.Row="1" ColumnSpacing="24">
             <Grid.ColumnDefinitions>
@@ -41,7 +40,7 @@
                                     
                                     <TextBlock Grid.Row="2" Text="{x:Bind Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     
-                                    <!-- AÃ‡Ã•ES RÃPIDAS -->
+                                    <!-- AÃƒâ€¡Ãƒâ€¢ES RÃƒÂPIDAS -->
                                     <Grid Grid.Row="3" Margin="0,8,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -49,15 +48,13 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         
-                                        <Button helpers:Translate.Key="Prompts_BtnCopy" Content="Copiar" HorizontalAlignment="Stretch" Margin="0,0,8,0"
-                                                Command="{Binding ElementName=RootPage, Path=ViewModel.CopyPromptCommand}" 
-                                                CommandParameter="{x:Bind}"/>
+                                        <Button x:Name="PromptsBtnCopyElement" ToolTipService.ToolTip="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='Prompts_BtnCopy'}" Content="Copiar" HorizontalAlignment="Stretch" Margin="0,0,8,0" Command="{Binding ElementName=RootPage, Path=ViewModel.CopyPromptCommand}" CommandParameter="{x:Bind}" />
                                         
                                         <Button Grid.Column="1" Padding="8,4" Margin="0,0,4,0"
                                                 Command="{Binding ElementName=RootPage, Path=ViewModel.SelectPromptForEditCommand}"
                                                 CommandParameter="{x:Bind}">
                                             <ToolTipService.ToolTip>
-                                                <ToolTip helpers:Translate.Key="Prompts_ToolTipEdit" Content="Editar" />
+                                                <ToolTip x:Name="PromptsToolTipEditElement" ToolTipService.ToolTip="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='Prompts_ToolTipEdit'}" Content="Editar"  />
                                             </ToolTipService.ToolTip>
                                             <SymbolIcon Symbol="Edit"/>
                                         </Button>
@@ -67,7 +64,7 @@
                                                 CommandParameter="{x:Bind}"
                                                 Foreground="Red">
                                             <ToolTipService.ToolTip>
-                                                <ToolTip helpers:Translate.Key="Prompts_ToolTipDelete" Content="Excluir" />
+                                                <ToolTip x:Name="PromptsToolTipDeleteElement" ToolTipService.ToolTip="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='Prompts_ToolTipDelete'}" Content="Excluir"  />
                                             </ToolTipService.ToolTip>
                                             <SymbolIcon Symbol="Delete"/>
                                         </Button>
@@ -82,8 +79,8 @@
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12" 
                             Visibility="{x:Bind ViewModel.EmptyMessageVisibility, Mode=OneWay}">
                     <SymbolIcon Symbol="OutlineStar" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <TextBlock helpers:Translate.Key="Prompts_EmptyTitle" Text="Nenhum prompt salvo ainda." Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
-                    <TextBlock helpers:Translate.Key="Prompts_EmptyDesc" Text="Crie um novo prompt usando o formulÃ¡rio Ã  direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="PromptsEmptyTitleElement" Text="Nenhum prompt salvo ainda." Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="PromptsEmptyDescElement" Text="Crie um novo prompt usando o formulário Ã direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
                 </StackPanel>
             </Grid>
 
@@ -92,15 +89,11 @@
                 <StackPanel Spacing="16">
                     <TextBlock Text="{x:Bind ViewModel.FormTitle, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
 
-                    <TextBox helpers:Translate.Key="Prompts_InputTitle" Header="TÃ­tulo" PlaceholderText="Ex: Revisar CÃ³digo" 
-                             Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="PromptsInputTitleElement" Header="Título" PlaceholderText="Ex: Revisar CÃ³digo" Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox helpers:Translate.Key="Prompts_InputCat" Header="Categoria" PlaceholderText="Ex: ProgramaÃ§Ã£o" 
-                             Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="PromptsInputCatElement" Header="Categoria" PlaceholderText="Ex: ProgramaÃ§Ã£o" Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox helpers:Translate.Key="Prompts_InputContent" Header="ConteÃºdo do Prompt" PlaceholderText="Por favor, revise o cÃ³digo abaixo..." 
-                             Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    <TextBox x:Name="PromptsInputContentElement" Header="ConteÃºdo do Prompt" PlaceholderText="Por favor, revise o cÃ³digo abaixo..." Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
                     <Grid ColumnSpacing="12" Margin="0,8,0,0">
                         <Grid.ColumnDefinitions>
@@ -108,14 +101,13 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
-                        <Button Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"
-                                Command="{x:Bind ViewModel.SavePromptCommand}"/>
+                        <Button x:Name="PromptsBtnSaveElement" Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.SavePromptCommand}" />
                                 
-                        <Button Grid.Column="1" Content="Cancelar" HorizontalAlignment="Stretch"
-                                Command="{x:Bind ViewModel.ClearFormCommand}"/>
+                        <Button x:Name="PromptsBtnCancelElement" Grid.Column="1" Content="Cancelar" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ClearFormCommand}" />
                     </Grid>
                 </StackPanel>
             </Border>
         </Grid>
     </Grid>
 </Page>
+
