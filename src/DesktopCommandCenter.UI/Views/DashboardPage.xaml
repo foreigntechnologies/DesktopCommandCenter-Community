@@ -375,47 +375,46 @@
                         </Grid>
                     </Button>
                 </Grid>
+
+            <!-- ══ RODAPÉ: Links do app ══ -->
+            <Border MaxWidth="1400"
+                HorizontalAlignment="Stretch"
+                Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                CornerRadius="10"
+                Padding="16,10"
+                Margin="0,32,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
+                        <HyperlinkButton x:Name="BtnDashDoc" Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <HyperlinkButton x:Name="BtnDashProject" Content="Conheça o Projeto" NavigateUri="https://foreigntechnologies.com.br/projects/windows/desktop-command-center/" FontSize="12" Padding="4,2" />
+                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <HyperlinkButton x:Name="BtnDashGit" Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
+                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <HyperlinkButton x:Name="BtnDashBug" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
+                        <TextBlock x:Name="SeparatorBugReport" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <HyperlinkButton x:Name="BtnUpgradePro" helpers:Translate.Key="Dashboard_BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
+                        <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
+                                    <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+                    </StackPanel>
+                    <TextBlock
+                        x:Name="TxtCopyright"
+                        Text="© 2026 Foreign Technologies®. All rights reserved"
+                        FontSize="11"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center" />
+                </Grid>
+            </Border>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>
-
-    <!-- ══ RODAPÉ: Links do app ══ --><!-- ══ RODAPÉ: Links do app ══ -->
-        <Border Grid.Row="1"
-            MaxWidth="1400"
-            HorizontalAlignment="Stretch"
-            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
-            CornerRadius="10"
-            Padding="16,10">
-            <Grid>
-                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
-                    <HyperlinkButton x:Name="BtnDashDoc" Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnDashProject" Content="Conheça o Projeto" NavigateUri="https://foreigntechnologies.com.br/projects/windows/desktop-command-center/" FontSize="12" Padding="4,2" />
-                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnDashGit" Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                    <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnDashBug" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
-                    <TextBlock x:Name="SeparatorBugReport" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <HyperlinkButton x:Name="BtnUpgradePro" helpers:Translate.Key="Dashboard_BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
-                    <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                    <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
-                        <DropDownButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
-                                <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
-                            </MenuFlyout>
-                        </DropDownButton.Flyout>
-                    </DropDownButton>
-                </StackPanel>
-                <TextBlock
-                    x:Name="TxtCopyright"
-                    Text="© 2026 Foreign Technologies®. All rights reserved"
-                    FontSize="11"
-                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center" />
-            </Grid>
-        </Border>
-    </Grid>
+</Grid>
 </Page>
-
