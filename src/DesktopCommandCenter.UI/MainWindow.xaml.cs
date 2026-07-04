@@ -101,7 +101,7 @@ InitializeComponent();
     {
         try
         {
-            if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
+            if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
 
             // Skip update if window is in a transient state (minimized)
             if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter p &&

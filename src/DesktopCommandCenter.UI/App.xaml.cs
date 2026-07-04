@@ -574,7 +574,7 @@ public partial class App : Microsoft.UI.Xaml.Application
 
         var dispatcherQueue = MainWindow.DispatcherQueue;
 
-        System.Threading.Tasks.Task.Run(() =>
+        System.Threading.Tasks.Task.Run(async () =>
         {
             try
             {
@@ -593,6 +593,32 @@ public partial class App : Microsoft.UI.Xaml.Application
                 // Start Automation Engine
                 var automationEngine = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAutomationEngine>();
                 automationEngine.Start();
+
+                // ─── BACKGROUND SESSION & LICENSE VALIDATION ───────────────────
+                var authService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>();
+                var licenseService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>();
+                try
+                {
+                    var user = await authService.GetCurrentUserAsync();
+                    if (user != null)
+                    {
+                        var plan = await licenseService.GetCurrentPlanAsync();
+                        bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+                        
+                        dispatcherQueue?.TryEnqueue(() =>
+                        {
+                            App.IsProUnlocked = isPlanPro;
+                            App.SaveProCached(isPlanPro);
+                            App.SaveCachedEmail(user.Email);
+                            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPlanPro));
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    // Fallback to cache on network errors; do not set to false
+                }
+                // ─────────────────────────────────────────────────────────────
 
                 // Register Dynamic Hotkeys and UI-thread services
                 dispatcherQueue?.TryEnqueue(() =>
