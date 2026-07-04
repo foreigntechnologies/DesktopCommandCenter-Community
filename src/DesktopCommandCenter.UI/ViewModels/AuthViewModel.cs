@@ -98,8 +98,8 @@ public partial class AuthViewModel : ObservableObject
     public bool CanLinkMicrosoft => !HasMicrosoftLinked;
     public bool HasNoGoogleLinked => !HasGoogleLinked;
 
-    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) && !CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
-    public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+    public bool IsFreePlan   => IsLoggedIn && CurrentPlan.Equals("free", StringComparison.OrdinalIgnoreCase);
+    public bool IsProPlan    => IsLoggedIn && (CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase));
     public bool IsPausedPlan => IsLoggedIn && CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
     
     public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
@@ -154,12 +154,24 @@ public partial class AuthViewModel : ObservableObject
         }
         else
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            // Only reset to logged-out state if there is genuinely no session on disk.
+            // If the session file exists but Firebase hasn't loaded yet (returned null),
+            // keep the cached state to avoid a false "free" flash on startup.
+            var sessionFile = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "DCC", "dcc_auth_session.json");
+            if (!System.IO.File.Exists(sessionFile))
             {
-                CurrentPlan = "free";
-                StatusMessage = string.Empty;
-                App.IsProUnlocked = false;
-            });
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    IsLoggedIn = false;
+                    CurrentPlan = "free";
+                    StatusMessage = string.Empty;
+                    App.IsProUnlocked = false;
+                    App.SaveCachedEmail(string.Empty);
+                    App.SaveProCached(false);
+                });
+            }
         }
     }
 
@@ -178,12 +190,13 @@ public partial class AuthViewModel : ObservableObject
         
         // Persist email and pro status to disk so startup is instant on next launch
         App.SaveCachedEmail(user.Email);
-        App.SaveProCached(plan.Equals("pro", StringComparison.OrdinalIgnoreCase));
+        bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+        App.SaveProCached(isPlanPro);
 
         _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase);
             
             App.IsProUnlocked = newIsPro;
             
