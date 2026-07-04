@@ -255,6 +255,7 @@
   "Notes_Save": "Salvar",
   "Notes_Cancel": "Cancelar",
   "Notes_TitlePlaceholder": "Título da nota",
+  "Notes_CategoryPlaceholder": "Categoria (ex: Trabalho)",
   "Notes_ContentPlaceholder": "Escreva sua nota aqui...",
   "Oobe_Title": "Bem-vindo ao Desktop Command Center!",
   "Oobe_Desc": "Antes de começarmos, escolha o seu tema preferido:",

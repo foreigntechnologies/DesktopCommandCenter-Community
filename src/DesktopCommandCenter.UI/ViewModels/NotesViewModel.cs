@@ -39,10 +39,11 @@ public partial class NotesViewModel : ObservableObject
         Notes.Insert(0, note); // Insert at top
     }
 
-    public async Task UpdateNoteAsync(Note note, string newTitle, string newContent)
+    public async Task UpdateNoteAsync(Note note, string newTitle, string newContent, string newCategory)
     {
         note.Title = newTitle;
         note.Content = newContent;
+        note.Category = newCategory;
         await _mediator.Send(new UpdateNoteCommand(note));
         
         // Trigger UI update

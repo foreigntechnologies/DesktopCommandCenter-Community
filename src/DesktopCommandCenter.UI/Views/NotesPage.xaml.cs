@@ -72,6 +72,13 @@ InitializeComponent();
                 Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
             };
             
+            var categoryBox = new TextBox 
+            { 
+                PlaceholderText = loc.GetString("Notes_CategoryPlaceholder") ?? "Categoria", 
+                Text = isEdit && noteToEdit != null ? noteToEdit.Category : "",
+                Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
+            };
+            
             var contentBox = new TextBox 
             { 
                 PlaceholderText = loc.GetString("Notes_ContentPlaceholder") ?? "Escreva sua nota aqui...",
@@ -83,6 +90,7 @@ InitializeComponent();
 
             var panel = new StackPanel();
             panel.Children.Add(titleBox);
+            panel.Children.Add(categoryBox);
             panel.Children.Add(contentBox);
 
             var dialog = new ContentDialog
@@ -101,17 +109,18 @@ InitializeComponent();
             if (result == ContentDialogResult.Primary)
             {
                 string title = string.IsNullOrWhiteSpace(titleBox.Text) ? "Nota sem título" : titleBox.Text;
+                string category = string.IsNullOrWhiteSpace(categoryBox.Text) ? "Geral" : categoryBox.Text;
                 string content = contentBox.Text;
                 
                 if (string.IsNullOrWhiteSpace(content)) return;
 
                 if (isEdit && noteToEdit != null)
                 {
-                    await ViewModel.UpdateNoteAsync(noteToEdit, title, content);
+                    await ViewModel.UpdateNoteAsync(noteToEdit, title, content, category);
                 }
                 else
                 {
-                    await ViewModel.CreateNoteAsync(title, content, "Geral");
+                    await ViewModel.CreateNoteAsync(title, content, category);
                 }
             }
         }
