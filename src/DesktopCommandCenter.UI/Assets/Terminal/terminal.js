@@ -77,7 +77,6 @@ if (window.chrome && window.chrome.webview) {
         } else if (msg.type === 'hud') {
             if (msg.cpu) document.getElementById('cpu-hud').innerText = `CPU: ${msg.cpu}`;
             if (msg.ram) document.getElementById('ram-hud').innerText = `RAM: ${msg.ram}`;
-            if (msg.ai) document.getElementById('ai-status').innerText = `AI: ${msg.ai}`;
         }
     });
 }

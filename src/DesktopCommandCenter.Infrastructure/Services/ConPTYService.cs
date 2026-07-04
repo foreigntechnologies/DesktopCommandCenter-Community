@@ -151,8 +151,32 @@ public class ConPTYService : ITerminalService
         var tSec = new SECURITY_ATTRIBUTES { nLength = Marshal.SizeOf<SECURITY_ATTRIBUTES>() };
 
         string psPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");
-        string executable = commandLine.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase) ? psPath : commandLine;
+        
+        string executable;
+        if (commandLine.Equals("powershell.exe", StringComparison.OrdinalIgnoreCase))
+        {
+            // Injeta o alias 'ai' nativamente no PowerShell
+            executable = $"{psPath} -NoExit -Command \"function ai {{ future.exe ai `$args }}\"";
+        }
+        else
+        {
+            executable = commandLine;
+        }
         string cwd = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+        // Injetar o future.exe no PATH
+        string cliPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", ".build", "bin", "DesktopCommandCenter.CLI", "Debug", "net9.0-windows10.0.26100.0"));
+        if (!Directory.Exists(cliPath))
+        {
+            // Fallback for release/other builds
+            cliPath = Path.Combine(AppContext.BaseDirectory, "tools");
+        }
+        
+        string currentPath = Environment.GetEnvironmentVariable("PATH") ?? "";
+        if (!currentPath.Contains(cliPath, StringComparison.OrdinalIgnoreCase))
+        {
+            Environment.SetEnvironmentVariable("PATH", currentPath + ";" + cliPath);
+        }
 
         bool created = CreateProcess(null, executable, ref pSec, ref tSec, false, EXTENDED_STARTUPINFO_PRESENT, IntPtr.Zero, cwd, ref startupInfo, out _processInfo);
         

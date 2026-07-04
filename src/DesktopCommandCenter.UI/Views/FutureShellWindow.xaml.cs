@@ -40,14 +40,17 @@ public sealed partial class FutureShellWindow : Window
             appWindow.SetIcon(iconPath);
         }
 
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        try
         {
-            AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
         }
-        else
+        catch
         {
-            AppTitleBar.Visibility = Visibility.Collapsed;
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
         }
+
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(AppTitleBar);
 
         // Initialize Terminal Service
         _terminalService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITerminalService>();
@@ -70,7 +73,7 @@ public sealed partial class FutureShellWindow : Window
                 var process = System.Diagnostics.Process.GetCurrentProcess();
                 var ramMB = (process.WorkingSet64 / 1024 / 1024).ToString();
                 
-                var msg = new { type = "hud", cpu = "~1%", ram = ramMB, ai = "Ready" };
+                var msg = new { type = "hud", cpu = "~1%", ram = $"{ramMB} MB" };
                 var json = JsonSerializer.Serialize(msg);
                 TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
             }

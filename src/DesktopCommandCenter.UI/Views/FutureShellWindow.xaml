@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     Title="FutureShell">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="Transparent" RequestedTheme="Dark">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
