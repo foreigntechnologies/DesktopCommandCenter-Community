@@ -10,10 +10,10 @@ public sealed partial class AuthPage : Page
 
     public AuthPage()
     {
-InitializeComponent();
-            UpdateTranslations();
-            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         ViewModel = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<AuthViewModel>();
+        InitializeComponent();
+        UpdateTranslations();
+        Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         
         Loaded += AuthPage_Loaded;
         // Translate.Key on each XAML element handles live language updates automatically.
