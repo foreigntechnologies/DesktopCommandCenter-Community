@@ -42,11 +42,9 @@ InitializeComponent();
             catch { }
         }
 
-        // Use AppWindow.TitleBar API exclusively - do NOT call SetTitleBar() or ExtendsContentIntoTitleBar
-        // together, as this combination causes a fail-fast 0xc0000602 crash in Microsoft.UI.Input.dll
-        // when dragging the window to a monitor with a different DPI and then maximizing.
-        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-        AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
+        // Use Window API directly to avoid 0xc0000602 crash on multi-monitor DPI changes
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(AppTitleBar);
 
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");

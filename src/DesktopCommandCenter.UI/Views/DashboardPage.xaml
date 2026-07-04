@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16" Padding="0,0,16,0">
-            <StackPanel Spacing="20" MaxWidth="1400">
+            <StackPanel Spacing="20" MaxWidth="1400" HorizontalAlignment="Center">
 
             <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
             <Grid>
@@ -39,7 +39,7 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
                         <Ellipse Width="6" Height="6" Fill="#4CAF50" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtVersion" Text="v2.0.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtVersion" Text="v1.0.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </StackPanel>
 

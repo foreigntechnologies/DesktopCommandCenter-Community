@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging;
@@ -128,7 +128,7 @@ public sealed partial class DashboardPage : Page
             }
             else
             {
-                TxtVersion.Text = "v1.0.1";
+                TxtVersion.Text = "v1.0.0";
             }
         }
 
