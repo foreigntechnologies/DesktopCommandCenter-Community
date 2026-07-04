@@ -43,14 +43,10 @@
 
 
 
-        <Grid x:Name="AppTitleBar" Background="Transparent" Height="48" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <StackPanel x:Name="AppTitleBar" Background="Transparent" Height="48" VerticalAlignment="Top" Orientation="Horizontal">
             <Image Source="Assets/StoreLogo.png" Width="16" Height="16" Margin="12,8,12,8" VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="DCC - Desktop Command Center" VerticalAlignment="Center" FontSize="12" />
-        </Grid>
+            <TextBlock Text="DCC - Desktop Command Center" VerticalAlignment="Center" FontSize="12" />
+        </StackPanel>
 
         <!--
             The Frame hosts pages for your application content. Add your UI to
