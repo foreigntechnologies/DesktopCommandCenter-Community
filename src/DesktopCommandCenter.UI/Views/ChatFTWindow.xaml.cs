@@ -65,8 +65,8 @@ public sealed partial class ChatFTWindow : Window
                 try
                 {
                     appWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
-                    appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
-                    appWindow.TitleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+                    appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    appWindow.TitleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
                 }
                 catch { }
             }

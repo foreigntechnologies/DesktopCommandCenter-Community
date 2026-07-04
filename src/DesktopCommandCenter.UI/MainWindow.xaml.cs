@@ -43,7 +43,7 @@ InitializeComponent();
         }
 
         ExtendsContentIntoTitleBar = true;
-        // SetTitleBar(AppTitleBar); // Removed to prevent WinUI 3 crash during maximize transitions
+        SetTitleBar(AppTitleBar); // Restored, the real fix is the transparent button color below
         
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
@@ -103,15 +103,15 @@ InitializeComponent();
                     titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
                 }
 
-                // Keep backgrounds transparent so Mica/Acrylic shows through
-                titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
+                // Keep backgrounds transparent so Mica/Acrylic shows through, using alpha 1 to prevent 0xc0000602 input crash
+                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
                 titleBar.ButtonHoverBackgroundColor = isDark
                     ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
                     : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
                 titleBar.ButtonPressedBackgroundColor = isDark
                     ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
                     : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
-                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
 
                 // Re-subscribe to ActualThemeChanged each time to avoid double-subscription
                 root.ActualThemeChanged -= Root_ActualThemeChanged;
