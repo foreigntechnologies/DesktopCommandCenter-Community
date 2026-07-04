@@ -13,6 +13,7 @@ public sealed partial class FutureShellWindow : Window
 {
     private ITerminalService _terminalService;
     private DispatcherTimer _hudTimer;
+    private bool _isInitialized = false;
 
     [DllImport("shell32.dll", SetLastError = true)]
     public static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
@@ -40,17 +41,15 @@ public sealed partial class FutureShellWindow : Window
             appWindow.SetIcon(iconPath);
         }
 
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
-        }
+        // NOTE: SystemBackdrop (Mica) is intentionally NOT set here.
+        // Setting it before Activate() can trigger WinRT InvalidOperationException
+        // when the window is moved between monitors or resized during DPI transitions.
+        // It is applied in the first Activated event via InitializeWindowUI().
 
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
+
+        this.Activated += FutureShellWindow_Activated;
 
         // Initialize Terminal Service
         _terminalService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITerminalService>();
@@ -62,6 +61,22 @@ public sealed partial class FutureShellWindow : Window
         _hudTimer.Start();
 
         InitializeTerminalAsync();
+    }
+
+    private void FutureShellWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        if (!_isInitialized)
+        {
+            _isInitialized = true;
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+            }
+            catch
+            {
+                try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
+            }
+        }
     }
 
     private void HudTimer_Tick(object? sender, object e)
@@ -164,9 +179,9 @@ public sealed partial class FutureShellWindow : Window
 
     private void TerminalService_ProcessExited(object? sender, EventArgs e)
     {
-        DispatcherQueue.TryEnqueue(() =>
+        DispatcherQueue?.TryEnqueue(() =>
         {
-            this.Close();
+            try { this.Close(); } catch { }
         });
     }
 

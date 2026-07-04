@@ -141,6 +141,11 @@ public sealed partial class MainWindow : Window
 
     private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
     {
+        // Only respond after the window UI has been fully initialized.
+        // During construction or before Activate(), XamlRoot is null and
+        // calling TitleBar APIs can throw a WinRT InvalidOperationException.
+        if (!_isInitialized) return;
+
         // Trigger a debounced TitleBar update whenever the window position, size,
         // or presenter state changes (covers monitor moves and maximize/restore).
         if (args.DidPositionChange || args.DidSizeChange || args.DidPresenterChange)
@@ -506,35 +511,8 @@ public sealed partial class MainWindow : Window
             _ = tService.SetLanguageAsync(lang);
         }
         
-        // Salva uma referência para usar dentro do Task.Run com segurança
-        var currentServices = App.Current.Services;
-        
-        // Verifica a licença no startup em background
-        _ = System.Threading.Tasks.Task.Run(async () =>
-        {
-            try
-            {
-                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
-                var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
-
-                var user = await authService.GetCurrentUserAsync();
-                if (user != null)
-                {
-                    var plan = await licenseService.GetCurrentPlanAsync();
-                    bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                    App.IsProUnlocked = isPro;
-                    
-                    DispatcherQueue?.TryEnqueue(() =>
-                    {
-                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                Serilog.Log.Error(ex, "Erro ao verificar a licença inicial no startup.");
-            }
-        });
+        // License validation is already handled by App.InitializeApplicationAsync() which
+        // runs right after MainWindow.Activate(). No need to duplicate it here.
         
         bool firstRun = false;
         try
