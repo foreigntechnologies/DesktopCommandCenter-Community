@@ -20,8 +20,6 @@ public sealed partial class MainWindow : Window
     [DllImport("shell32.dll", SetLastError = true)]
     static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
-    private bool _isInitialized = false;
-
     public MainWindow()
     {
         InitializeComponent();
@@ -45,6 +43,22 @@ public sealed partial class MainWindow : Window
 
         RootFrame.Loaded += RootFrame_Loaded;
         this.Activated += MainWindow_FocusChanged;
+
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+            }
+            catch { }
+        }
+
+        // Navigate the root frame to the main page on startup.
+        RootFrame.Navigate(typeof(MainPage));
 
         // Set initial title bar button colors once the frame is ready.
         // NOTE: We intentionally do NOT subscribe to AppWindow.Changed here.
@@ -110,12 +124,6 @@ public sealed partial class MainWindow : Window
     private DateTime _lastFocusCheck = DateTime.MinValue;
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
-        if (!_isInitialized)
-        {
-            _isInitialized = true;
-            InitializeWindowUI();
-        }
-
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
@@ -132,30 +140,6 @@ public sealed partial class MainWindow : Window
                 // The license is already checked on Startup and when opening the Account/Settings pages.
             }
         }
-    }
-
-    private void InitializeWindowUI()
-    {
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
-
-        // Navigate the root frame to the main page on startup.
-        RootFrame.Navigate(typeof(MainPage));
-
-        // NOTE: We no longer subscribe to ActualThemeChanged because modifying AppWindow.TitleBar
-        // during monitor or DPI transitions (like maximizing on a different screen)
-        // can throw an ArgumentException from WinRT and cause a 0xc0000602 FailFast crash.
-        // TitleBar colors will be set once on Load and remain static.
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)

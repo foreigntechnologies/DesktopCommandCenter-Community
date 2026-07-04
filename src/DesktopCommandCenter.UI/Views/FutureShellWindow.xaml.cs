@@ -13,7 +13,7 @@ public sealed partial class FutureShellWindow : Window
 {
     private ITerminalService _terminalService;
     private DispatcherTimer _hudTimer;
-    private bool _isInitialized = false;
+
 
     [DllImport("shell32.dll", SetLastError = true)]
     public static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
@@ -49,7 +49,14 @@ public sealed partial class FutureShellWindow : Window
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
 
-        this.Activated += FutureShellWindow_Activated;
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
+        }
 
         // Initialize Terminal Service
         _terminalService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITerminalService>();
@@ -63,21 +70,6 @@ public sealed partial class FutureShellWindow : Window
         InitializeTerminalAsync();
     }
 
-    private void FutureShellWindow_Activated(object sender, WindowActivatedEventArgs args)
-    {
-        if (!_isInitialized)
-        {
-            _isInitialized = true;
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-            }
-            catch
-            {
-                try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
-            }
-        }
-    }
 
     private void HudTimer_Tick(object? sender, object e)
     {
