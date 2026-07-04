@@ -42,8 +42,7 @@ InitializeComponent();
             catch { }
         }
 
-        ExtendsContentIntoTitleBar = true;
-        // SetTitleBar(AppTitleBar); // Removed to prevent WinUI 3 crash during maximize transitions
+        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
