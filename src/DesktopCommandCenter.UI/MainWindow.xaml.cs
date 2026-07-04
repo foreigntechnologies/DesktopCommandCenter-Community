@@ -70,22 +70,27 @@ InitializeComponent();
     /// </summary>
     public void UpdateTitleBarButtonColors()
     {
-        DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+        // Add a delay to prevent fail-fast 0xc0000602 when moving across monitors with different DPIs.
+        // WinUI fires ActualThemeChanged during DPI scaling, and accessing AppWindow.TitleBar immediately causes a COM crash.
+        System.Threading.Tasks.Task.Run(async () =>
         {
-            try
+            await System.Threading.Tasks.Task.Delay(300);
+            DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
-                if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
+                try
+                {
+                    if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
 
-                // Avoid fail-fast COM exception when updating AppWindow.TitleBar properties
-                // while the window is in an intermediate state (minimized, moving between monitors, etc.)
-                if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter &&
-                    presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
-                    return;
+                    // Avoid fail-fast COM exception when updating AppWindow.TitleBar properties
+                    // while the window is in an intermediate state (minimized, moving between monitors, etc.)
+                    if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter &&
+                        presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
+                        return;
 
-                var titleBar = AppWindow?.TitleBar;
-                if (titleBar == null) return;
+                    var titleBar = AppWindow?.TitleBar;
+                    if (titleBar == null) return;
 
-                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+                    var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
 
                 if (isDark)
                 {
@@ -115,7 +120,12 @@ InitializeComponent();
                 root.ActualThemeChanged -= Root_ActualThemeChanged;
                 root.ActualThemeChanged += Root_ActualThemeChanged;
             }
-            catch { /* Silently ignore transient invalid state during DPI/monitor transitions */ }
+            catch (Exception ex)
+            {
+                // Silently ignore COM exceptions during DPI/monitor changes
+                System.Diagnostics.Debug.WriteLine($"Failed to update title bar colors: {ex.Message}");
+            }
+        });
         });
     }
 
