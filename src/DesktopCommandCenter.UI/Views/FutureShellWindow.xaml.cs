@@ -46,8 +46,8 @@ public sealed partial class FutureShellWindow : Window
         // when the window is moved between monitors or resized during DPI transitions.
         // It is applied in the first Activated event via InitializeWindowUI().
 
-        this.ExtendsContentIntoTitleBar = true;
-        this.SetTitleBar(AppTitleBar);
+        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        // Do NOT call this.SetTitleBar(AppTitleBar). The grid will just overlay the native drag region.
 
         this.Activated += FutureShellWindow_Activated;
 

@@ -32,9 +32,9 @@ public sealed partial class MainWindow : Window
         
         this.Closed += MainWindow_Closed;
 
-        // Use Window API directly to avoid 0xc0000602 crash on multi-monitor DPI changes
-        this.ExtendsContentIntoTitleBar = true;
-        this.SetTitleBar(AppTitleBar);
+        // Use AppWindow API directly to avoid 0xc0000602 crash in Microsoft.UI.Input.dll on multi-monitor DPI changes
+        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        // Do NOT call this.SetTitleBar(AppTitleBar). The grid will just overlay the native drag region.
 
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
