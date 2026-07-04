@@ -47,53 +47,24 @@ public sealed partial class MainWindow : Window
         this.Activated += MainWindow_FocusChanged;
 
         // Set initial title bar button colors once the frame is ready.
-        RootFrame.Loaded += (s, e) => UpdateTitleBarButtonColors();
-
-        // Also update TitleBar after any window-state change (DPI, maximize, monitor move)
-        AppWindow.Changed += AppWindow_Changed;
-    }
-
-    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _titleBarDebounceTimer;
-
-    /// <summary>
-    /// Updates the caption button foreground/background colors to match the current theme.
-    /// Uses a DispatcherTimer (UI thread only) to debounce rapid calls during DPI/monitor transitions.
-    /// A DispatcherTimer is safe from WinRT apartment violations because it always fires on the UI thread.
-    /// </summary>
-    public void UpdateTitleBarButtonColors()
-    {
-        // Stop any pending timer — rapid calls collapse into one deferred execution
-        _titleBarDebounceTimer?.Stop();
-
-        if (_titleBarDebounceTimer == null)
-        {
-            _titleBarDebounceTimer = DispatcherQueue.CreateTimer();
-            _titleBarDebounceTimer.Interval = TimeSpan.FromMilliseconds(600);
-            _titleBarDebounceTimer.IsRepeating = false;
-            _titleBarDebounceTimer.Tick += (t, _) =>
-            {
-                t.Stop();
-                ApplyTitleBarColors();
-            };
-        }
-
-        _titleBarDebounceTimer.Start();
+        // NOTE: We intentionally do NOT subscribe to AppWindow.Changed here.
+        // Setting TitleBar properties during a DPI transition (monitor move / maximize)
+        // causes WinRT to FailFast with 0xc0000602. TitleBar colors are applied once
+        // on load and then only when the theme actually changes (ActualThemeChanged).
+        RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
     }
 
     /// <summary>
-    /// Actually applies TitleBar button colors. Called on the UI thread after debounce settles.
-    /// All access to AppWindow.TitleBar happens here, with defensive null/state checks.
+    /// Applies TitleBar button colors to match the current theme.
+    /// Called on the UI thread only when the frame loads or the theme changes.
+    /// We no longer call this on AppWindow.Changed / DPI transitions because
+    /// setting TitleBar properties during a DPI change triggers WinRT FailFast (0xc0000602).
     /// </summary>
-    private void ApplyTitleBarColors()
+    public void ApplyTitleBarColors()
     {
         try
         {
             if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
-
-            // Skip update if window is in a transient state (minimized)
-            if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter p &&
-                p.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
-                return;
 
             var titleBar = AppWindow?.TitleBar;
             if (titleBar == null) return;
@@ -115,7 +86,7 @@ public sealed partial class MainWindow : Window
                 titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
             }
 
-            // alpha=1 (near-transparent) avoids the hit-test null region that triggers 0xc0000602
+            // alpha=1 (near-transparent) avoids the hit-test null region
             titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
             titleBar.ButtonHoverBackgroundColor = isDark
                 ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
@@ -124,9 +95,6 @@ public sealed partial class MainWindow : Window
                 ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
                 : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
             titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-
-            root.ActualThemeChanged -= Root_ActualThemeChanged;
-            root.ActualThemeChanged += Root_ActualThemeChanged;
         }
         catch (Exception ex)
         {
@@ -136,23 +104,9 @@ public sealed partial class MainWindow : Window
 
     private void Root_ActualThemeChanged(Microsoft.UI.Xaml.FrameworkElement sender, object args)
     {
-        UpdateTitleBarButtonColors();
+        ApplyTitleBarColors();
     }
 
-    private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
-    {
-        // Only respond after the window UI has been fully initialized.
-        // During construction or before Activate(), XamlRoot is null and
-        // calling TitleBar APIs can throw a WinRT InvalidOperationException.
-        if (!_isInitialized) return;
-
-        // Trigger a debounced TitleBar update whenever the window position, size,
-        // or presenter state changes (covers monitor moves and maximize/restore).
-        if (args.DidPositionChange || args.DidSizeChange || args.DidPresenterChange)
-        {
-            UpdateTitleBarButtonColors();
-        }
-    }
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
@@ -198,6 +152,13 @@ public sealed partial class MainWindow : Window
 
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
+
+        // Subscribe to theme changes exactly once so TitleBar colors stay correct
+        // when the user switches between dark/light mode.
+        if (Content is Microsoft.UI.Xaml.FrameworkElement root)
+        {
+            root.ActualThemeChanged += Root_ActualThemeChanged;
+        }
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)

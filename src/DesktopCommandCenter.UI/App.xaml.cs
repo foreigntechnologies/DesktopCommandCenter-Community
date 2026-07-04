@@ -78,7 +78,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             // ActualTheme resolves correctly after RequestedTheme is set.
             if (mainWindow is MainWindow dccMainWindow)
             {
-                dccMainWindow.UpdateTitleBarButtonColors();
+                dccMainWindow.ApplyTitleBarColors();
             }
         }
     }
