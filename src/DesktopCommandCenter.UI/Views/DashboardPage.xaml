@@ -33,25 +33,27 @@
                         x:Name="TxtGreeting"
                         Style="{StaticResource TitleLargeTextBlockStyle}"
                         FontWeight="SemiBold" />
-                    <TextBlock
-                        Text="{x:Bind ViewModel.CurrentDate, Mode=OneWay}"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock
+                            Text="{x:Bind ViewModel.CurrentDate, Mode=OneWay}"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock
+                            Text="•"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock
+                            Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            FontFamily="Consolas" />
+                    </StackPanel>
+
                     <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
                         <Ellipse Width="6" Height="6" Fill="#4CAF50" VerticalAlignment="Center" />
                         <TextBlock x:Name="TxtVersion" Text="v1.0.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
-                </StackPanel>
-
-                <!-- Relógio -->
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Spacing="4">
-                    <TextBlock
-                        Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        FontWeight="SemiBold"
-                        HorizontalAlignment="Right"
-                        FontFamily="Consolas" />
-
                 </StackPanel>
             </Grid>
 
