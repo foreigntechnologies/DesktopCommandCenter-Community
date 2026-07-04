@@ -62,44 +62,47 @@ public sealed partial class MainWindow : Window
     /// </summary>
     public void ApplyTitleBarColors()
     {
-        try
+        DispatcherQueue.TryEnqueue(() =>
         {
-            if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
-
-            var titleBar = AppWindow?.TitleBar;
-            if (titleBar == null) return;
-
-            var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
-
-            if (isDark)
+            try
             {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-            }
-            else
-            {
-                titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-            }
+                if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
 
-            // alpha=1 (near-transparent) avoids the hit-test null region
-            titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-            titleBar.ButtonHoverBackgroundColor = isDark
-                ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
-                : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
-            titleBar.ButtonPressedBackgroundColor = isDark
-                ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
-                : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
-            titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"TitleBar update skipped: {ex.Message}");
-        }
+                var titleBar = AppWindow?.TitleBar;
+                if (titleBar == null) return;
+
+                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+
+                if (isDark)
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+                else
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+
+                // alpha=1 (near-transparent) avoids the hit-test null region
+                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                titleBar.ButtonHoverBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                titleBar.ButtonPressedBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"TitleBar update skipped: {ex.Message}");
+            }
+        });
     }
 
     private void Root_ActualThemeChanged(Microsoft.UI.Xaml.FrameworkElement sender, object args)
