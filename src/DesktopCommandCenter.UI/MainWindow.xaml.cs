@@ -63,26 +63,41 @@ InitializeComponent();
         RootFrame.Loaded += (s, e) => UpdateTitleBarButtonColors();
     }
 
+    private System.Threading.CancellationTokenSource? _titleBarUpdateCts;
+
     /// <summary>
     /// Updates the caption button foreground/background colors to match the current theme.
     /// Called once on load and again whenever the theme changes.
+    /// Uses debouncing to avoid fail-fast COM crashes during rapid DPI changes (multi-monitor drag).
     /// Safe to call only from the UI thread.
     /// </summary>
     public void UpdateTitleBarButtonColors()
     {
-        // Add a delay to prevent fail-fast 0xc0000602 when moving across monitors with different DPIs.
-        // WinUI fires ActualThemeChanged during DPI scaling, and accessing AppWindow.TitleBar immediately causes a COM crash.
+        // Cancel any previous pending update — rapid calls during monitor drag are collapsed into one
+        _titleBarUpdateCts?.Cancel();
+        _titleBarUpdateCts = new System.Threading.CancellationTokenSource();
+        var token = _titleBarUpdateCts.Token;
+
         System.Threading.Tasks.Task.Run(async () =>
         {
-            await System.Threading.Tasks.Task.Delay(300);
+            try
+            {
+                // 500ms debounce: wait until DPI transitions settle
+                await System.Threading.Tasks.Task.Delay(500, token);
+            }
+            catch (OperationCanceledException)
+            {
+                return; // A newer call superseded this one
+            }
+
             DispatcherQueue?.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
+                if (token.IsCancellationRequested) return;
                 try
                 {
                     if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
 
-                    // Avoid fail-fast COM exception when updating AppWindow.TitleBar properties
-                    // while the window is in an intermediate state (minimized, moving between monitors, etc.)
+                    // Skip if window is minimized or in an intermediate state
                     if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter &&
                         presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
                         return;
@@ -92,40 +107,40 @@ InitializeComponent();
 
                     var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
 
-                if (isDark)
-                {
-                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                }
-                else
-                {
-                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                }
+                    if (isDark)
+                    {
+                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
+                    else
+                    {
+                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
 
-                // alpha=1 (near-transparent) avoids the hit-test null region that triggers 0xc0000602
-                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-                titleBar.ButtonHoverBackgroundColor = isDark
-                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
-                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
-                titleBar.ButtonPressedBackgroundColor = isDark
-                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
-                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
-                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    // alpha=1 (near-transparent) avoids the hit-test null region that triggers 0xc0000602
+                    titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    titleBar.ButtonHoverBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                    titleBar.ButtonPressedBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                    titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
 
-                root.ActualThemeChanged -= Root_ActualThemeChanged;
-                root.ActualThemeChanged += Root_ActualThemeChanged;
-            }
-            catch (Exception ex)
-            {
-                // Silently ignore COM exceptions during DPI/monitor changes
-                System.Diagnostics.Debug.WriteLine($"Failed to update title bar colors: {ex.Message}");
-            }
-        });
+                    root.ActualThemeChanged -= Root_ActualThemeChanged;
+                    root.ActualThemeChanged += Root_ActualThemeChanged;
+                }
+                catch (Exception ex)
+                {
+                    // Silently ignore COM exceptions during DPI/monitor changes
+                    System.Diagnostics.Debug.WriteLine($"Failed to update title bar colors: {ex.Message}");
+                }
+            });
         });
     }
 
