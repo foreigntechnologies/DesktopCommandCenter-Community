@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -292,12 +292,16 @@
                                 <FontIcon Glyph="&#xE9F5;" FontSize="20" Foreground="#FF9800" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtPro1Title" Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                <Grid ColumnSpacing="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="TxtPro1Title" Grid.Column="0" Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
-                                </StackPanel>
+                                </Grid>
                                 <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
@@ -310,12 +314,16 @@
                                 <FontIcon Glyph="&#xE8BD;" FontSize="20" Foreground="#AB47BC" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtDashPromptsTitle" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                <Grid ColumnSpacing="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="TxtDashPromptsTitle" Grid.Column="0" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
-                                </StackPanel>
+                                </Grid>
                                 <TextBlock x:Name="TxtDashPromptsDesc" Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
@@ -328,12 +336,16 @@
                                 <FontIcon Glyph="&#xED35;" FontSize="20" Foreground="#00BCD4" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtPro2Title" Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                <Grid ColumnSpacing="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="TxtPro2Title" Grid.Column="0" Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
-                                </StackPanel>
+                                </Grid>
                                 <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
@@ -346,12 +358,16 @@
                                 <FontIcon Glyph="&#xE753;" FontSize="20" Foreground="#E91E63" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtPro3Title" Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                <Grid ColumnSpacing="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="TxtPro3Title" Grid.Column="0" Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
-                                </StackPanel>
+                                </Grid>
                                 <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
@@ -364,12 +380,16 @@
                                 <FontIcon Glyph="&#xE713;" FontSize="20" Foreground="#8BC34A" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtPro4Title" Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                    <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
+                                <Grid ColumnSpacing="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="TxtPro4Title" Grid.Column="0" Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
-                                </StackPanel>
+                                </Grid>
                                 <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>

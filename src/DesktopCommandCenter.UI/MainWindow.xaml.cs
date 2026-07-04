@@ -163,45 +163,22 @@ InitializeComponent();
     }
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
-
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
-            if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
+            if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
             {
                 _lastFocusCheck = DateTime.Now;
                 
-                try
-                {
-                    var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(App.Current.Services);
-                    var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(App.Current.Services);
-                    var dq = this.DispatcherQueue;
+                // Read local session just for basic info if needed
+                var sessionFile = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+                    "DCC", "dcc_auth_session.json");
 
-                    _ = System.Threading.Tasks.Task.Run(async () =>
-                    {
-                        try
-                        {
-                            var user = await authService.GetCurrentUserAsync();
-                            if (user != null)
-                            {
-                                var plan = await licenseService.GetCurrentPlanAsync();
-                                bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                                
-                                if (App.IsProUnlocked != isPro)
-                                {
-                                    App.IsProUnlocked = isPro;
-                                    dq?.TryEnqueue(() =>
-                                    {
-                                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                                    });
-                                }
-                            }
-                        }
-                        catch { }
-                    });
-                }
-                catch { }
+                // Note: We intentionally avoid checking the license against Firestore on every window focus
+                // because it causes unnecessary API calls and potential false downgrades on transient network issues.
+                // The license is already checked on Startup and when opening the Account/Settings pages.
             }
         }
     }
