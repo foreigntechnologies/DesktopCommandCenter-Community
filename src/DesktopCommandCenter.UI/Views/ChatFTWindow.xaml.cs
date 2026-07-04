@@ -35,8 +35,7 @@ public sealed partial class ChatFTWindow : Window
 
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            this.ExtendsContentIntoTitleBar = true;
-            this.SetTitleBar(AppTitleBar);
+            AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         }
         else
         {
