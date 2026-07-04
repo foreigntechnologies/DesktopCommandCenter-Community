@@ -264,7 +264,7 @@
   "Oobe_ThemeSystem": "Padrão do Sistema (Contraste)",
   "Oobe_Hint": "Você poderá alterar isso nas Configurações posteriormente.",
   "Search_PageTitle": "Pesquisa Universal Avançada",
-  "Search_Input_Placeholder": "",
+  "Search_Input_Placeholder": "Pesquise por arquivos, comandos ou envie texto para a IA...",
   "Search_BtnOpen": "Abrir / Executar",
   "Search_BtnSendAI": "Enviar para IA",
   "ProcMgr_PageTitle": "Gerenciador de Processos Avançado",

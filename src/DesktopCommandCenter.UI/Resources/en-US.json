@@ -266,7 +266,7 @@
   "Oobe_ThemeSystem": "System Default (Contrast)",
   "Oobe_Hint": "You can change this later in Settings.",
   "Search_PageTitle": "Advanced Universal Search",
-  "Search_Input_Placeholder": "",
+  "Search_Input_Placeholder": "Search for files, commands or send text to AI...",
   "Search_BtnOpen": "Open / Run",
   "Search_BtnSendAI": "Send to AI",
   "ProcMgr_PageTitle": "Advanced Process Manager",
