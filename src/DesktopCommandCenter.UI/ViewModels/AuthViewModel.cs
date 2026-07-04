@@ -176,6 +176,10 @@ public partial class AuthViewModel : ObservableObject
 
         var plan = await _licenseService.GetCurrentPlanAsync();
         
+        // Persist email and pro status to disk so startup is instant on next launch
+        App.SaveCachedEmail(user.Email);
+        App.SaveProCached(plan.Equals("pro", StringComparison.OrdinalIgnoreCase));
+
         _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
@@ -183,9 +187,6 @@ public partial class AuthViewModel : ObservableObject
             
             App.IsProUnlocked = newIsPro;
             
-            // Notifica listeners APENAS se não estourar loop (mesmo que seja mesmo valor, os listeners como MainPage cuidam de si)
-            // Para evitar o loop do CheckInitialStateAsync, removemos temporariamente o listening ou filtramos.
-            // Aqui, enviamos sempre que o login atualiza o plano com sucesso.
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             
             UserEmail  = user.Email;
