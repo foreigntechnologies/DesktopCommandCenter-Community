@@ -38,5 +38,25 @@ public partial class NotesViewModel : ObservableObject
         var note = await _mediator.Send(new CreateNoteCommand(title, content, category));
         Notes.Insert(0, note); // Insert at top
     }
+
+    public async Task UpdateNoteAsync(Note note, string newTitle, string newContent)
+    {
+        note.Title = newTitle;
+        note.Content = newContent;
+        await _mediator.Send(new UpdateNoteCommand(note));
+        
+        // Trigger UI update
+        var index = Notes.IndexOf(note);
+        if (index >= 0)
+        {
+            Notes[index] = note;
+        }
+    }
+
+    public async Task DeleteNoteAsync(Note note)
+    {
+        await _mediator.Send(new DeleteNoteCommand(note.Id));
+        Notes.Remove(note);
+    }
 }
 

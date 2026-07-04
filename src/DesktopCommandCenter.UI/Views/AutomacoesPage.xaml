@@ -1,4 +1,4 @@
-ï»¿<Page
+<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.AutomacoesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,7 +12,7 @@
         </Grid.RowDefinitions>
 
         <Grid Margin="0,0,0,16">
-            <TextBlock x:Name="AutoPageTitleElement" Text="Regras de AutomaÃ§Ã£o" Style="{StaticResource TitleTextBlockStyle}"  />
+            <TextBlock x:Name="AutoPageTitleElement" Text="Regras de Automação" Style="{StaticResource TitleTextBlockStyle}"  />
             <Button x:Name="AutoBtnNewRuleElement" Content="+ Nova Regra" Click="NovaRegraButton_Click" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}"  />
         </Grid>
 
@@ -40,7 +40,7 @@
                             <TextBlock Text="{Binding AcaoCompleta, Mode=OneWay}" FontWeight="Bold" FontSize="16" />
                         </StackPanel>
 
-                        <ToggleSwitch Grid.Column="3" IsOn="{Binding IsAtivo, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Center" AutomationProperties.Name="Ativar ou desativar regra de automaÃ§Ã£o" />
+                        <ToggleSwitch Grid.Column="3" IsOn="{Binding IsAtivo, Mode=TwoWay}" Margin="24,0,0,0" VerticalAlignment="Center" AutomationProperties.Name="Ativar ou desativar regra de automação" />
 
                         <Button Grid.Column="4" Command="{Binding ElementName=Root, Path=ViewModel.RemoveRegraCommand}" CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Margin="16,0,0,0">
                             <ToolTipService.ToolTip>
@@ -58,12 +58,13 @@
                 <ComboBox x:Name="TriggersCombo" Header="Gatilho (Se isso acontecer)" ItemsSource="{x:Bind ViewModel.AvailableTriggers}" HorizontalAlignment="Stretch" SelectionChanged="TriggersCombo_SelectionChanged"  />
                 <TextBox x:Name="TriggerParamTextBox" HorizontalAlignment="Stretch" Visibility="Collapsed" />
                 
-                <ComboBox x:Name="ActionsCombo" Header="AÃ§Ã£o (FaÃ§a isso)" ItemsSource="{x:Bind ViewModel.AvailableActions}" HorizontalAlignment="Stretch" SelectionChanged="ActionsCombo_SelectionChanged"  />
+                <ComboBox x:Name="ActionsCombo" Header="Ação (Faça isso)" ItemsSource="{x:Bind ViewModel.AvailableActions}" HorizontalAlignment="Stretch" SelectionChanged="ActionsCombo_SelectionChanged"  />
                 <ComboBox x:Name="LanguageCombo" Header="Linguagem do Script" ItemsSource="{x:Bind ViewModel.AvailableLanguages}" HorizontalAlignment="Stretch" Visibility="Collapsed"  />
                 <TextBox x:Name="ActionParamTextBox" HorizontalAlignment="Stretch" Visibility="Collapsed" />
             </StackPanel>
         </ContentDialog>
     </Grid>
 </Page>
+
 
 

@@ -20,25 +20,100 @@ InitializeComponent();
 
         private void UpdateTranslations()
         {
-            NotesPageTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Notes_PageTitle");
-            // NewNoteTitle and NewNoteContent could also be localized here if needed.
+            var loc = Helpers.LocalizationHelper.Instance;
+            NotesPageTitleElement.Text = loc.GetString("Notes_PageTitle");
+            AddNoteTextElement.Text = loc.GetString("Notes_AddNote") ?? "Adicionar Nota";
         }
 
-        private async void SaveNote_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void AddNote_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            string title = NewNoteTitle.Text;
-            string content = NewNoteContent.Text;
+            await ShowNoteDialogAsync(null);
+        }
 
-            if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(content))
-                return;
+        private async void EditNote_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is DesktopCommandCenter.Domain.Entities.Note note)
+            {
+                await ShowNoteDialogAsync(note);
+            }
+        }
 
-            if (string.IsNullOrWhiteSpace(title))
-                title = "Nota sem título";
+        private async void DeleteNote_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is DesktopCommandCenter.Domain.Entities.Note note)
+            {
+                var loc = Helpers.LocalizationHelper.Instance;
+                var dialog = new ContentDialog
+                {
+                    Title = loc.GetString("Notes_DeleteConfirmTitle") ?? "Confirmar Exclusão",
+                    Content = loc.GetString("Notes_DeleteConfirmContent") ?? "Tem certeza que deseja excluir esta nota?",
+                    PrimaryButtonText = loc.GetString("Notes_DeleteNote") ?? "Excluir",
+                    CloseButtonText = loc.GetString("Notes_Cancel") ?? "Cancelar",
+                    XamlRoot = this.XamlRoot
+                };
 
-            await ViewModel.CreateNoteAsync(title, content, "Geral");
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    await ViewModel.DeleteNoteAsync(note);
+                }
+            }
+        }
 
-            NewNoteTitle.Text = string.Empty;
-            NewNoteContent.Text = string.Empty;
+        private async System.Threading.Tasks.Task ShowNoteDialogAsync(DesktopCommandCenter.Domain.Entities.Note noteToEdit)
+        {
+            var loc = Helpers.LocalizationHelper.Instance;
+            bool isEdit = noteToEdit != null;
+
+            var titleBox = new TextBox 
+            { 
+                PlaceholderText = loc.GetString("Notes_TitlePlaceholder") ?? "Título da nota", 
+                Text = isEdit ? noteToEdit.Title : "",
+                Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
+            };
+            
+            var contentBox = new TextBox 
+            { 
+                PlaceholderText = loc.GetString("Notes_ContentPlaceholder") ?? "Escreva sua nota aqui...",
+                Text = isEdit ? noteToEdit.Content : "",
+                AcceptsReturn = true, 
+                MinHeight = 120, 
+                TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap 
+            };
+
+            var panel = new StackPanel();
+            panel.Children.Add(titleBox);
+            panel.Children.Add(contentBox);
+
+            var dialog = new ContentDialog
+            {
+                Title = isEdit 
+                    ? (loc.GetString("Notes_EditNote") ?? "Editar Nota")
+                    : (loc.GetString("Notes_AddNote") ?? "Adicionar Nota"),
+                Content = panel,
+                PrimaryButtonText = loc.GetString("Notes_Save") ?? "Salvar",
+                CloseButtonText = loc.GetString("Notes_Cancel") ?? "Cancelar",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            
+            if (result == ContentDialogResult.Primary)
+            {
+                string title = string.IsNullOrWhiteSpace(titleBox.Text) ? "Nota sem título" : titleBox.Text;
+                string content = contentBox.Text;
+                
+                if (string.IsNullOrWhiteSpace(content)) return;
+
+                if (isEdit)
+                {
+                    await ViewModel.UpdateNoteAsync(noteToEdit, title, content);
+                }
+                else
+                {
+                    await ViewModel.CreateNoteAsync(title, content, "Geral");
+                }
+            }
         }
 }
 

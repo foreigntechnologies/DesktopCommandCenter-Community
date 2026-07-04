@@ -1,4 +1,4 @@
-<Page
+<Page NavigationCacheMode="Required"
     x:Name="RootPage"
     x:Class="DesktopCommandCenter.UI.Views.IALocalPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -276,3 +276,4 @@
         </Border>
     </Grid>
 </Page>
+

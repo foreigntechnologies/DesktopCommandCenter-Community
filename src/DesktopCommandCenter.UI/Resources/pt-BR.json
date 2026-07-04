@@ -1,4 +1,4 @@
-﻿{
+{
   "Nav_Dashboard": "Dashboard",
   "Nav_ProcessManager": "Gerenciador de Processos",
   "Nav_Notes": "Notas Rápidas",
@@ -247,6 +247,15 @@
   "ComingSoon_Subtitle": "Estamos construindo este módulo para você.",
   "Notes_PageTitle": "Notas Rápidas",
   "Notes_BtnNew": "Nova Nota",
+  "Notes_AddNote": "Adicionar Nota",
+  "Notes_EditNote": "Editar Nota",
+  "Notes_DeleteNote": "Excluir",
+  "Notes_DeleteConfirmTitle": "Confirmar Exclusão",
+  "Notes_DeleteConfirmContent": "Tem certeza que deseja excluir esta nota?",
+  "Notes_Save": "Salvar",
+  "Notes_Cancel": "Cancelar",
+  "Notes_TitlePlaceholder": "Título da nota",
+  "Notes_ContentPlaceholder": "Escreva sua nota aqui...",
   "Oobe_Title": "Bem-vindo ao Desktop Command Center!",
   "Oobe_Desc": "Antes de começarmos, escolha o seu tema preferido:",
   "Oobe_ThemeLight": "Claro",
