@@ -42,9 +42,12 @@ InitializeComponent();
             catch { }
         }
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar); // Restored, the real fix is the transparent button color below
-        
+        // Use AppWindow.TitleBar API exclusively - do NOT call SetTitleBar() or ExtendsContentIntoTitleBar
+        // together, as this combination causes a fail-fast 0xc0000602 crash in Microsoft.UI.Input.dll
+        // when dragging the window to a monitor with a different DPI and then maximizing.
+        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        AppWindow.TitleBar.PreferredHeightOption = Microsoft.UI.Windowing.TitleBarHeightOption.Tall;
+
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
         if (System.IO.File.Exists(iconPath))
@@ -59,7 +62,6 @@ InitializeComponent();
         this.Activated += MainWindow_FocusChanged;
 
         // Set initial title bar button colors once the frame is ready.
-        // RootFrame is always a FrameworkElement so no cast needed.
         RootFrame.Loaded += (s, e) => UpdateTitleBarButtonColors();
     }
 
@@ -77,16 +79,15 @@ InitializeComponent();
                 if (Content is not Microsoft.UI.Xaml.FrameworkElement root) return;
 
                 // Avoid fail-fast COM exception when updating AppWindow.TitleBar properties
-                // while the window is minimized or not fully initialized.
-                if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter && 
+                // while the window is in an intermediate state (minimized, moving between monitors, etc.)
+                if (AppWindow?.Presenter is Microsoft.UI.Windowing.OverlappedPresenter presenter &&
                     presenter.State == Microsoft.UI.Windowing.OverlappedPresenterState.Minimized)
                     return;
 
-                // Resolve actual theme (light/dark)
-                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
-
                 var titleBar = AppWindow?.TitleBar;
                 if (titleBar == null) return;
+
+                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
 
                 if (isDark)
                 {
@@ -103,7 +104,7 @@ InitializeComponent();
                     titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
                 }
 
-                // Keep backgrounds transparent so Mica/Acrylic shows through, using alpha 1 to prevent 0xc0000602 input crash
+                // alpha=1 (near-transparent) avoids the hit-test null region that triggers 0xc0000602
                 titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
                 titleBar.ButtonHoverBackgroundColor = isDark
                     ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
@@ -113,11 +114,10 @@ InitializeComponent();
                     : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
                 titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
 
-                // Re-subscribe to ActualThemeChanged each time to avoid double-subscription
                 root.ActualThemeChanged -= Root_ActualThemeChanged;
                 root.ActualThemeChanged += Root_ActualThemeChanged;
             }
-            catch { /* Silently ignore if AppWindow is in an invalid state */ }
+            catch { /* Silently ignore transient invalid state during DPI/monitor transitions */ }
         });
     }
 
