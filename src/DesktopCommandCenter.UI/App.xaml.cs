@@ -572,9 +572,12 @@ public partial class App : Microsoft.UI.Xaml.Application
         MainWindow = new MainWindow();
         MainWindow.Activate();
 
-        var dispatcherQueue = MainWindow.DispatcherQueue;
+        _ = InitializeApplicationAsync(MainWindow.DispatcherQueue);
+    }
 
-        System.Threading.Tasks.Task.Run(async () =>
+    private async System.Threading.Tasks.Task InitializeApplicationAsync(Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue)
+    {
+        await System.Threading.Tasks.Task.Run(async () =>
         {
             try
             {

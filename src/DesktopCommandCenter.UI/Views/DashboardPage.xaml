@@ -18,8 +18,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16" Padding="0,0,16,0">
-            <StackPanel Spacing="20" MaxWidth="1400" HorizontalAlignment="Stretch">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,16" Padding="0,0,16,0">
+            <StackPanel Spacing="20" MaxWidth="1400" HorizontalAlignment="Center">
 
             <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
             <Grid>

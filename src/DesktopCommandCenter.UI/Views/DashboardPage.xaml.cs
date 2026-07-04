@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,6 +16,10 @@ public sealed partial class DashboardPage : Page
         InitializeComponent();
         Loaded += DashboardPage_Loaded;
         DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        WeakReferenceMessenger.Default.Register<DesktopCommandCenter.UI.Messages.LicenseChangedMessage>(this, (r, m) =>
+        {
+            DispatcherQueue.TryEnqueue(() => UpdateTranslations());
+        });
     }
 
     private void UpdateTranslations()

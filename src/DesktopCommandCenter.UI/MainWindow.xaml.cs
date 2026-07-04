@@ -20,27 +20,17 @@ public sealed partial class MainWindow : Window
     [DllImport("shell32.dll", SetLastError = true)]
     static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
+    private bool _isInitialized = false;
+
     public MainWindow()
     {
-InitializeComponent();
-            UpdateTranslations();
-            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        InitializeComponent();
+        UpdateTranslations();
+        Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
         TrayQuickAccessCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowQuickAccess);
         
         this.Closed += MainWindow_Closed;
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
 
         // Use Window API directly to avoid 0xc0000602 crash on multi-monitor DPI changes
         this.ExtendsContentIntoTitleBar = true;
@@ -52,9 +42,6 @@ InitializeComponent();
         {
             AppWindow.SetIcon(iconPath);
         }
-
-        // Navigate the root frame to the main page on startup.
-        RootFrame.Navigate(typeof(MainPage));
 
         RootFrame.Loaded += RootFrame_Loaded;
         this.Activated += MainWindow_FocusChanged;
@@ -165,6 +152,12 @@ InitializeComponent();
     private DateTime _lastFocusCheck = DateTime.MinValue;
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
+        if (!_isInitialized)
+        {
+            _isInitialized = true;
+            InitializeWindowUI();
+        }
+
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
@@ -181,6 +174,25 @@ InitializeComponent();
                 // The license is already checked on Startup and when opening the Account/Settings pages.
             }
         }
+    }
+
+    private void InitializeWindowUI()
+    {
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+            }
+            catch { }
+        }
+
+        // Navigate the root frame to the main page on startup.
+        RootFrame.Navigate(typeof(MainPage));
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
