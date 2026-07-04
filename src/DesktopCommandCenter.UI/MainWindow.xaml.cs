@@ -105,10 +105,6 @@ public sealed partial class MainWindow : Window
         });
     }
 
-    private void Root_ActualThemeChanged(Microsoft.UI.Xaml.FrameworkElement sender, object args)
-    {
-        ApplyTitleBarColors();
-    }
 
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
@@ -156,12 +152,10 @@ public sealed partial class MainWindow : Window
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
 
-        // Subscribe to theme changes exactly once so TitleBar colors stay correct
-        // when the user switches between dark/light mode.
-        if (Content is Microsoft.UI.Xaml.FrameworkElement root)
-        {
-            root.ActualThemeChanged += Root_ActualThemeChanged;
-        }
+        // NOTE: We no longer subscribe to ActualThemeChanged because modifying AppWindow.TitleBar
+        // during monitor or DPI transitions (like maximizing on a different screen)
+        // can throw an ArgumentException from WinRT and cause a 0xc0000602 FailFast crash.
+        // TitleBar colors will be set once on Load and remain static.
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
