@@ -98,8 +98,8 @@ public partial class AuthViewModel : ObservableObject
     public bool CanLinkMicrosoft => !HasMicrosoftLinked;
     public bool HasNoGoogleLinked => !HasGoogleLinked;
 
-    public bool IsFreePlan => IsLoggedIn && !CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) && !CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
-    public bool IsProPlan  => IsLoggedIn && CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+    public bool IsFreePlan   => IsLoggedIn && CurrentPlan.Equals("free", StringComparison.OrdinalIgnoreCase);
+    public bool IsProPlan    => IsLoggedIn && (CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase));
     public bool IsPausedPlan => IsLoggedIn && CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
     
     public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
@@ -108,6 +108,14 @@ public partial class AuthViewModel : ObservableObject
     public Microsoft.UI.Xaml.Visibility InverseProVisibility => IsProPlan ? Microsoft.UI.Xaml.Visibility.Collapsed : Microsoft.UI.Xaml.Visibility.Visible;
     
     public string PlanDisplayText => IsProPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanProActive") : (IsPausedPlan ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanPaused") : DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auth_PlanCommunity"));
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ProPlanPriceText))]
+    [NotifyPropertyChangedFor(nameof(ProPlanPeriodText))]
+    private bool _isYearlyPlan = false;
+
+    public string ProPlanPriceText => IsYearlyPlan ? "R$ 429,90" : "R$ 39,90";
+    public string ProPlanPeriodText => IsYearlyPlan ? "/ ano" : "/ mês";
 
     public AuthViewModel(IAuthService authService, ILicenseService licenseService)
     {
@@ -142,39 +150,69 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user != null)
         {
-            await OnLoginSuccessAsync(user);
+            await OnLoginSuccessAsync(user, isNewLogin: false);
         }
         else
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            // Only reset to logged-out state if there is genuinely no session on disk.
+            // If the session file exists but Firebase hasn't loaded yet (returned null),
+            // keep the cached state to avoid a false "free" flash on startup.
+            var sessionFile = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "DCC", "dcc_auth_session.json");
+            if (!System.IO.File.Exists(sessionFile))
             {
-                CurrentPlan = "free";
-                StatusMessage = string.Empty;
-                App.IsProUnlocked = false;
-            });
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    IsLoggedIn = false;
+                    CurrentPlan = "free";
+                    StatusMessage = string.Empty;
+                    App.IsProUnlocked = false;
+                    App.SaveCachedEmail(string.Empty);
+                    App.SaveProCached(false);
+                });
+            }
         }
     }
 
-    // ── Helper compartilhado pós-login ──────────────────────────────────────
-    private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user)
+    // ─── Helper compartilhado pós-login ──────────────────────────────────────────────
+    private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user, bool isNewLogin = true)
     {
-        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) para evitar
-        //    que o status da conta anterior vaze para a nova sessão.
-        App.IsProUnlocked = false;
-        App.SaveProCached(false);
+        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) APENAS para novos logins
+        //    para evitar que o status da conta anterior vaze para a nova sessão.
+        if (isNewLogin)
+        {
+            App.IsProUnlocked = false;
+            App.SaveProCached(false);
+        }
 
-        var plan = await _licenseService.GetCurrentPlanAsync();
-        
+        string plan;
+        try
+        {
+            plan = await _licenseService.GetCurrentPlanAsync();
+            // Persist email and pro status to disk so startup is instant on next launch
+            App.SaveCachedEmail(user.Email);
+            bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+            App.SaveProCached(isPlanPro);
+        }
+        catch (Exception)
+        {
+            // Network error/offline. Fallback to cached state.
+            plan = App.GetProCached() ? "pro" : "free";
+            
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                StatusMessage = "Modo Offline (Licença não pôde ser atualizada)";
+            });
+        }
+
         _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase);
+            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase);
             
             App.IsProUnlocked = newIsPro;
             
-            // Notifica listeners APENAS se não estourar loop (mesmo que seja mesmo valor, os listeners como MainPage cuidam de si)
-            // Para evitar o loop do CheckInitialStateAsync, removemos temporariamente o listening ou filtramos.
-            // Aqui, enviamos sempre que o login atualiza o plano com sucesso.
             WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
             
             UserEmail  = user.Email;
@@ -368,6 +406,15 @@ public partial class AuthViewModel : ObservableObject
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
 
         StartPollingForPlanChange("pro");
+    }
+
+    [RelayCommand]
+    public async Task SubscribeAsync()
+    {
+        if (IsYearlyPlan)
+            await UpgradeYearlyAsync();
+        else
+            await UpgradeMonthlyAsync();
     }
 
     [RelayCommand]

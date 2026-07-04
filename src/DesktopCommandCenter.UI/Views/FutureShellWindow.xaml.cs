@@ -14,6 +14,7 @@ public sealed partial class FutureShellWindow : Window
     private ITerminalService _terminalService;
     private DispatcherTimer _hudTimer;
 
+
     [DllImport("shell32.dll", SetLastError = true)]
     public static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
@@ -40,14 +41,21 @@ public sealed partial class FutureShellWindow : Window
             appWindow.SetIcon(iconPath);
         }
 
-        if (AppWindowTitleBar.IsCustomizationSupported())
+        // NOTE: SystemBackdrop (Mica) is intentionally NOT set here.
+        // Setting it before Activate() can trigger WinRT InvalidOperationException
+        // when the window is moved between monitors or resized during DPI transitions.
+        // It is applied in the first Activated event via InitializeWindowUI().
+
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(AppTitleBar);
+
+        try
         {
-            this.ExtendsContentIntoTitleBar = true;
-            this.SetTitleBar(AppTitleBar);
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
         }
-        else
+        catch
         {
-            AppTitleBar.Visibility = Visibility.Collapsed;
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
         }
 
         // Initialize Terminal Service
@@ -62,6 +70,7 @@ public sealed partial class FutureShellWindow : Window
         InitializeTerminalAsync();
     }
 
+
     private void HudTimer_Tick(object? sender, object e)
     {
         if (TerminalWebView.CoreWebView2 != null)
@@ -71,7 +80,7 @@ public sealed partial class FutureShellWindow : Window
                 var process = System.Diagnostics.Process.GetCurrentProcess();
                 var ramMB = (process.WorkingSet64 / 1024 / 1024).ToString();
                 
-                var msg = new { type = "hud", cpu = "~1%", ram = ramMB, ai = "Ready" };
+                var msg = new { type = "hud", cpu = "~1%", ram = $"{ramMB} MB" };
                 var json = JsonSerializer.Serialize(msg);
                 TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
             }
@@ -162,9 +171,9 @@ public sealed partial class FutureShellWindow : Window
 
     private void TerminalService_ProcessExited(object? sender, EventArgs e)
     {
-        DispatcherQueue.TryEnqueue(() =>
+        DispatcherQueue?.TryEnqueue(() =>
         {
-            this.Close();
+            try { this.Close(); } catch { }
         });
     }
 

@@ -1,4 +1,4 @@
-﻿<Page
+<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.PromptsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -40,7 +40,7 @@
                                     
                                     <TextBlock Grid.Row="2" Text="{x:Bind Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     
-                                    <!-- AÃƒâ€¡Ãƒâ€¢ES RÃƒÂPIDAS -->
+                                    <!-- AÃ‡Ã•ES RÃPIDAS -->
                                     <Grid Grid.Row="3" Margin="0,8,0,0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -80,20 +80,20 @@
                             Visibility="{x:Bind ViewModel.EmptyMessageVisibility, Mode=OneWay}">
                     <SymbolIcon Symbol="OutlineStar" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock x:Name="PromptsEmptyTitleElement" Text="Nenhum prompt salvo ainda." Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
-                    <TextBlock x:Name="PromptsEmptyDescElement" Text="Crie um novo prompt usando o formulário Ã direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="PromptsEmptyDescElement" Text="Crie um novo prompt usando o formul�rio � direita." Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
                 </StackPanel>
             </Grid>
 
-            <!-- COLUNA DIREITA: FORMULÃRIO DE CADASTRO/EDIÃ‡ÃƒO -->
+            <!-- COLUNA DIREITA: FORMULÁRIO DE CADASTRO/EDI�ÃO -->
             <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="20" VerticalAlignment="Top">
                 <StackPanel Spacing="16">
                     <TextBlock Text="{x:Bind ViewModel.FormTitle, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
 
-                    <TextBox x:Name="PromptsInputTitleElement" Header="Título" PlaceholderText="Ex: Revisar CÃ³digo" Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="PromptsInputTitleElement" Header="T�tulo" PlaceholderText="Ex: Revisar C�digo" Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox x:Name="PromptsInputCatElement" Header="Categoria" PlaceholderText="Ex: ProgramaÃ§Ã£o" Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="PromptsInputCatElement" Header="Categoria" PlaceholderText="Ex: Programa��o" Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox x:Name="PromptsInputContentElement" Header="ConteÃºdo do Prompt" PlaceholderText="Por favor, revise o cÃ³digo abaixo..." Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                    <TextBox x:Name="PromptsInputContentElement" Header="Conte�do do Prompt" PlaceholderText="Por favor, revise o c�digo abaixo..." Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
                     <Grid ColumnSpacing="12" Margin="0,8,0,0">
                         <Grid.ColumnDefinitions>
@@ -110,4 +110,5 @@
         </Grid>
     </Grid>
 </Page>
+
 

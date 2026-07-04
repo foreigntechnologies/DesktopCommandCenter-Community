@@ -9,9 +9,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<INoteRepository, NoteRepository>();
-        services.AddScoped<IClipboardRepository, ClipboardRepository>();
-        services.AddScoped<IPromptRepository, PromptRepository>();
+        services.AddTransient<INoteRepository, NoteRepository>();
+        services.AddTransient<IClipboardRepository, ClipboardRepository>();
+        services.AddTransient<IPromptRepository, PromptRepository>();
         services.AddSingleton<ITranslationService, TranslationService>();
         services.AddSingleton<IClipboardService, WindowsClipboardService>();
         services.AddSingleton<IColorPickerService, ColorPickerService>();

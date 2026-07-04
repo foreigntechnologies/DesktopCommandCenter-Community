@@ -24,7 +24,7 @@ public sealed partial class ColorLoupeWindow : Window
     {
         this.InitializeComponent();
 
-        ExtendsContentIntoTitleBar = true; // Remove standard title bar
+        this.ExtendsContentIntoTitleBar = true; // Remove standard title bar
         
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         

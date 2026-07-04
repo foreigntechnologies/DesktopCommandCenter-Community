@@ -16,6 +16,10 @@ public sealed partial class DashboardPage : Page
         InitializeComponent();
         Loaded += DashboardPage_Loaded;
         DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
+        WeakReferenceMessenger.Default.Register<DesktopCommandCenter.UI.Messages.LicenseChangedMessage>(this, (r, m) =>
+        {
+            DispatcherQueue.TryEnqueue(() => UpdateTranslations());
+        });
     }
 
     private void UpdateTranslations()
@@ -45,12 +49,10 @@ public sealed partial class DashboardPage : Page
         TxtToolColorDesc.Text = loc.GetString("Dash_ToolColorDesc");
         TxtToolClipTitle.Text = loc.GetString("Dash_ToolClipTitle");
         TxtToolClipDesc.Text = loc.GetString("Dash_ToolClipDesc");
-        TxtToolNotesTitle.Text = loc.GetString("Dash_ToolNotesTitle");
-        TxtToolNotesDesc.Text = loc.GetString("Dash_ToolNotesDesc");
         TxtToolAwakeTitle.Text = loc.GetString("Dash_ToolAwakeTitle");
         TxtToolAwakeDesc.Text = loc.GetString("Dash_ToolAwakeDesc");
-        TxtToolTopTitle.Text = loc.GetString("Dash_ToolTopTitle");
-        TxtToolTopDesc.Text = loc.GetString("Dash_ToolTopDesc");
+        TxtToolCaptureTitle.Text = loc.GetString("Dash_ToolCaptureTitle");
+        TxtToolCaptureDesc.Text = loc.GetString("Dash_ToolCaptureDesc");
         TxtToolTransTitle.Text = loc.GetString("Dash_ToolTransTitle");
         TxtToolTransDesc.Text = loc.GetString("Dash_ToolTransDesc");
         TxtToolTimerTitle.Text = loc.GetString("Dash_ToolTimerTitle");
@@ -70,6 +72,7 @@ public sealed partial class DashboardPage : Page
 
         // Footer links
         BtnDashDoc.Content = loc.GetString("Dash_DocButton");
+        BtnDashProject.Content = loc.GetString("Dash_ProjectButton");
         BtnDashGit.Content = loc.GetString("Dash_GitButton");
         BtnDashBug.Content = loc.GetString("Dash_BugButton");
         TxtCopyright.Text = loc.GetString("Dash_Copyright");
@@ -105,6 +108,7 @@ public sealed partial class DashboardPage : Page
         int hour = DateTime.Now.Hour;
         string greetingKey = hour switch
         {
+            < 5 => "GreetingEvening",
             < 12 => "GreetingMorning",
             < 18 => "GreetingAfternoon",
             _ => "GreetingEvening"
@@ -128,7 +132,7 @@ public sealed partial class DashboardPage : Page
             }
             else
             {
-                TxtVersion.Text = "v1.0.1";
+                TxtVersion.Text = "v1.0.0";
             }
         }
 
@@ -140,6 +144,8 @@ public sealed partial class DashboardPage : Page
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorBugReport.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
+        
+        await ViewModel.LoadMetricsAsync();
     }
 
     private static string CapitalizeFirst(string s)

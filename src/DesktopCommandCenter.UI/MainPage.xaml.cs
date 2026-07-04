@@ -14,8 +14,6 @@ public sealed partial class MainPage : Page
         this.Loaded += MainPage_Loaded;
         
         // Removed broken x:Bind DataContext
-        // AppNavigationView.DataContext = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-        
         DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         UpdateTranslations();
 
@@ -41,7 +39,6 @@ public sealed partial class MainPage : Page
             });
         });
 
-        _ = ValidateProLicenseAsync();
     }
 
     private void UpdateTranslations()
@@ -77,29 +74,6 @@ public sealed partial class MainPage : Page
         }
 
         UpdateNavigationLocks();
-    }
-
-    private async System.Threading.Tasks.Task ValidateProLicenseAsync()
-    {
-        try
-        {
-            var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
-            var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>((App.Current as App).Services);
-
-            var user = await authService.GetCurrentUserAsync();
-            if (user != null)
-            {
-                var plan = await licenseService.GetCurrentPlanAsync();
-                App.IsProUnlocked = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(App.IsProUnlocked));
-            }
-            else
-            {
-                App.IsProUnlocked = false;
-                WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(false));
-            }
-        }
-        catch { }
     }
 
     private void NavigateToAction(string actionId)

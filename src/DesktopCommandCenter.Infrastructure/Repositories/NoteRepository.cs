@@ -2,6 +2,7 @@ using DesktopCommandCenter.Application.Interfaces;
 using DesktopCommandCenter.Domain.Entities;
 using DesktopCommandCenter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,5 +27,21 @@ public class NoteRepository : INoteRepository
         _context.Notes.Add(note);
         await _context.SaveChangesAsync();
         return note;
+    }
+
+    public async Task UpdateAsync(Note note)
+    {
+        _context.Notes.Update(note);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var note = await _context.Notes.FindAsync(id);
+        if (note != null)
+        {
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+        }
     }
 }

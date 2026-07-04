@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.SystemUpdatesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -72,14 +72,14 @@
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
 
-                        <!-- BotÃµes -->
+                        <!-- Botões -->
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                             <Button x:Name="BtnCheckWU"
                                     Click="BtnCheckWU_Click"
                                     IsEnabled="{x:Bind ViewModel.IsLoadingWindowsUpdates, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE72C;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnCheckWU" Text="Verificar AtualizaÃ§Ãµes"  />
+                                    <TextBlock x:Name="TxtBtnCheckWU" Text="Verificar Atualizações"  />
                                 </StackPanel>
                             </Button>
 
@@ -105,8 +105,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock x:Name="TxtAutoInstallTitle" Text="AtualizaÃ§Ã£o AutomÃ¡tica em Background" Style="{StaticResource BodyStrongTextBlockStyle}"  />
-                                <TextBlock x:Name="TxtAutoInstallDesc" Text="O sistema verificarÃ¡ e instalarÃ¡ atualizaÃ§Ãµes automaticamente em horÃ¡rios ociosos." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
+                                <TextBlock x:Name="TxtAutoInstallTitle" Text="Atualização Automática em Background" Style="{StaticResource BodyStrongTextBlockStyle}"  />
+                                <TextBlock x:Name="TxtAutoInstallDesc" Text="O sistema verificará e instalará atualizações automaticamente em horários ociosos." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
                             </StackPanel>
                             <ToggleSwitch x:Name="ToggleAutoInstall"
                                           Grid.Column="1"
@@ -117,7 +117,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Lista de AtualizaÃ§Ãµes -->
+                    <!-- Lista de Atualizações -->
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                         <StackPanel Spacing="8">
                             <!-- Empty state -->
@@ -127,7 +127,7 @@
                                         Spacing="12"
                                         Margin="0,60,0,0">
                                 <FontIcon Glyph="&#xE930;" FontSize="48" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="TxtWUEmptyMsg" Text="Clique em 'Verificar AtualizaÃ§Ãµes' para comeÃ§ar" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
+                                <TextBlock x:Name="TxtWUEmptyMsg" Text="Clique em 'Verificar Atualizações' para começar" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             </StackPanel>
 
                             <!-- Repeat for each update item -->
@@ -179,7 +179,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Progress da instalaÃ§Ã£o -->
+                    <!-- Progress da instalação -->
                     <Border Grid.Row="3"
                             Visibility="{x:Bind ViewModel.IsInstalling, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                             Background="{ThemeResource SubtleFillColorSecondaryBrush}"
@@ -195,7 +195,7 @@
             </PivotItem>
 
             <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-                 ABA 2 â€“ ATUALIZAÃ‡Ã•ES DE SOFTWARE (WINGET)
+                 ABA 2 â€“ ATUALIZAÇÃ•ES DE SOFTWARE (WINGET)
                  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <PivotItem x:Name="PivotSW" Header="Softwares">
                 <Grid RowSpacing="12">
@@ -248,7 +248,7 @@
                                         Spacing="12" Margin="0,60,0,0">
                                 <FontIcon Glyph="&#xE930;" FontSize="48"
                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="TxtSWEmptyMsg" Text="Clique em 'Verificar' para buscar atualizaÃ§Ãµes de software" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
+                                <TextBlock x:Name="TxtSWEmptyMsg" Text="Clique em 'Verificar' para buscar atualizações de software" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             </StackPanel>
 
                             <ItemsControl ItemsSource="{x:Bind ViewModel.SoftwareUpdates, Mode=OneWay}">
@@ -322,7 +322,7 @@
             </PivotItem>
 
             <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-                 ABA 3 â€“ SOFTWARES INSTALADOS (DesinstalaÃ§Ã£o)
+                 ABA 3 â€“ SOFTWARES INSTALADOS (Desinstalação)
                  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <PivotItem x:Name="PivotApps" Header="Gerenciar Apps">
                 <Grid RowSpacing="12">
@@ -343,8 +343,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock x:Name="SystemUpdatesDeepCleanTitleElement" Text="DesinstalaÃ§Ã£o Limpa (Deep Clean)" Style="{StaticResource BodyStrongTextBlockStyle}"  />
-                                <TextBlock x:Name="SystemUpdatesDeepCleanDescElement" Text="Remove sobras de arquivos temporÃ¡rios, cache e pastas do sistema apÃ³s a desinstalaÃ§Ã£o." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
+                                <TextBlock x:Name="SystemUpdatesDeepCleanTitleElement" Text="Desinstalação Limpa (Deep Clean)" Style="{StaticResource BodyStrongTextBlockStyle}"  />
+                                <TextBlock x:Name="SystemUpdatesDeepCleanDescElement" Text="Remove sobras de arquivos temporários, cache e pastas do sistema após a desinstalação." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
                             </StackPanel>
                             <ToggleSwitch Grid.Column="1"
                                           IsOn="{x:Bind ViewModel.DeepCleanEnabled, Mode=TwoWay}"
@@ -447,7 +447,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Progress da desinstalaÃ§Ã£o -->
+                    <!-- Progress da desinstalação -->
                     <Border Grid.Row="3"
                             Visibility="{x:Bind ViewModel.IsUninstalling, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                             Background="{ThemeResource SubtleFillColorSecondaryBrush}"

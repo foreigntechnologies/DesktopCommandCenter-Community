@@ -1,4 +1,4 @@
-<Page
+<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -190,3 +190,4 @@
         </ContentDialog>
     </Grid>
 </Page>
+

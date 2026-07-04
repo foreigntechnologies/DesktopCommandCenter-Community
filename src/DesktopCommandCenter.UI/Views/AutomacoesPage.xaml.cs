@@ -54,9 +54,9 @@ ViewModel = App.Current.Services.GetRequiredService<ViewModels.AutomacoesViewMod
             TriggerParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(TriggerParamTextBox, "Minutos do Intervalo");
         }
-        else if (trigger == "Ao abrir um aplicativo especÃ­fico")
+        else if (trigger == "Ao abrir um aplicativo específico")
         {
-            TriggerParamTextBox.Header = "Nome do Processo / ExecutÃ¡vel";
+            TriggerParamTextBox.Header = "Nome do Processo / Executável";
             TriggerParamTextBox.PlaceholderText = "Ex: devenv.exe ou devenv";
             TriggerParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(TriggerParamTextBox, "Nome do aplicativo a monitorar");
@@ -81,25 +81,25 @@ ViewModel = App.Current.Services.GetRequiredService<ViewModels.AutomacoesViewMod
         if (action == "Executar script personalizado")
         {
             LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            ActionParamTextBox.Header = "CÃ³digo do Script";
+            ActionParamTextBox.Header = "Código do Script";
             ActionParamTextBox.PlaceholderText = "Cole ou escreva seu script aqui...";
             ActionParamTextBox.AcceptsReturn = true;
             ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap;
             ActionParamTextBox.MinHeight = 150;
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "CÃ³digo do script personalizado");
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Código do script personalizado");
         }
         else if (action == "Abrir programa")
         {
-            ActionParamTextBox.Header = "Caminho ou nome do executÃ¡vel";
+            ActionParamTextBox.Header = "Caminho ou nome do executável";
             ActionParamTextBox.PlaceholderText = "Ex: C:\\Windows\\notepad.exe ou notepad";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do executÃ¡vel");
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do executável");
         }
         else if (action == "Falar texto (Text-to-Speech)")
         {
             ActionParamTextBox.Header = "Mensagem falada";
-            ActionParamTextBox.PlaceholderText = "Ex: Processamento concluÃ­do!";
+            ActionParamTextBox.PlaceholderText = "Ex: Processamento concluído!";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Mensagem falada");
         }
@@ -110,12 +110,12 @@ ViewModel = App.Current.Services.GetRequiredService<ViewModels.AutomacoesViewMod
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do script a executar");
         }
-        else if (action == "Exibir notificaÃ§Ã£o do sistema (Toast)")
+        else if (action == "Exibir notificação do sistema (Toast)")
         {
-            ActionParamTextBox.Header = "Mensagem da notificaÃ§Ã£o";
-            ActionParamTextBox.PlaceholderText = "Ex: Nova automaÃ§Ã£o disparada!";
+            ActionParamTextBox.Header = "Mensagem da notificação";
+            ActionParamTextBox.PlaceholderText = "Ex: Nova automação disparada!";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Mensagem da notificaÃ§Ã£o");
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Mensagem da notificação");
         }
         else
         {

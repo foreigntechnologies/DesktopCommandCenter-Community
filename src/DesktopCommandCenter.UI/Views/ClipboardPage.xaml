@@ -1,4 +1,4 @@
-﻿<Page
+<Page NavigationCacheMode="Required"
     x:Name="RootPage"
     x:Class="DesktopCommandCenter.UI.Views.ClipboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="ClipPageTitleElement" Text="Smart Clipboard" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
-            <Button x:Name="ClipBtnClearElement" Grid.Column="1" Content="Limpar HistÃ³rico" Command="{x:Bind ViewModel.ClearHistoryCommand}"  />
+            <Button x:Name="ClipBtnClearElement" Grid.Column="1" Content="Limpar Hist�rico" Command="{x:Bind ViewModel.ClearHistoryCommand}"  />
         </Grid>
 
         <ProgressRing Grid.Row="1" IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -62,4 +62,5 @@
         </ListView>
     </Grid>
 </Page>
+
 
