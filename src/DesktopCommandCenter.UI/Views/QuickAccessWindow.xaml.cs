@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,7 +37,7 @@ InitializeComponent();
         AppWindow.SetIcon("Assets/AppIcon.ico");
 
         // Remove a barra de título nativa
-        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        this.ExtendsContentIntoTitleBar = true;
 
         // Acrylic backdrop
         try

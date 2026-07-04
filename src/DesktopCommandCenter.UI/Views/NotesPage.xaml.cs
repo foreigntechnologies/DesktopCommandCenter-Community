@@ -60,7 +60,7 @@ InitializeComponent();
             }
         }
 
-        private async System.Threading.Tasks.Task ShowNoteDialogAsync(DesktopCommandCenter.Domain.Entities.Note noteToEdit)
+        private async System.Threading.Tasks.Task ShowNoteDialogAsync(DesktopCommandCenter.Domain.Entities.Note? noteToEdit)
         {
             var loc = Helpers.LocalizationHelper.Instance;
             bool isEdit = noteToEdit != null;
@@ -68,14 +68,14 @@ InitializeComponent();
             var titleBox = new TextBox 
             { 
                 PlaceholderText = loc.GetString("Notes_TitlePlaceholder") ?? "Título da nota", 
-                Text = isEdit ? noteToEdit.Title : "",
+                Text = isEdit && noteToEdit != null ? noteToEdit.Title : "",
                 Margin = new Microsoft.UI.Xaml.Thickness(0, 0, 0, 12)
             };
             
             var contentBox = new TextBox 
             { 
                 PlaceholderText = loc.GetString("Notes_ContentPlaceholder") ?? "Escreva sua nota aqui...",
-                Text = isEdit ? noteToEdit.Content : "",
+                Text = isEdit && noteToEdit != null ? noteToEdit.Content : "",
                 AcceptsReturn = true, 
                 MinHeight = 120, 
                 TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap 
@@ -105,7 +105,7 @@ InitializeComponent();
                 
                 if (string.IsNullOrWhiteSpace(content)) return;
 
-                if (isEdit)
+                if (isEdit && noteToEdit != null)
                 {
                     await ViewModel.UpdateNoteAsync(noteToEdit, title, content);
                 }
