@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
@@ -88,7 +88,7 @@ var deepCleanService = Microsoft.Extensions.DependencyInjection.ServiceProviderS
         UpdateEmptyStates();
     }
 
-    // -- ABA 3: Gerenciar Apps (DesinstalaÃ§Ã£o) --
+    // -- ABA 3: Gerenciar Apps (Desinstalação) --
 
     private async void BtnLoadApps_Click(object sender, RoutedEventArgs e)
     {

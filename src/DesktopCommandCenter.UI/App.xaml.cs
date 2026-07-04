@@ -655,7 +655,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddInfrastructure();
         
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite($"Data Source={dbPath}"));
+            options.UseSqlite($"Data Source={dbPath}"), ServiceLifetime.Transient);
             
         return services.BuildServiceProvider();
     }

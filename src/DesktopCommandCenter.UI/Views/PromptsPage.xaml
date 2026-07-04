@@ -84,16 +84,16 @@
                 </StackPanel>
             </Grid>
 
-            <!-- COLUNA DIREITA: FORMULÃRIO DE CADASTRO/EDIÃ‡ÃƒO -->
+            <!-- COLUNA DIREITA: FORMULÃRIO DE CADASTRO/EDIÇÃƒO -->
             <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="20" VerticalAlignment="Top">
                 <StackPanel Spacing="16">
                     <TextBlock Text="{x:Bind ViewModel.FormTitle, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold"/>
 
-                    <TextBox x:Name="PromptsInputTitleElement" Header="Título" PlaceholderText="Ex: Revisar CÃ³digo" Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="PromptsInputTitleElement" Header="Título" PlaceholderText="Ex: Revisar Código" Text="{x:Bind ViewModel.EditTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox x:Name="PromptsInputCatElement" Header="Categoria" PlaceholderText="Ex: ProgramaÃ§Ã£o" Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="PromptsInputCatElement" Header="Categoria" PlaceholderText="Ex: Programação" Text="{x:Bind ViewModel.EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox x:Name="PromptsInputContentElement" Header="ConteÃºdo do Prompt" PlaceholderText="Por favor, revise o cÃ³digo abaixo..." Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                    <TextBox x:Name="PromptsInputContentElement" Header="Conteúdo do Prompt" PlaceholderText="Por favor, revise o código abaixo..." Text="{x:Bind ViewModel.EditContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
                     <Grid ColumnSpacing="12" Margin="0,8,0,0">
                         <Grid.ColumnDefinitions>

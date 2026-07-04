@@ -60,8 +60,8 @@ public sealed partial class BugReportDialog : ContentDialog
         {
             StatusInfoBar.IsOpen = true;
             StatusInfoBar.Severity = InfoBarSeverity.Warning;
-            StatusInfoBar.Title = "Campos obrigatÃ³rios";
-            StatusInfoBar.Message = "Por favor, preencha o tÃ­tulo e a descriÃ§Ã£o do problema.";
+            StatusInfoBar.Title = "Campos obrigatórios";
+            StatusInfoBar.Message = "Por favor, preencha o título e a descrição do problema.";
             return;
         }
 
@@ -70,12 +70,12 @@ public sealed partial class BugReportDialog : ContentDialog
         StatusInfoBar.Title = "Enviando...";
         StatusInfoBar.Message = "Aguarde enquanto transmitimos o seu reporte.";
         
-        // Desabilita botÃµes
+        // Desabilita botões
         IsPrimaryButtonEnabled = false;
 
         try
         {
-            // PadrÃ£o: Preparando o payload para ser enviado a um Webhook do Firebase ou API de Email
+            // Padrão: Preparando o payload para ser enviado a um Webhook do Firebase ou API de Email
             var payload = new
             {
                 title = TitleTextBox.Text,
@@ -85,10 +85,10 @@ public sealed partial class BugReportDialog : ContentDialog
                 timestamp = DateTime.UtcNow.ToString("o")
             };
 
-            // Aqui vocÃª pode inserir a URL real do seu Firebase Function ou MailerSend
+            // Aqui você pode inserir a URL real do seu Firebase Function ou MailerSend
             // string webhookUrl = "https://us-central1-SEU-PROJETO.cloudfunctions.net/reportBug";
             
-            // SimulaÃ§Ã£o de envio para a API (Remover o Task.Delay na integraÃ§Ã£o real)
+            // Simulação de envio para a API (Remover o Task.Delay na integração real)
             await Task.Delay(1500); 
 
             // Se for usar HttpClient real:
@@ -102,9 +102,9 @@ public sealed partial class BugReportDialog : ContentDialog
 
             StatusInfoBar.Severity = InfoBarSeverity.Success;
             StatusInfoBar.Title = "Enviado com sucesso!";
-            StatusInfoBar.Message = "Obrigado por contribuir. Nossa equipe analisarÃ¡ em breve.";
+            StatusInfoBar.Message = "Obrigado por contribuir. Nossa equipe analisará em breve.";
             
-            // Aguarda um momento para o usuÃ¡rio ler a mensagem e fecha
+            // Aguarda um momento para o usuário ler a mensagem e fecha
             await Task.Delay(2000);
             this.Hide();
         }
@@ -112,7 +112,7 @@ public sealed partial class BugReportDialog : ContentDialog
         {
             StatusInfoBar.Severity = InfoBarSeverity.Error;
             StatusInfoBar.Title = "Erro ao enviar";
-            StatusInfoBar.Message = "Verifique sua conexÃ£o e tente novamente. Detalhes: " + ex.Message;
+            StatusInfoBar.Message = "Verifique sua conexão e tente novamente. Detalhes: " + ex.Message;
             IsPrimaryButtonEnabled = true;
         }
     }

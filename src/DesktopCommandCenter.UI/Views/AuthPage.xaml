@@ -58,7 +58,7 @@
                     </Border>
                 </StackPanel>
 
-                <!-- ══ PAINEL NÃO LOGADO ══ -->
+                <!-- â•â• PAINEL NÃƒO LOGADO â•â• -->
                 <StackPanel x:Name="NotLoggedInPanel" Spacing="16" Visibility="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
 
                     <!-- Google -->
@@ -102,6 +102,25 @@
                         </Grid>
                     </Button>
 
+                    <!-- Microsoft -->
+                    <Button Command="{x:Bind ViewModel.LoginWithMicrosoftCommand}"
+                            Visibility="Collapsed"
+                            HorizontalAlignment="Stretch" Padding="14,12"
+                            CornerRadius="8">
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="190" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Grid.Column="1" x:Name="TxtMicrosoft" Text="Continuar com a Microsoft" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="14"  />
+                        </Grid>
+                    </Button>
+
                     <!-- Botões de login movidos para cima para manter os erros abaixo -->
 
                     <!-- Nota de privacidade -->
@@ -116,7 +135,7 @@
                     </TextBlock>
                 </StackPanel>
 
-                <!-- ══ PAINEL LOGADO ══ -->
+                <!-- â•â• PAINEL LOGADO â•â• -->
                 <Border x:Name="LoggedInPanel" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="16" Padding="32,32,32,24"
@@ -168,7 +187,7 @@
                                 </StackPanel>
 
                                 <!-- Microsoft -->
-                                <StackPanel x:Name="MicrosoftEmailPanel" Orientation="Horizontal" Spacing="8" Visibility="{x:Bind ViewModel.HasMicrosoftLinked, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center">
+                                <StackPanel x:Name="MicrosoftEmailPanel" Orientation="Horizontal" Spacing="8" Visibility="Collapsed" HorizontalAlignment="Center">
                                     <Viewbox Width="18" Height="18">
                                         <Canvas Width="24" Height="24">
                                             <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
@@ -228,6 +247,23 @@
                                         <TextBlock Grid.Column="1" x:Name="TxtLinkGitHub" Text="Vincular GitHub" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"  />
                                     </Grid>
                                 </Button>
+                                
+                                <Button Command="{x:Bind ViewModel.LinkMicrosoftCommand}" 
+                                        Visibility="Collapsed" 
+                                        HorizontalAlignment="Stretch" Padding="8" CornerRadius="6">
+                                    <Grid HorizontalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Viewbox Grid.Column="0" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Data="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z" Fill="#00A4EF"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Grid.Column="1" x:Name="TxtLinkMicrosoft" Text="Vincular Microsoft" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"  />
+                                    </Grid>
+                                </Button>
                             </StackPanel>
                             <TextBlock x:Name="TxtLinkDesc" Text="Ao vincular, você poderá entrar na sua conta com qualquer um dos provedores associados." FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" TextAlignment="Center"  />
                         </StackPanel>
@@ -241,7 +277,7 @@
                                 <FontIcon Glyph="&#xE734;" FontSize="24" Foreground="Gold" />
                                 <TextBlock x:Name="TxtProActiveTitle" Text="Plano PRO Ativo!" FontWeight="Bold" FontSize="16"  />
                             </StackPanel>
-                            <TextBlock x:Name="TxtProActiveDesc" Text="Você tem acesso completo a todos os recursos exclusivos." FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
+                            <TextBlock x:Name="TxtProActiveDesc" Text="você tem acesso completo a todos os recursos exclusivos." FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             <Button Command="{x:Bind ViewModel.OpenCustomerPortalCommand}"
                                     HorizontalAlignment="Stretch" Padding="0,12" CornerRadius="8" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
@@ -274,8 +310,8 @@
 
             </StackPanel>
 
-            <!-- COMPARAÇÃO DE PLANOS (Novo Design) -->
-            <StackPanel Spacing="16" Margin="0,40,0,40" MaxWidth="1000" HorizontalAlignment="Center">
+            <!-- COMPARAÇÃƒO DE PLANOS (Novo Design) -->
+            <StackPanel Spacing="16" Margin="0,40,0,40" MaxWidth="1000" HorizontalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                 <TextBlock x:Name="SettingsSubTitleElement" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center"  />
                 
                 <Grid ColumnSpacing="24">
@@ -310,17 +346,17 @@
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="13" Margin="0,0,0,16" />
 
                                     <StackPanel Spacing="12">
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF1BElement" FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run Text=" " /><Run x:Name="SettingsCommF1DElement" >Mica e Dark Mode.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF2BElement" FontWeight="SemiBold">Always On Top:</Run><Run Text=" " /><Run x:Name="SettingsCommF2DElement" >Fixe janelas no topo.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF3BElement" FontWeight="SemiBold">Awake:</Run><Run Text=" " /><Run x:Name="SettingsCommF3DElement" >Impede suspensão da tela.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF4BElement" FontWeight="SemiBold">Clipboard Avançado:</Run><Run Text=" " /><Run x:Name="SettingsCommF4DElement" >Histórico do seu Ctrl+C.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF5BElement" FontWeight="SemiBold">Utilitários e Temporizador:</Run><Run Text=" " /><Run x:Name="SettingsCommF5DElement" >Coleções embutidas.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF1BElement" FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run Text=" " /><Run x:Name="SettingsCommF1DElement" >Mica e Dark Mode.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF2BElement" FontWeight="SemiBold">Always On Top:</Run><Run Text=" " /><Run x:Name="SettingsCommF2DElement" >Fixe janelas no topo.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF3BElement" FontWeight="SemiBold">Awake:</Run><Run Text=" " /><Run x:Name="SettingsCommF3DElement" >Impede suspensão da tela.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF4BElement" FontWeight="SemiBold">Clipboard Avançado:</Run><Run Text=" " /><Run x:Name="SettingsCommF4DElement" >Histórico do seu Ctrl+C.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsCommF5BElement" FontWeight="SemiBold">Utilitários e Temporizador:</Run><Run Text=" " /><Run x:Name="SettingsCommF5DElement" >Coleções embutidas.</Run></TextBlock></StackPanel>
                                         
                                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,8" />
 
-                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF14Element" Text="Sem Sincronização em Nuvem" FontSize="13" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF13Element" Text="Sem IA Autônoma ou Llama 3" FontSize="13" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF12Element" Text="Sem Reconhecimento de Voz" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="&#x2718;" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF14Element" Text="Sem Sincronização em Nuvem" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="&#x2718;" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF13Element" Text="Sem IA Autônoma ou Llama 3" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" Opacity="0.6"><TextBlock Text="&#x2718;" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock x:Name="SettingsCommF12Element" Text="Sem Reconhecimento de Voz" FontSize="13" /></StackPanel>
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
@@ -336,7 +372,7 @@
                                         <GradientStop Color="#FF1C2541" Offset="1.0" />
                                     </LinearGradientBrush>
                                 </Border.Background>
-                                <TextBlock x:Name="SettingsCommBubble" Text="GRÁTIS" Foreground="White" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock x:Name="SettingsCommBubble" Text="GRÃTIS" Foreground="White" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </Border>
                     </Grid>
@@ -368,17 +404,17 @@
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextAlignment="Center" TextWrapping="Wrap" FontSize="13" Margin="0,0,0,16" />
 
                                     <StackPanel Spacing="12">
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF1Element" Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="13" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF2BElement" FontWeight="SemiBold">Sincronização Cloud:</Run><Run Text=" " /><Run x:Name="SettingsProF2DElement">Seus dados salvos seguros.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF3BElement" FontWeight="SemiBold">IA Autônoma:</Run><Run Text=" " /><Run x:Name="SettingsProF3DElement">Copilot central (Semantic Kernel).</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF4BElement" FontWeight="SemiBold">Modelos Locais (Ollama):</Run><Run Text=" " /><Run x:Name="SettingsProF4DElement">Llama 3 100% privado.</Run></TextBlock></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF5BElement" FontWeight="SemiBold">Reconhecimento de Voz:</Run><Run Text=" " /><Run x:Name="SettingsProF5DElement">Whisper nativo no PC.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF1Element" Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF2BElement" FontWeight="SemiBold">Sincronização Cloud:</Run><Run Text=" " /><Run x:Name="SettingsProF2DElement">Seus dados salvos seguros.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF3BElement" FontWeight="SemiBold">IA Autônoma:</Run><Run Text=" " /><Run x:Name="SettingsProF3DElement">Copilot central (Semantic Kernel).</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF4BElement" FontWeight="SemiBold">Modelos Locais (Ollama):</Run><Run Text=" " /><Run x:Name="SettingsProF4DElement">Llama 3 100% privado.</Run></TextBlock></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="13"><Run x:Name="SettingsProF5BElement" FontWeight="SemiBold">Reconhecimento de Voz:</Run><Run Text=" " /><Run x:Name="SettingsProF5DElement">Whisper nativo no PC.</Run></TextBlock></StackPanel>
                                         
                                         <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,8" />
 
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF6Element" Text="Streaming ultrarrápido de IA" FontSize="13" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF7Element" Text="Visão Computacional Local" FontSize="13" /></StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="✔" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF10Element" Text="Atualizações Prioritárias via Store" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF6Element" Text="Streaming ultrarrápido de IA" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF7Element" Text="Visão Computacional Local" FontSize="13" /></StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="&#x2714;" Foreground="#FF8A2BE2" FontWeight="Bold" /><TextBlock x:Name="SettingsProF10Element" Text="Atualizações Prioritárias via Store" FontSize="13" /></StackPanel>
                                     </StackPanel>
                                 </StackPanel>
 
@@ -386,12 +422,34 @@
                                 <StackPanel Grid.Row="2" Spacing="16" Padding="24,0,24,24" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                     <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
                                         <TextBlock x:Name="AuthRadioMonthly" Text="Mensal" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" />
-                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsYearlyPlan, Mode=TwoWay}" OffContent="" OnContent="" MinWidth="0" VerticalAlignment="Center" Margin="0,-4,0,0" />
+                                        <ToggleSwitch IsOn="{x:Bind ViewModel.IsYearlyPlan, Mode=TwoWay}" OffContent="" OnContent="" MinWidth="0" VerticalAlignment="Center" Margin="0,-4,0,0">
+                                            <ToggleSwitch.Resources>
+                                                <SolidColorBrush x:Key="ToggleSwitchFillOff" Color="#FF1E90FF" />
+                                                <SolidColorBrush x:Key="ToggleSwitchStrokeOff" Color="#FF1E90FF" />
+                                                <SolidColorBrush x:Key="ToggleSwitchKnobFillOff" Color="White" />
+                                                <SolidColorBrush x:Key="ToggleSwitchFillOffPointerOver" Color="#FF3BA0FF" />
+                                                <SolidColorBrush x:Key="ToggleSwitchStrokeOffPointerOver" Color="#FF3BA0FF" />
+                                                <SolidColorBrush x:Key="ToggleSwitchKnobFillOffPointerOver" Color="White" />
+                                                <SolidColorBrush x:Key="ToggleSwitchFillOffPressed" Color="#FF0078D7" />
+                                                <SolidColorBrush x:Key="ToggleSwitchStrokeOffPressed" Color="#FF0078D7" />
+                                                <SolidColorBrush x:Key="ToggleSwitchKnobFillOffPressed" Color="White" />
+                                            </ToggleSwitch.Resources>
+                                        </ToggleSwitch>
                                         <TextBlock x:Name="AuthRadioYearly" Text="Anual" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" />
                                     </StackPanel>
                                     
                                     <Grid>
                                         <Button HorizontalAlignment="Stretch" Padding="0" CornerRadius="12" Command="{x:Bind ViewModel.SubscribeCommand}">
+                                            <Button.Resources>
+                                                <LinearGradientBrush x:Key="ButtonBackgroundPointerOver" StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FFAA4BF2" Offset="0.0" />
+                                                    <GradientStop Color="#FFFF34B3" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                                <LinearGradientBrush x:Key="ButtonBackgroundPressed" StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#FF6A0BC2" Offset="0.0" />
+                                                    <GradientStop Color="#FFDF0483" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Button.Resources>
                                             <Button.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                                     <GradientStop Color="#FF8A2BE2" Offset="0.0" />
@@ -445,3 +503,4 @@
             </ScrollViewer>
     </Grid>
 </Page>
+

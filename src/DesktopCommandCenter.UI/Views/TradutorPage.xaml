@@ -56,7 +56,7 @@
                 </Grid>
 
                 <Grid Grid.Column="1">
-                    <TextBox x:Name="TranslatorTargetTextElement" Text="{x:Bind ViewModel.TranslatedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" MinHeight="300" Padding="12,12,12,48" PlaceholderText="TraduÃ§Ã£o..." />
+                    <TextBox x:Name="TranslatorTargetTextElement" Text="{x:Bind ViewModel.TranslatedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" MinHeight="300" Padding="12,12,12,48" PlaceholderText="Tradução..." />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12" Spacing="4">
                         <Button Command="{x:Bind ViewModel.PasteTranslatedCommand}" Background="Transparent" BorderThickness="0">
                             <ToolTipService.ToolTip>

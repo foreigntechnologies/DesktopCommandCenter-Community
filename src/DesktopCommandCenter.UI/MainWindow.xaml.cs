@@ -172,7 +172,7 @@ InitializeComponent();
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invÃ©s de fechar (X), oculta o app para a bandeja do sistema
+        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
         args.Handled = true;
         this.AppWindow.Hide();
     }
@@ -294,7 +294,7 @@ InitializeComponent();
 
     private async void AddQuickCommand_Click(object sender, RoutedEventArgs e)
     {
-        var titleBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "TÃ­tulo (ex: Ping)", Margin = new Thickness(0, 0, 0, 8) };
+        var titleBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Título (ex: Ping)", Margin = new Thickness(0, 0, 0, 8) };
         var cmdBox = new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "Comando (ex: ping google.com)" };
         var panel = new Microsoft.UI.Xaml.Controls.StackPanel();
         panel.Children.Add(titleBox);
@@ -302,7 +302,7 @@ InitializeComponent();
 
         var dialog = new Microsoft.UI.Xaml.Controls.ContentDialog
         {
-            Title = "Novo Comando RÃ¡pido",
+            Title = "Novo Comando Rápido",
             Content = panel,
             PrimaryButtonText = "Salvar",
             CloseButtonText = "Cancelar",
@@ -342,14 +342,14 @@ InitializeComponent();
     {
         try
         {
-            // Toggle: se jÃ¡ estÃ¡ visÃ­vel, fecha
+            // Toggle: se já está visível, fecha
             if (_quickAccessWindow != null && _quickAccessWindow.AppWindow.IsVisible)
             {
                 _quickAccessWindow.AppWindow.Hide();
                 return;
             }
 
-            // Recria se a janela foi destruÃ­da
+            // Recria se a janela foi destruída
             if (_quickAccessWindow == null)
             {
                 _quickAccessWindow = new Views.QuickAccessWindow();
@@ -360,7 +360,7 @@ InitializeComponent();
         }
         catch (Exception ex)
         {
-            Serilog.Log.Error(ex, "Erro ao abrir o painel de Acesso RÃ¡pido.");
+            Serilog.Log.Error(ex, "Erro ao abrir o painel de Acesso Rápido.");
         }
     }
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -386,7 +386,7 @@ InitializeComponent();
         ShowApp();
         try
         {
-            // Verifica se estÃ¡ rodando como pacote MSIX (Microsoft Store)
+            // Verifica se está rodando como pacote MSIX (Microsoft Store)
             var currentPackage = Windows.ApplicationModel.Package.Current;
             if (currentPackage != null)
             {
@@ -464,7 +464,7 @@ InitializeComponent();
         {
             var combo = new Microsoft.UI.Xaml.Controls.ComboBox
             {
-                Items = { "PortuguÃªs - Brasil", "English", "EspaÃ±ol" },
+                Items = { "Português - Brasil", "English", "Español" },
                 SelectedIndex = 0,
                 HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Stretch
             };
@@ -488,10 +488,10 @@ InitializeComponent();
             _ = tService.SetLanguageAsync(lang);
         }
         
-        // Salva uma referÃªncia para usar dentro do Task.Run com seguranÃ§a
+        // Salva uma referência para usar dentro do Task.Run com segurança
         var currentServices = App.Current.Services;
         
-        // Verifica a licenÃ§a no startup em background
+        // Verifica a licença no startup em background
         _ = System.Threading.Tasks.Task.Run(async () =>
         {
             try
@@ -514,7 +514,7 @@ InitializeComponent();
             }
             catch (Exception ex)
             {
-                Serilog.Log.Error(ex, "Erro ao verificar a licenÃ§a inicial no startup.");
+                Serilog.Log.Error(ex, "Erro ao verificar a licença inicial no startup.");
             }
         });
         

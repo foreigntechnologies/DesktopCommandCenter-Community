@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
 
 namespace DesktopCommandCenter.UI.Views;
@@ -21,7 +21,24 @@ InitializeComponent();
         private void UpdateTranslations()
         {
             NotesPageTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("Notes_PageTitle");
-            if (NotesBtnNewElement.Content is string || NotesBtnNewElement.Content == null) NotesBtnNewElement.Content = Helpers.LocalizationHelper.Instance.GetString("Notes_BtnNew");
+            // NewNoteTitle and NewNoteContent could also be localized here if needed.
+        }
+
+        private async void SaveNote_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            string title = NewNoteTitle.Text;
+            string content = NewNoteContent.Text;
+
+            if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(content))
+                return;
+
+            if (string.IsNullOrWhiteSpace(title))
+                title = "Nota sem título";
+
+            await ViewModel.CreateNoteAsync(title, content, "Geral");
+
+            NewNoteTitle.Text = string.Empty;
+            NewNoteContent.Text = string.Empty;
         }
 }
 

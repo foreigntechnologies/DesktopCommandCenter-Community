@@ -66,13 +66,10 @@ public partial class DashboardViewModel : ObservableObject
         var timeFormat = App.GetTimeFormat();
         var dateFormat = App.GetDateFormat();
 
-        // Use the app-selected language culture, not the OS locale.
-        // This ensures dates appear in English when the user picked English,
-        // even if the OS is set to pt-BR or es-ES.
         CultureInfo culture;
         try
         {
-            var langCode = App.GetAppLanguage(); // e.g. "en-US", "pt-BR", "es-ES"
+            var langCode = App.GetAppLanguage();
             culture = new CultureInfo(langCode);
         }
         catch
@@ -83,6 +80,25 @@ public partial class DashboardViewModel : ObservableObject
         CurrentTime = DateTime.Now.ToString(timeFormat, culture);
         CurrentDate = DateTime.Now.ToString(dateFormat, culture);
         WelcomeMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dashboard_Welcome") ?? "Bem-vindo de volta!";
+    }
+
+    [ObservableProperty]
+    private string _notesCountText = "0";
+
+    [ObservableProperty]
+    private string _clipboardCountText = "0";
+
+    public async System.Threading.Tasks.Task LoadMetricsAsync()
+    {
+        var mediator = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetService(typeof(MediatR.IMediator)) as MediatR.IMediator;
+        if (mediator != null)
+        {
+            var notes = await mediator.Send(new DesktopCommandCenter.Application.Features.Notes.Queries.GetNotesQuery());
+            NotesCountText = System.Linq.Enumerable.Count(notes).ToString();
+
+            var clipboard = await mediator.Send(new DesktopCommandCenter.Application.Features.Clipboard.Queries.GetClipboardItemsQuery());
+            ClipboardCountText = System.Linq.Enumerable.Count(clipboard).ToString();
+        }
     }
 }
 

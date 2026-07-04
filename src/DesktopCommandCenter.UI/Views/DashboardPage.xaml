@@ -77,7 +77,7 @@
                 <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
                     <StackPanel Spacing="4">
                         <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
-                        <TextBlock x:Name="TxtNotesCount" Text="0" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock x:Name="TxtNotesCount" Text="{x:Bind ViewModel.NotesCountText, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
                         <TextBlock x:Name="TxtDashNotes" Text="Notas salvas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </Border>
@@ -86,7 +86,7 @@
                 <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
                     <StackPanel Spacing="4">
                         <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
-                        <TextBlock x:Name="TxtClipCount" Text="0" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock x:Name="TxtClipCount" Text="{x:Bind ViewModel.ClipboardCountText, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
                         <TextBlock x:Name="TxtDashClip" Text="No Clipboard" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </Border>

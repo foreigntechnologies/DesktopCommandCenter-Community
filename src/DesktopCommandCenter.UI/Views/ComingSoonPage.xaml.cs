@@ -19,7 +19,7 @@ public sealed partial class ComingSoonPage : Page
         
         if (e.Parameter is string featureName)
         {
-            SubtitleText.Text = $"Estamos construindo o mÃ³dulo '{featureName}' para vocÃª. Fique de olho nas prÃ³ximas atualizaÃ§Ãµes!";
+            SubtitleText.Text = $"Estamos construindo o módulo '{featureName}' para você. Fique de olho nas próximas atualizações!";
         }
     }
 

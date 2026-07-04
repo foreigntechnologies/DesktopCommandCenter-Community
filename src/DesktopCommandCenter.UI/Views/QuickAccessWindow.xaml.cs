@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -36,7 +36,7 @@ InitializeComponent();
         
         AppWindow.SetIcon("Assets/AppIcon.ico");
 
-        // Remove a barra de tÃ­tulo nativa
+        // Remove a barra de título nativa
         ExtendsContentIntoTitleBar = true;
 
         // Acrylic backdrop
@@ -46,7 +46,7 @@ InitializeComponent();
         }
         catch { }
 
-        // Sem botÃµes de tÃ­tulo, sem redimensionamento, sem maximizar
+        // Sem botões de título, sem redimensionamento, sem maximizar
         if (AppWindow.Presenter is OverlappedPresenter p)
         {
             p.IsResizable      = false;
@@ -65,12 +65,12 @@ InitializeComponent();
             }
         };
 
-        // VersÃ£o no badge inferior
+        // Versão no badge inferior
         TxtVersion.Text = $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1"}";
     }
 
     /// <summary>
-    /// Posiciona e exibe o painel no canto inferior direito da tela onde estÃ¡ o cursor/bandeja.
+    /// Posiciona e exibe o painel no canto inferior direito da tela onde está o cursor/bandeja.
     /// </summary>
     public void ShowAtTray()
     {
@@ -84,7 +84,7 @@ InitializeComponent();
         var hwnd = WindowNative.GetWindowHandle(this);
         double dpiScale = GetDpiForWindow(hwnd) / 96.0;
 
-        // Descobre o monitor onde fica a bandeja (usa o cursor como referÃªncia)
+        // Descobre o monitor onde fica a bandeja (usa o cursor como referência)
         GetCursorPos(out var pt);
         var hMonitor = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
         var mi = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
@@ -94,7 +94,7 @@ InitializeComponent();
         int workRight  = mi.rcWork.Right;
         int workBottom = mi.rcWork.Bottom;
 
-        // Converte tamanho lÃ³gico do painel para fÃ­sico (pixels)
+        // Converte tamanho lógico do painel para físico (pixels)
         int physW = (int)(PanelWidth  * dpiScale);
         int physH = (int)(PanelHeight * dpiScale);
 
@@ -104,7 +104,7 @@ InitializeComponent();
         AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(x, y, physW, physH));
     }
 
-    // â”€â”€ Handlers de navegaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // â”€â”€ Handlers de navegação â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void Tool_Click(object sender, RoutedEventArgs e)
     {

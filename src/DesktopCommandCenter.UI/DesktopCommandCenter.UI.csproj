@@ -150,6 +150,34 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x86'" />
+
+  <!--
+    Copy ProFeatures DLL + all its build outputs to this project's output dir
+    when building any *Pro configuration (DebugPro, ReleasePro).
+    This is what makes DependencyInjection.cs find the DLL and load FirebaseAuthService
+    instead of falling back to DummyAuthService.
+  -->
+  <PropertyGroup Condition="$(Configuration.Contains('Pro'))">
+    <!-- 3 levels up from Community\src\DesktopCommandCenter.UI\ = repo root, then into .build -->
+    <_RepoRoot>$(MSBuildThisFileDirectory)..\..\..\</_RepoRoot>
+    <ProFeaturesOutputDir Condition="'$(Platform)' != 'AnyCPU'">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Platform)\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
+    <ProFeaturesOutputDir Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
+  </PropertyGroup>
+
+  <Target Name="CopyProFeaturesToOutput" AfterTargets="Build" Condition="$(Configuration.Contains('Pro'))">
+    <Message Text="[Pro Build] Copying ProFeatures from: $(ProFeaturesOutputDir)" Importance="high" />
+    <ItemGroup>
+      <ProFeatureFiles Include="$(ProFeaturesOutputDir)**\*.*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(ProFeatureFiles)"
+      DestinationFiles="@(ProFeatureFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true"
+      ContinueOnError="true" />
+    <Message Text="[Pro Build] ProFeatures DLL copied to $(OutDir)" Importance="high" />
+  </Target>
   
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
     <EnableMsixTooling>false</EnableMsixTooling>

@@ -33,11 +33,10 @@ public partial class NotesViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
-    public async Task AddTestNoteAsync()
+    public async Task CreateNoteAsync(string title, string content, string category)
     {
-        var note = await _mediator.Send(new CreateNoteCommand("Nova Nota", "Conteúdo de teste via MediatR!", "Geral"));
-        Notes.Add(note);
+        var note = await _mediator.Send(new CreateNoteCommand(title, content, category));
+        Notes.Insert(0, note); // Insert at top
     }
 }
 

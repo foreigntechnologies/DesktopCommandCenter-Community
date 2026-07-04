@@ -51,13 +51,15 @@ InitializeComponent();
         TxtAuthDesc.Text = loc.GetString("Auth_PageDesc");
         TxtLoading.Text = loc.GetString("Auth_TxtLoading");
         if (AuthBtnCancelElement.Content is string || AuthBtnCancelElement.Content == null) AuthBtnCancelElement.Content = loc.GetString("Auth_BtnCancel");
-        TxtGoogle.Text = loc.GetString("Auth_BtnGoogle");
-        TxtGitHub.Text = loc.GetString("Auth_BtnGitHub");
-
-        TxtLinkAccountsTitle.Text = loc.GetString("Auth_LinkAccountsTitle");
-        TxtLinkGoogle.Text = loc.GetString("Auth_BtnLinkGoogle");
-        TxtLinkGitHub.Text = loc.GetString("Auth_BtnLinkGitHub");
-        TxtLinkDesc.Text = loc.GetString("Auth_LinkDesc");
+        
+        // Botões sociais
+        if (TxtGoogle != null) TxtGoogle.Text = loc.GetString("Auth_LoginGoogle");
+        if (TxtGitHub != null) TxtGitHub.Text = loc.GetString("Auth_LoginGitHub");
+        if (TxtMicrosoft != null) TxtMicrosoft.Text = loc.GetString("Auth_LoginMicrosoft");
+        if (TxtLinkGoogle != null) TxtLinkGoogle.Text = loc.GetString("Auth_LinkGoogle");
+        if (TxtLinkGitHub != null) TxtLinkGitHub.Text = loc.GetString("Auth_LinkGitHub");
+        if (TxtLinkMicrosoft != null) TxtLinkMicrosoft.Text = loc.GetString("Auth_LinkMicrosoft");
+        if (TxtLinkDesc != null) TxtLinkDesc.Text = loc.GetString("Auth_LinkDesc");
         
         TxtProActiveTitle.Text = loc.GetString("Auth_ProActiveTitle");
         TxtProActiveDesc.Text = loc.GetString("Auth_ProActiveDesc");

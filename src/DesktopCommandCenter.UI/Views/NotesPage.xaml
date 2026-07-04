@@ -10,15 +10,26 @@
     <Grid Padding="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
             <TextBlock x:Name="NotesPageTitleElement" Text="Notas Rápidas" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center"  />
-            <Button x:Name="NotesBtnNewElement" Content="Nova Nota" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.AddTestNoteCommand}"  />
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Notes, Mode=OneWay}" SelectionMode="None">
+        <!-- Formulário de Nova Nota -->
+        <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" 
+                CornerRadius="8" Padding="16" Margin="0,0,0,16" VerticalAlignment="Top">
+            <StackPanel Spacing="12">
+                <TextBox x:Name="NewNoteTitle" PlaceholderText="Título da nota" />
+                <TextBox x:Name="NewNoteContent" PlaceholderText="Escreva sua nota aqui..." AcceptsReturn="True" MinHeight="80" TextWrapping="Wrap" />
+                <Button Content="Salvar Nota" Style="{StaticResource AccentButtonStyle}" Click="SaveNote_Click" HorizontalAlignment="Right" />
+            </StackPanel>
+        </Border>
+
+        <ListView Grid.Row="2" ItemsSource="{x:Bind ViewModel.Notes, Mode=OneWay}" SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />

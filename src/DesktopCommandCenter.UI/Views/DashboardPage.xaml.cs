@@ -140,6 +140,8 @@ public sealed partial class DashboardPage : Page
         SeparatorStripe.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         BtnStripeCheckout.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
         SeparatorBugReport.Visibility = isPro ? Visibility.Collapsed : Visibility.Visible;
+        
+        await ViewModel.LoadMetricsAsync();
     }
 
     private static string CapitalizeFirst(string s)

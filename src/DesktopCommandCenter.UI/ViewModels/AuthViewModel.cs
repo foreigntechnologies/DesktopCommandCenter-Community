@@ -112,7 +112,7 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ProPlanPriceText))]
     [NotifyPropertyChangedFor(nameof(ProPlanPeriodText))]
-    private bool _isYearlyPlan = true;
+    private bool _isYearlyPlan = false;
 
     public string ProPlanPriceText => IsYearlyPlan ? "R$ 429,90" : "R$ 39,90";
     public string ProPlanPeriodText => IsYearlyPlan ? "/ ano" : "/ mês";
@@ -150,7 +150,7 @@ public partial class AuthViewModel : ObservableObject
         var user = await _authService.GetCurrentUserAsync();
         if (user != null)
         {
-            await OnLoginSuccessAsync(user);
+            await OnLoginSuccessAsync(user, isNewLogin: false);
         }
         else
         {
@@ -163,13 +163,16 @@ public partial class AuthViewModel : ObservableObject
         }
     }
 
-    // ── Helper compartilhado pós-login ──────────────────────────────────────
-    private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user)
+    // ─── Helper compartilhado pós-login ──────────────────────────────────────────────
+    private async Task OnLoginSuccessAsync(Application.Interfaces.AuthUser user, bool isNewLogin = true)
     {
-        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) para evitar
-        //    que o status da conta anterior vaze para a nova sessão.
-        App.IsProUnlocked = false;
-        App.SaveProCached(false);
+        // 1. Reseta o PRO imediatamente (antes da consulta Firestore) APENAS para novos logins
+        //    para evitar que o status da conta anterior vaze para a nova sessão.
+        if (isNewLogin)
+        {
+            App.IsProUnlocked = false;
+            App.SaveProCached(false);
+        }
 
         var plan = await _licenseService.GetCurrentPlanAsync();
         
