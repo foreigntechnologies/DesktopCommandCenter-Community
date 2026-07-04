@@ -133,8 +133,8 @@
                                 <FontIcon Glyph="&#xE895;" FontSize="20" Foreground="#E53935" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolUpdateTitle" Text="Update Center" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolUpdateDesc" Text="Atualizações de apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolUpdateTitle" Text="Update Center" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolUpdateDesc" Text="Atualizações de apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -146,8 +146,8 @@
                                 <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolColorTitle" Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolColorDesc" Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolColorTitle" Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolColorDesc" Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -159,8 +159,8 @@
                                 <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolAwakeTitle" Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolAwakeDesc" Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolAwakeTitle" Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolAwakeDesc" Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -172,8 +172,8 @@
                                 <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#EF5350" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolPalleteTitle" Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolPalleteDesc" Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolPalleteTitle" Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolPalleteDesc" Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -186,8 +186,8 @@
                                 <FontIcon Glyph="&#xE943;" FontSize="20" Foreground="#7B68EE" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolShellTitle" Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolShellDesc" Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolShellTitle" Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolShellDesc" Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -199,8 +199,8 @@
                                 <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolClipTitle" Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolClipDesc" Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolClipTitle" Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolClipDesc" Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -212,8 +212,8 @@
                                 <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTimerTitle" Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolTimerDesc" Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolTimerTitle" Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolTimerDesc" Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -225,8 +225,8 @@
                                 <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolSearchTitle" Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolSearchDesc" Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolSearchTitle" Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolSearchDesc" Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -239,8 +239,8 @@
                                 <FontIcon Glyph="&#xE722;" FontSize="20" Foreground="#009688" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolCaptureTitle" Text="Captura de Tela" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolCaptureDesc" Text="Capturas rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolCaptureTitle" Text="Captura de Tela" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolCaptureDesc" Text="Capturas rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -252,8 +252,8 @@
                                 <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTransTitle" Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="TxtToolTransDesc" Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtToolTransTitle" Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtToolTransDesc" Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -298,7 +298,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -311,12 +311,12 @@
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <TextBlock x:Name="TxtDashPromptsTitle" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock x:Name="TxtDashPromptsTitle" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
                                     <Border Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtDashPromptsDesc" Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtDashPromptsDesc" Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -334,7 +334,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -352,7 +352,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
@@ -370,7 +370,7 @@
                                         <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
                                     </Border>
                                 </StackPanel>
-                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Grid>
                     </Button>
