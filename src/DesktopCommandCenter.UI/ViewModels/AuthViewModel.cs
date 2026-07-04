@@ -186,12 +186,25 @@ public partial class AuthViewModel : ObservableObject
             App.SaveProCached(false);
         }
 
-        var plan = await _licenseService.GetCurrentPlanAsync();
-        
-        // Persist email and pro status to disk so startup is instant on next launch
-        App.SaveCachedEmail(user.Email);
-        bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
-        App.SaveProCached(isPlanPro);
+        string plan;
+        try
+        {
+            plan = await _licenseService.GetCurrentPlanAsync();
+            // Persist email and pro status to disk so startup is instant on next launch
+            App.SaveCachedEmail(user.Email);
+            bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+            App.SaveProCached(isPlanPro);
+        }
+        catch (Exception)
+        {
+            // Network error/offline. Fallback to cached state.
+            plan = App.GetProCached() ? "pro" : "free";
+            
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                StatusMessage = "Modo Offline (Licença não pôde ser atualizada)";
+            });
+        }
 
         _dispatcherQueue.TryEnqueue(() =>
         {
