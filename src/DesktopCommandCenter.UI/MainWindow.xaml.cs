@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -452,13 +452,6 @@ InitializeComponent();
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
     {
         RootFrame.Loaded -= RootFrame_Loaded; // Run only once
-
-        try
-        {
-            var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
-            presenter?.Maximize();
-        }
-        catch { }
 
         if (!App.HasAppLanguageCached() && RootFrame.Content is Microsoft.UI.Xaml.Controls.Page currentPage)
         {

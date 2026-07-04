@@ -43,7 +43,7 @@
 
 
 
-        <Grid x:Name="AppTitleBar" Background="Transparent" MinHeight="40" VerticalAlignment="Top">
+        <Grid x:Name="AppTitleBar" Background="Transparent" Height="48" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
