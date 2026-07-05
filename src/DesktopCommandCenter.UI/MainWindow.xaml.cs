@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Runtime.InteropServices;
 using WinRT.Interop;
+using Serilog;
+using Microsoft.UI.Windowing;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,6 +36,10 @@ public sealed partial class MainWindow : Window
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
 
+        Log.Information("MainWindow initializing...");
+        this.SizeChanged += MainWindow_SizeChanged;
+        this.VisibilityChanged += MainWindow_VisibilityChanged;
+
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
         if (System.IO.File.Exists(iconPath))
@@ -41,21 +47,14 @@ public sealed partial class MainWindow : Window
             AppWindow.SetIcon(iconPath);
         }
 
+        // WinRT Crash Investigation: Tracking AppWindow changes safely
+        AppWindow.Changed += AppWindow_Changed;
+
         RootFrame.Loaded += RootFrame_Loaded;
         this.Activated += MainWindow_FocusChanged;
 
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
+        // Moving SystemBackdrop initialization to MainWindow_FocusChanged (Activated event)
+        // to prevent 0xc0000602 crashes when the window is initialized on a secondary monitor with a different DPI.
 
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
@@ -68,6 +67,39 @@ public sealed partial class MainWindow : Window
         RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
     }
 
+    private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
+    {
+        try
+        {
+            if (args.DidPositionChange || args.DidSizeChange || args.DidPresenterChange)
+            {
+                var displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(sender.Id, Microsoft.UI.Windowing.DisplayAreaFallback.Primary);
+                Log.Information("AppWindow_Changed => DidPositionChange: {Pos}, DidSizeChange: {Size}, DidPresenterChange: {Pres}, Width: {W}, Height: {H}, DisplayArea: {Area}", 
+                    args.DidPositionChange, args.DidSizeChange, args.DidPresenterChange, sender.Size.Width, sender.Size.Height, displayArea?.DisplayId.Value);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "AppWindow_Changed caused an exception. Preventing FailFast.");
+        }
+    }
+
+    private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+    {
+        try
+        {
+            bool isLoaded = false;
+            if (Content is FrameworkElement fe) isLoaded = fe.IsLoaded && fe.XamlRoot != null;
+            Log.Information("Window_SizeChanged => Width: {W}, Height: {H}, XamlRoot Valid: {Valid}", args.Size.Width, args.Size.Height, isLoaded);
+        }
+        catch (Exception ex) { Log.Error(ex, "MainWindow_SizeChanged exception"); }
+    }
+
+    private void MainWindow_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
+    {
+        Log.Information("Window_VisibilityChanged => Visible: {Vis}", args.Visible);
+    }
+
     /// <summary>
     /// Applies TitleBar button colors to match the current theme.
     /// Called on the UI thread only when the frame loads or the theme changes.
@@ -76,15 +108,31 @@ public sealed partial class MainWindow : Window
     /// </summary>
     public void ApplyTitleBarColors()
     {
+        Log.Information("ApplyTitleBarColors scheduled on DispatcherQueue.");
         DispatcherQueue.TryEnqueue(() =>
         {
             try
             {
-                if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
+                if (Content is not Microsoft.UI.Xaml.FrameworkElement root)
+                {
+                    Log.Warning("ApplyTitleBarColors: Content is not FrameworkElement.");
+                    return;
+                }
+                
+                if (root.XamlRoot == null)
+                {
+                    Log.Warning("ApplyTitleBarColors: XamlRoot is null. Aborting to prevent FailFast.");
+                    return; // PREVENT FAILFAST 0xc0000602
+                }
 
                 var titleBar = AppWindow?.TitleBar;
-                if (titleBar == null) return;
+                if (titleBar == null)
+                {
+                    Log.Warning("ApplyTitleBarColors: AppWindow.TitleBar is null.");
+                    return;
+                }
 
+                Log.Information("ApplyTitleBarColors executing. ActualTheme: {Theme}", root.ActualTheme);
                 var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
 
                 if (isDark)
@@ -111,10 +159,12 @@ public sealed partial class MainWindow : Window
                     ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
                     : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
                 titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                
+                Log.Information("ApplyTitleBarColors applied successfully.");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"TitleBar update skipped: {ex.Message}");
+                Log.Error(ex, "ApplyTitleBarColors caused an exception. Possible WinRT disposed object.");
             }
         });
     }
@@ -122,8 +172,25 @@ public sealed partial class MainWindow : Window
 
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
+    private bool _isBackdropSet = false;
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
+        if (!_isBackdropSet)
+        {
+            _isBackdropSet = true;
+            try
+            {
+                Log.Information("Attempting to create MicaBackdrop on first Activation...");
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "MicaBackdrop failed, falling back to DesktopAcrylicBackdrop...");
+                try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); }
+                catch (Exception innerEx) { Log.Error(innerEx, "Both Mica and Acrylic backdrops failed to initialize."); }
+            }
+        }
+
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
@@ -144,9 +211,17 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
-        args.Handled = true;
-        this.AppWindow.Hide();
+        Log.Information("MainWindow_Closed triggered.");
+        if (App.GetMinimizeToTray())
+        {
+            // Ao invés de fechar (X), oculta o app para a bandeja do sistema
+            args.Handled = true;
+            this.AppWindow.Hide();
+        }
+        else
+        {
+            Microsoft.UI.Xaml.Application.Current.Exit();
+        }
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }

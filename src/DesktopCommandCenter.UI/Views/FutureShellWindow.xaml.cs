@@ -49,14 +49,7 @@ public sealed partial class FutureShellWindow : Window
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
 
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
-        }
+        this.Activated += Window_Activated;
 
         // Initialize Terminal Service
         _terminalService = ((App)Microsoft.UI.Xaml.Application.Current).Services.GetRequiredService<ITerminalService>();
@@ -70,6 +63,24 @@ public sealed partial class FutureShellWindow : Window
         InitializeTerminalAsync();
     }
 
+
+    private bool _isWindowInitialized = false;
+
+    private void Window_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        if (!_isWindowInitialized)
+        {
+            _isWindowInitialized = true;
+            try
+            {
+                SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+            }
+            catch
+            {
+                try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
+            }
+        }
+    }
 
     private void HudTimer_Tick(object? sender, object e)
     {

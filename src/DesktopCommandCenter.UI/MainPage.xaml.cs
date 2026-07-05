@@ -7,11 +7,16 @@ namespace DesktopCommandCenter.UI;
 public sealed partial class MainPage : Page
 {
     private DateTime _lastNavTime = DateTime.MinValue;
+    private Microsoft.UI.Xaml.DispatcherTimer? _timer;
+    private ulong _prevIdleTime;
+    private ulong _prevKernelTime;
+    private ulong _prevUserTime;
 
     public MainPage()
     {
         InitializeComponent();
         this.Loaded += MainPage_Loaded;
+        this.Unloaded += MainPage_Unloaded;
         
         // Removed broken x:Bind DataContext
         DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
@@ -48,11 +53,8 @@ public sealed partial class MainPage : Page
         NavDashboard.Content = loc.GetString("Nav_Dashboard");
         NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
         NavNotes.Content = loc.GetString("Nav_Notes");
-        HeaderSysUtils.Content = loc.GetString("Nav_SysUtils");
-        NavSystemUpdates.Content = loc.GetString("Nav_SystemUpdates");
         NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
         NavAwake.Content = loc.GetString("Nav_Awake");
-        NavCliCommands.Content = loc.GetString("Nav_CliCommands");
         NavClipboard.Content = loc.GetString("Nav_Clipboard");
 
 
@@ -60,8 +62,15 @@ public sealed partial class MainPage : Page
         NavTimer.Content = loc.GetString("Nav_Timer");
         NavCapture.Content = loc.GetString("Nav_Capture");
         NavTranslator.Content = loc.GetString("Nav_Translator");
-        HeaderPro.Content = loc.GetString("Nav_ProFeatures");
         NavIALocal.Content = loc.GetString("Nav_ChatFT");
+        NavApps.Content = loc.GetString("Nav_Apps");
+
+        if (ChatFTHeaderButton != null)
+        {
+            var tooltip = new Microsoft.UI.Xaml.Controls.ToolTip();
+            tooltip.Content = loc.GetString("AskAITooltip");
+            Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ChatFTHeaderButton, tooltip);
+        }
         NavSearch.Content = loc.GetString("Nav_Search");
         NavPrompts.Content = loc.GetString("Nav_Prompts");
         NavAutomations.Content = loc.GetString("Nav_Automations");
@@ -87,6 +96,12 @@ public sealed partial class MainPage : Page
             {
                 ContentFrame.Navigate(typeof(Views.SettingsPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             }
+            AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
+            return;
+        }
+        else if (actionId == "ManageHotkeys")
+        {
+            ContentFrame.Navigate(typeof(Views.SettingsPage), "OpenHotkeysDialog", new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
@@ -206,6 +221,7 @@ public sealed partial class MainPage : Page
             Type? pageType = tag switch
             {
                 "Dashboard" => typeof(Views.DashboardPage),
+                "AppsWorkspaces" => typeof(Views.AppsWorkspacesPage),
                 "ProcessManager" => typeof(Views.ProcessManagerPage),
                 "Notes" => typeof(Views.NotesPage),
                 "Clipboard" => typeof(Views.ClipboardPage),
@@ -214,16 +230,18 @@ public sealed partial class MainPage : Page
                 "Awake" => typeof(Views.AwakePage),
                 "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
                 "Temporizador" => typeof(Views.TemporizadorPage),
-                "SystemUpdates" => typeof(Views.SystemUpdatesPage),
+                "System" => typeof(Views.SystemUpdatesPage),
                 "Captura" => typeof(Views.CapturaPage),
-            "Tradutor" => typeof(Views.TradutorPage),
-            "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
-            "Prompts" => typeof(Views.PromptsPage),
-            "Automacoes" => typeof(Views.AutomacoesPage),
-            "Auth" => typeof(Views.AuthPage),
-            "CliCommands" => typeof(Views.CliCommandsPage),
-            _ => typeof(Views.ComingSoonPage)
-        };
+                "Tradutor" => typeof(Views.TradutorPage),
+                "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
+                "Prompts" => typeof(Views.PromptsPage),
+                "Automacoes" => typeof(Views.AutomacoesPage),
+                "Auth" => typeof(Views.AuthPage),
+                "CliCommands" => typeof(Views.CliCommandsPage),
+                "DeveloperHub" => typeof(Views.DeveloperHubPage),
+                "Settings" => typeof(Views.SettingsPage),
+                _ => typeof(Views.ComingSoonPage)
+            };
 
         bool isProFeature = tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
 
@@ -320,6 +338,62 @@ public sealed partial class MainPage : Page
             FirstLaunchLanguageDialog.XamlRoot = this.XamlRoot;
             await FirstLaunchLanguageDialog.ShowAsync();
         }
+
+        // Start real-time update timer for status bar
+        _timer = new Microsoft.UI.Xaml.DispatcherTimer();
+        _timer.Interval = System.TimeSpan.FromSeconds(1.5);
+        _timer.Tick += Timer_Tick!;
+        _timer.Start();
+        Timer_Tick(this, null!);
+    }
+
+    private void MainPage_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (_timer != null)
+        {
+            _timer.Stop();
+            _timer.Tick -= Timer_Tick!;
+            _timer = null;
+        }
+    }
+
+    private void Timer_Tick(object? sender, object? e)
+    {
+        try
+        {
+            var memStatus = new DesktopCommandCenter.UI.Views.MEMORYSTATUSEX();
+            memStatus.Init();
+            if (DesktopCommandCenter.UI.Views.NativeMethods.GlobalMemoryStatusEx(ref memStatus) && StatusTextRam != null)
+            {
+                StatusTextRam.Text = $"RAM: {memStatus.dwMemoryLoad}%";
+            }
+
+            if (DesktopCommandCenter.UI.Views.NativeMethods.GetSystemTimes(out var idle, out var kernel, out var user) && StatusTextCpu != null)
+            {
+                ulong curIdle = idle.ToULong();
+                ulong curKernel = kernel.ToULong();
+                ulong curUser = user.ToULong();
+
+                if (_prevIdleTime != 0)
+                {
+                    ulong sysDiff = (curKernel - _prevKernelTime) + (curUser - _prevUserTime);
+                    ulong idleDiff = curIdle - _prevIdleTime;
+                    
+                    if (sysDiff > 0)
+                    {
+                        double cpuPct = (sysDiff - idleDiff) * 100.0 / sysDiff;
+                        if (cpuPct < 0) cpuPct = 0;
+                        if (cpuPct > 100) cpuPct = 100;
+                        StatusTextCpu.Text = $"CPU: {cpuPct:F0}%";
+                    }
+                }
+                
+                _prevIdleTime = curIdle;
+                _prevKernelTime = curKernel;
+                _prevUserTime = curUser;
+            }
+        }
+        catch { }
     }
 
     private void CmbFirstLaunchLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -340,5 +414,58 @@ public sealed partial class MainPage : Page
             var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
             FirstLaunchLanguageDialog.Title = loc.GetString("Settings_Language"); 
         }
+    }
+
+    private void ChatFTHeaderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        NavigateToAction("IALocal");
+    }
+
+    private void FutureShellHeaderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        NavigateToAction("FutureShell");
+    }
+
+    private void AppNavigationView_PaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
+    {
+        try
+        {
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ToggleButton>(sender, "TogglePaneButton");
+            if (toggleButton != null)
+            {
+                // Substitui o ícone para um 'X' (Cancel) de forma segura (string em vez de objeto)
+                toggleButton.Content = "\uE711"; 
+            }
+        }
+        catch { }
+    }
+
+    private void AppNavigationView_PaneClosing(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs args)
+    {
+        try
+        {
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ToggleButton>(sender, "TogglePaneButton");
+            if (toggleButton != null)
+            {
+                // Volta para o ícone Hamburguer (GlobalNavButton)
+                toggleButton.Content = "\uE700"; 
+            }
+        }
+        catch { }
+    }
+
+    private T? FindVisualChild<T>(Microsoft.UI.Xaml.DependencyObject parent, string name) where T : Microsoft.UI.Xaml.FrameworkElement
+    {
+        for (int i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i);
+            if (child is T element && element.Name == name)
+            {
+                return element;
+            }
+            var result = FindVisualChild<T>(child, name);
+            if (result != null) return result;
+        }
+        return null;
     }
 }

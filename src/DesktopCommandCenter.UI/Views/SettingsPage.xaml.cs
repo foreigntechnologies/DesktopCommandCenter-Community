@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +14,16 @@ public sealed partial class SettingsPage : Page
         this.InitializeComponent();
         
         this.Loaded += SettingsPage_Loaded;
+    }
+
+    protected override async void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (e.Parameter is string param && param == "OpenHotkeysDialog")
+        {
+            HotkeysListDialog.XamlRoot = this.XamlRoot;
+            await HotkeysListDialog.ShowAsync();
+        }
     }
 
     private void SettingsPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -72,6 +82,19 @@ public sealed partial class SettingsPage : Page
             TxtAIDesc.Text = loc.GetString("Settings_AIDesc");
         }
 
+        if (TxtBehaviorTitle != null)
+        {
+            TxtBehaviorTitle.Text = loc.GetString("Settings_BehaviorTitle");
+            TglStartWithWindows.Header = loc.GetString("Settings_StartWithWindows");
+            TglMinimizeToTray.Header = loc.GetString("Settings_MinimizeToTray");
+            TglAutoUpdate.Header = loc.GetString("Settings_AutoUpdate");
+        }
+
+        if (BtnSaveAI != null)
+        {
+            BtnSaveAI.Content = loc.GetString("Settings_SaveAIBtn") ?? "Salvar";
+        }
+
         // Reload hotkey display names so they reflect the current language
         ViewModel?.ReloadHotkeys();
     }
@@ -80,6 +103,12 @@ public sealed partial class SettingsPage : Page
     private HotkeyConfigItemViewModel? _editingItem;
     private uint _tempModifiers = 0;
     private uint _tempVirtualKey = 0;
+
+    private async void OpenHotkeysList_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        HotkeysListDialog.XamlRoot = this.XamlRoot;
+        await HotkeysListDialog.ShowAsync();
+    }
 
     private async void EditHotkeyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
@@ -95,6 +124,7 @@ public sealed partial class SettingsPage : Page
                 : item.CurrentHotkeyDisplay;
 
             EditHotkeyDialog.XamlRoot = this.XamlRoot;
+            HotkeysListDialog.Hide(); // Hide the list dialog first
             await EditHotkeyDialog.ShowAsync();
         }
     }
@@ -102,6 +132,13 @@ public sealed partial class SettingsPage : Page
     private void EditHotkeyDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
         HotkeyPreviewText.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+    }
+
+    private async void EditHotkeyDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    {
+        // Add a small delay to ensure EditHotkeyDialog is fully closed before showing HotkeysListDialog again
+        await System.Threading.Tasks.Task.Delay(50);
+        _ = HotkeysListDialog.ShowAsync();
     }
 
     private void EditHotkeyDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -201,6 +238,22 @@ public sealed partial class SettingsPage : Page
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(
             "https://github.com/foreigntechnologies/DesktopCommandCenter-Community")
         { UseShellExecute = true });
+    }
+
+    private void SaveAI_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (sender is Button btn)
+        {
+            var originalText = btn.Content;
+            btn.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_Saved") ?? "Salvo!";
+            var timer = new Microsoft.UI.Xaml.DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+            timer.Tick += (s, args) =>
+            {
+                btn.Content = originalText;
+                timer.Stop();
+            };
+            timer.Start();
+        }
     }
 }
 

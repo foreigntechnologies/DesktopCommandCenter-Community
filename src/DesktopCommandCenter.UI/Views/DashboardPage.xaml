@@ -1,432 +1,219 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converters="using:DesktopCommandCenter.UI.Converters"
-    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
+    xmlns:controls="using:DesktopCommandCenter.UI.Controls"
     mc:Ignorable="d"
     Background="Transparent">
-    
 
+    <Grid Background="Transparent">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Padding="32" Spacing="24">
+                
+                <!-- 1. HEADER (Health Status) -->
+                <Border Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
+                        BorderThickness="1" CornerRadius="8" Padding="20">
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <FontIcon x:Name="HealthIcon" Glyph="&#xE73E;" FontSize="32" Foreground="{ThemeResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="DashGreeting" Text="Bom dia, Gustavo" FontSize="20" FontWeight="SemiBold" />
+                            <TextBlock x:Name="HealthStatusText" Text="Seu computador está saudável." FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-    <Grid Padding="28,20,28,28">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,16" Padding="0,0,16,0">
-            <StackPanel Spacing="20" MaxWidth="1280" HorizontalAlignment="Stretch">
-
-            <!-- ══ CABEÇALHO: Saudação + Data/Hora ══ -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Spacing="2">
-                    <TextBlock
-                        x:Name="TxtGreeting"
-                        Style="{StaticResource TitleLargeTextBlockStyle}"
-                        FontWeight="SemiBold" />
+                <!-- 2. METRICS (CPU, RAM, GPU, Rede) -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
                     
-                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                        <Run Text="{x:Bind ViewModel.CurrentDate, Mode=OneWay}" />
-                        <Run Text=" • " />
-                        <Run Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}" FontFamily="Consolas" />
-                    </TextBlock>
-
-                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
-                        <Ellipse Width="6" Height="6" Fill="#4CAF50" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtVersion" Text="v1.0.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-
-            <!-- ══ MÉTRICAS RÁPIDAS (4 Cards) ══ -->
-            <Grid ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <!-- Card 1: Ferramentas disponíveis -->
-                <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE74C;" FontSize="20" Foreground="#00BCD4" />
-                        <TextBlock Text="12" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock x:Name="TxtDashTools" Text="Ferramentas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 2: Notas -->
-                <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE70B;" FontSize="20" Foreground="#FFB347" />
-                        <TextBlock x:Name="TxtNotesCount" Text="{x:Bind ViewModel.NotesCountText, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock x:Name="TxtDashNotes" Text="Notas salvas" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 3: Itens no Clipboard -->
-                <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
-                        <TextBlock x:Name="TxtClipCount" Text="{x:Bind ViewModel.ClipboardCountText, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock x:Name="TxtDashClip" Text="No Clipboard" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 4: Plano -->
-                <Border Grid.Column="3" x:Name="PlanCard" Style="{StaticResource MetricCardStyle}">
-                    <StackPanel Spacing="4">
-                        <FontIcon Glyph="&#xE734;" FontSize="20" Foreground="#FF9800" />
-                        <TextBlock x:Name="TxtPlanBadge" Text="Community" Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" FontSize="18" />
-                        <TextBlock x:Name="TxtDashPlan" Text="Plano atual" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- ══ FERRAMENTAS DA COMUNIDADE (GRATUITO) ══ -->
-            <StackPanel Spacing="12">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="TxtDashCommSection" Grid.Column="0" Text="Ferramentas da Comunidade" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
+                    <controls:InfoCard Grid.Column="0" Title="CPU" IconGlyph="&#xE968;">
+                        <TextBlock x:Name="CpuText" Text="0%" FontSize="28" FontWeight="Bold" />
+                    </controls:InfoCard>
+                    <controls:InfoCard Grid.Column="1" Title="RAM" IconGlyph="&#xE964;">
+                        <TextBlock x:Name="RamText" Text="0%" FontSize="28" FontWeight="Bold" />
+                    </controls:InfoCard>
+                    <controls:InfoCard Grid.Column="2" Title="GPU" IconGlyph="&#xE945;">
+                        <TextBlock Text="3%" FontSize="28" FontWeight="Bold" />
+                    </controls:InfoCard>
+                    <controls:InfoCard Grid.Column="3" Title="Rede" IconGlyph="&#xE839;">
+                        <TextBlock x:Name="NetworkText" Text="0%" FontSize="28" FontWeight="Bold" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+                    </controls:InfoCard>
                 </Grid>
 
-                <!-- Grade 4 colunas (Community) -->
-                <Grid ColumnSpacing="12" RowSpacing="12">
+                <!-- 3. TIMELINE & AI ACTIONS -->
+                <Grid ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Timeline Inteligente -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Timeline Inteligente" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
+                        <Border Grid.Row="1" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
+                                BorderThickness="1" CornerRadius="8" Padding="8">
+                            <ListView x:Name="TimelineList" SelectionMode="None">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60" />
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Time}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                            <FontIcon Grid.Column="1" Glyph="{Binding Icon}" Foreground="{Binding IconColor}" FontSize="14" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Message}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Border>
+                    </Grid>
+
+                    <!-- Ações IA -->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Ações IA" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
+                        <Border Grid.Row="1" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
+                                BorderThickness="1" CornerRadius="8" Padding="20">
+                            <StackPanel Spacing="16">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon Glyph="&#xEC19;" FontSize="24" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                                    <TextBlock x:Name="AIPromptTitle" Text="O que posso fazer por você?" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock x:Name="AIPromptMessage" Text="A RAM está em 94%. Deseja analisar os processos?" TextWrapping="Wrap" />
+                                <StackPanel Spacing="8" x:Name="AIActionsContainer">
+                                    <Button x:Name="AIPromptBtn1" Content="Encontrar processos pesados" HorizontalAlignment="Stretch" Click="AIPromptBtn1_Click" />
+                                    <Button x:Name="AIPromptBtn2" Content="Limpar memória em cache" HorizontalAlignment="Stretch" Click="AIPromptBtn2_Click" />
+                                    <Button x:Name="AIPromptBtn3" Content="Otimizar Rede (Flush DNS)" HorizontalAlignment="Stretch" Click="AIPromptBtn3_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <!-- 4. PILLARS (FutureShell, ChatFT, Desenvolvimento) -->
+                <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
 
-                    <!-- Row 1 -->
-                    <Button Grid.Row="0" Grid.Column="0" Click="ToolCard_Click" Tag="SystemUpdates" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE53935" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE895;" FontSize="20" Foreground="#E53935" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolUpdateTitle" Text="Update Center" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolUpdateDesc" Text="Atualizações de apps" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
+                    <controls:InfoCard Grid.Column="0" Title="FutureShell" IconGlyph="&#xE756;">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Últimos comandos:" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="winget upgrade" FontFamily="Consolas" />
+                            <TextBlock Text="git status" FontFamily="Consolas" />
+                            <TextBlock Text="npm run dev" FontFamily="Consolas" />
+                        </StackPanel>
+                    </controls:InfoCard>
 
-                    <Button Grid.Row="0" Grid.Column="1" Click="ToolCard_Click" Tag="ColorPicker" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A0099DA" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xEF3C;" FontSize="20" Foreground="#0099DA" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolColorTitle" Text="Seletor de Cores" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolColorDesc" Text="Captura cores da tela" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
+                    <controls:InfoCard Grid.Column="1" Title="ChatFT" IconGlyph="&#xE92E;">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Últimas conversas:" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="✓ Criar Dockerfile" />
+                            <TextBlock Text="✓ Revisar código C#" />
+                            <TextBlock Text="✓ Gerar Prompt de IA" />
+                        </StackPanel>
+                    </controls:InfoCard>
 
-                    <Button Grid.Row="0" Grid.Column="2" Click="ToolCard_Click" Tag="Awake" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE708;" FontSize="20" Foreground="#FF9800" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolAwakeTitle" Text="Modo Ativo" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolAwakeDesc" Text="Mantém o PC acordado" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="0" Grid.Column="3" Click="ToolCard_Click" Tag="CliCommands" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AEF5350" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE756;" FontSize="20" Foreground="#EF5350" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolPalleteTitle" Text="Paleta de Comandos" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolPalleteDesc" Text="Comandos CLI rápidos" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <!-- Row 2 -->
-                    <Button Grid.Row="1" Grid.Column="0" Click="ToolCard_Click" Tag="FutureShell" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE943;" FontSize="20" Foreground="#7B68EE" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolShellTitle" Text="FutureShell" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolShellDesc" Text="Terminal Independente" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="1" Click="ToolCard_Click" Tag="Clipboard" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A7B68EE" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xF0E3;" FontSize="20" Foreground="#7B68EE" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolClipTitle" Text="Clipboard" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolClipDesc" Text="Histórico de cópias" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="2" Click="ToolCard_Click" Tag="Temporizador" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF7043" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE916;" FontSize="20" Foreground="#FF7043" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTimerTitle" Text="Temporizador" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolTimerDesc" Text="Cronômetro e timer" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="1" Grid.Column="3" Click="ToolCard_Click" Tag="PesquisaUniversal" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A42A5F5" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE721;" FontSize="20" Foreground="#42A5F5" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolSearchTitle" Text="Pesquisa Universal" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolSearchDesc" Text="Busca em tudo" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <!-- Row 3 -->
-                    <Button Grid.Row="2" Grid.Column="0" Click="ToolCard_Click" Tag="Captura" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A009688" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE722;" FontSize="20" Foreground="#009688" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolCaptureTitle" Text="Captura de Tela" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolCaptureDesc" Text="Capturas rápidas" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="2" Grid.Column="1" Click="ToolCard_Click" Tag="Tradutor" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A26C6DA" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xF2B7;" FontSize="20" Foreground="#26C6DA" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <TextBlock x:Name="TxtToolTransTitle" Text="Tradutor" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                <TextBlock x:Name="TxtToolTransDesc" Text="Tradução instantânea" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
+                    <controls:InfoCard Grid.Column="2" Title="Desenvolvimento" IconGlyph="&#xE943;">
+                        <ScrollViewer MaxHeight="110" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                            <ItemsControl x:Name="DevToolsList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,8">
+                                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left" />
+                                            <TextBlock Text="{Binding Status}" HorizontalAlignment="Right" Foreground="{Binding StatusColor}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </controls:InfoCard>
                 </Grid>
 
+                <!-- 5. STORAGE & SYSTEM SHORTCUTS -->
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" Spacing="24">
+                        
+                        <StackPanel Spacing="12">
+                            <TextBlock x:Name="StorageTitle" Text="Armazenamento" FontSize="16" FontWeight="SemiBold" />
+                            <ItemsControl x:Name="DrivesItemsControl">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="16" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:InfoCard Title="{Binding Title}" IconGlyph="{Binding IconGlyph}" Width="250">
+                                            <StackPanel Spacing="8">
+                                                <ProgressBar Value="{Binding PercentageUsed}" Maximum="100" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0">
+                                                        <TextBlock Text="{Binding UsedText}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                                                        <TextBlock Text="{Binding TotalText}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                                        <TextBlock Text="{Binding FreeText}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </controls:InfoCard>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- SYSTEM SHORTCUTS -->
+                        <StackPanel Spacing="12">
+                            <TextBlock x:Name="SystemShortcutsTitle" Text="Atalhos do Sistema" FontSize="16" FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Spacing="16">
+                                <Grid Width="200" VerticalAlignment="Top">
+                                    <controls:InfoCard Title="Configurações" IconGlyph="&#xE713;" />
+                                    <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenSettings_Click" />
+                                </Grid>
+
+                                <Grid Width="200" VerticalAlignment="Top">
+                                    <controls:InfoCard Title="Variáveis de Ambiente" IconGlyph="&#xE756;" />
+                                    <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenEnvVars_Click" />
+                                </Grid>
+
+                                <Grid Width="200" VerticalAlignment="Top">
+                                    <controls:InfoCard Title="Editor de Registro" IconGlyph="&#xE81E;" />
+                                    <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenRegEdit_Click" />
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
 
             </StackPanel>
-
-            <!-- ══ RECURSOS PRO ══ -->
-            <StackPanel Spacing="12" Margin="0,32,0,0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="TxtDashProSection" Grid.Column="0" Text="Recursos PRO (IA &amp; Automação)" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="1" x:Name="TxtProBadge" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,24,0" />
-                </Grid>
-
-                <Grid ColumnSpacing="12" RowSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Button x:Name="BtnProChatFT" Grid.Row="0" Grid.Column="0" Click="ToolCard_Click" Tag="IALocal" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AFF9800" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE9F5;" FontSize="20" Foreground="#FF9800" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtPro1Title" Grid.Column="0" Text="ChatFT" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
-                                    </Border>
-                                </Grid>
-                                <TextBlock x:Name="TxtPro1Desc" Text="Transcrição e chat offline" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button Grid.Row="0" Grid.Column="1" Click="ToolCard_Click" Tag="Prompts" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AAB47BC" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE8BD;" FontSize="20" Foreground="#AB47BC" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtDashPromptsTitle" Grid.Column="0" Text="Prompts de IA" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
-                                    </Border>
-                                </Grid>
-                                <TextBlock x:Name="TxtDashPromptsDesc" Text="Biblioteca de prompts" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button x:Name="BtnProAutomacoes" Grid.Row="0" Grid.Column="2" Click="ToolCard_Click" Tag="Automacoes" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A00BCD4" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xED35;" FontSize="20" Foreground="#00BCD4" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtPro2Title" Grid.Column="0" Text="Automações" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
-                                    </Border>
-                                </Grid>
-                                <TextBlock x:Name="TxtPro2Desc" Text="Workflows automatizados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button x:Name="BtnProCloudSync" Grid.Row="0" Grid.Column="3" Click="ToolCard_Click" Tag="CloudSync" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1AE91E63" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE753;" FontSize="20" Foreground="#E91E63" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtPro3Title" Grid.Column="0" Text="Cloud Sync" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
-                                    </Border>
-                                </Grid>
-                                <TextBlock x:Name="TxtPro3Desc" Text="Sincronize notas e dados" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-
-                    <Button x:Name="BtnProPerfis" Grid.Row="1" Grid.Column="0" Click="ToolCard_Click" Tag="Perfis" Style="{StaticResource ToolCardButtonStyle}">
-                        <Grid Padding="16,14">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#1A8BC34A" Margin="0,0,12,0">
-                                <FontIcon Glyph="&#xE713;" FontSize="20" Foreground="#8BC34A" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="TxtPro4Title" Grid.Column="0" Text="Perfis" Style="{StaticResource BodyStrongTextBlockStyle}" TextWrapping="Wrap" />
-                                    <Border Grid.Column="1" Background="#FF9800" CornerRadius="4" Padding="5,2,5,1" VerticalAlignment="Center" Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                        <TextBlock Text="PRO" FontSize="9" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,1,0,0" />
-                                    </Border>
-                                </Grid>
-                                <TextBlock x:Name="TxtPro4Desc" Text="Múltiplos perfis de uso" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Grid>
-                    </Button>
-                </Grid>
-
-            <!-- ══ RODAPÉ: Links do app ══ -->
-            <Border MaxWidth="1400"
-                HorizontalAlignment="Stretch"
-                Background="{ThemeResource SubtleFillColorSecondaryBrush}"
-                CornerRadius="10"
-                Padding="16,10"
-                Margin="0,32,0,0">
-                <Grid>
-                    <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Left">
-                        <HyperlinkButton x:Name="BtnDashDoc" Content="Documentação" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnDashProject" Content="Conheça o Projeto" NavigateUri="https://foreigntechnologies.com.br/projects/windows/desktop-command-center/" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnDashGit" Content="Repositório GitHub" NavigateUri="https://github.com/foreigntechnologies/DesktopCommandCenter-Community" FontSize="12" Padding="4,2" />
-                        <TextBlock Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnDashBug" Content="Reportar Bug" Click="BtnBugReport_Click" FontSize="12" Padding="4,2" />
-                        <TextBlock x:Name="SeparatorBugReport" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <HyperlinkButton x:Name="BtnUpgradePro" helpers:Translate.Key="Dashboard_BtnUpgradePro" Content="🚀 Conhecer o PRO" Click="BtnUpgradePro_Click" FontSize="12" Padding="4,2" />
-                        <TextBlock x:Name="SeparatorStripe" Text="·" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-                        <DropDownButton x:Name="BtnStripeCheckout" Content="💳 Checkout Stripe" FontSize="12" Padding="4,2" Background="Transparent" BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
-                            <DropDownButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Text="Assinatura Mensal | R$ 39,90" Click="StripeMonthly_Click" />
-                                    <MenuFlyoutItem Text="Assinatura Anual | R$ 429,90" Click="StripeYearly_Click" />
-                                </MenuFlyout>
-                            </DropDownButton.Flyout>
-                        </DropDownButton>
-                    </StackPanel>
-                    <TextBlock
-                        x:Name="TxtCopyright"
-                        Text="© 2026 Foreign Technologies®. All rights reserved"
-                        FontSize="11"
-                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center" />
-                </Grid>
-            </Border>
-            </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
-</Grid>
+        </ScrollViewer>
+    </Grid>
 </Page>

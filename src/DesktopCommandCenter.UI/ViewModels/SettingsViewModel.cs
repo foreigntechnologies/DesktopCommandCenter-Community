@@ -28,6 +28,17 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private int _selectedLanguageIndex;
 
+    // ── Comportamento do Aplicativo ────────────────────────────────────────────
+
+    [ObservableProperty]
+    private bool _startWithWindows;
+
+    [ObservableProperty]
+    private bool _minimizeToTray;
+
+    [ObservableProperty]
+    private bool _autoUpdate;
+
     // ── Configurações de IA ──────────────────────────────────────────────────────
 
     [ObservableProperty]
@@ -155,6 +166,11 @@ public partial class SettingsViewModel : ObservableObject
 
         LoadHotkeys();
 
+        // Comportamento do Aplicativo
+        StartWithWindows = App.GetStartWithWindows();
+        MinimizeToTray = App.GetMinimizeToTray();
+        AutoUpdate = App.GetAutoUpdate();
+
         // Configurações de IA
         string aiProvider = App.GetAIAgentProvider();
         SelectedAIProviderIndex = aiProvider switch
@@ -205,6 +221,9 @@ public partial class SettingsViewModel : ObservableObject
         { "PesquisaUniversal", "Nav_Search"           },
         { "Automacoes",        "Nav_Automations"      },
         { "CliCommands",       "Nav_CliCommands"      },
+        { "AppsWorkspaces",    "Nav_Apps"             },
+        { "DeveloperHub",      "NavDeveloperHub"      },
+        { "ManageHotkeys",     "Settings_HotkeysTitle"},
     };
 
     public void ReloadHotkeys() => LoadHotkeys();
@@ -363,6 +382,23 @@ public partial class SettingsViewModel : ObservableObject
         {
             _ = translationService.SetLanguageAsync(lang);
         }
+    }
+
+    // ── Comportamento do Aplicativo ────────────────────────────────────────────
+
+    partial void OnStartWithWindowsChanged(bool value)
+    {
+        App.SaveStartWithWindows(value);
+    }
+
+    partial void OnMinimizeToTrayChanged(bool value)
+    {
+        App.SaveMinimizeToTray(value);
+    }
+
+    partial void OnAutoUpdateChanged(bool value)
+    {
+        App.SaveAutoUpdate(value);
     }
 
     partial void OnSelectedTimeFormatIndexChanged(int value)
