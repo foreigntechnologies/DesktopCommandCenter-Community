@@ -184,8 +184,8 @@
     <ItemGroup>
       <CLIFiles Include="$(CLIOutputDir)**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(CLIFiles)" DestinationFiles="@(CLIFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
-    <Message Text="[Pro Build] future-shell CLI copied to $(OutDir)" Importance="high" />
+    <Copy SourceFiles="@(CLIFiles)" DestinationFiles="@(CLIFiles->'$(OutDir)CLI\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Text="[Pro Build] future-shell CLI copied to $(OutDir)CLI\" Importance="high" />
   </Target>
   
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">

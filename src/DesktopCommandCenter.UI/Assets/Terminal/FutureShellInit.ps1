@@ -127,7 +127,7 @@ function future-shell {
         [Parameter(ValueFromRemainingArguments=$true)]
         $ArgsList
     )
-    $cliPath = Join-Path $AppRoot "future-shell.exe"
+    $cliPath = Join-Path $AppRoot "CLI\future-shell.exe"
     if (Test-Path $cliPath) {
         & $cliPath $ArgsList
     } else {
