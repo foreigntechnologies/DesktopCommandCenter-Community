@@ -118,3 +118,19 @@ function principal-commands {
     Write-Host $pcContent
     Write-Host ""
 }
+
+# FutureShell AI CLI Registration
+$AppRoot = (Get-Item $PSCommandPath).Directory.Parent.Parent.FullName
+
+function future-shell {
+    param(
+        [Parameter(ValueFromRemainingArguments=$true)]
+        $ArgsList
+    )
+    $cliPath = Join-Path $AppRoot "future-shell.exe"
+    if (Test-Path $cliPath) {
+        & $cliPath $ArgsList
+    } else {
+        Write-Host "AI CLI (future-shell.exe) não foi encontrado no pacote!" -ForegroundColor Red
+    }
+}
