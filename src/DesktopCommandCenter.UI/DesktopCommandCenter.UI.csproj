@@ -130,7 +130,6 @@
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.PluginSDK\DesktopCommandCenter.PluginSDK.csproj" />
-    <ProjectReference Include="..\..\..\src\DesktopCommandCenter.CLI\DesktopCommandCenter.CLI.csproj" />
   </ItemGroup>
 
 
@@ -166,6 +165,9 @@
     <_RepoRoot>$(MSBuildThisFileDirectory)..\..\..\</_RepoRoot>
     <ProFeaturesOutputDir Condition="'$(Platform)' != 'AnyCPU'">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Platform)\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
     <ProFeaturesOutputDir Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
+    
+    <CLIOutputDir Condition="'$(Platform)' != 'AnyCPU'">$(_RepoRoot).build\bin\DesktopCommandCenter.CLI\$(Platform)\$(Configuration)\net9.0-windows10.0.26100.0\</CLIOutputDir>
+    <CLIOutputDir Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(_RepoRoot).build\bin\DesktopCommandCenter.CLI\$(Configuration)\net9.0-windows10.0.26100.0\</CLIOutputDir>
   </PropertyGroup>
 
   <Target Name="CopyProFeaturesToOutput" AfterTargets="Build" Condition="$(Configuration.Contains('Pro'))">
@@ -175,6 +177,15 @@
     </ItemGroup>
     <Copy SourceFiles="@(ProFeatureFiles)" DestinationFiles="@(ProFeatureFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
     <Message Text="[Pro Build] ProFeatures DLL copied to $(OutDir)" Importance="high" />
+  </Target>
+
+  <Target Name="CopyCLIToOutput" AfterTargets="Build" Condition="$(Configuration.Contains('Pro'))">
+    <Message Text="[Pro Build] Copying future-shell CLI from: $(CLIOutputDir)" Importance="high" />
+    <ItemGroup>
+      <CLIFiles Include="$(CLIOutputDir)**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CLIFiles)" DestinationFiles="@(CLIFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Text="[Pro Build] future-shell CLI copied to $(OutDir)" Importance="high" />
   </Target>
   
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
