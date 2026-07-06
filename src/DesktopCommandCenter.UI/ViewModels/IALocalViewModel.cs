@@ -87,7 +87,7 @@ public partial class IALocalViewModel : ObservableObject
     public bool IsChatNotEmpty => Messages.Count > 0;
 
     [ObservableProperty]
-    private bool _isWebSearchMode = true; // Default: always search the web
+    private bool _isWebSearchMode = false; // Default: OFF (natural chat)
 
     [ObservableProperty]
     private bool _isEditMenuOpen = false;
@@ -353,6 +353,13 @@ public partial class IALocalViewModel : ObservableObject
             try
             {
                 string effectivePrompt = promptBackup;
+
+                // Evitar busca na web para cumprimentos simples ou testes curtos
+                bool isGreeting = System.Text.RegularExpressions.Regex.IsMatch(promptBackup.Trim(), @"^(\s*(oi|oie|ol[aá]|bom dia|boa tarde|boa noite|hello|hi|hey|e a[ií]|tudo bem|tudo bom|como vai|como est[aá]|fala a[ií]|teste|testando)[,\.\!\?]*\s*)+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (isGreeting)
+                {
+                    isWebSearch = false;
+                }
 
                 // If web search mode, search the web first and inject results
                 if (isWebSearch)

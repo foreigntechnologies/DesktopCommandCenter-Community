@@ -59,16 +59,16 @@ public sealed partial class DeveloperHubPage : Page
                 var response = await client.GetAsync(testUrl);
                 if (response.IsSuccessStatusCode)
                 {
-                    ai.StatusText = "Rodando";
+                    ai.StatusText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Running") ?? "Rodando";
                 }
                 else
                 {
-                    ai.StatusText = "Erro";
+                    ai.StatusText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Error") ?? "Erro";
                 }
             }
             catch
             {
-                ai.StatusText = "Offline";
+                ai.StatusText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Offline") ?? "Offline";
             }
         }
     }
@@ -79,7 +79,7 @@ public class LocalAIStatus : System.ComponentModel.INotifyPropertyChanged
     public string Name { get; set; } = string.Empty;
     public string Endpoint { get; set; } = string.Empty;
 
-    private string _statusText = "Verificando...";
+    private string _statusText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Checking") ?? "Verificando...";
     public string StatusText
     {
         get => _statusText;
@@ -94,10 +94,18 @@ public class LocalAIStatus : System.ComponentModel.INotifyPropertyChanged
         }
     }
 
-    public Microsoft.UI.Xaml.Media.SolidColorBrush StatusColor =>
-        StatusText == "Rodando" ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen) :
-        StatusText == "Offline" ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange) :
-        new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.DimGray);
+    public Microsoft.UI.Xaml.Media.SolidColorBrush StatusColor
+    {
+        get
+        {
+            var runningText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Running") ?? "Rodando";
+            var offlineText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("DevHub_Offline") ?? "Offline";
+
+            return StatusText == runningText ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen) :
+                   StatusText == offlineText ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange) :
+                   new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.DimGray);
+        }
+    }
 
     public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 }

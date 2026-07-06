@@ -74,14 +74,14 @@ namespace DesktopCommandCenter.UI.Views
         {
             var dialog = new ContentDialog
             {
-                Title = "Novo Ambiente",
-                PrimaryButtonText = "Criar",
-                CloseButtonText = "Cancelar",
+                Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_NewWorkspace") ?? "Novo Ambiente",
+                PrimaryButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Create") ?? "Criar",
+                CloseButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Cancel") ?? "Cancelar",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = this.XamlRoot
             };
 
-            var inputTextBox = new TextBox { PlaceholderText = "Nome do Ambiente (ex: Web Dev)" };
+            var inputTextBox = new TextBox { PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_NewWorkspacePrompt") ?? "Nome do Ambiente (ex: Web Dev)" };
             dialog.Content = inputTextBox;
 
             var result = await dialog.ShowAsync();
@@ -100,8 +100,10 @@ namespace DesktopCommandCenter.UI.Views
             {
                 _currentWorkspace = ws;
                 WorkspaceDetailsArea.Visibility = Visibility.Visible;
+                WorkspaceNoneSelectedArea.Visibility = Visibility.Collapsed;
+                
                 CurrentWorkspaceName.Text = ws.Name;
-                CurrentWorkspaceAppCount.Text = $"{ws.Apps.Count} aplicativos vinculados";
+                CurrentWorkspaceAppCount.Text = string.Format(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_LinkedCount") ?? "{0} aplicativos vinculados", ws.Apps.Count);
                 AppsGridView.ItemsSource = ws.Apps;
                 
                 if (ws.Apps.Count == 0)
@@ -119,6 +121,7 @@ namespace DesktopCommandCenter.UI.Views
             {
                 _currentWorkspace = null;
                 WorkspaceDetailsArea.Visibility = Visibility.Collapsed;
+                WorkspaceNoneSelectedArea.Visibility = Visibility.Visible;
             }
         }
 
@@ -156,6 +159,67 @@ namespace DesktopCommandCenter.UI.Views
                 var temp = _currentWorkspace;
                 WorkspacesList.SelectedItem = null;
                 WorkspacesList.SelectedItem = temp;
+            }
+        }
+
+        private async void BtnEditWorkspace_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentWorkspace == null) return;
+            
+            var dialog = new ContentDialog
+            {
+                Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_EditWorkspaceTitle") ?? "Editar Ambiente",
+                PrimaryButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Save") ?? "Salvar",
+                CloseButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Cancel") ?? "Cancelar",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot
+            };
+
+            var inputTextBox = new TextBox { Text = _currentWorkspace.Name };
+            dialog.Content = inputTextBox;
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(inputTextBox.Text))
+            {
+                _currentWorkspace.Name = inputTextBox.Text;
+                SaveData();
+                CurrentWorkspaceName.Text = _currentWorkspace.Name;
+                
+                // Refresh list
+                var temp = _currentWorkspace;
+                WorkspacesList.SelectedItem = null;
+                WorkspacesList.SelectedItem = temp;
+            }
+        }
+
+        private async void BtnDeleteWorkspace_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentWorkspace == null) return;
+            
+            var dialog = new ContentDialog
+            {
+                Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_DeleteWorkspaceTitle") ?? "Excluir Ambiente",
+                Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Apps_DeleteWorkspacePrompt") ?? "Tem certeza que deseja excluir este ambiente e remover seus atalhos?",
+                PrimaryButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Delete") ?? "Excluir",
+                CloseButtonText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Cancel") ?? "Cancelar",
+                DefaultButton = ContentDialogButton.Close,
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                Workspaces.Remove(_currentWorkspace);
+                SaveData();
+                
+                if (Workspaces.Count > 0)
+                {
+                    WorkspacesList.SelectedIndex = 0;
+                }
+                else
+                {
+                    WorkspacesList.SelectedItem = null;
+                }
             }
         }
 
@@ -217,11 +281,27 @@ namespace DesktopCommandCenter.UI.Views
         }
     }
 
-    public class AppWorkspace
+    public class AppWorkspace : System.ComponentModel.INotifyPropertyChanged
     {
         public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        
+        private string _name = string.Empty;
+        public string Name 
+        { 
+            get => _name; 
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Name)));
+                }
+            }
+        }
+        
         public ObservableCollection<WorkspaceApp> Apps { get; set; } = new ObservableCollection<WorkspaceApp>();
+
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
     }
 
     public class WorkspaceApp
@@ -229,5 +309,38 @@ namespace DesktopCommandCenter.UI.Views
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
+        
+        [System.Text.Json.Serialization.JsonIgnore]
+        private System.IO.MemoryStream? _iconStream;
+        [System.Text.Json.Serialization.JsonIgnore]
+        private Microsoft.UI.Xaml.Media.ImageSource? _appIconSource;
+        
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Microsoft.UI.Xaml.Media.ImageSource? AppIconSource
+        {
+            get
+            {
+                if (_appIconSource != null) return _appIconSource;
+                if (string.IsNullOrEmpty(Path) || !System.IO.File.Exists(Path)) return null;
+                try
+                {
+                    var icon = System.Drawing.Icon.ExtractAssociatedIcon(Path);
+                    if (icon != null)
+                    {
+                        using var bmp = icon.ToBitmap();
+                        _iconStream = new System.IO.MemoryStream();
+                        bmp.Save(_iconStream, System.Drawing.Imaging.ImageFormat.Png);
+                        _iconStream.Position = 0;
+                        
+                        var bitmapImage = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage();
+                        var _ = bitmapImage.SetSourceAsync(_iconStream.AsRandomAccessStream());
+                        _appIconSource = bitmapImage;
+                        return _appIconSource;
+                    }
+                }
+                catch { }
+                return null;
+            }
+        }
     }
 }

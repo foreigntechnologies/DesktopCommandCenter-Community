@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:DesktopCommandCenter.UI.Controls"
     xmlns:local="using:DesktopCommandCenter.UI.Views"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -16,85 +17,85 @@
         </Grid.RowDefinitions>
 
         <StackPanel Spacing="8" Margin="0,0,0,24">
-            <TextBlock x:Uid="DevHubTitle" Text="Developer Hub" Style="{StaticResource TitleTextBlockStyle}" />
-            <TextBlock x:Uid="DevHubSubtitle" Text="Gerencie todas as suas linguagens, SDKs, CLIs e ferramentas locais em um só lugar." 
+            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubTitle.Text')}" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubSubtitle.Text')}" 
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
         </StackPanel>
 
         <Pivot Grid.Row="1">
-            <PivotItem x:Uid="DevHubTabSDKs" Header="SDKs &amp; Linguagens">
+            <PivotItem Header="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubTabSDKs.Header')}">
                 <ScrollViewer>
                     <StackPanel Spacing="16" Padding="0,16,0,0">
-                        <TextBlock x:Uid="DevHubLangDetected" Text="Linguagens Detectadas" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubLangDetected.Text')}" Style="{StaticResource SubtitleTextBlockStyle}" />
                         
                         <controls:InfoCard Title=".NET 9 SDK" IconGlyph="&#xE943;">
                             <Grid>
-                                <TextBlock Text="Instalado" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <Button Content="Atualizar" HorizontalAlignment="Right" />
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Installed')}" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Button Content="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Update')}" HorizontalAlignment="Right" />
                             </Grid>
                         </controls:InfoCard>
 
                         <controls:InfoCard Title="Node.js" IconGlyph="&#xE943;">
                             <Grid>
                                 <TextBlock Text="v20.10.0" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <Button Content="Gerenciar via nvm" HorizontalAlignment="Right" />
+                                <Button Content="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_ManageNVM')}" HorizontalAlignment="Right" />
                             </Grid>
                         </controls:InfoCard>
                         
                         <controls:InfoCard Title="Python" IconGlyph="&#xE943;">
                             <Grid>
                                 <TextBlock Text="3.11.5" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <Button Content="pip list" HorizontalAlignment="Right" />
+                                <Button Content="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_PipList')}" HorizontalAlignment="Right" />
                             </Grid>
                         </controls:InfoCard>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
             
-            <PivotItem x:Uid="DevHubTabCloud" Header="CLIs &amp; Cloud">
+            <PivotItem Header="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubTabCloud.Header')}">
                 <ScrollViewer>
                     <StackPanel Spacing="16" Padding="0,16,0,0">
-                        <TextBlock x:Uid="DevHubCloudDetected" Text="Ferramentas de Nuvem Detectadas" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubCloudDetected.Text')}" Style="{StaticResource SubtitleTextBlockStyle}" />
                         <controls:InfoCard Title="Firebase CLI" IconGlyph="&#xE756;">
                             <Grid>
-                                <TextBlock Text="Instalado via npm" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Pronto" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_InstalledNpm')}" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Update')}" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
                             </Grid>
                         </controls:InfoCard>
                         <controls:InfoCard Title="Vercel CLI" IconGlyph="&#xE756;">
                             <Grid>
-                                <TextBlock Text="Instalado via npm" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Pronto" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_InstalledNpm')}" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Update')}" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
                             </Grid>
                         </controls:InfoCard>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
 
-            <PivotItem x:Uid="DevHubTabDB" Header="Containers &amp; Bancos">
+            <PivotItem Header="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubTabDB.Header')}">
                 <ScrollViewer>
                     <StackPanel Spacing="16" Padding="0,16,0,0">
-                        <TextBlock x:Uid="DevHubLocalServices" Text="Serviços Locais" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubLocalServices.Text')}" Style="{StaticResource SubtitleTextBlockStyle}" />
                         <controls:InfoCard Title="Docker Desktop" IconGlyph="&#xECA5;">
                             <Grid>
-                                <TextBlock Text="Engine v24.0.5" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Rodando" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Installed')}" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Running')}" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
                             </Grid>
                         </controls:InfoCard>
                         <controls:InfoCard Title="PostgreSQL" IconGlyph="&#xE943;">
                             <Grid>
-                                <TextBlock Text="Porta 5432" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Serviço Ativo" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Port')}" HorizontalAlignment="Left" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHub_Running')}" HorizontalAlignment="Right" Foreground="{ThemeResource SystemFillColorSuccessBrush}"/>
                             </Grid>
                         </controls:InfoCard>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
             
-            <PivotItem x:Uid="DevHubTabAI" Header="IAs Locais">
+            <PivotItem Header="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubTabAI.Header')}">
                 <ScrollViewer>
                     <StackPanel Spacing="16" Padding="0,16,0,0">
-                        <TextBlock x:Uid="DevHubAIModels" Text="Modelos e APIs de IA" Style="{StaticResource SubtitleTextBlockStyle}" />
+                        <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('DevHubAIModels.Text')}" Style="{StaticResource SubtitleTextBlockStyle}" />
                         <ItemsControl ItemsSource="{x:Bind LocalAIs}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="local:LocalAIStatus">

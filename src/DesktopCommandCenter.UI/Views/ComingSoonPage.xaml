@@ -10,8 +10,8 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
             <FontIcon Glyph="&#xE946;" FontSize="64" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
-            <TextBlock x:Name="ComingSoonTitleElement" Text="Em Breve!" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"  />
-            <TextBlock x:Name="SubtitleText" Text="Estamos construindo este módulo para você." Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap"  />
+            <TextBlock x:Name="ComingSoonTitleElement" Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='ComingSoon_Title'}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"  />
+            <TextBlock x:Name="SubtitleText" Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='ComingSoon_Subtitle'}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap"  />
         </StackPanel>
     </Grid>
 </Page>

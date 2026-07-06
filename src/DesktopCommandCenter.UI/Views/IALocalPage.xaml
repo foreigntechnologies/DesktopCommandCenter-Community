@@ -120,7 +120,7 @@
                               CornerRadius="16" BorderThickness="1" Padding="14,6">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xE12B;" FontSize="14" />
-                        <TextBlock Text="Busca na web" FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind ViewModel.GetString('Chat_WebSearchBadge', 'Busca na web')}" FontWeight="SemiBold" />
                     </StackPanel>
                 </ToggleButton>
             </StackPanel>

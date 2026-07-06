@@ -27,116 +27,116 @@
                     </Border>
                 </StackPanel>
 
-                <Grid ColumnSpacing="24">
+                <Grid ColumnSpacing="24" RowSpacing="24">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Spacing="24">
-                        <!-- Comportamento do Aplicativo -->
-                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
+                    <!-- Comportamento do Aplicativo -->
+                    <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Stretch">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtBehaviorTitle" helpers:Translate.Key="Settings_BehaviorTitle" Text="Comportamento do Aplicativo" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
+                            <ToggleSwitch x:Name="TglStartWithWindows" helpers:Translate.Key="Settings_StartWithWindows" Header="Inicializar com o Windows (Silenciosamente)" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
+                            <ToggleSwitch x:Name="TglMinimizeToTray" helpers:Translate.Key="Settings_MinimizeToTray" Header="Minimizar para a Bandeja do Sistema ao Fechar" IsOn="{x:Bind ViewModel.MinimizeToTray, Mode=TwoWay}" />
+                            <ToggleSwitch x:Name="TglAutoUpdate" helpers:Translate.Key="Settings_AutoUpdate" Header="Verificar atualizações automaticamente" IsOn="{x:Bind ViewModel.AutoUpdate, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Card de Inteligência Artificial -->
+                    <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Stretch">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtAITitle" helpers:Translate.Key="Settings_AITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Name="TxtAIDesc" helpers:Translate.Key="Settings_AIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+
                             <StackPanel Spacing="16">
-                                <TextBlock x:Name="TxtBehaviorTitle" helpers:Translate.Key="Settings_BehaviorTitle" Text="Comportamento do Aplicativo" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
-                                <ToggleSwitch x:Name="TglStartWithWindows" helpers:Translate.Key="Settings_StartWithWindows" Header="Inicializar com o Windows (Silenciosamente)" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
-                                <ToggleSwitch x:Name="TglMinimizeToTray" helpers:Translate.Key="Settings_MinimizeToTray" Header="Minimizar para a Bandeja do Sistema ao Fechar" IsOn="{x:Bind ViewModel.MinimizeToTray, Mode=TwoWay}" />
-                                <ToggleSwitch x:Name="TglAutoUpdate" helpers:Translate.Key="Settings_AutoUpdate" Header="Verificar atualizações automaticamente" IsOn="{x:Bind ViewModel.AutoUpdate, Mode=TwoWay}" />
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Aparência e Temas -->
-                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                            <StackPanel Spacing="16">
-                                <TextBlock x:Name="TxtAppearanceTitle" helpers:Translate.Key="Settings_AppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
-
-                                <ComboBox x:Name="CmbTheme" helpers:Translate.Key="Settings_ThemeLabel" Header="Tema do Aplicativo"
-                                          SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
-                                          HorizontalAlignment="Stretch">
-                                    <ComboBoxItem x:Name="CmbThemeItem1" helpers:Translate.Key="Settings_ThemeLight" Content="Claro" />
-                                    <ComboBoxItem x:Name="CmbThemeItem2" helpers:Translate.Key="Settings_ThemeDark" Content="Escuro" />
-                                    <ComboBoxItem x:Name="CmbThemeItem3" helpers:Translate.Key="Settings_ThemeSystem" Content="Padrão do Sistema (Contraste)" />
-                                </ComboBox>
-
-                                <ComboBox x:Name="CmbLanguage" helpers:Translate.Key="Settings_LangLabel" Header="Idioma do Aplicativo (Requer reinício)"
-                                          SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
-                                          HorizontalAlignment="Stretch">
-                                    <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
-                                    <ComboBoxItem x:Name="CmbLang2" Content="English" />
-                                    <ComboBoxItem x:Name="CmbLang3" Content="Español" />
-                                </ComboBox>
-
-                                <ComboBox x:Name="CmbTimeFormat" helpers:Translate.Key="Settings_TimeFormat" Header="Formato da Hora (Início)"
-                                          SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
-                                          HorizontalAlignment="Stretch">
-                                    <ComboBoxItem x:Name="CmbTime1" helpers:Translate.Key="Settings_Time1" Content="24 Horas (HH:mm) - Ex: 15:30" />
-                                    <ComboBoxItem x:Name="CmbTime2" helpers:Translate.Key="Settings_Time2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
-                                    <ComboBoxItem x:Name="CmbTime3" helpers:Translate.Key="Settings_Time3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
-                                    <ComboBoxItem x:Name="CmbTime4" helpers:Translate.Key="Settings_Time4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
-                                </ComboBox>
-
-                                <ComboBox x:Name="CmbDateFormat" helpers:Translate.Key="Settings_DateFormat" Header="Formato da Data (Início)"
-                                          SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
-                                          HorizontalAlignment="Stretch">
-                                    <ComboBoxItem x:Name="CmbDate1" helpers:Translate.Key="Settings_Date1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
-                                    <ComboBoxItem x:Name="CmbDate2" helpers:Translate.Key="Settings_Date2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
-                                    <ComboBoxItem x:Name="CmbDate3" helpers:Translate.Key="Settings_Date3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
-                                    <ComboBoxItem x:Name="CmbDate4" helpers:Translate.Key="Settings_Date4" Content="Inglês - Ex: Jun 10, 2026" />
-                                </ComboBox>
-
-                                <TextBlock x:Name="TxtThemeDesc" helpers:Translate.Key="Settings_ThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Teclas de Atalho -->
-                        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="0" Click="OpenHotkeysList_Click" Background="Transparent" BorderThickness="0">
-                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <FontIcon Glyph="&#xE765;" FontSize="24" VerticalAlignment="Center" Margin="0,0,16,0" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock x:Name="TxtHotkeysTitle" helpers:Translate.Key="Settings_HotkeysTitle" Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}" />
-                                        <TextBlock x:Name="TxtHotkeysDesc" helpers:Translate.Key="Settings_HotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                    </StackPanel>
-                                    <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="14" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                </Grid>
-                            </Border>
-                        </Button>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Spacing="24">
-                        <!-- Card de Inteligência Artificial -->
-                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                            <StackPanel Spacing="16">
-                                <TextBlock x:Name="TxtAITitle" helpers:Translate.Key="Settings_AITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                                <TextBlock x:Name="TxtAIDesc" helpers:Translate.Key="Settings_AIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-
-                                <StackPanel Spacing="16">
-                                    <StackPanel Spacing="4">
-                                        <TextBlock Text="OpenAI (ChatGPT)" FontWeight="SemiBold" />
-                                        <PasswordBox PlaceholderText="sk-..." Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
-                                    </StackPanel>
-
-                                    <StackPanel Spacing="4">
-                                        <TextBlock Text="Google Gemini" FontWeight="SemiBold" />
-                                        <PasswordBox PlaceholderText="AIza..." Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
-                                    </StackPanel>
-
-                                    <StackPanel Spacing="4">
-                                        <TextBlock Text="Anthropic Claude" FontWeight="SemiBold" />
-                                        <PasswordBox PlaceholderText="sk-ant..." Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
-                                    </StackPanel>
-
-                                    <Button x:Name="BtnSaveAI" helpers:Translate.Key="Settings_SaveAIBtn" Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Click="SaveAI_Click" Margin="0,8,0,0"/>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="OpenAI (ChatGPT)" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="sk-..." Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
                                 </StackPanel>
+
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Google Gemini" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="AIza..." Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
+                                </StackPanel>
+
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Anthropic Claude" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="sk-ant..." Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
+                                </StackPanel>
+
+                                <Button x:Name="BtnSaveAI" helpers:Translate.Key="Settings_SaveAIBtn" Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Click="SaveAI_Click" Margin="0,8,0,0"/>
                             </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Aparência e Temas -->
+                    <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Top">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtAppearanceTitle" helpers:Translate.Key="Settings_AppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
+
+                            <ComboBox x:Name="CmbTheme" helpers:Translate.Key="Settings_ThemeLabel" Header="Tema do Aplicativo"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbThemeItem1" helpers:Translate.Key="Settings_ThemeLight" Content="Claro" />
+                                <ComboBoxItem x:Name="CmbThemeItem2" helpers:Translate.Key="Settings_ThemeDark" Content="Escuro" />
+                                <ComboBoxItem x:Name="CmbThemeItem3" helpers:Translate.Key="Settings_ThemeSystem" Content="Padrão do Sistema (Contraste)" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbLanguage" helpers:Translate.Key="Settings_LangLabel" Header="Idioma do Aplicativo (Requer reinício)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
+                                <ComboBoxItem x:Name="CmbLang2" Content="English" />
+                                <ComboBoxItem x:Name="CmbLang3" Content="Español" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbTimeFormat" helpers:Translate.Key="Settings_TimeFormat" Header="Formato da Hora (Início)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbTime1" helpers:Translate.Key="Settings_Time1" Content="24 Horas (HH:mm) - Ex: 15:30" />
+                                <ComboBoxItem x:Name="CmbTime2" helpers:Translate.Key="Settings_Time2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
+                                <ComboBoxItem x:Name="CmbTime3" helpers:Translate.Key="Settings_Time3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
+                                <ComboBoxItem x:Name="CmbTime4" helpers:Translate.Key="Settings_Time4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbDateFormat" helpers:Translate.Key="Settings_DateFormat" Header="Formato da Data (Início)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbDate1" helpers:Translate.Key="Settings_Date1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
+                                <ComboBoxItem x:Name="CmbDate2" helpers:Translate.Key="Settings_Date2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
+                                <ComboBoxItem x:Name="CmbDate3" helpers:Translate.Key="Settings_Date3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
+                                <ComboBoxItem x:Name="CmbDate4" helpers:Translate.Key="Settings_Date4" Content="Inglês - Ex: Jun 10, 2026" />
+                            </ComboBox>
+
+                            <TextBlock x:Name="TxtThemeDesc" helpers:Translate.Key="Settings_ThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Teclas de Atalho -->
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" Padding="0" Click="OpenHotkeysList_Click" Background="Transparent" BorderThickness="0">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Top">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE765;" FontSize="24" VerticalAlignment="Center" Margin="0,0,16,0" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock x:Name="TxtHotkeysTitle" helpers:Translate.Key="Settings_HotkeysTitle" Text="Teclas de Atalho" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtHotkeysDesc" helpers:Translate.Key="Settings_HotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="14" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </Grid>
                         </Border>
-                    </StackPanel>
+                    </Button>
                 </Grid>
 
 

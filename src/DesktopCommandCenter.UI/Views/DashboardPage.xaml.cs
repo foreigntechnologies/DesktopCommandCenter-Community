@@ -39,7 +39,7 @@ public sealed partial class DashboardPage : Page
         {
             var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>((App.Current as App).Services);
             var user = await authService.GetCurrentUserAsync();
-            var name = "Usuário";
+            var name = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DefaultUser") ?? "Usuário";
             
             if (user != null && !string.IsNullOrEmpty(user.DisplayName))
             {
@@ -57,7 +57,11 @@ public sealed partial class DashboardPage : Page
             var greeting = loc.GetString(greetingKey);
             if (string.IsNullOrEmpty(greeting) || greeting == greetingKey) 
             {
-                greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+                greeting = hour < 12 
+                    ? (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Morning") ?? "Bom dia")
+                    : hour < 18 
+                        ? (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Afternoon") ?? "Boa tarde")
+                        : (DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Evening") ?? "Boa noite");
             }
             
             if (DashGreeting != null)
@@ -68,11 +72,11 @@ public sealed partial class DashboardPage : Page
             // Timeline Inteligente (Mock for Mission Control)
             var timelineItems = new System.Collections.ObjectModel.ObservableCollection<TimelineEvent>
             {
-                new TimelineEvent { Time = "17:42", Icon = "\uE896", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = "Windows Update está Atualizado!" },
-                new TimelineEvent { Time = "17:40", Icon = "\uE756", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = "FutureShell executou winget upgrade" },
-                new TimelineEvent { Time = "17:31", Icon = "\uE7BA", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange), Message = "RAM chegou a 95%" },
-                new TimelineEvent { Time = "17:20", Icon = "\uE702", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = "Bluetooth conectado" },
-                new TimelineEvent { Time = "16:58", Icon = "\uEC19", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = "ChatFT gerou um script PowerShell" }
+                new TimelineEvent { Time = "17:42", Icon = "\uE896", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Timeline1")  },
+                new TimelineEvent { Time = "17:40", Icon = "\uE756", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Timeline2")  },
+                new TimelineEvent { Time = "17:31", Icon = "\uE7BA", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange), Message = string.Format(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Timeline3"), "95")  },
+                new TimelineEvent { Time = "17:20", Icon = "\uE702", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Timeline4")  },
+                new TimelineEvent { Time = "16:58", Icon = "\uEC19", IconColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen), Message = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Timeline5")  }
             };
             if (TimelineList != null) TimelineList.ItemsSource = timelineItems;
 
@@ -84,6 +88,12 @@ public sealed partial class DashboardPage : Page
             
             // First tick manually to not wait 1.5s
             Timer_Tick(this, null!);
+
+            if (StorageTitle != null) StorageTitle.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_StorageTitle");
+            if (SysShortcutsTitle != null) SysShortcutsTitle.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_SysShortcuts");
+            if (CardSettings != null) CardSettings.Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Settings");
+            if (CardEnvVars != null) CardEnvVars.Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_EnvVars");
+            if (CardRegEdit != null) CardRegEdit.Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_RegEdit");
 
             // Load Drives dynamically
             var drivesList = new System.Collections.ObjectModel.ObservableCollection<DriveInfoModel>();
@@ -104,16 +114,22 @@ public sealed partial class DashboardPage : Page
                               d.DriveType == System.IO.DriveType.Network ? "\uE839" : // Network
                               "\uEDA2"; // Hard Drive/Default
 
-                string label = string.IsNullOrEmpty(d.VolumeLabel) ? (d.DriveType == System.IO.DriveType.Removable ? "Removível" : "Disco Local") : d.VolumeLabel;
+                string removableTrans = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Removable") ?? "Removível";
+                string localDiskTrans = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_LocalDisk") ?? "Disco Local";
+                string label = string.IsNullOrEmpty(d.VolumeLabel) ? (d.DriveType == System.IO.DriveType.Removable ? removableTrans : localDiskTrans) : d.VolumeLabel;
                 
+                string usedTrans = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Used") ?? "Usado: {0} GB";
+                string freeTrans = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Free") ?? "Livre: {0} GB";
+                string totalTrans = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_Total") ?? "Total: {0} GB";
+
                 drivesList.Add(new DriveInfoModel
                 {
                     Title = $"{label} {d.Name.TrimEnd('\\')}",
                     IconGlyph = icon,
                     PercentageUsed = pct,
-                    UsedText = $"Usado: {usedGb:F1} GB",
-                    FreeText = $"Livre: {freeGb:F1} GB",
-                    TotalText = $"Total: {totalGb:F1} GB"
+                    UsedText = string.Format(usedTrans, usedGb.ToString("F1")),
+                    FreeText = string.Format(freeTrans, freeGb.ToString("F1")),
+                    TotalText = string.Format(totalTrans, totalGb.ToString("F1"))
                 });
             }
             if (DrivesItemsControl != null)
@@ -126,6 +142,8 @@ public sealed partial class DashboardPage : Page
                 DevToolsList.ItemsSource = _devTools;
                 _ = LoadDevToolsAsync();
             }
+
+            _ = LoadRealCardsDataAsync();
 
             _prevNetworkTime = DateTime.Now;
             _prevNetworkBytes = GetTotalNetworkBytes();
@@ -149,6 +167,37 @@ public sealed partial class DashboardPage : Page
             return total;
         }
         catch { return 0; }
+    }
+
+    private async System.Threading.Tasks.Task LoadRealCardsDataAsync()
+    {
+        try
+        {
+            // FutureShell Quick Commands
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DCC", "dcc_quick_commands.json");
+            if (System.IO.File.Exists(path))
+            {
+                var json = await System.IO.File.ReadAllTextAsync(path);
+                using var doc = System.Text.Json.JsonDocument.Parse(json);
+                var cmds = doc.RootElement.EnumerateArray().Select(x => x.GetProperty("Command").GetString()).Where(x => !string.IsNullOrEmpty(x)).ToList();
+                
+                if (cmds.Count > 0 && FutureShellCmd1 != null) FutureShellCmd1.Text = cmds[0];
+                if (cmds.Count > 1 && FutureShellCmd2 != null) FutureShellCmd2.Text = cmds[1];
+                if (cmds.Count > 2 && FutureShellCmd3 != null) FutureShellCmd3.Text = cmds[2];
+            }
+            else
+            {
+                if (FutureShellCmd1 != null) FutureShellCmd1.Text = "Nenhum comando salvo.";
+                if (FutureShellCmd2 != null) FutureShellCmd2.Text = "";
+                if (FutureShellCmd3 != null) FutureShellCmd3.Text = "";
+            }
+
+            // ChatFT (No persistence implemented yet, using placeholder)
+            if (ChatFT1 != null) ChatFT1.Text = "Nenhuma conversa encontrada.";
+            if (ChatFT2 != null) ChatFT2.Text = "";
+            if (ChatFT3 != null) ChatFT3.Text = "";
+        }
+        catch { }
     }
 
     private long GetTotalNetworkSpeed()
@@ -204,12 +253,12 @@ public sealed partial class DashboardPage : Page
             _devTools.Clear();
             foreach (var t in installedTools)
             {
-                t.Status = "Instalado";
+                t.Status = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevInstalled");
                 _devTools.Add(t);
             }
             if (_devTools.Count == 0)
             {
-                _devTools.Add(new DevToolStatus { Name = "Nenhuma Ferramenta", Status = "Encontrada", ProcessName = "" });
+                _devTools.Add(new DevToolStatus { Name = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevNoTools"), Status = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevFound"), ProcessName = "" });
             }
         });
     }
@@ -240,6 +289,23 @@ public sealed partial class DashboardPage : Page
     {
         try
         {
+            // Update Date and Time
+            var cultureCode = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.CurrentCulture;
+            var culture = new System.Globalization.CultureInfo(cultureCode);
+            
+            if (DashDateText != null)
+            {
+                var dateFormat = App.GetDateFormat();
+                if (string.IsNullOrEmpty(dateFormat)) dateFormat = "dddd, dd MMMM yyyy";
+                DashDateText.Text = System.DateTime.Now.ToString(dateFormat, culture);
+            }
+            if (DashTimeText != null)
+            {
+                var timeFormat = App.GetTimeFormat();
+                if (string.IsNullOrEmpty(timeFormat)) timeFormat = "HH:mm";
+                DashTimeText.Text = System.DateTime.Now.ToString(timeFormat, culture);
+            }
+
             // Update RAM
             var memStatus = new MEMORYSTATUSEX();
             memStatus.Init();
@@ -256,27 +322,27 @@ public sealed partial class DashboardPage : Page
                     {
                         HealthIcon.Glyph = "\uE7BA"; // Warning
                         HealthIcon.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange);
-                        HealthStatusText.Text = "Atenção: Uso de memória RAM elevado.";
+                        HealthStatusText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_HealthWarn");
                         
-                        AIPromptTitle.Text = "Alerta de Desempenho";
-                        AIPromptMessage.Text = $"Sua RAM atingiu {memStatus.dwMemoryLoad}%. Deseja que eu analise e encerre processos ociosos para liberar espaço?";
+                        AIPromptTitle.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_PerfAlert");
+                        AIPromptMessage.Text = string.Format(DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_PerfAlertDesc"), memStatus.dwMemoryLoad);
                         
-                        if (AIPromptBtn1 != null) { AIPromptBtn1.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn1.Content = "Encontrar processos pesados"; }
-                        if (AIPromptBtn2 != null) { AIPromptBtn2.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn2.Content = "Limpar memória em cache"; }
+                        if (AIPromptBtn1 != null) { AIPromptBtn1.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn1.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFindHeavy"); }
+                        if (AIPromptBtn2 != null) { AIPromptBtn2.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearCache"); }
                         if (AIPromptBtn3 != null) { AIPromptBtn3.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed; }
                     }
                     else
                     {
                         HealthIcon.Glyph = "\uE73E"; // Checkmark
                         HealthIcon.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen);
-                        HealthStatusText.Text = "Seu computador está saudável.";
+                        HealthStatusText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_HealthOk");
 
-                        AIPromptTitle.Text = "O que posso fazer por você?";
-                        AIPromptMessage.Text = "Tudo parece tranquilo no momento. Posso ajudar com alguma automação ou pesquisa?";
+                        AIPromptTitle.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_AiAsk");
+                        AIPromptMessage.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_AiAskDesc");
                         
-                        if (AIPromptBtn1 != null) { AIPromptBtn1.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn1.Content = "Criar nova Automação"; }
-                        if (AIPromptBtn2 != null) { AIPromptBtn2.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn2.Content = "Abrir ChatFT"; }
-                        if (AIPromptBtn3 != null) { AIPromptBtn3.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn3.Content = "Otimizar Rede (Flush DNS)"; }
+                        if (AIPromptBtn1 != null) { AIPromptBtn1.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn1.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnNewAuto"); }
+                        if (AIPromptBtn2 != null) { AIPromptBtn2.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnOpenChatFT"); }
+                        if (AIPromptBtn3 != null) { AIPromptBtn3.Visibility = Microsoft.UI.Xaml.Visibility.Visible; AIPromptBtn3.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFlushDns"); }
                     }
                 }
             }
@@ -334,18 +400,18 @@ public sealed partial class DashboardPage : Page
             _prevNetworkTime = currentTime;
 
             // Update DevTools
-            if (_devTools.Count > 0 && _devTools[0].Name != "Nenhuma Ferramenta")
+            if (_devTools.Count > 0 && _devTools[0].Name != DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevNoTools"))
             {
                 var processes = System.Diagnostics.Process.GetProcesses().Select(p => p.ProcessName.ToLower()).ToHashSet();
                 foreach (var tool in _devTools)
                 {
                     if (processes.Contains(tool.ProcessName.ToLower()))
                     {
-                        tool.Status = "Rodando";
+                        tool.Status = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevRunning");
                     }
                     else
                     {
-                        tool.Status = "Instalado";
+                        tool.Status = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevInstalled");
                     }
                 }
             }
@@ -355,7 +421,7 @@ public sealed partial class DashboardPage : Page
 
     private void AIPromptBtn1_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (AIPromptBtn1.Content?.ToString() == "Encontrar processos pesados")
+        if (AIPromptBtn1.Content?.ToString() == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFindHeavy"))
         {
             this.Frame?.Navigate(typeof(ProcessManagerPage));
         }
@@ -367,12 +433,12 @@ public sealed partial class DashboardPage : Page
 
     private async void AIPromptBtn2_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (AIPromptBtn2.Content?.ToString() == "Limpar memória em cache")
+        if (AIPromptBtn2.Content?.ToString() == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearCache"))
         {
             try
             {
                 AIPromptBtn2.IsEnabled = false;
-                AIPromptBtn2.Content = "Limpando...";
+                AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearing");
                 
                 await System.Threading.Tasks.Task.Run(() =>
                 {
@@ -386,15 +452,15 @@ public sealed partial class DashboardPage : Page
                     }
                 });
 
-                AIPromptBtn2.Content = "✓ Memória Otimizada!";
+                AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnMemOptimized");
                 await System.Threading.Tasks.Task.Delay(2000);
-                AIPromptBtn2.Content = "Limpar memória em cache";
+                AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearCache");
                 AIPromptBtn2.IsEnabled = true;
             }
             catch
             {
                 AIPromptBtn2.IsEnabled = true;
-                AIPromptBtn2.Content = "Limpar memória em cache";
+                AIPromptBtn2.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearCache");
             }
         }
         else
@@ -406,12 +472,12 @@ public sealed partial class DashboardPage : Page
 
     private async void AIPromptBtn3_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (AIPromptBtn3.Content?.ToString() == "Otimizar Rede (Flush DNS)")
+        if (AIPromptBtn3.Content?.ToString() == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFlushDns"))
         {
             try
             {
                 AIPromptBtn3.IsEnabled = false;
-                AIPromptBtn3.Content = "Limpando DNS...";
+                AIPromptBtn3.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnClearingDns");
                 
                 await System.Threading.Tasks.Task.Run(() =>
                 {
@@ -424,15 +490,15 @@ public sealed partial class DashboardPage : Page
                     })?.WaitForExit();
                 });
 
-                AIPromptBtn3.Content = "✓ Rede Otimizada!";
+                AIPromptBtn3.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnNetOptimized");
                 await System.Threading.Tasks.Task.Delay(2000);
-                AIPromptBtn3.Content = "Otimizar Rede (Flush DNS)";
+                AIPromptBtn3.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFlushDns");
                 AIPromptBtn3.IsEnabled = true;
             }
             catch
             {
                 AIPromptBtn3.IsEnabled = true;
-                AIPromptBtn3.Content = "Otimizar Rede (Flush DNS)";
+                AIPromptBtn3.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_BtnFlushDns");
             }
         }
     }
@@ -500,9 +566,9 @@ public class DevToolStatus : System.ComponentModel.INotifyPropertyChanged
     }
     
     public Microsoft.UI.Xaml.Media.Brush StatusColor => 
-        Status == "Rodando" ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen) :
-        Status == "Instalado" ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.DeepSkyBlue) :
-        Status == "Atualizar" ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.IndianRed) :
+        Status == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevRunning") ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen) :
+        Status == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevInstalled") ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.DeepSkyBlue) :
+        Status == DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Dash_DevUpdate") ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.IndianRed) :
         new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.DimGray);
 
     public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;

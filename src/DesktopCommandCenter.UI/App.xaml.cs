@@ -741,6 +741,7 @@ public partial class App : Microsoft.UI.Xaml.Application
                         try
                         {
                             var mgr = new Velopack.UpdateManager("https://github.com/foreigntechnologies/DesktopCommandCenter-Community");
+                            if (!mgr.IsInstalled) return;
                             var newVersion = await mgr.CheckForUpdatesAsync();
                             if (newVersion != null && dispatcherQueue != null)
                             {

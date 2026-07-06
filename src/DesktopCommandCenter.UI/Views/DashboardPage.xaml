@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:DesktopCommandCenter.UI.Controls"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -16,13 +17,19 @@
                 <Border Background="{ThemeResource LayerFillColorDefaultBrush}" 
                         BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
                         BorderThickness="1" CornerRadius="8" Padding="20">
-                    <StackPanel Orientation="Horizontal" Spacing="16">
-                        <FontIcon x:Name="HealthIcon" Glyph="&#xE73E;" FontSize="32" Foreground="{ThemeResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="DashGreeting" Text="Bom dia, Gustavo" FontSize="20" FontWeight="SemiBold" />
-                            <TextBlock x:Name="HealthStatusText" Text="Seu computador está saudável." FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Left">
+                            <FontIcon x:Name="HealthIcon" Glyph="&#xE73E;" FontSize="32" Foreground="{ThemeResource SystemFillColorSuccessBrush}" VerticalAlignment="Center" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="DashGreeting" Text="Bom dia, Gustavo" FontSize="20" FontWeight="SemiBold" />
+                                <TextBlock x:Name="HealthStatusText" Text="Seu computador está saudável." FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <TextBlock x:Name="DashDateText" Text="..." FontSize="16" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="DashTimeText" Text="..." FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
                 </Border>
 
                 <!-- 2. METRICS (CPU, RAM, GPU, Rede) -->
@@ -61,7 +68,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Timeline Inteligente" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
+                        <TextBlock Grid.Row="0" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_TimelineTitle')}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
                         <Border Grid.Row="1" Background="{ThemeResource LayerFillColorDefaultBrush}" 
                                 BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
                                 BorderThickness="1" CornerRadius="8" Padding="8">
@@ -90,20 +97,20 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Ações IA" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
+                        <TextBlock Grid.Row="0" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIActionsTitle')}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
                         <Border Grid.Row="1" Background="{ThemeResource LayerFillColorDefaultBrush}" 
                                 BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
                                 BorderThickness="1" CornerRadius="8" Padding="20">
                             <StackPanel Spacing="16">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <FontIcon Glyph="&#xEC19;" FontSize="24" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
-                                    <TextBlock x:Name="AIPromptTitle" Text="O que posso fazer por você?" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="AIPromptTitle" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIPromptTitle')}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
                                 </StackPanel>
-                                <TextBlock x:Name="AIPromptMessage" Text="A RAM está em 94%. Deseja analisar os processos?" TextWrapping="Wrap" />
+                                <TextBlock x:Name="AIPromptMessage" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIPromptMessage')}" TextWrapping="Wrap" />
                                 <StackPanel Spacing="8" x:Name="AIActionsContainer">
-                                    <Button x:Name="AIPromptBtn1" Content="Encontrar processos pesados" HorizontalAlignment="Stretch" Click="AIPromptBtn1_Click" />
-                                    <Button x:Name="AIPromptBtn2" Content="Limpar memória em cache" HorizontalAlignment="Stretch" Click="AIPromptBtn2_Click" />
-                                    <Button x:Name="AIPromptBtn3" Content="Otimizar Rede (Flush DNS)" HorizontalAlignment="Stretch" Click="AIPromptBtn3_Click" />
+                                    <Button x:Name="AIPromptBtn1" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIBtn1')}" HorizontalAlignment="Stretch" Click="AIPromptBtn1_Click" />
+                                    <Button x:Name="AIPromptBtn2" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIBtn2')}" HorizontalAlignment="Stretch" Click="AIPromptBtn2_Click" />
+                                    <Button x:Name="AIPromptBtn3" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_AIBtn3')}" HorizontalAlignment="Stretch" Click="AIPromptBtn3_Click" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -120,23 +127,23 @@
 
                     <controls:InfoCard Grid.Column="0" Title="FutureShell" IconGlyph="&#xE756;">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Últimos comandos:" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="winget upgrade" FontFamily="Consolas" />
-                            <TextBlock Text="git status" FontFamily="Consolas" />
-                            <TextBlock Text="npm run dev" FontFamily="Consolas" />
+                            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_LatestCommands')}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="FutureShellCmd1" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_CmdWinget')}" FontFamily="Consolas" />
+                            <TextBlock x:Name="FutureShellCmd2" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_CmdGit')}" FontFamily="Consolas" />
+                            <TextBlock x:Name="FutureShellCmd3" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_CmdNpm')}" FontFamily="Consolas" />
                         </StackPanel>
                     </controls:InfoCard>
 
                     <controls:InfoCard Grid.Column="1" Title="ChatFT" IconGlyph="&#xE92E;">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Últimas conversas:" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                            <TextBlock Text="✓ Criar Dockerfile" />
-                            <TextBlock Text="✓ Revisar código C#" />
-                            <TextBlock Text="✓ Gerar Prompt de IA" />
+                            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_LatestChats')}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="ChatFT1" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_Chat1')}" />
+                            <TextBlock x:Name="ChatFT2" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_Chat2')}" />
+                            <TextBlock x:Name="ChatFT3" Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_Chat3')}" />
                         </StackPanel>
                     </controls:InfoCard>
 
-                    <controls:InfoCard Grid.Column="2" Title="Desenvolvimento" IconGlyph="&#xE943;">
+                    <controls:InfoCard Grid.Column="2" Title="{x:Bind helpers:LocalizationHelper.GetLocalized('Dash_DevTitle')}" IconGlyph="&#xE943;">
                         <ScrollViewer MaxHeight="110" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
                             <ItemsControl x:Name="DevToolsList">
                                 <ItemsControl.ItemTemplate>
@@ -157,7 +164,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="24">
                         
                         <StackPanel Spacing="12">
-                            <TextBlock x:Name="StorageTitle" Text="Armazenamento" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock x:Name="StorageTitle" Grid.Row="0" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
                             <ItemsControl x:Name="DrivesItemsControl">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -191,20 +198,20 @@
 
                         <!-- SYSTEM SHORTCUTS -->
                         <StackPanel Spacing="12">
-                            <TextBlock x:Name="SystemShortcutsTitle" Text="Atalhos do Sistema" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock x:Name="SysShortcutsTitle" Grid.Row="0" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
                             <StackPanel Orientation="Horizontal" Spacing="16">
                                 <Grid Width="200" VerticalAlignment="Top">
-                                    <controls:InfoCard Title="Configurações" IconGlyph="&#xE713;" />
+                                    <controls:InfoCard x:Name="CardSettings" IconGlyph="&#xE713;" />
                                     <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenSettings_Click" />
                                 </Grid>
 
                                 <Grid Width="200" VerticalAlignment="Top">
-                                    <controls:InfoCard Title="Variáveis de Ambiente" IconGlyph="&#xE756;" />
+                                    <controls:InfoCard x:Name="CardEnvVars" IconGlyph="&#xE8B1;" />
                                     <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenEnvVars_Click" />
                                 </Grid>
 
                                 <Grid Width="200" VerticalAlignment="Top">
-                                    <controls:InfoCard Title="Editor de Registro" IconGlyph="&#xE81E;" />
+                                    <controls:InfoCard x:Name="CardRegEdit" IconGlyph="&#xE90C;" />
                                     <Button Padding="0" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="BtnOpenRegEdit_Click" />
                                 </Grid>
                             </StackPanel>

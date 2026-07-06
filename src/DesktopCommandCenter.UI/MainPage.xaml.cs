@@ -50,36 +50,43 @@ public sealed partial class MainPage : Page
     {
         var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
 
-        NavDashboard.Content = loc.GetString("Nav_Dashboard");
+        // Main nav items
+        NavDashboard.Content    = loc.GetString("Nav_Dashboard");
+        NavSearch.Content       = loc.GetString("Nav_Search");
+        NavIALocal.Content      = loc.GetString("Nav_ChatFT");
+        NavApps.Content         = loc.GetString("Nav_Apps");
+        NavFutureShell.Content  = loc.GetString("Nav_FutureShell");
+        NavCliCommands.Content  = loc.GetString("Nav_CliCommands");
+        NavDeveloperHub.Content = loc.GetString("Nav_DeveloperHub");
+
+        // System section
+        NavSystem.Content         = loc.GetString("Nav_System");
         NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
-        NavNotes.Content = loc.GetString("Nav_Notes");
+
+        // Utilities
+        NavNotes.Content       = loc.GetString("Nav_Notes");
+        NavClipboard.Content   = loc.GetString("Nav_Clipboard");
+        NavTimer.Content       = loc.GetString("Nav_Timer");
+        NavCapture.Content     = loc.GetString("Nav_Capture");
+        NavTranslator.Content  = loc.GetString("Nav_Translator");
         NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
-        NavAwake.Content = loc.GetString("Nav_Awake");
-        NavClipboard.Content = loc.GetString("Nav_Clipboard");
+        NavAwake.Content       = loc.GetString("Nav_Awake");
+        NavAlwaysOnTop.Content = loc.GetString("Nav_AlwaysOnTop");
 
+        // Automation & Plugins
+        NavPrompts.Content     = loc.GetString("Nav_Prompts");
+        NavAutomations.Content = loc.GetString("Nav_Automations");
+        NavMarketplace.Content = loc.GetString("Nav_Marketplace");
 
-
-        NavTimer.Content = loc.GetString("Nav_Timer");
-        NavCapture.Content = loc.GetString("Nav_Capture");
-        NavTranslator.Content = loc.GetString("Nav_Translator");
-        NavIALocal.Content = loc.GetString("Nav_ChatFT");
-        NavApps.Content = loc.GetString("Nav_Apps");
+        // Footer
+        NavAuth.Content     = loc.GetString("Nav_Auth");
+        NavSettings.Content = loc.GetString("Nav_Settings");
 
         if (ChatFTHeaderButton != null)
         {
             var tooltip = new Microsoft.UI.Xaml.Controls.ToolTip();
             tooltip.Content = loc.GetString("AskAITooltip");
             Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ChatFTHeaderButton, tooltip);
-        }
-        NavSearch.Content = loc.GetString("Nav_Search");
-        NavPrompts.Content = loc.GetString("Nav_Prompts");
-        NavAutomations.Content = loc.GetString("Nav_Automations");
-        NavMarketplace.Content = loc.GetString("Nav_Marketplace");
-        NavAuth.Content = loc.GetString("Nav_Auth");
-
-        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem navSettingsItem)
-        {
-            navSettingsItem.Content = loc.GetString("Nav_Settings");
         }
 
         UpdateNavigationLocks();

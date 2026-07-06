@@ -41,13 +41,39 @@ public sealed partial class FutureShellWindow : Window
             appWindow.SetIcon(iconPath);
         }
 
+        var presenter = appWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
+        if (presenter != null)
+        {
+            presenter.Maximize();
+        }
+
         // NOTE: SystemBackdrop (Mica) is intentionally NOT set here.
         // Setting it before Activate() can trigger WinRT InvalidOperationException
         // when the window is moved between monitors or resized during DPI transitions.
         // It is applied in the first Activated event via InitializeWindowUI().
 
-        this.ExtendsContentIntoTitleBar = true;
-        this.SetTitleBar(AppTitleBar);
+        try
+        {
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch
+        {
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
+        }
+
+        appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+
+        if (AppWindow.TitleBar != null)
+        {
+            AppWindow.TitleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+            AppWindow.TitleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+            AppWindow.TitleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+            AppWindow.TitleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+            AppWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+            AppWindow.TitleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
+            AppWindow.TitleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF);
+            AppWindow.TitleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+        }
 
         this.Activated += Window_Activated;
 
@@ -64,22 +90,9 @@ public sealed partial class FutureShellWindow : Window
     }
 
 
-    private bool _isWindowInitialized = false;
-
     private void Window_Activated(object sender, WindowActivatedEventArgs args)
     {
-        if (!_isWindowInitialized)
-        {
-            _isWindowInitialized = true;
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-            }
-            catch
-            {
-                try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); } catch { }
-            }
-        }
+
     }
 
     private void HudTimer_Tick(object? sender, object e)

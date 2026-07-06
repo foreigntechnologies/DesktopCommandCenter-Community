@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="DesktopCommandCenter.UI.Views.SystemUpdatesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -112,6 +112,8 @@
                                           Grid.Column="1"
                                           IsOn="{x:Bind ViewModel.AutoInstallEnabled, Mode=TwoWay}"
                                           Toggled="ToggleAutoInstall_Toggled"
+                                          OnContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOn'}"
+                                          OffContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOff'}"
                                           VerticalAlignment="Center"
                                           Margin="12,0,0,0" />
                         </Grid>
@@ -348,6 +350,8 @@
                             </StackPanel>
                             <ToggleSwitch Grid.Column="1"
                                           IsOn="{x:Bind ViewModel.DeepCleanEnabled, Mode=TwoWay}"
+                                          OnContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOn'}"
+                                          OffContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOff'}"
                                           VerticalAlignment="Center"
                                           Margin="12,0,0,0" />
                         </Grid>

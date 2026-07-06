@@ -28,6 +28,8 @@ public class LocalizationHelper : INotifyPropertyChanged
         WhenReady = Task.CompletedTask;
     }
 
+    public string CurrentCulture => _translationService.CurrentCulture;
+
     public string this[string key] => _translationService.Get(key);
 
     // Método explícito para suportar {x:Bind} com passagem de parâmetro em XAML,
