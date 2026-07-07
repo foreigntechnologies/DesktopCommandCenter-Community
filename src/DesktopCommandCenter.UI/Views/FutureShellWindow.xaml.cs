@@ -13,6 +13,8 @@ public sealed partial class FutureShellWindow : Window
 {
     private ITerminalService _terminalService;
     private DispatcherTimer _hudTimer;
+    private DispatcherTimer _outputTimer;
+    private System.Collections.Concurrent.ConcurrentQueue<string> _outputQueue = new();
 
 
     [DllImport("shell32.dll", SetLastError = true)]
@@ -85,6 +87,10 @@ public sealed partial class FutureShellWindow : Window
         _hudTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
         _hudTimer.Tick += HudTimer_Tick;
         _hudTimer.Start();
+
+        _outputTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
+        _outputTimer.Tick += OutputTimer_Tick;
+        _outputTimer.Start();
 
         InitializeTerminalAsync();
     }
@@ -176,21 +182,31 @@ public sealed partial class FutureShellWindow : Window
         }
     }
 
+    private void OutputTimer_Tick(object? sender, object e)
+    {
+        if (_outputQueue.IsEmpty) return;
+        
+        var sb = new System.Text.StringBuilder();
+        while (_outputQueue.TryDequeue(out var text))
+        {
+            sb.Append(text);
+        }
+        
+        if (TerminalWebView.CoreWebView2 != null && sb.Length > 0)
+        {
+            try 
+            {
+                var msg = new { type = "output", data = sb.ToString() };
+                var json = JsonSerializer.Serialize(msg);
+                TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
+            } 
+            catch { }
+        }
+    }
+
     private void TerminalService_OutputDataReceived(object? sender, string e)
     {
-        DispatcherQueue.TryEnqueue(() =>
-        {
-            if (TerminalWebView.CoreWebView2 != null)
-            {
-                try 
-                {
-                    var msg = new { type = "output", data = e };
-                    var json = JsonSerializer.Serialize(msg);
-                    TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
-                } 
-                catch { }
-            }
-        });
+        _outputQueue.Enqueue(e);
     }
 
     private void TerminalService_ProcessExited(object? sender, EventArgs e)
