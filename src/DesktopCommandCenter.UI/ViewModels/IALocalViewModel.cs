@@ -45,6 +45,14 @@ public partial class ChatMessage : ObservableObject
     private bool _isThinking = false;
     
     public Microsoft.UI.Xaml.Visibility ThinkingVisibility => IsThinking ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StreamingVisibility))]
+    [NotifyPropertyChangedFor(nameof(NotStreamingVisibility))]
+    private bool _isStreaming = false;
+
+    public Microsoft.UI.Xaml.Visibility StreamingVisibility => IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility NotStreamingVisibility => !IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 }
 
 public partial class IALocalViewModel : ObservableObject
@@ -343,7 +351,7 @@ public partial class IALocalViewModel : ObservableObject
         AttachedImagePath = "";
         IsGenerating = true;
 
-        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true };
+        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true, IsStreaming = true };
         Messages.Add(aiMsg);
 
         var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
@@ -464,6 +472,7 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     IsGenerating = false;
                     aiMsg.IsThinking = false;
+                    aiMsg.IsStreaming = false;
                     StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_Ready") ?? "Pronto. Ollama + Semantic Kernel.";
                 });
             }

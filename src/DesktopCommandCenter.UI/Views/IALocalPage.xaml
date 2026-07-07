@@ -184,7 +184,8 @@
                             <Border CornerRadius="4,16,16,16" Padding="14,10"
                                     Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
                                 <StackPanel>
-                                    <controls:MarkdownTextBlock Text="{x:Bind Content, Mode=OneWay}" />
+                                    <TextBlock Text="{x:Bind Content, Mode=OneWay}" TextWrapping="Wrap" Visibility="{x:Bind StreamingVisibility, Mode=OneWay}" IsTextSelectionEnabled="True" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    <controls:MarkdownTextBlock Text="{x:Bind Content, Mode=OneWay}" Visibility="{x:Bind NotStreamingVisibility, Mode=OneWay}" />
                                     <ProgressRing IsActive="{x:Bind IsThinking, Mode=OneWay}" Visibility="{x:Bind ThinkingVisibility, Mode=OneWay}"
                                                   Width="20" Height="20" HorizontalAlignment="Left" Margin="0,6,0,0" />
                                 </StackPanel>
