@@ -112,7 +112,7 @@ public sealed partial class FutureShellWindow : Window
                 
                 var msg = new { type = "hud", cpu = "~1%", ram = $"{ramMB} MB" };
                 var json = JsonSerializer.Serialize(msg);
-                TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
+                TerminalWebView.CoreWebView2.PostWebMessageAsString(json);
             }
             catch { }
         }
@@ -198,7 +198,7 @@ public sealed partial class FutureShellWindow : Window
             {
                 var msg = new { type = "output", data = sb.ToString() };
                 var json = JsonSerializer.Serialize(msg);
-                TerminalWebView.CoreWebView2.PostWebMessageAsJson(json);
+                TerminalWebView.CoreWebView2.PostWebMessageAsString(json);
             } 
             catch { }
         }

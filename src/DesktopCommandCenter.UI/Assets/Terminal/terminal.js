@@ -71,7 +71,10 @@ function initTerminal() {
 // Receive messages from C# host
 if (window.chrome && window.chrome.webview) {
     window.chrome.webview.addEventListener('message', event => {
-        const msg = event.data;
+        let msg = event.data;
+        if (typeof msg === 'string') {
+            try { msg = JSON.parse(msg); } catch (e) {}
+        }
         if (msg.type === 'output') {
             term.write(msg.data);
         } else if (msg.type === 'hud') {
