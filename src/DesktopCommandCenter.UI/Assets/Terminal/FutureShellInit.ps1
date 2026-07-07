@@ -134,3 +134,5 @@ function future-shell {
         Write-Host "AI CLI (future-shell.exe) não foi encontrado no pacote!" -ForegroundColor Red
     }
 }
+
+Set-Alias fs future-shell -Scope Global -Force
