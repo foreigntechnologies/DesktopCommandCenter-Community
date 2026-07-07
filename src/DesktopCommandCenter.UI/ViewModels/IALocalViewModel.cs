@@ -419,12 +419,32 @@ public partial class IALocalViewModel : ObservableObject
                     }
                 }
 
+                string buffer = "";
+                var lastUpdate = DateTime.UtcNow;
+
                 await foreach (var token in _agentService.SendMessageStreamAsync(effectivePrompt, imageBackup).ConfigureAwait(false))
+                {
+                    buffer += token;
+                    var now = DateTime.UtcNow;
+                    if ((now - lastUpdate).TotalMilliseconds >= 150)
+                    {
+                        var chunk = buffer;
+                        buffer = "";
+                        lastUpdate = now;
+                        dispatcher.TryEnqueue(() => 
+                        {
+                            aiMsg.IsThinking = false;
+                            aiMsg.Content += chunk;
+                        });
+                    }
+                }
+
+                if (buffer.Length > 0)
                 {
                     dispatcher.TryEnqueue(() => 
                     {
                         aiMsg.IsThinking = false;
-                        aiMsg.Content += token;
+                        aiMsg.Content += buffer;
                     });
                 }
             }
