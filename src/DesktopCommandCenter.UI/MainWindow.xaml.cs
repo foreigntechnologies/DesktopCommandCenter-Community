@@ -164,10 +164,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private bool _isExiting = false;
+
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
         Log.Information("MainWindow_Closed triggered.");
-        if (App.GetMinimizeToTray())
+        if (!_isExiting && App.GetMinimizeToTray())
         {
             // Ao invés de fechar (X), oculta o app para a bandeja do sistema
             args.Handled = true;
@@ -393,6 +395,8 @@ public sealed partial class MainWindow : Window
             if (currentPackage != null)
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://downloadsAndUpdates"));
+                _isExiting = true;
+                Microsoft.UI.Xaml.Application.Current.Exit();
                 return;
             }
         }
@@ -449,6 +453,7 @@ public sealed partial class MainWindow : Window
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
         // Force the app to close completely
+        _isExiting = true;
         Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
