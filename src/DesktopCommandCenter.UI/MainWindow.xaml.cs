@@ -389,8 +389,12 @@ public sealed partial class MainWindow : Window
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
-        // Force the app to close completely
-        Microsoft.UI.Xaml.Application.Current.Exit();
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            try { TrayIcon?.Dispose(); } catch { }
+            try { Microsoft.UI.Xaml.Application.Current.Exit(); } catch { }
+            Environment.Exit(0);
+        });
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)

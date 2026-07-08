@@ -1,4 +1,10 @@
-﻿Clear-Host
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+try { chcp 65001 > $null } catch { }
+
+Clear-Host
 $lang = (Get-Culture).TwoLetterISOLanguageName
 
 if ($lang -eq "pt") {
@@ -16,6 +22,7 @@ Dica: Para usar uma CLI, Ferramenta ou Biblioteca específica, digite seu comand
 
 Antes de utilizar um CLI Específico, verifique se o mesmo está instalado ou não.
 Digite 'help' para ajuda ou 'principal-commands' para uma lista de comandos.
+Para usar a IA, digite fs "Olá", usando fs seguido do comando com as aspas.
 "@
     $helpTitle = "=== Ajuda do FutureShell ==="
     $helpContent = "O FutureShell suporta qualquer CLI instalada no seu sistema.`n- Para entrar no Linux/WSL: digite 'wsl' ou 'bash'`n- Para executar comandos nativos do CMD: digite 'cmd'`n- Para ver os comandos principais: digite 'principal-commands'`n- Para ajuda nativa do PowerShell: digite 'help <comando>'"
@@ -43,6 +50,7 @@ Consejo: Para usar una CLI, Herramienta o Biblioteca específica, escriba su com
 
 Antes de utilizar una CLI específica, verifique si está instalada o no.
 Escriba 'help' para ayuda o 'principal-commands' para una lista de comandos.
+Para usar la IA, escriba fs "Hola", usando fs seguido del comando con comillas.
 "@
     $helpTitle = "=== Ayuda de FutureShell ==="
     $helpContent = "FutureShell soporta cualquier CLI instalada en su sistema.`n- Para entrar en Linux/WSL: escriba 'wsl' o 'bash'`n- Para comandos CMD: escriba 'cmd'`n- Para comandos principales: escriba 'principal-commands'`n- Para ayuda nativa de PowerShell: escriba 'help <comando>'"
@@ -70,6 +78,7 @@ Tip: To use a specific CLI, Tool, or Library, type its specific command and pres
 
 Before using a specific CLI, make sure it is installed.
 Type 'help' for help or 'principal-commands' for a list of commands.
+To use the AI, type fs "Hello", using fs followed by the command in quotes.
 "@
     $helpTitle = "=== FutureShell Help ==="
     $helpContent = "FutureShell supports any CLI installed on your system.`n- To enter Linux/WSL: type 'wsl' or 'bash'`n- To execute CMD commands: type 'cmd'`n- For main commands: type 'principal-commands'`n- For native PowerShell help: type 'help <command>'"
