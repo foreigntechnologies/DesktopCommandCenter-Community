@@ -108,7 +108,7 @@ public sealed partial class FutureShellWindow : Window
         
         var webView = new Microsoft.UI.Xaml.Controls.WebView2 
         { 
-            DefaultBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(255, 12, 12, 12), // #0C0C0C
+            DefaultBackgroundColor = Microsoft.UI.Colors.Black,
             HorizontalAlignment = HorizontalAlignment.Stretch, 
             VerticalAlignment = VerticalAlignment.Stretch 
         };
