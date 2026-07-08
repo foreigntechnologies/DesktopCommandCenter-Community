@@ -396,7 +396,7 @@ public sealed partial class MainWindow : Window
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://downloadsAndUpdates"));
                 _isExiting = true;
-                Microsoft.UI.Xaml.Application.Current.Exit();
+                Environment.Exit(0);
                 return;
             }
         }
@@ -454,7 +454,7 @@ public sealed partial class MainWindow : Window
     {
         // Force the app to close completely
         _isExiting = true;
-        Microsoft.UI.Xaml.Application.Current.Exit();
+        Environment.Exit(0);
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
