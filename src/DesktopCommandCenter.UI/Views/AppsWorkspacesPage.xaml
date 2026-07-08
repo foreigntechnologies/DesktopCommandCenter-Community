@@ -1,0 +1,160 @@
+<Page
+    x:Class="DesktopCommandCenter.UI.Views.AppsWorkspacesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DesktopCommandCenter.UI.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:DesktopCommandCenter.UI.Controls"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid Padding="32">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,24">
+            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_Title')}" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_Desc')}" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnSpacing="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar: Workspaces List -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_CreateWorkspace')}" HorizontalAlignment="Stretch" Margin="0,0,0,12" Click="BtnNewWorkspace_Click">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE710;" FontSize="14" />
+                                <TextBlock Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='Apps_NewWorkspace'}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <ListView Grid.Row="1" x:Name="WorkspacesList" SelectionChanged="WorkspacesList_SelectionChanged" 
+                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8"
+                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="8">
+                                <FontIcon Glyph="&#xE81E;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="Medium" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+            <!-- Main Content: Apps in selected Workspace -->
+            <Grid Grid.Column="1" x:Name="WorkspaceDetailsArea" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Workspace Header Actions -->
+                <Grid Grid.Row="0" Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock x:Name="CurrentWorkspaceName" Text="Nome do Ambiente" FontSize="20" FontWeight="SemiBold" />
+                        <TextBlock x:Name="CurrentWorkspaceAppCount" Text="0 aplicativos vinculados" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                        <Button x:Name="BtnAddApp" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_AddApp')}" Click="BtnAddApp_Click">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE710;" FontSize="14" />
+                                        <TextBlock Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='Apps_AddApp'}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                        <Button x:Name="BtnLaunchAll" Content="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_LaunchAll')}" Style="{StaticResource AccentButtonStyle}" Click="BtnLaunchAll_Click">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE768;" FontSize="14" />
+                                        <TextBlock Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='Apps_LaunchAll'}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Apps Grid -->
+                <GridView Grid.Row="1" x:Name="AppsGridView" SelectionMode="None">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <controls:InfoCard Title="{Binding Name}" IconGlyph="&#xE718;" Width="280" Margin="0,0,16,16">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="{Binding Path}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" MaxLines="2" ToolTipService.ToolTip="{Binding Path}" />
+                                    
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <Button Grid.Column="0" Content="Abrir" HorizontalAlignment="Stretch" Margin="0,0,8,0" Click="BtnLaunchApp_Click" Tag="{Binding Id}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE768;" FontSize="12" />
+                                                        <TextBlock Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='Apps_Open'}" FontSize="12" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                        
+                                        <Button Grid.Column="1" Click="BtnRemoveApp_Click" Tag="{Binding Id}" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Remover">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="14" Foreground="IndianRed" />
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </controls:InfoCard>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+                <!-- Empty State -->
+                <StackPanel Grid.Row="1" x:Name="EmptyStateArea" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Visibility="Collapsed">
+                    <FontIcon Glyph="&#xE14A;" FontSize="48" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_EmptyTitle')}" FontSize="18" FontWeight="Medium" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_EmptyDesc')}" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                </StackPanel>
+
+            </Grid>
+
+            <!-- No Workspace Selected State -->
+            <StackPanel Grid.Column="1" x:Name="WorkspaceNoneSelectedArea" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+                <FontIcon Glyph="&#xE734;" FontSize="48" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_NoWorkspaceTitle')}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="{x:Bind helpers:LocalizationHelper.GetLocalized('Apps_NoWorkspaceDesc')}" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</Page>

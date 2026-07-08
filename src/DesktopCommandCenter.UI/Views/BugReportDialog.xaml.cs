@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -14,7 +14,10 @@ public sealed partial class BugReportDialog : ContentDialog
 
     public BugReportDialog()
     {
+
         this.InitializeComponent();
+        UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
     }
 
     private async void AttachButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -113,4 +116,21 @@ public sealed partial class BugReportDialog : ContentDialog
             IsPrimaryButtonEnabled = true;
         }
     }
+
+        private void UpdateTranslations()
+        {
+            BugReportTitleElement.Title = Helpers.LocalizationHelper.Instance.GetString("BugReport_Title");
+            BugReportDescElement.Text = Helpers.LocalizationHelper.Instance.GetString("BugReport_Desc");
+            TitleTextBox.Header = Helpers.LocalizationHelper.Instance.GetString("BugReport_InputTitle");
+            var p_TitleTextBox = Helpers.LocalizationHelper.Instance.GetString("BugReport_InputTitle_Placeholder");
+            if (!string.IsNullOrEmpty(p_TitleTextBox) && p_TitleTextBox != "BugReport_InputTitle_Placeholder") TitleTextBox.PlaceholderText = p_TitleTextBox;
+            DescriptionTextBox.Header = Helpers.LocalizationHelper.Instance.GetString("BugReport_InputDesc");
+            var p_DescriptionTextBox = Helpers.LocalizationHelper.Instance.GetString("BugReport_InputDesc_Placeholder");
+            if (!string.IsNullOrEmpty(p_DescriptionTextBox) && p_DescriptionTextBox != "BugReport_InputDesc_Placeholder") DescriptionTextBox.PlaceholderText = p_DescriptionTextBox;
+            BugReportAttachTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("BugReport_AttachTitle");
+            AttachmentNameText.Text = Helpers.LocalizationHelper.Instance.GetString("BugReport_NoFile");
+            if (BugReportBtnBrowseElement.Content is string || BugReportBtnBrowseElement.Content == null) BugReportBtnBrowseElement.Content = Helpers.LocalizationHelper.Instance.GetString("BugReport_BtnBrowse");
+        }
 }
+
+

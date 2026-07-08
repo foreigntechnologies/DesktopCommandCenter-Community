@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using DesktopCommandCenter.UI.ViewModels;
@@ -11,15 +11,19 @@ public sealed partial class SystemUpdatesPage : Page
 
     public SystemUpdatesPage()
     {
-        var deepCleanService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IDeepCleanService>(App.Current.Services);
+var deepCleanService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IDeepCleanService>(App.Current.Services);
         ViewModel = new SystemUpdatesViewModel(deepCleanService);
         this.InitializeComponent();
-
+        UpdateTranslations();
+            Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         this.Loaded += SystemUpdatesPage_Loaded;
     }
 
     private async void SystemUpdatesPage_Loaded(object sender, RoutedEventArgs e)
     {
+        // Garante que o idioma terminou de carregar antes de exibir status traduzido
+        await Helpers.LocalizationHelper.Instance.WhenReady;
+
         UpdateEmptyStates();
         
         if (!ViewModel.WindowsUpdates.Any() && !ViewModel.IsLoadingWindowsUpdates)
@@ -97,4 +101,30 @@ public sealed partial class SystemUpdatesPage : Page
         await ViewModel.UninstallSelectedAppsAsync();
         UpdateEmptyStates();
     }
+
+        private void UpdateTranslations()
+        {
+            TxtPageTitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PageTitle");
+            TxtPageSubtitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PageSubtitle");
+            PivotWU.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotWU");
+            TxtBtnCheckWU.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnCheckUpdates");
+            TxtBtnInstallWU.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnInstallUpdates");
+            TxtAutoInstallTitle.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_AutoInstallTitle");
+            TxtAutoInstallDesc.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_AutoInstallDesc");
+            TxtWUEmptyMsg.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_EmptyWUMsg");
+            
+            PivotSW.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotSW");
+            TxtBtnCheckSW.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnCheckSW");
+            TxtBtnUpdateSW.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnUpdateSW");
+            TxtSWEmptyMsg.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_EmptySWMsg");
+            PivotApps.Header = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_PivotApps");
+            SystemUpdatesDeepCleanTitleElement.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_DeepCleanTitle");
+            SystemUpdatesDeepCleanDescElement.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_DeepCleanDesc");
+            TxtBtnLoadApps.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnLoadApps");
+            TxtBtnUninstall.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_BtnUninstall");
+            TxtAppsEmptyMsg.Text = Helpers.LocalizationHelper.Instance.GetString("SystemUpdates_EmptyAppsMsg");
+        }
 }
+
+
+

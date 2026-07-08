@@ -45,6 +45,14 @@ public partial class ChatMessage : ObservableObject
     private bool _isThinking = false;
     
     public Microsoft.UI.Xaml.Visibility ThinkingVisibility => IsThinking ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StreamingVisibility))]
+    [NotifyPropertyChangedFor(nameof(NotStreamingVisibility))]
+    private bool _isStreaming = false;
+
+    public Microsoft.UI.Xaml.Visibility StreamingVisibility => IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility NotStreamingVisibility => !IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 }
 
 public partial class IALocalViewModel : ObservableObject
@@ -66,7 +74,7 @@ public partial class IALocalViewModel : ObservableObject
     private string _attachedImagePath = "";
 
     [ObservableProperty]
-    private string _statusMessage = "Pronto. Ollama + Semantic Kernel.";
+    private string _statusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_Ready") ?? "Pronto. Ollama + Semantic Kernel.";
 
     [ObservableProperty]
     private bool _isDownloadingModel = false;
@@ -87,7 +95,7 @@ public partial class IALocalViewModel : ObservableObject
     public bool IsChatNotEmpty => Messages.Count > 0;
 
     [ObservableProperty]
-    private bool _isWebSearchMode = true; // Default: always search the web
+    private bool _isWebSearchMode = false; // Default: OFF (natural chat)
 
     [ObservableProperty]
     private bool _isEditMenuOpen = false;
@@ -235,7 +243,7 @@ public partial class IALocalViewModel : ObservableObject
         var file = await picker.PickSingleFileAsync();
         if (file != null)
         {
-            StatusMessage = "Transcrevendo arquivo de áudio...";
+            StatusMessage = GetString("ChatFT_StatusTranscribing", "Transcrevendo arquivo de áudio...");
             IsGenerating = true;
             try
             {
@@ -244,11 +252,11 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     CurrentPrompt += " " + text;
                 }
-                StatusMessage = "Pronto.";
+                StatusMessage = GetString("ChatFT_StatusReady", "Pronto.");
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Erro na transcrição: {ex.Message}";
+                StatusMessage = GetString("ChatFT_StatusErrorTranscribing", "Erro na transcrição: ") + ex.Message;
             }
             finally
             {
@@ -262,7 +270,7 @@ public partial class IALocalViewModel : ObservableObject
     {
         if (IsRecording)
         {
-            StatusMessage = "Processando áudio...";
+            StatusMessage = GetString("ChatFT_StatusProcessingAudio", "Processando áudio...");
             IsRecording = false;
             IsGenerating = true;
             try
@@ -272,11 +280,11 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     CurrentPrompt += " " + text;
                 }
-                StatusMessage = "Pronto.";
+                StatusMessage = GetString("ChatFT_StatusReady", "Pronto.");
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Erro na transcrição: {ex.Message}";
+                StatusMessage = GetString("ChatFT_StatusErrorTranscribing", "Erro na transcrição: ") + ex.Message;
             }
             finally
             {
@@ -289,11 +297,11 @@ public partial class IALocalViewModel : ObservableObject
             {
                 _whisperService.StartRecording();
                 IsRecording = true;
-                StatusMessage = "Gravando microfone... Clique novamente para parar.";
+                StatusMessage = GetString("ChatFT_StatusRecording", "Gravando microfone... Clique novamente para parar.");
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Erro ao gravar: {ex.Message}";
+                StatusMessage = GetString("ChatFT_StatusErrorRecording", "Erro ao gravar: ") + ex.Message;
             }
         }
     }
@@ -317,7 +325,7 @@ public partial class IALocalViewModel : ObservableObject
         _agentService.ClearHistory();
         CurrentPrompt = "";
         AttachedImagePath = "";
-        StatusMessage = "Pronto.";
+        StatusMessage = GetString("ChatFT_StatusReady", "Pronto.");
     }
 
     [RelayCommand]
@@ -343,7 +351,7 @@ public partial class IALocalViewModel : ObservableObject
         AttachedImagePath = "";
         IsGenerating = true;
 
-        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true };
+        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true, IsStreaming = true };
         Messages.Add(aiMsg);
 
         var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
@@ -354,13 +362,20 @@ public partial class IALocalViewModel : ObservableObject
             {
                 string effectivePrompt = promptBackup;
 
+                // Evitar busca na web para cumprimentos simples ou testes curtos
+                bool isGreeting = System.Text.RegularExpressions.Regex.IsMatch(promptBackup.Trim(), @"^(\s*(oi|oie|ol[aá]|bom dia|boa tarde|boa noite|hello|hi|hey|e a[ií]|tudo bem|tudo bom|como vai|como est[aá]|fala a[ií]|teste|testando)[,\.\!\?]*\s*)+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (isGreeting)
+                {
+                    isWebSearch = false;
+                }
+
                 // If web search mode, search the web first and inject results
                 if (isWebSearch)
                 {
                     dispatcher.TryEnqueue(() =>
                     {
-                        StatusMessage = "Buscando na web...";
-                        aiMsg.Content = "⏳ Buscando na web...";
+                        StatusMessage = GetString("ChatFT_StatusSearching", "Buscando na web...");
+                        aiMsg.Content = "⏳ " + GetString("ChatFT_StatusSearching", "Buscando na web...");
                         aiMsg.IsThinking = false;
                     });
 
@@ -384,13 +399,17 @@ public partial class IALocalViewModel : ObservableObject
                         }
                         ctx.AppendLine($"PERGUNTA DO USUÁRIO: {promptBackup}");
                         ctx.AppendLine();
-                        ctx.AppendLine("Responda de forma direta, completa e em português do Brasil. Inclua datas, nomes e detalhes específicos que aparecem nas fontes. Seja preciso como o ChatGPT.");
+                        
+                        var appLang = DesktopCommandCenter.UI.App.GetAppLanguage();
+                        string targetLang = appLang.StartsWith("en") ? "English" : appLang.StartsWith("es") ? "Español" : "português do Brasil";
+                        ctx.AppendLine($"Responda de forma direta, completa e em {targetLang}. Inclua datas, nomes e detalhes específicos que aparecem nas fontes. Seja preciso como o ChatGPT.");
                         effectivePrompt = ctx.ToString();
 
                         // Store sources on the message for display
                         dispatcher.TryEnqueue(() =>
                         {
-                            StatusMessage = $"Encontrei {searchResults.Count} resultado(s). Analisando...";
+                            var searchStatus = GetString("ChatFT_StatusFoundResults", "Encontrei {0} resultado(s). Analisando...");
+                            StatusMessage = searchStatus.Contains("{0}") ? string.Format(searchStatus, searchResults.Count) : searchStatus;
                             aiMsg.Content = "";
                             aiMsg.IsThinking = true;
                             foreach (var r in searchResults)
@@ -401,19 +420,39 @@ public partial class IALocalViewModel : ObservableObject
                     {
                         dispatcher.TryEnqueue(() =>
                         {
-                            StatusMessage = "Nenhum resultado encontrado. Respondendo com conhecimento local...";
+                            StatusMessage = GetString("ChatFT_StatusNoResults", "Nenhum resultado encontrado. Respondendo com conhecimento local...");
                             aiMsg.Content = "";
                             aiMsg.IsThinking = true;
                         });
                     }
                 }
 
+                string buffer = "";
+                var lastUpdate = DateTime.UtcNow;
+
                 await foreach (var token in _agentService.SendMessageStreamAsync(effectivePrompt, imageBackup).ConfigureAwait(false))
+                {
+                    buffer += token;
+                    var now = DateTime.UtcNow;
+                    if ((now - lastUpdate).TotalMilliseconds >= 150)
+                    {
+                        var chunk = buffer;
+                        buffer = "";
+                        lastUpdate = now;
+                        dispatcher.TryEnqueue(() => 
+                        {
+                            aiMsg.IsThinking = false;
+                            aiMsg.Content += chunk;
+                        });
+                    }
+                }
+
+                if (buffer.Length > 0)
                 {
                     dispatcher.TryEnqueue(() => 
                     {
                         aiMsg.IsThinking = false;
-                        aiMsg.Content += token;
+                        aiMsg.Content += buffer;
                     });
                 }
             }
@@ -422,8 +461,9 @@ public partial class IALocalViewModel : ObservableObject
                 System.Diagnostics.Debug.WriteLine($"[ChatFT Error] {ex}");
                 dispatcher.TryEnqueue(() => 
                 {
-                    aiMsg.Content += $"\n[Erro: {ex.Message}]";
-                    StatusMessage = "Erro ao contatar IA.";
+                    var errText = GetString("ChatFT_StatusErrorAI", "Erro ao contatar IA.");
+                    aiMsg.Content += $"\n[{errText} {ex.Message}]";
+                    StatusMessage = errText;
                 });
             }
             finally
@@ -432,7 +472,8 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     IsGenerating = false;
                     aiMsg.IsThinking = false;
-                    StatusMessage = "Pronto. Ollama + Semantic Kernel.";
+                    aiMsg.IsStreaming = false;
+                    StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_Ready") ?? "Pronto. Ollama + Semantic Kernel.";
                 });
             }
         });

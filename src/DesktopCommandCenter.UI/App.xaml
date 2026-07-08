@@ -16,24 +16,21 @@
                 <ResourceDictionary x:Key="Default">
                     <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
-                    <Color x:Key="SystemAccentColor">#00E5FF</Color>
-                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#00E5FF" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0A000000" />
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#1A000000" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
-                    <Color x:Key="SystemAccentColor">#00E5FF</Color>
-                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#00E5FF" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#0A000000" />
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#1A000000" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="WindowBackgroundColor" Color="Transparent" />
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Transparent" />
-                    <Color x:Key="SystemAccentColor">#00E5FF</Color>
-                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}" />
+                    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#00E5FF" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1AFFFFFF" />
                     <SolidColorBrush x:Key="CardBorderBrush" Color="#33FFFFFF" />
                 </ResourceDictionary>
@@ -41,6 +38,7 @@
 
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+            <converters:TranslateConverter x:Key="TranslateConverter" />
 
             <CornerRadius x:Key="CardCornerRadius">12</CornerRadius>
 
@@ -60,6 +58,7 @@
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="CornerRadius" Value="12" />
                 <Setter Property="Padding" Value="0" />
+                <Setter Property="MinHeight" Value="85" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />

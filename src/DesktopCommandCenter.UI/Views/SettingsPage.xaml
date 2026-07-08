@@ -1,4 +1,4 @@
-<Page
+<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:DesktopCommandCenter.UI.ViewModels"
     xmlns:converters="using:DesktopCommandCenter.UI.Converters"
+    xmlns:helpers="using:DesktopCommandCenter.UI.Helpers"
     mc:Ignorable="d"
     Background="Transparent">
     
@@ -13,320 +14,187 @@
 
     <Grid Padding="24">
         <ScrollViewer>
-            <StackPanel Spacing="24" MaxWidth="900" HorizontalAlignment="Left">
+            <StackPanel Spacing="24" HorizontalAlignment="Stretch">
 
                 <!-- Título -->
                 <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,0,0,16">
-                    <TextBlock x:Name="TxtSettingsTitle" Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
-                    <Border x:Name="ProBadge" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
-                        <TextBlock Text="PRO" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
+                    <TextBlock x:Name="TxtSettingsTitle" helpers:Translate.Key="Settings_PageTitle" Text="Configurações" Style="{StaticResource TitleTextBlockStyle}" VerticalAlignment="Center" />
+                    <Border x:Name="ProBadge" Background="Gold" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
+                        <TextBlock Text="PRO" Foreground="Black" FontWeight="Bold" FontSize="12" />
                     </Border>
                     <Border x:Name="CommunityBadge" Background="{ThemeResource SystemFillColorNeutralBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Visibility="Collapsed">
                         <TextBlock Text="COMMUNITY" Foreground="{ThemeResource TextFillColorPrimaryBrush}" FontWeight="Bold" FontSize="12" />
                     </Border>
                 </StackPanel>
 
-                <!-- Aparência e Temas -->
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                    <StackPanel Spacing="16">
-                        <TextBlock x:Name="TxtAppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <Grid ColumnSpacing="24" RowSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <ComboBox x:Name="CmbTheme" Header="Tema do Aplicativo"
-                                  SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
-                                  Width="300">
-                            <ComboBoxItem x:Name="CmbThemeItem1" Content="Claro" />
-                            <ComboBoxItem x:Name="CmbThemeItem2" Content="Escuro" />
-                            <ComboBoxItem x:Name="CmbThemeItem3" Content="Padrão do Sistema (Contraste)" />
-                        </ComboBox>
-
-                        <ComboBox x:Name="CmbLanguage" Header="Idioma do Aplicativo (Requer reinício)"
-                                  SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
-                                  Width="300">
-                            <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
-                            <ComboBoxItem x:Name="CmbLang2" Content="English" />
-                            <ComboBoxItem x:Name="CmbLang3" Content="Español" />
-                        </ComboBox>
-
-                        <ComboBox x:Name="CmbTimeFormat" Header="Formato da Hora (Início)"
-                                  SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
-                                  Width="300">
-                            <ComboBoxItem x:Name="CmbTime1" Content="24 Horas (HH:mm) - Ex: 15:30" />
-                            <ComboBoxItem x:Name="CmbTime2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
-                            <ComboBoxItem x:Name="CmbTime3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
-                            <ComboBoxItem x:Name="CmbTime4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
-                        </ComboBox>
-
-                        <ComboBox x:Name="CmbDateFormat" Header="Formato da Data (Início)"
-                                  SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
-                                  Width="300">
-                            <ComboBoxItem x:Name="CmbDate1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
-                            <ComboBoxItem x:Name="CmbDate2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
-                            <ComboBoxItem x:Name="CmbDate3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
-                            <ComboBoxItem x:Name="CmbDate4" Content="Inglês - Ex: Jun 10, 2026" />
-                        </ComboBox>
-
-                        <TextBlock x:Name="TxtThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Teclas de Atalho -->
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                    <StackPanel Spacing="16">
-                        <TextBlock x:Name="TxtHotkeysTitle" Text="Teclas de Atalho Global" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock x:Name="TxtHotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows."
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-
-                        <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="viewmodels:HotkeyConfigItemViewModel">
-                                    <Grid Padding="8" Margin="0,4">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="200" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{x:Bind DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" />
-                                        <!-- Cadeado PRO -->
-                                        <FontIcon Grid.Column="1" Glyph="&#xE72E;" FontSize="13" Margin="8,0"
-                                                  Foreground="Gold" VerticalAlignment="Center"
-                                                  Visibility="{x:Bind InverseEnabledVisibility, Mode=OneWay}" />
-                                        <Button Grid.Column="2"
-                                                Click="EditHotkeyButton_Click"
-                                                Tag="{Binding}"
-                                                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-                                                HorizontalAlignment="Left"
-                                                Width="220"
-                                                Background="{ThemeResource ControlFillColorDefaultBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="4"
-                                                Padding="12,6">
-                                            <Grid HorizontalAlignment="Stretch">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{x:Bind CurrentHotkeyDisplay, Mode=OneWay}"
-                                                           VerticalAlignment="Center"
-                                                           FontFamily="Consolas"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
-                                                <FontIcon Grid.Column="1" Glyph="&#xE70F;" FontSize="12" Margin="8,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                            </Grid>
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </Border>
-
-                <!-- Card de Inteligência Artificial -->
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                    <StackPanel Spacing="16">
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <FontIcon Glyph="&#xECE4;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TxtAITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                    <!-- Comportamento do Aplicativo -->
+                    <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Stretch">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtBehaviorTitle" helpers:Translate.Key="Settings_BehaviorTitle" Text="Comportamento do Aplicativo" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
+                            <ToggleSwitch x:Name="TglStartWithWindows" helpers:Translate.Key="Settings_StartWithWindows" Header="Inicializar com o Windows (Silenciosamente)" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
+                            <ToggleSwitch x:Name="TglMinimizeToTray" helpers:Translate.Key="Settings_MinimizeToTray" Header="Minimizar para a Bandeja do Sistema ao Fechar" IsOn="{x:Bind ViewModel.MinimizeToTray, Mode=TwoWay}" />
+                            <ToggleSwitch x:Name="TglAutoUpdate" helpers:Translate.Key="Settings_AutoUpdate" Header="Verificar atualizações automaticamente" IsOn="{x:Bind ViewModel.AutoUpdate, Mode=TwoWay}" />
                         </StackPanel>
+                    </Border>
 
-                        <TextBlock x:Name="TxtAIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    <!-- Card de Inteligência Artificial -->
+                    <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Stretch">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtAITitle" helpers:Translate.Key="Settings_AITitle" Text="Inteligência Artificial (ChatFT)" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Name="TxtAIDesc" helpers:Translate.Key="Settings_AIDesc" Text="Defina as chaves de API dos provedores desejados. Deixe em branco se for usar o Ollama (Local) gratuitamente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
 
-                        <Grid ColumnSpacing="20" RowSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                            <StackPanel Spacing="16">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="OpenAI (ChatGPT)" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="sk-..." Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
+                                </StackPanel>
 
-                            <TextBlock Text="OpenAI (ChatGPT)" VerticalAlignment="Center" FontWeight="SemiBold" />
-                            <PasswordBox Grid.Column="1" PlaceholderText="sk-..." Password="{x:Bind ViewModel.OpenAIApiKey, Mode=TwoWay}" />
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Google Gemini" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="AIza..." Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
+                                </StackPanel>
 
-                            <TextBlock Grid.Row="1" Text="Google Gemini" VerticalAlignment="Center" FontWeight="SemiBold" />
-                            <PasswordBox Grid.Row="1" Grid.Column="1" PlaceholderText="AIza..." Password="{x:Bind ViewModel.GeminiApiKey, Mode=TwoWay}" />
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Anthropic Claude" FontWeight="SemiBold" />
+                                    <PasswordBox PlaceholderText="sk-ant..." Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch" PasswordRevealMode="Peek" />
+                                </StackPanel>
 
-                            <TextBlock Grid.Row="2" Text="Anthropic Claude" VerticalAlignment="Center" FontWeight="SemiBold" />
-                            <PasswordBox Grid.Row="2" Grid.Column="1" PlaceholderText="sk-ant..." Password="{x:Bind ViewModel.ClaudeApiKey, Mode=TwoWay}" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <!-- Card de Assinatura / Conta -->
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24">
-                    <StackPanel Spacing="16">
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <FontIcon Glyph="&#xE7BF;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center" />
-                            <TextBlock x:Name="TxtSubscriptionTitle" Text="Assinatura e Conta" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center"/>
+                                <Button x:Name="BtnSaveAI" helpers:Translate.Key="Settings_SaveAIBtn" Content="Salvar" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Click="SaveAI_Click" Margin="0,8,0,0"/>
+                            </StackPanel>
                         </StackPanel>
+                    </Border>
 
-                        <!-- Info da conta (visível quando logado) -->
-                        <StackPanel x:Name="LoggedInAccountInfoPanel" Spacing="4" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
-                            <Grid ColumnSpacing="12">
+                    <!-- Aparência e Temas -->
+                    <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Top">
+                        <StackPanel Spacing="16">
+                            <TextBlock x:Name="TxtAppearanceTitle" helpers:Translate.Key="Settings_AppearanceTitle" Text="Aparência e Temas" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,8" />
+
+                            <ComboBox x:Name="CmbTheme" helpers:Translate.Key="Settings_ThemeLabel" Header="Tema do Aplicativo"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbThemeItem1" helpers:Translate.Key="Settings_ThemeLight" Content="Claro" />
+                                <ComboBoxItem x:Name="CmbThemeItem2" helpers:Translate.Key="Settings_ThemeDark" Content="Escuro" />
+                                <ComboBoxItem x:Name="CmbThemeItem3" helpers:Translate.Key="Settings_ThemeSystem" Content="Padrão do Sistema (Contraste)" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbLanguage" helpers:Translate.Key="Settings_LangLabel" Header="Idioma do Aplicativo (Requer reinício)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbLang1" Content="Português - Brasil" />
+                                <ComboBoxItem x:Name="CmbLang2" Content="English" />
+                                <ComboBoxItem x:Name="CmbLang3" Content="Español" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbTimeFormat" helpers:Translate.Key="Settings_TimeFormat" Header="Formato da Hora (Início)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedTimeFormatIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbTime1" helpers:Translate.Key="Settings_Time1" Content="24 Horas (HH:mm) - Ex: 15:30" />
+                                <ComboBoxItem x:Name="CmbTime2" helpers:Translate.Key="Settings_Time2" Content="24 Horas com Segundos (HH:mm:ss) - Ex: 15:30:45" />
+                                <ComboBoxItem x:Name="CmbTime3" helpers:Translate.Key="Settings_Time3" Content="12 Horas AM/PM (hh:mm tt) - Ex: 03:30 PM" />
+                                <ComboBoxItem x:Name="CmbTime4" helpers:Translate.Key="Settings_Time4" Content="12 Horas com Segundos (hh:mm:ss tt) - Ex: 03:30:45 PM" />
+                            </ComboBox>
+
+                            <ComboBox x:Name="CmbDateFormat" helpers:Translate.Key="Settings_DateFormat" Header="Formato da Data (Início)"
+                                      SelectedIndex="{x:Bind ViewModel.SelectedDateFormatIndex, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem x:Name="CmbDate1" helpers:Translate.Key="Settings_Date1" Content="Longo - Ex: quarta-feira, 10 de junho de 2026" />
+                                <ComboBoxItem x:Name="CmbDate2" helpers:Translate.Key="Settings_Date2" Content="Curto (dd/MM/yyyy) - Ex: 10/06/2026" />
+                                <ComboBoxItem x:Name="CmbDate3" helpers:Translate.Key="Settings_Date3" Content="ISO (yyyy-MM-dd) - Ex: 2026-06-10" />
+                                <ComboBoxItem x:Name="CmbDate4" helpers:Translate.Key="Settings_Date4" Content="Inglês - Ex: Jun 10, 2026" />
+                            </ComboBox>
+
+                            <TextBlock x:Name="TxtThemeDesc" helpers:Translate.Key="Settings_ThemeDesc" Text="O tema Padrão do Sistema respeitará o Alto Contraste caso esteja ativado no Windows."
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Teclas de Atalho -->
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" Padding="0" Click="OpenHotkeysList_Click" Background="Transparent" BorderThickness="0">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" VerticalAlignment="Top">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <FontIcon Glyph="&#xE77B;" FontSize="22" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Bind ViewModel.UserEmail, Mode=OneWay}" FontWeight="SemiBold" />
-                                    <TextBlock Text="{x:Bind ViewModel.PlanDisplayText, Mode=OneWay}"
-                                               Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
+                                <FontIcon Glyph="&#xE765;" FontSize="24" VerticalAlignment="Center" Margin="0,0,16,0" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock x:Name="TxtHotkeysTitle" helpers:Translate.Key="Settings_HotkeysTitle" Text="Teclas de Atalho" Style="{StaticResource SubtitleTextBlockStyle}" />
+                                    <TextBlock x:Name="TxtHotkeysDesc" helpers:Translate.Key="Settings_HotkeysDesc" Text="Configure atalhos que funcionam de qualquer lugar do Windows." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                 </StackPanel>
-                                <Border Grid.Column="2" Background="{x:Bind ViewModel.PlanBadgeColor, Mode=OneWay}"
-                                        CornerRadius="4" Padding="10,4" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Bind ViewModel.PlanBadgeText, Mode=OneWay}"
-                                               Foreground="White" FontWeight="Bold" FontSize="12" />
-                                </Border>
+                                <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="14" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                             </Grid>
-                        </StackPanel>
+                        </Border>
+                    </Button>
+                </Grid>
 
-                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" />
 
-                        <!-- COMPARAÇÃO DE PLANOS -->
-                        <Grid ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!-- COMMUNITY -->
-                            <Border Grid.Column="0" CornerRadius="8" Padding="20"
-                                    BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                    Visibility="{x:Bind ViewModel.InverseProVisibility, Mode=OneWay}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Spacing="10">
-                                        <StackPanel Spacing="2">
-                                            <TextBlock x:Name="TxtCommunityTitle" Text="Community" Style="{StaticResource SubtitleTextBlockStyle}" />
-                                            <TextBlock x:Name="TxtCommunitySubtitle" Text="Open Source · Grátis para sempre"
-                                                       Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="12" />
-                                        </StackPanel>
-                                        <TextBlock x:Name="TxtCommunityDesc" Text="O pacote base focado em produtividade extrema, rodando 100% offline sem necessidade de conta ou login."
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   TextWrapping="Wrap" FontSize="12" />
-
-                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
-
-                                        <StackPanel Spacing="7">
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Design WinUI 3 Premium:</Run><Run> Mica, Glassmorphism e Dark Mode nativo.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Always On Top:</Run><Run> Fixe qualquer janela acima de todas.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Awake (Caffeine):</Run><Run> Impede suspensão da tela.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Clipboard Avançado:</Run><Run> Histórico completo de Ctrl+C.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Color Picker e Lupa:</Run><Run> Captura HEX/RGB de qualquer pixel.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Pesquisa Universal:</Run><Run> Spotlight para arquivos e ações.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Temporizadores:</Run><Run> Múltiplos timers e método Pomodoro.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Notas Rápidas:</Run><Run> Bloco de anotações sempre à mão.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Automações e CLI:</Run><Run> Scripts e comandos de terminal.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Utilitários de Texto:</Run><Run> Modificadores e tradução rápida.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte da Comunidade (GitHub)" /></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Integração de IA" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Modelos Locais (Llama 3 / Whisper)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✗" Foreground="{ThemeResource SystemFillColorCriticalBrush}" FontWeight="Bold" /><TextBlock Text="Sem Sincronização em Nuvem" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" /></StackPanel>
-                                        </StackPanel>
-                                    </StackPanel>
-
-                                    <Button Grid.Row="1" HorizontalAlignment="Stretch" Padding="12,10" Click="OpenCommunityRepo_Click" Margin="0,16,0,0">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon Glyph="&#xE8A7;" FontSize="14" />
-                                            <TextBlock x:Name="TxtCommunityBtn" Text="Baixar Grátis (GitHub)" />
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </Border>
-
-                            <!-- PRO -->
-                            <Border Grid.Column="1" CornerRadius="8" Padding="20"
-                                    BorderThickness="2" BorderBrush="{ThemeResource AccentFillColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Spacing="10">
-                                        <StackPanel Spacing="2">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <TextBlock x:Name="TxtProBadgeTitle" Text="PRO" Style="{StaticResource SubtitleTextBlockStyle}" />
-                                                <Border Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                                    <TextBlock x:Name="TxtProRecommended" Text="Recomendado" FontSize="10" FontWeight="Bold" Foreground="White" />
-                                                </Border>
-                                            </StackPanel>
-                                            <TextBlock x:Name="TxtProSubtitle" Text="Licença Nuvem · Atualizada automaticamente"
-                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
-                                        </StackPanel>
-                                        <TextBlock x:Name="TxtProDesc" Text="Voltada para profissionais. Inclui TODAS as funcionalidades Community, mais:"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="12" />
-
-                                        <Border BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}" BorderThickness="0,1,0,0" Margin="0,4" />
-
-                                        <StackPanel Spacing="7">
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock Text="Todas as funcionalidades Community" FontWeight="SemiBold" FontSize="12" /></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Sincronização em Nuvem (Firebase):</Run><Run> Login seguro e gestão da chave PRO.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">IA Autônoma (Semantic Kernel):</Run><Run> Agente central alimentado pela Microsoft.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">LLM 100% Local (Ollama):</Run><Run> Processa Llama 3 no seu hardware. Privacidade absoluta.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Reconhecimento de Voz (Whisper):</Run><Run> Transcreva áudio offline com redes neurais.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Respostas em Streaming:</Run><Run> A IA digita instantaneamente enquanto pensa.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Visão Computacional Local:</Run><Run> Anexe prints e imagens para a IA analisar.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">Biblioteca de Prompts:</Run><Run> Salve e reutilize prompts em um clique.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock TextWrapping="Wrap" FontSize="12"><Run FontWeight="SemiBold">[EM BREVE] Marketplace de Plugins:</Run><Run> Loja embutida com módulos nativos em C#.</Run></TextBlock></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Atualizações Prioritárias via Store" /></StackPanel>
-                                            <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="✔" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontWeight="Bold" /><TextBlock FontSize="12" Text="Suporte Dedicado via E-mail" /></StackPanel>
-                                        </StackPanel>
-                                    </StackPanel>
-
-                                    <!-- Botão único — muda conforme estado -->
-                                    <StackPanel Grid.Row="1" Margin="0,16,0,0">
-                                        <!-- Não logado -->
-                                        <Button x:Name="NotLoggedInProButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
-                                                Command="{x:Bind ViewModel.GoToLoginCommand}"
-                                                x:Load="{x:Bind ViewModel.IsNotLoggedIn, Mode=OneWay}">
-                                            <TextBlock x:Name="TxtProBtnNotLogged" Text="Entrar para Assinar PRO" FontWeight="SemiBold" />
-                                        </Button>
-
-                                        <!-- Logado, plano Free -->
-                                        <Button x:Name="FreePlanUpgradeButton" HorizontalAlignment="Stretch" Padding="12,10" Style="{StaticResource AccentButtonStyle}"
-                                                Command="{x:Bind ViewModel.UpgradeMonthlyCommand}"
-                                                x:Load="{x:Bind ViewModel.IsFreePlan, Mode=OneWay}">
-                                            <TextBlock x:Name="TxtProBtnFree" Text="Baixar na Microsoft Store" FontWeight="SemiBold" />
-                                        </Button>
-
-                                        <!-- Logado, plano PRO -->
-                                        <StackPanel x:Name="ProPlanActivePanel" Spacing="6" x:Load="{x:Bind ViewModel.IsProPlan, Mode=OneWay}">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <FontIcon Glyph="&#xE734;" FontSize="14" Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
-                                                <TextBlock x:Name="TxtProBtnActive" Text="Plano PRO Ativo!" FontWeight="Bold" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontSize="13" />
-                                            </StackPanel>
-                                            <Button HorizontalAlignment="Stretch" Padding="12,10"
-                                                    Command="{x:Bind ViewModel.OpenCustomerPortalCommand}">
-                                                <TextBlock x:Name="TxtProBtnManage" Text="Gerenciar / Cancelar Assinatura" FontWeight="SemiBold" />
-                                            </Button>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </Grid>
-
-                        <!-- Sair da conta -->
-                        <StackPanel x:Name="LogoutPanel" x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}" HorizontalAlignment="Left">
-                            <HyperlinkButton x:Name="BtnLogoutSettings" Command="{x:Bind ViewModel.LogoutCommand}"
-                                             Content="Sair da conta"
-                                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        </StackPanel>
-
-                    </StackPanel>
-                </Border>
 
             </StackPanel>
         </ScrollViewer>
 
+        <ContentDialog x:Name="HotkeysListDialog"
+                       Title="Teclas de Atalho Global"
+                       CloseButtonText="Fechar"
+                       DefaultButton="Close">
+            <ScrollViewer MaxHeight="500">
+                <ListView ItemsSource="{x:Bind ViewModel.Hotkeys, Mode=OneWay}" SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="viewmodels:HotkeyConfigItemViewModel">
+                            <Grid Padding="8" Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                                <!-- Cadeado PRO -->
+                                <FontIcon Grid.Column="1" Glyph="&#xE72E;" FontSize="13" Margin="8,0"
+                                          Foreground="Gold" VerticalAlignment="Center"
+                                          Visibility="{x:Bind InverseEnabledVisibility, Mode=OneWay}" />
+                                <Button Grid.Column="2"
+                                        Click="EditHotkeyButton_Click"
+                                        Tag="{Binding}"
+                                        IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                                        HorizontalAlignment="Left"
+                                        Width="220"
+                                        Background="{ThemeResource ControlFillColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="12,6">
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Bind CurrentHotkeyDisplay, Mode=OneWay}"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="Consolas"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                        <FontIcon Grid.Column="1" Glyph="&#xE70F;" FontSize="12" Margin="8,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </Grid>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+        </ContentDialog>
+
         <ContentDialog x:Name="EditHotkeyDialog"
+                       helpers:Translate.Key="Settings_DialogTitle"
                        Title="Editar Tecla de Atalho"
                        PrimaryButtonText="OK"
                        CloseButtonText="Cancelar"
@@ -343,14 +211,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="HotkeyPreviewText" Text="Nenhum" FontSize="20" FontWeight="Bold" FontFamily="Consolas" VerticalAlignment="Center" IsReadOnly="True" PreviewKeyDown="EditHotkeyDialog_KeyDown" />
-                        <Button Grid.Column="1" Content="Limpar" Click="ClearHotkeyButton_Click" VerticalAlignment="Center" />
+                        <Button Grid.Column="1" helpers:Translate.Key="Settings_BtnClear" Content="Limpar" Click="ClearHotkeyButton_Click" VerticalAlignment="Center" />
                     </Grid>
                 </Border>
 
-                <TextBlock Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar."
+                <TextBlock helpers:Translate.Key="Settings_HotkeyHint" Text="Pressione a nova combinação de teclas desejada (ex: Ctrl + Alt + P) no seu teclado. O diálogo capturará as teclas automaticamente. Pressione ENTER para confirmar."
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap" FontSize="12" />
             </StackPanel>
         </ContentDialog>
     </Grid>
 </Page>
+

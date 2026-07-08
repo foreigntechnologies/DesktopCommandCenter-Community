@@ -1,4 +1,4 @@
-﻿<Page
+﻿<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.AwakePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,16 +14,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Awake" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16"/>
+        <TextBlock x:Name="AwakePageTitleElement" Text="Awake" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,16" />
 
         <Grid Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="600">
             <StackPanel Spacing="16">
-                <TextBlock Text="Mantenha o seu computador acordado" Style="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock Text="O Awake Ã© uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. Ã‰ Ãºtil quando vocÃª estÃ¡ executando tarefas longas que nÃ£o requerem interaÃ§Ã£o com o mouse/teclado." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                <TextBlock x:Name="AwakeSubTitleElement" Text="Mantenha o seu computador acordado" Style="{StaticResource SubtitleTextBlockStyle}"  />
+                <TextBlock x:Name="AwakeDescElement" Text="O Awake é uma ferramenta inspirada no PowerToys que impede o seu computador de dormir ou desligar a tela. É útil quando você está executando tarefas longas que não requerem interação com o mouse/teclado." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
 
-                <ToggleSwitch Header="Manter Desperto" IsOn="{x:Bind ViewModel.IsAwakeEnabled, Mode=TwoWay}" Margin="0,16,0,0" />
-                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <ToggleSwitch x:Name="AwakeToggleElement" Header="Manter Desperto" IsOn="{x:Bind ViewModel.IsAwakeEnabled, Mode=TwoWay}" Margin="0,16,0,0"  />
+                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"  FontWeight="SemiBold" TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
     </Grid>
 </Page>
+
+

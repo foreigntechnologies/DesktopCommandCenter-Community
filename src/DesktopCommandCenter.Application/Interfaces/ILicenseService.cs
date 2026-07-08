@@ -13,4 +13,6 @@ public interface ILicenseService
     /// Checks the exact plan from Firestore ("free" or "pro").
     /// </summary>
     Task<string> GetCurrentPlanAsync();
+
+    Task<bool> HasUsedTrialAsync();
 }

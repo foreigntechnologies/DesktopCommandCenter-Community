@@ -15,17 +15,30 @@ Diseñado para profesionales, desarrolladores, creadores de contenido, analistas
 
 ## Filosofía: Local First + Cloud Light
 - **Local First**: Todos los datos del usuario (Notas, Historial del Portapapeles, Configuraciones) permanecen estrictamente en la máquina local utilizando SQLite. Tu contenido nunca se sube a la nube.
-- **Cloud Light**: La conectividad en la nube (Firebase Auth) se utiliza exclusivamente como Proveedor de Identidad (Google / GitHub) para vincular un ID de Usuario único para la validación de licencias/suscripciones a través de Stripe.
+- **Cloud Light**: La conectividad en la nube (Firebase Auth) se utiliza exclusivamente como Proveedor de Identidad (Google / GitHub / Microsoft) para vincular un ID de Usuario único para la validación de licencias/suscripciones a través de Stripe.
 
-## Características
+## Características (Community / Gratuito)
 - ✨ **Fluent Design System**: Construido nativamente para Windows 11 con fondos translúcidos (Mica) y animaciones fluidas.
-- 🤖 **ChatFT (Agente IA)**: Un agente autónomo "Local First" impulsado por Microsoft Semantic Kernel y Ollama. Detecta automáticamente y te permite alternar entre todos tus modelos instalados localmente. Capaz de ejecutar complementos locales de C# (por ejemplo, leer tus archivos, obtener la hora del sistema) completamente sin conexión.
-- 🎙️ **Voz y Visión**: Incluye Whisper.net para transcripción de audio sin conexión (micrófono y archivos) y soporte de Visión multimodal utilizando Ollama.
-- 📋 **Smart Clipboard**: Un servicio en segundo plano que captura silenciosamente tu historial de portapapeles, permitiéndote buscar y recuperar copias anteriores al instante.
-- 📝 **Notas Rápidas**: Un bloc de notas increíblemente rápido integrado en la barra lateral.
 - 🌍 **Localización en Tiempo Real**: Interfaz completamente traducida (Inglés, Portugués, Español).
-- 💻 **FutureShell**: Un terminal robusto PTY (Pseudo Console) integrado, capaz de ejecutar PowerShell, CMD, Bash y cualquier CLI global instalada en su sistema. Soporta un sistema de ayuda inteligente personalizado escribiendo `help` o `principal-commands`.
-- ⚙️ **Automatizaciones Avanzadas**: Cree automatizaciones basadas en reglas para abrir programas o ejecutar scripts personalizados sin problemas en múltiples lenguajes (PowerShell, Bash, Python, Node.js, Java, Golang).
+- 🎨 **Color Picker**: Captura colores de la pantalla rápidamente.
+- 📋 **Clipboard (Portapapeles)**: Un servicio en segundo plano que captura silenciosamente tu historial de copias.
+- 📝 **Notes (Notas)**: Un bloc de notas increíblemente rápido integrado en la barra lateral.
+- 🌙 **Awake**: Mantén tu PC activo y evita que se suspenda.
+- 📌 **Always on Top**: Fija cualquier ventana en la parte superior.
+- 🌐 **Translator (Traductor)**: Traducción instantánea de texto.
+- ⏱️ **Timer (Temporizador)**: Cronómetro y temporizador integrados.
+- 🔄 **Update Center**: Centro de actualizaciones de la aplicación.
+- 🔍 **Universal Search**: Búsqueda rápida y universal.
+- ⌨️ **Command Palette**: Comandos CLI rápidos directamente.
+- 💻 **FutureShell**: Un terminal robusto PTY integrado capaz de ejecutar PowerShell, CMD, Bash.
+
+## Funcionalidades PRO (AI & Automation)
+- 🤖 **ChatFT (Agente IA)**: Un agente autónomo "Local First" impulsado por Microsoft Semantic Kernel y Ollama. Incluye Visión y transcripción de voz offline (Whisper).
+- 💬 **Prompts de IA (Prompt Library)**: Biblioteca completa de prompts.
+- ⚙️ **Automations (Automatizaciones)**: Crea flujos de trabajo visuales o ejecuta scripts personalizados en múltiples lenguajes.
+- ☁️ **Cloud Sync**: Sincroniza de forma segura tus notas, atajos e IA en la nube.
+- 👤 **Profiles (Perfiles)**: Alterna contextos entre perfiles de Trabajo, Estudio y Personal.
+- 🧩 **Marketplace y Plugins**: (Próximamente) Amplía las capacidades con herramientas de la comunidad.
 
 ## Arquitectura y Tecnologías
 - **Framework**: .NET 9, Windows App SDK (WinUI 3)

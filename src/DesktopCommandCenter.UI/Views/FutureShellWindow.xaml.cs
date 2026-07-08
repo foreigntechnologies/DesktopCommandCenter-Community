@@ -29,6 +29,10 @@ public sealed partial class FutureShellWindow : Window
     {
         InitializeComponent();
         
+        // MUST BE SET BEFORE AppWindow properties to avoid FailFast crash on DPI changes
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(RightDragRegion);
+        
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
@@ -47,16 +51,7 @@ public sealed partial class FutureShellWindow : Window
             appWindow.SetIcon(iconPath);
         }
 
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            AppTitleBar.Loaded += AppTitleBar_Loaded;
-            // The TabView is now our main content, so the drag region should be above it
-        }
-        else
-        {
-            AppTitleBar.Visibility = Visibility.Collapsed;
-        }
+        ApplyTitleBarColors();
 
         _hudTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
         _hudTimer.Tick += HudTimer_Tick;
@@ -66,18 +61,23 @@ public sealed partial class FutureShellWindow : Window
         CreateNewTab();
     }
 
-    private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
+    private void ApplyTitleBarColors()
     {
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
-        
-        if (AppWindowTitleBar.IsCustomizationSupported())
-        {
-            appWindow.TitleBar.SetDragRectangles(new[] {
-                new Windows.Graphics.RectInt32(0, 0, (int)AppTitleBar.ActualWidth, (int)AppTitleBar.ActualHeight)
-            });
-        }
+        var titleBar = appWindow?.TitleBar;
+        if (titleBar == null) return;
+
+        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+
+        titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+        titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
+        titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF);
+        titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
     }
 
     private void HudTimer_Tick(object? sender, object e)

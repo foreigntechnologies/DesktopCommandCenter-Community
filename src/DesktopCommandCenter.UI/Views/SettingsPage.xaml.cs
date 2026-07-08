@@ -16,6 +16,16 @@ public sealed partial class SettingsPage : Page
         this.Loaded += SettingsPage_Loaded;
     }
 
+    protected override async void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (e.Parameter is string param && param == "OpenHotkeysDialog")
+        {
+            HotkeysListDialog.XamlRoot = this.XamlRoot;
+            await HotkeysListDialog.ShowAsync();
+        }
+    }
+
     private void SettingsPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         if (App.IsProUnlocked)
@@ -68,29 +78,37 @@ public sealed partial class SettingsPage : Page
         
         if (TxtAITitle != null)
         {
-            TxtAITitle.Text = loc.GetString("Settings_AiTitle");
-            TxtAIDesc.Text = loc.GetString("Settings_AiDesc");
+            TxtAITitle.Text = loc.GetString("Settings_AITitle");
+            TxtAIDesc.Text = loc.GetString("Settings_AIDesc");
         }
-        TxtSubscriptionTitle.Text = loc.GetString("Settings_SubTitle");
-        TxtCommunityTitle.Text = loc.GetString("Settings_CommTitle");
-        TxtCommunitySubtitle.Text = loc.GetString("Settings_CommSub");
-        TxtCommunityDesc.Text = loc.GetString("Settings_CommDesc");
-        TxtCommunityBtn.Text = loc.GetString("Settings_CommBtn");
-        TxtProBadgeTitle.Text = loc.GetString("Settings_ProBadge");
-        TxtProRecommended.Text = loc.GetString("Settings_ProRec");
-        TxtProSubtitle.Text = loc.GetString("Settings_ProSub");
-        TxtProDesc.Text = loc.GetString("Settings_ProDesc");
-        TxtProBtnNotLogged.Text = loc.GetString("Settings_ProNotLogged");
-        TxtProBtnFree.Text = loc.GetString("Settings_ProFree");
-        TxtProBtnActive.Text = loc.GetString("Settings_ProActive");
-        TxtProBtnManage.Text = loc.GetString("Settings_ProManage");
-        BtnLogoutSettings.Content = loc.GetString("Auth_Logout");
+
+        if (TxtBehaviorTitle != null)
+        {
+            TxtBehaviorTitle.Text = loc.GetString("Settings_BehaviorTitle");
+            TglStartWithWindows.Header = loc.GetString("Settings_StartWithWindows");
+            TglMinimizeToTray.Header = loc.GetString("Settings_MinimizeToTray");
+            TglAutoUpdate.Header = loc.GetString("Settings_AutoUpdate");
+        }
+
+        if (BtnSaveAI != null)
+        {
+            BtnSaveAI.Content = loc.GetString("Settings_SaveAIBtn") ?? "Salvar";
+        }
+
+        // Reload hotkey display names so they reflect the current language
+        ViewModel?.ReloadHotkeys();
     }
 
 
     private HotkeyConfigItemViewModel? _editingItem;
     private uint _tempModifiers = 0;
     private uint _tempVirtualKey = 0;
+
+    private async void OpenHotkeysList_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        HotkeysListDialog.XamlRoot = this.XamlRoot;
+        await HotkeysListDialog.ShowAsync();
+    }
 
     private async void EditHotkeyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
@@ -102,10 +120,11 @@ public sealed partial class SettingsPage : Page
 
             HotkeyDialogActionText.Text = $"Configure as teclas para: {item.DisplayName}";
             HotkeyPreviewText.Text = string.IsNullOrEmpty(item.CurrentHotkeyDisplay) || item.CurrentHotkeyDisplay == "None" 
-                ? "Nenhum" 
+                ? DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum" 
                 : item.CurrentHotkeyDisplay;
 
             EditHotkeyDialog.XamlRoot = this.XamlRoot;
+            HotkeysListDialog.Hide(); // Hide the list dialog first
             await EditHotkeyDialog.ShowAsync();
         }
     }
@@ -113,6 +132,13 @@ public sealed partial class SettingsPage : Page
     private void EditHotkeyDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
     {
         HotkeyPreviewText.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+    }
+
+    private async void EditHotkeyDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    {
+        // Add a small delay to ensure EditHotkeyDialog is fully closed before showing HotkeysListDialog again
+        await System.Threading.Tasks.Task.Delay(50);
+        _ = HotkeysListDialog.ShowAsync();
     }
 
     private void EditHotkeyDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -127,7 +153,7 @@ public sealed partial class SettingsPage : Page
     {
         _tempModifiers = 0;
         _tempVirtualKey = 0;
-        HotkeyPreviewText.Text = "Nenhum";
+        HotkeyPreviewText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum";
     }
 
     private void EditHotkeyDialog_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -204,7 +230,7 @@ public sealed partial class SettingsPage : Page
         }
         else
         {
-            HotkeyPreviewText.Text = "Nenhum";
+            HotkeyPreviewText.Text = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_HotkeyNone") ?? "Nenhum";
         }
     }
     private void OpenCommunityRepo_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -213,4 +239,21 @@ public sealed partial class SettingsPage : Page
             "https://github.com/foreigntechnologies/DesktopCommandCenter-Community")
         { UseShellExecute = true });
     }
+
+    private void SaveAI_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (sender is Button btn)
+        {
+            var originalText = btn.Content;
+            btn.Content = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Settings_Saved") ?? "Salvo!";
+            var timer = new Microsoft.UI.Xaml.DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+            timer.Tick += (s, args) =>
+            {
+                btn.Content = originalText;
+                timer.Stop();
+            };
+            timer.Start();
+        }
+    }
 }
+

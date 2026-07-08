@@ -22,6 +22,6 @@ public sealed partial class IALocalPage : Page
 
     private void UpdateTranslations()
     {
-        // Traduções agora devem ser aplicadas diretamente via x:Bind no XAML
+        Bindings.Update();
     }
 }

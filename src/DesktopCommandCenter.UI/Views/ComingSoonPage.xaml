@@ -1,4 +1,4 @@
-﻿<Page
+<Page NavigationCacheMode="Required"
     x:Class="DesktopCommandCenter.UI.Views.ComingSoonPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,15 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="Transparent">
-
+    
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24">
             <FontIcon Glyph="&#xE946;" FontSize="64" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
-            <TextBlock Text="Em Breve!" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center" />
-            <TextBlock x:Name="SubtitleText" Text="Estamos construindo este mÃ³dulo para vocÃª." 
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
-                       Style="{StaticResource BodyTextBlockStyle}" 
-                       HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap" />
+            <TextBlock x:Name="ComingSoonTitleElement" Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='ComingSoon_Title'}" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"  />
+            <TextBlock x:Name="SubtitleText" Text="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='ComingSoon_Subtitle'}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="400" TextWrapping="Wrap"  />
         </StackPanel>
     </Grid>
 </Page>
+

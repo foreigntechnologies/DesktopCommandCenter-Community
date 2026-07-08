@@ -74,22 +74,11 @@ public partial class App : Microsoft.UI.Xaml.Application
                 _ => Microsoft.UI.Xaml.ElementTheme.Default
             };
 
-            var isDark = frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
-            if (frameworkElement.RequestedTheme == Microsoft.UI.Xaml.ElementTheme.Default)
+            // Update caption button colors after the theme has been applied.
+            // ActualTheme resolves correctly after RequestedTheme is set.
+            if (mainWindow is MainWindow dccMainWindow)
             {
-                isDark = App.Current.RequestedTheme == Microsoft.UI.Xaml.ApplicationTheme.Dark;
-            }
-
-            if (mainWindow.AppWindow?.TitleBar != null)
-            {
-                try
-                {
-                    mainWindow.AppWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
-                }
-                catch
-                {
-                    // Ignora exceções COM/ArgumentException que ocorrem ao maximizar no WinUI 3
-                }
+                dccMainWindow.ApplyTitleBarColors();
             }
         }
     }
@@ -106,7 +95,7 @@ public partial class App : Microsoft.UI.Xaml.Application
             }
         }
         catch { }
-        return "HH:mm";
+        return "hh:mm:ss tt";
     }
 
     public static void SaveTimeFormat(string format)
@@ -416,6 +405,101 @@ public partial class App : Microsoft.UI.Xaml.Application
         catch { }
     }
 
+    public static bool GetMinimizeToTray()
+    {
+        try
+        {
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.TryGetValue("MinimizeToTray", out object? val) && val is bool b)
+            {
+                return b;
+            }
+        }
+        catch { }
+        return true; // Default is true for existing users
+    }
+
+    public static void SaveMinimizeToTray(bool value)
+    {
+        try
+        {
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["MinimizeToTray"] = value;
+        }
+        catch { }
+    }
+
+    public static bool GetAutoUpdate()
+    {
+        try
+        {
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.TryGetValue("AutoUpdate", out object? val) && val is bool b)
+            {
+                return b;
+            }
+        }
+        catch { }
+        return true; // Default is true
+    }
+
+    public static void SaveAutoUpdate(bool value)
+    {
+        try
+        {
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["AutoUpdate"] = value;
+        }
+        catch { }
+    }
+
+    public static bool GetStartWithWindows()
+    {
+        try
+        {
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.TryGetValue("StartWithWindows", out object? val) && val is bool b)
+            {
+                return b;
+            }
+        }
+        catch { }
+        return false;
+    }
+
+    public static void SaveStartWithWindows(bool value)
+    {
+        try
+        {
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["StartWithWindows"] = value;
+            
+            var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+            if (key != null)
+            {
+                if (value)
+                {
+                    string exePath = Environment.ProcessPath ?? "";
+                    string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(exePath)) ?? "";
+                    string updateExe = Path.Combine(parentDir, "Update.exe");
+                    string command;
+
+                    if (File.Exists(updateExe))
+                    {
+                        command = $"\"{updateExe}\" --processStart \"{Path.GetFileName(exePath)}\" --processStartArgs \"--silent\"";
+                    }
+                    else
+                    {
+                        command = $"\"{exePath}\" --silent";
+                    }
+                    key.SetValue("DesktopCommandCenter", command);
+                }
+                else
+                {
+                    key.DeleteValue("DesktopCommandCenter", false);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to update StartWithWindows registry key");
+        }
+    }
+
     public App()
     {
         // Intercepta qualquer exceção grave não tratada
@@ -559,12 +643,15 @@ public partial class App : Microsoft.UI.Xaml.Application
         var cmdArgs = Environment.GetCommandLineArgs();
         bool isFutureShell = false;
         bool isChatFT = false;
+        bool isSilent = false;
         foreach (var arg in cmdArgs)
         {
             if (arg.Equals("--futureshell", StringComparison.OrdinalIgnoreCase))
                 isFutureShell = true;
             else if (arg.Equals("--chatft", StringComparison.OrdinalIgnoreCase))
                 isChatFT = true;
+            else if (arg.Equals("--silent", StringComparison.OrdinalIgnoreCase))
+                isSilent = true;
         }
 
         if (isFutureShell)
@@ -581,11 +668,26 @@ public partial class App : Microsoft.UI.Xaml.Application
         }
 
         MainWindow = new MainWindow();
-        MainWindow.Activate();
+        
+        if (isSilent)
+        {
+            // When starting silently with Windows, we don't want to show the window.
+            // In WinUI3, you must activate the window to initialize the message loop properly,
+            // so we activate then hide immediately.
+            MainWindow.Activate();
+            MainWindow.AppWindow.Hide();
+        }
+        else
+        {
+            MainWindow.Activate();
+        }
 
-        var dispatcherQueue = MainWindow.DispatcherQueue;
+        _ = InitializeApplicationAsync(MainWindow.DispatcherQueue);
+    }
 
-        System.Threading.Tasks.Task.Run(() =>
+    private async System.Threading.Tasks.Task InitializeApplicationAsync(Microsoft.UI.Dispatching.DispatcherQueue dispatcherQueue)
+    {
+        await System.Threading.Tasks.Task.Run(async () =>
         {
             try
             {
@@ -604,6 +706,55 @@ public partial class App : Microsoft.UI.Xaml.Application
                 // Start Automation Engine
                 var automationEngine = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAutomationEngine>();
                 automationEngine.Start();
+
+                // ─── BACKGROUND SESSION & LICENSE VALIDATION ───────────────────
+                var authService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>();
+                var licenseService = Services.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>();
+                try
+                {
+                    var user = await authService.GetCurrentUserAsync();
+                    if (user != null)
+                    {
+                        var plan = await licenseService.GetCurrentPlanAsync();
+                        bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+                        
+                        dispatcherQueue?.TryEnqueue(() =>
+                        {
+                            App.IsProUnlocked = isPlanPro;
+                            App.SaveProCached(isPlanPro);
+                            App.SaveCachedEmail(user.Email);
+                            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPlanPro));
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    // Fallback to cache on network errors; do not set to false
+                }
+                // ─────────────────────────────────────────────────────────────
+
+                // ─── BACKGROUND AUTO UPDATE ──────────────────────────────────
+                if (App.GetAutoUpdate())
+                {
+                    _ = System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var mgr = new Velopack.UpdateManager("https://github.com/foreigntechnologies/DesktopCommandCenter-Community");
+                            if (!mgr.IsInstalled) return;
+                            var newVersion = await mgr.CheckForUpdatesAsync();
+                            if (newVersion != null && dispatcherQueue != null)
+                            {
+                                dispatcherQueue.TryEnqueue(() => 
+                                {
+                                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.NavigateMessage("UpdateAvailable"));
+                                });
+                            }
+                        }
+                        catch { }
+                    });
+                }
+                // ─────────────────────────────────────────────────────────────
 
                 // Register Dynamic Hotkeys and UI-thread services
                 dispatcherQueue?.TryEnqueue(() =>
@@ -666,7 +817,7 @@ public partial class App : Microsoft.UI.Xaml.Application
         services.AddInfrastructure();
         
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite($"Data Source={dbPath}"));
+            options.UseSqlite($"Data Source={dbPath}"), ServiceLifetime.Transient);
             
         return services.BuildServiceProvider();
     }

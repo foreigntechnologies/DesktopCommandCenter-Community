@@ -1,32 +1,14 @@
 <Project>
   <PropertyGroup>
-    <!-- Define as novas configurações disponíveis para toda a solution -->
-    <Configurations>Debug;Release;DebugCommunity;ReleaseCommunity;DebugPro;ReleasePro</Configurations>
+    <ParentDirectoryBuildProps>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</ParentDirectoryBuildProps>
   </PropertyGroup>
 
-  <!-- Lógica de compilação PRO -->
-  <PropertyGroup Condition="$(Configuration.Contains('Pro'))">
-    <DefineConstants>$(DefineConstants);PRO_VERSION</DefineConstants>
-    <!-- Pode ser usado no código C# ou em outros lugares no MSBuild -->
-    <IsProBuild>true</IsProBuild>
-  </PropertyGroup>
+  <!-- Import the root Directory.Build.props from the Enterprise parent directory if it exists -->
+  <Import Project="$(ParentDirectoryBuildProps)" Condition="'$(ParentDirectoryBuildProps)' != ''" />
 
-  <!-- Lógica de compilação Community -->
-  <PropertyGroup Condition="$(Configuration.Contains('Community'))">
-    <DefineConstants>$(DefineConstants);COMMUNITY_VERSION</DefineConstants>
-    <IsProBuild>false</IsProBuild>
-  </PropertyGroup>
-
-  <!-- Lógica padrão do Debug -->
-  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-
-  <!-- Lógica padrão do Release -->
-  <PropertyGroup Condition="$(Configuration.Contains('Release'))">
-    <Optimize>true</Optimize>
-    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  <!-- Encurtar caminhos intermediários apenas do projeto de UI para evitar MSB4023 / MAX_PATH -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'DesktopCommandCenter.UI'">
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\.b\ui\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\.o\ui\</BaseIntermediateOutputPath>
   </PropertyGroup>
 </Project>

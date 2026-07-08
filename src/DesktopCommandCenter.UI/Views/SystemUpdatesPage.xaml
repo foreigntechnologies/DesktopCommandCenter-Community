@@ -26,31 +26,25 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- ══ HEADER ══ -->
+        <!-- â•â• HEADER â•â• -->
         <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,20">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Border Width="40" Height="40" CornerRadius="10" Background="#1A00C853">
                     <FontIcon Glyph="&#xE895;" FontSize="20" Foreground="#00C853" />
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock x:Name="TxtPageTitle"
-                               Text="Update Center"
-                               Style="{StaticResource TitleTextBlockStyle}"
-                               FontWeight="SemiBold" />
-                    <TextBlock x:Name="TxtPageSubtitle"
-                               Text="Windows Update e Gerenciador de Softwares"
-                               Style="{StaticResource CaptionTextBlockStyle}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="TxtPageTitle" Text="Update Center" Style="{StaticResource TitleTextBlockStyle}" FontWeight="SemiBold"  />
+                    <TextBlock x:Name="TxtPageSubtitle" Text="Windows Update e Gerenciador de Softwares" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"  />
                 </StackPanel>
             </StackPanel>
         </StackPanel>
 
-        <!-- ══ PIVOT (abas) ══ -->
+        <!-- â•â• PIVOT (abas) â•â• -->
         <Pivot Grid.Row="1" x:Name="MainPivot" SelectionChanged="MainPivot_SelectionChanged">
 
-            <!-- ══════════════════════════════════════════════════════════
-                 ABA 1 – WINDOWS UPDATE
-                 ══════════════════════════════════════════════════════════ -->
+            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                 ABA 1 â€“ WINDOWS UPDATE
+                 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <PivotItem x:Name="PivotWU" Header="Windows Update">
                 <Grid RowSpacing="12">
                     <Grid.RowDefinitions>
@@ -85,7 +79,7 @@
                                     IsEnabled="{x:Bind ViewModel.IsLoadingWindowsUpdates, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE72C;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnCheckWU" Text="Verificar Atualizações" />
+                                    <TextBlock x:Name="TxtBtnCheckWU" Text="Verificar Atualizações"  />
                                 </StackPanel>
                             </Button>
 
@@ -95,7 +89,7 @@
                                     IsEnabled="{x:Bind ViewModel.IsInstalling, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE896;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnInstallWU" Text="Instalar Selecionadas" />
+                                    <TextBlock x:Name="TxtBtnInstallWU" Text="Instalar Selecionadas"  />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -111,19 +105,15 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock x:Name="TxtAutoInstallTitle"
-                                           Text="Atualização Automática em Background"
-                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                <TextBlock x:Name="TxtAutoInstallDesc"
-                                           Text="O sistema verificará e instalará atualizações automaticamente em horários ociosos."
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           TextWrapping="Wrap" />
+                                <TextBlock x:Name="TxtAutoInstallTitle" Text="Atualização Automática em Background" Style="{StaticResource BodyStrongTextBlockStyle}"  />
+                                <TextBlock x:Name="TxtAutoInstallDesc" Text="O sistema verificará e instalará atualizações automaticamente em horários ociosos." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
                             </StackPanel>
                             <ToggleSwitch x:Name="ToggleAutoInstall"
                                           Grid.Column="1"
                                           IsOn="{x:Bind ViewModel.AutoInstallEnabled, Mode=TwoWay}"
                                           Toggled="ToggleAutoInstall_Toggled"
+                                          OnContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOn'}"
+                                          OffContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOff'}"
                                           VerticalAlignment="Center"
                                           Margin="12,0,0,0" />
                         </Grid>
@@ -139,10 +129,7 @@
                                         Spacing="12"
                                         Margin="0,60,0,0">
                                 <FontIcon Glyph="&#xE930;" FontSize="48" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="TxtWUEmptyMsg"
-                                           Text="Clique em 'Verificar Atualizações' para começar"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           HorizontalAlignment="Center" />
+                                <TextBlock x:Name="TxtWUEmptyMsg" Text="Clique em 'Verificar Atualizações' para começar" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             </StackPanel>
 
                             <!-- Repeat for each update item -->
@@ -184,10 +171,7 @@
                                                         Padding="6,2"
                                                         Visibility="{x:Bind IsCritical, Converter={StaticResource BoolToVisibilityConverter}}"
                                                         VerticalAlignment="Center">
-                                                    <TextBlock Text="CRÍTICA"
-                                                               FontSize="9"
-                                                               FontWeight="Bold"
-                                                               Foreground="White" />
+                                                    <TextBlock Text="{Binding Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_Critical'}" FontSize="9" FontWeight="Bold" Foreground="White"  />
                                                 </Border>
                                             </Grid>
                                         </Border>
@@ -212,9 +196,9 @@
                 </Grid>
             </PivotItem>
 
-            <!-- ══════════════════════════════════════════════════════════
-                 ABA 2 – ATUALIZAÇÕES DE SOFTWARE (WINGET)
-                 ══════════════════════════════════════════════════════════ -->
+            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                 ABA 2 â€“ ATUALIZAÇÃ•ES DE SOFTWARE (WINGET)
+                 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <PivotItem x:Name="PivotSW" Header="Softwares">
                 <Grid RowSpacing="12">
                     <Grid.RowDefinitions>
@@ -243,7 +227,7 @@
                                     IsEnabled="{x:Bind ViewModel.IsLoadingSoftwareUpdates, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE72C;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnCheckSW" Text="Verificar" />
+                                    <TextBlock x:Name="TxtBtnCheckSW" Text="Verificar"  />
                                 </StackPanel>
                             </Button>
                             <Button x:Name="BtnUpdateSW" Click="BtnUpdateSW_Click"
@@ -251,7 +235,7 @@
                                     IsEnabled="{x:Bind ViewModel.IsUpdatingSoftware, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE896;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnUpdateSW" Text="Atualizar Selecionados" />
+                                    <TextBlock x:Name="TxtBtnUpdateSW" Text="Atualizar Selecionados"  />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -266,10 +250,7 @@
                                         Spacing="12" Margin="0,60,0,0">
                                 <FontIcon Glyph="&#xE930;" FontSize="48"
                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="TxtSWEmptyMsg"
-                                           Text="Clique em 'Verificar' para buscar atualizações de software"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           HorizontalAlignment="Center" />
+                                <TextBlock x:Name="TxtSWEmptyMsg" Text="Clique em 'Verificar' para buscar atualizações de software" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             </StackPanel>
 
                             <ItemsControl ItemsSource="{x:Bind ViewModel.SoftwareUpdates, Mode=OneWay}">
@@ -342,9 +323,9 @@
                 </Grid>
             </PivotItem>
 
-            <!-- ══════════════════════════════════════════════════════════
-                 ABA 3 – SOFTWARES INSTALADOS (Desinstalação)
-                 ══════════════════════════════════════════════════════════ -->
+            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                 ABA 3 â€“ SOFTWARES INSTALADOS (Desinstalação)
+                 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <PivotItem x:Name="PivotApps" Header="Gerenciar Apps">
                 <Grid RowSpacing="12">
                     <Grid.RowDefinitions>
@@ -364,15 +345,13 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Desinstalação Limpa (Deep Clean)"
-                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
-                                <TextBlock Text="Remove sobras de arquivos temporários, cache e pastas do sistema após a desinstalação."
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           TextWrapping="Wrap" />
+                                <TextBlock x:Name="SystemUpdatesDeepCleanTitleElement" Text="Desinstalação Limpa (Deep Clean)" Style="{StaticResource BodyStrongTextBlockStyle}"  />
+                                <TextBlock x:Name="SystemUpdatesDeepCleanDescElement" Text="Remove sobras de arquivos temporários, cache e pastas do sistema após a desinstalação." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
                             </StackPanel>
                             <ToggleSwitch Grid.Column="1"
                                           IsOn="{x:Bind ViewModel.DeepCleanEnabled, Mode=TwoWay}"
+                                          OnContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOn'}"
+                                          OffContent="{Binding Source={x:Null}, Converter={StaticResource TranslateConverter}, ConverterParameter='SystemUpdates_ToggleOff'}"
                                           VerticalAlignment="Center"
                                           Margin="12,0,0,0" />
                         </Grid>
@@ -398,15 +377,14 @@
                                     IsEnabled="{x:Bind ViewModel.IsLoadingInstalledApps, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE72C;" FontSize="14" />
-                                    <TextBlock x:Name="TxtBtnLoadApps" Text="Listar Softwares" />
+                                    <TextBlock x:Name="TxtBtnLoadApps" Text="Listar Softwares"  />
                                 </StackPanel>
                             </Button>
                             <Button x:Name="BtnUninstall" Click="BtnUninstall_Click"
                                     IsEnabled="{x:Bind ViewModel.IsUninstalling, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon Glyph="&#xE74D;" FontSize="14" Foreground="#EF5350" />
-                                    <TextBlock x:Name="TxtBtnUninstall" Text="Desinstalar Selecionados"
-                                               Foreground="#EF5350" />
+                                    <TextBlock x:Name="TxtBtnUninstall" Text="Desinstalar Selecionados" Foreground="#EF5350"  />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -421,10 +399,7 @@
                                         Spacing="12" Margin="0,60,0,0">
                                 <FontIcon Glyph="&#xE74C;" FontSize="48"
                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                <TextBlock x:Name="TxtAppsEmptyMsg"
-                                           Text="Clique em 'Listar Softwares' para ver os apps instalados"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           HorizontalAlignment="Center" />
+                                <TextBlock x:Name="TxtAppsEmptyMsg" Text="Clique em 'Listar Softwares' para ver os apps instalados" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center"  />
                             </StackPanel>
 
                             <ItemsControl ItemsSource="{x:Bind ViewModel.InstalledApps, Mode=OneWay}">
@@ -494,3 +469,5 @@
         </Pivot>
     </Grid>
 </Page>
+
+

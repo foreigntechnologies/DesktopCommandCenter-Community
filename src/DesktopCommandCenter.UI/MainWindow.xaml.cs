@@ -4,6 +4,9 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Runtime.InteropServices;
 using WinRT.Interop;
+using Serilog;
+using Microsoft.UI.Windowing;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,28 +23,35 @@ public sealed partial class MainWindow : Window
     [DllImport("shell32.dll", SetLastError = true)]
     static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
+
+
     public MainWindow()
     {
+        InitializeComponent();
+        UpdateTranslations();
+        Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
         TrayQuickAccessCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowQuickAccess);
-        InitializeComponent();
-        this.Closed += MainWindow_Closed;
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
-        
+        this.Closed += MainWindow_Closed;
+
+        // ExtendsContentIntoTitleBar — set BEFORE any AppWindow property access.
+        // Use the new Window.ExtendsContentIntoTitleBar API to avoid the FailFast crash 
+        // when changing monitors with different DPIs and maximizing.
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(AppTitleBar);
+
+        Log.Information("MainWindow initializing...");
+
+        // ── IMPORTANT: Do NOT subscribe to AppWindow.Changed or Window.SizeChanged. ──
+        // Those events fire on the WinRT compositor thread during DPI transitions.
+        // Even accessing args properties (e.g. sender.Size) through WinRT COM proxies
+        // during that window raises InvalidOperationException inside WinRT.Runtime.dll.
+        // C# try/catch CANNOT intercept WinRT FailFast — it bypasses managed handlers.
+        // Instead, we use a Win32 WndProc subclass to receive WM_DPICHANGED, which
+        // fires only AFTER the DPI transition is fully complete (safe to touch XAML).
+        // ─────────────────────────────────────────────────────────────────────────────
+
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
         if (System.IO.File.Exists(iconPath))
@@ -49,82 +59,130 @@ public sealed partial class MainWindow : Window
             AppWindow.SetIcon(iconPath);
         }
 
+        try
+        {
+            Log.Information("Attempting to create MicaBackdrop...");
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "MicaBackdrop failed, falling back to DesktopAcrylicBackdrop...");
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); }
+            catch (Exception innerEx) { Log.Error(innerEx, "Both Mica and Acrylic backdrops failed to initialize."); }
+        }
+
+        RootFrame.Loaded += RootFrame_Loaded;
+        this.Activated += MainWindow_FocusChanged;
+
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
 
-        RootFrame.Loaded += RootFrame_Loaded;
-
-        // Iniciar maximizado apenas após a janela ser ativada
-        this.Activated += MainWindow_Activated;
-        this.Activated += MainWindow_FocusChanged;
-        this.AppWindow.Changed += AppWindow_Changed;
+        // Apply TitleBar colors once after the frame loads.
+        // Do NOT re-apply inside AppWindow.Changed / SizeChanged (DPI transition risk).
+        RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
     }
 
-    private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
+
+
+    /// <summary>
+    /// Applies TitleBar button colors to match the current theme.
+    /// Safe to call from the UI thread or via DispatcherQueue.
+    /// Only called from: RootFrame.Loaded, WM_DPICHANGED WndProc, and theme change.
+    /// Never called from AppWindow.Changed or SizeChanged (those are crash zones).
+    /// </summary>
+    public void ApplyTitleBarColors()
     {
-        // Removido o sender.Hide() para que o botão minimizar "-" apenas minimize para a barra de tarefas normalmente.
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            try
+            {
+                if (Content is not FrameworkElement root || root.XamlRoot == null)
+                    return;
+
+                var titleBar = AppWindow?.TitleBar;
+                if (titleBar == null) return;
+
+                var isDark = root.RequestedTheme == ElementTheme.Dark || 
+                             (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
+                Log.Information("ApplyTitleBarColors: isDark={IsDark}", isDark);
+
+                if (isDark)
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+                else
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+
+                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                titleBar.ButtonHoverBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                titleBar.ButtonPressedBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+
+                Log.Information("ApplyTitleBarColors applied successfully.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "ApplyTitleBarColors exception.");
+            }
+        });
     }
 
-    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
-    {
-        this.Activated -= MainWindow_Activated; // Executa apenas na primeira vez
-        var presenter = AppWindow.Presenter as Microsoft.UI.Windowing.OverlappedPresenter;
-        presenter?.Maximize();
-    }
+
 
     private DateTime _lastFocusCheck = DateTime.MinValue;
-
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
+
+
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
-            // Debounce: Evita spammar o Firestore (limita a 1 check a cada 5 segundos)
-            if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 5)
+            if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
             {
                 _lastFocusCheck = DateTime.Now;
-                var currentServices = App.Current.Services;
                 
-                _ = System.Threading.Tasks.Task.Run(async () =>
-                {
-                    try
-                    {
-                        var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
-                        var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
+                // Read local session just for basic info if needed
+                var sessionFile = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+                    "DCC", "dcc_auth_session.json");
 
-                        var user = await authService.GetCurrentUserAsync();
-                        if (user != null)
-                        {
-                            var plan = await licenseService.GetCurrentPlanAsync();
-                            bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                            
-                            // Se o plano mudou (ex: acabou de pagar no Stripe)
-                            if (App.IsProUnlocked != isPro)
-                            {
-                                App.IsProUnlocked = isPro;
-                                DispatcherQueue?.TryEnqueue(() =>
-                                {
-                                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                                });
-                            }
-                        }
-                    }
-                    catch { }
-                });
+                // Note: We intentionally avoid checking the license against Firestore on every window focus
+                // because it causes unnecessary API calls and potential false downgrades on transient network issues.
+                // The license is already checked on Startup and when opening the Account/Settings pages.
             }
         }
     }
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
-        args.Handled = true;
-        this.AppWindow.Hide();
+        Log.Information("MainWindow_Closed triggered.");
+        if (App.GetMinimizeToTray())
+        {
+            // Ao invés de fechar (X), oculta o app para a bandeja do sistema
+            args.Handled = true;
+            this.AppWindow.Hide();
+        }
+        else
+        {
+            Microsoft.UI.Xaml.Application.Current.Exit();
+        }
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }
     public System.Windows.Input.ICommand TrayQuickAccessCommand { get; }
 
-    // ── Quick Access Panel (singleton) ────────────────────────────────────────
+    // â”€â”€ Quick Access Panel (singleton) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private Views.QuickAccessWindow? _quickAccessWindow;
     private DesktopCommandCenter.Application.Interfaces.ITerminalService? _terminalService;
     private bool _isTerminalOpen = false;
@@ -307,7 +365,7 @@ public sealed partial class MainWindow : Window
             Serilog.Log.Error(ex, "Erro ao abrir o painel de Acesso Rápido.");
         }
     }
-    // ──────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void ShowApp()
     {
@@ -344,6 +402,7 @@ public sealed partial class MainWindow : Window
         try
         {
             var mgr = new Velopack.UpdateManager("https://github.com/foreigntechnologies/DesktopCommandCenter-Community");
+            if (!mgr.IsInstalled) return;
             var newVersion = await mgr.CheckForUpdatesAsync();
             if (newVersion != null)
             {
@@ -429,35 +488,8 @@ public sealed partial class MainWindow : Window
             _ = tService.SetLanguageAsync(lang);
         }
         
-        // Salva uma referência para usar dentro do Task.Run com segurança
-        var currentServices = App.Current.Services;
-        
-        // Verifica a licença no startup em background
-        _ = System.Threading.Tasks.Task.Run(async () =>
-        {
-            try
-            {
-                var authService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.IAuthService>(currentServices);
-                var licenseService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ILicenseService>(currentServices);
-
-                var user = await authService.GetCurrentUserAsync();
-                if (user != null)
-                {
-                    var plan = await licenseService.GetCurrentPlanAsync();
-                    bool isPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase);
-                    App.IsProUnlocked = isPro;
-                    
-                    DispatcherQueue?.TryEnqueue(() =>
-                    {
-                        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send(new Messages.LicenseChangedMessage(isPro));
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                Serilog.Log.Error(ex, "Erro ao verificar a licença inicial no startup.");
-            }
-        });
+        // License validation is already handled by App.InitializeApplicationAsync() which
+        // runs right after MainWindow.Activate(). No need to duplicate it here.
         
         bool firstRun = false;
         try
@@ -547,4 +579,16 @@ public sealed partial class MainWindow : Window
             Serilog.Log.Error(ex, "Erro ao inicializar o Terminal (FutureShell).");
         }
     }
+
+        private void UpdateTranslations()
+        {
+            TrayUpdateAvailableElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_UpdateAvailable");
+            TrayQuickAccessElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_QuickAccess");
+            TraySettingsElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Settings");
+            TrayDocumentationElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Documentation");
+            TrayReportBugElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_ReportBug");
+            TrayExitElement.Text = Helpers.LocalizationHelper.Instance.GetString("Tray_Exit");
+            if (MainWindowNewCommandElement.Content is string || MainWindowNewCommandElement.Content == null) MainWindowNewCommandElement.Content = Helpers.LocalizationHelper.Instance.GetString("MainWindow_NewCommand");
+        }
 }
+

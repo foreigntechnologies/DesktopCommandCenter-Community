@@ -42,26 +42,26 @@ public partial class AutomacoesViewModel : ObservableObject
     private readonly IAutomationEngine _automationEngine;
     private readonly string _filePath;
 
-    public ObservableCollection<string> AvailableTriggers { get; } = new()
+    public ObservableCollection<string> AvailableTriggers => new()
     {
-        "Ao copiar um link do YouTube",
-        "Ao tirar um printscreen",
-        "Ao plugar Pendrive",
-        "A cada X minutos/horas",
-        "Ao ligar o computador",
-        "Ao abrir um aplicativo específico"
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_1"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_2"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_3"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_4"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_5"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_6")
     };
 
-    public ObservableCollection<string> AvailableActions { get; } = new()
+    public ObservableCollection<string> AvailableActions => new()
     {
-        "Abrir programa",
-        "Executar script personalizado",
-        "Extrair ID do vídeo",
-        "Extrair texto de imagem via OCR",
-        "Falar texto (Text-to-Speech)",
-        "Executar script PowerShell ou CMD",
-        "Limpar Área de Transferência",
-        "Exibir notificação do sistema (Toast)"
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_1"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_2"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_3"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_4"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_5"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_6"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_7"),
+        DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_8")
     };
 
     public ObservableCollection<string> AvailableLanguages { get; } = new()
@@ -114,9 +114,9 @@ public partial class AutomacoesViewModel : ObservableObject
         // Fallback default
         var defaultRules = new[]
         {
-            new AutomacaoRegra { Gatilho = "Ao copiar um link do YouTube", Acao = "Extrair ID do vídeo", IsAtivo = true },
-            new AutomacaoRegra { Gatilho = "Ao tirar um printscreen", Acao = "Extrair texto de imagem via OCR", IsAtivo = false },
-            new AutomacaoRegra { Gatilho = "Ao plugar Pendrive", Acao = "Exibir notificação do sistema (Toast)", AcaoParametro = "Novo dispositivo USB conectado!", IsAtivo = true }
+            new AutomacaoRegra { Gatilho = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_1"), Acao = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_3"), IsAtivo = true },
+            new AutomacaoRegra { Gatilho = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_2"), Acao = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_4"), IsAtivo = false },
+            new AutomacaoRegra { Gatilho = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Trigger_3"), Acao = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_Action_8"), AcaoParametro = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Auto_DefRule_ActionParam"), IsAtivo = true }
         };
 
         foreach (var rule in defaultRules)

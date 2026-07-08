@@ -6,15 +6,20 @@ namespace DesktopCommandCenter.UI.Views;
 public sealed partial class AutomacoesPage : Page
 {
     public ViewModels.AutomacoesViewModel ViewModel { get; }
+    private ViewModels.AutomacaoRegra? _editingRegra = null;
 
     public AutomacoesPage()
     {
         ViewModel = App.Current.Services.GetRequiredService<ViewModels.AutomacoesViewModel>();
         this.InitializeComponent();
+        UpdateTranslations();
+        Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
     }
 
     private async void NovaRegraButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _editingRegra = null;
+        NovaRegraDialog.Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Automations_DialogTitle") ?? "Criar Nova Regra";
         TriggersCombo.SelectedIndex = -1;
         ActionsCombo.SelectedIndex = -1;
         TriggerParamTextBox.Text = string.Empty;
@@ -38,7 +43,38 @@ public sealed partial class AutomacoesPage : Page
 
         if (!string.IsNullOrEmpty(trigger) && !string.IsNullOrEmpty(action))
         {
-            ViewModel.AddNovaRegra(trigger, action, triggerParam ?? "", actionParam ?? "", actionLinguagem ?? "");
+            if (_editingRegra != null)
+            {
+                _editingRegra.Gatilho = trigger;
+                _editingRegra.Acao = action;
+                _editingRegra.GatilhoParametro = triggerParam ?? "";
+                _editingRegra.AcaoParametro = actionParam ?? "";
+                _editingRegra.AcaoLinguagem = actionLinguagem ?? "";
+                ViewModel.SaveRules();
+                _editingRegra = null;
+            }
+            else
+            {
+                ViewModel.AddNovaRegra(trigger, action, triggerParam ?? "", actionParam ?? "", actionLinguagem ?? "");
+            }
+        }
+    }
+
+    private void EditRegraButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is ViewModels.AutomacaoRegra regra)
+        {
+            _editingRegra = regra;
+            TriggersCombo.SelectedItem = regra.Gatilho;
+            ActionsCombo.SelectedItem = regra.Acao;
+            
+            TriggerParamTextBox.Text = regra.GatilhoParametro;
+            ActionParamTextBox.Text = regra.AcaoParametro;
+            LanguageCombo.SelectedItem = regra.AcaoLinguagem;
+            
+            NovaRegraDialog.Title = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("Automations_DialogTitleEdit") ?? "Editar Regra";
+            NovaRegraDialog.XamlRoot = this.XamlRoot;
+            _ = NovaRegraDialog.ShowAsync();
         }
     }
 
@@ -47,15 +83,15 @@ public sealed partial class AutomacoesPage : Page
         var trigger = TriggersCombo.SelectedItem as string;
         if (trigger == "A cada X minutos/horas")
         {
-            TriggerParamTextBox.Header = "Intervalo (Minutos)";
-            TriggerParamTextBox.PlaceholderText = "Ex: 15";
+            TriggerParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoTrigger_Interval_Header") ?? "Intervalo (Minutos)";
+            TriggerParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoTrigger_Interval_Placeholder") ?? "Ex: 15";
             TriggerParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(TriggerParamTextBox, "Minutos do Intervalo");
         }
         else if (trigger == "Ao abrir um aplicativo específico")
         {
-            TriggerParamTextBox.Header = "Nome do Processo / Executável";
-            TriggerParamTextBox.PlaceholderText = "Ex: devenv.exe ou devenv";
+            TriggerParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoTrigger_Process_Header") ?? "Nome do Processo / Executável";
+            TriggerParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoTrigger_Process_Placeholder") ?? "Ex: devenv.exe ou devenv";
             TriggerParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(TriggerParamTextBox, "Nome do aplicativo a monitorar");
         }
@@ -79,8 +115,8 @@ public sealed partial class AutomacoesPage : Page
         if (action == "Executar script personalizado")
         {
             LanguageCombo.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            ActionParamTextBox.Header = "Código do Script";
-            ActionParamTextBox.PlaceholderText = "Cole ou escreva seu script aqui...";
+            ActionParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Script_Header") ?? "Código do Script";
+            ActionParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Script_Placeholder") ?? "Cole ou escreva seu script aqui...";
             ActionParamTextBox.AcceptsReturn = true;
             ActionParamTextBox.TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap;
             ActionParamTextBox.MinHeight = 150;
@@ -89,36 +125,34 @@ public sealed partial class AutomacoesPage : Page
         }
         else if (action == "Abrir programa")
         {
-            ActionParamTextBox.Header = "Caminho ou nome do executável";
-            ActionParamTextBox.PlaceholderText = "Ex: C:\\Windows\\notepad.exe ou notepad";
+            ActionParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Exe_Header") ?? "Caminho ou nome do executável";
+            ActionParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Exe_Placeholder") ?? "Ex: C:\\Windows\\notepad.exe ou notepad";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
             Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do executável");
         }
         else if (action == "Falar texto (Text-to-Speech)")
         {
-            ActionParamTextBox.Header = "Mensagem falada";
-            ActionParamTextBox.PlaceholderText = "Ex: Processamento concluído!";
+            ActionParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Speech_Header") ?? "Texto para Falar";
+            ActionParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Speech_Placeholder") ?? "Ex: Tarefa concluída com sucesso!";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Mensagem falada");
-        }
-        else if (action == "Executar script PowerShell ou CMD")
-        {
-            ActionParamTextBox.Header = "Caminho completo do script (.ps1 ou .bat)";
-            ActionParamTextBox.PlaceholderText = "Ex: C:\\Scripts\\backup.ps1";
-            ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Caminho do script a executar");
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Texto que o sistema irá falar");
         }
         else if (action == "Exibir notificação do sistema (Toast)")
         {
-            ActionParamTextBox.Header = "Mensagem da notificação";
-            ActionParamTextBox.PlaceholderText = "Ex: Nova automação disparada!";
+            ActionParamTextBox.Header = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Toast_Header") ?? "Mensagem da Notificação";
+            ActionParamTextBox.PlaceholderText = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("AutoAction_Toast_Placeholder") ?? "Ex: O sistema concluiu a análise.";
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
-            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Mensagem da notificação");
+            Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(ActionParamTextBox, "Texto da notificação toast");
         }
         else
         {
             ActionParamTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             ActionParamTextBox.Text = string.Empty;
         }
+    }
+
+    private void UpdateTranslations()
+    {
+        
     }
 }

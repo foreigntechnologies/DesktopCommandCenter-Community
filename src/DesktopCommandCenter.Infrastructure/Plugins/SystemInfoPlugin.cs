@@ -18,6 +18,10 @@ public sealed class SystemInfoPlugin
     [Description("Lê e retorna o conteúdo em texto de um arquivo local dado o seu caminho absoluto. Útil se o usuário pedir para você ler, resumir ou explicar um arquivo específico (ex: C:\\Users\\...\\arquivo.txt).")]
     public string ReadTextFile([Description("O caminho absoluto do arquivo a ser lido")] string filePath)
     {
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine($"\n[IA lendo arquivo em background: {filePath}]\n");
+        Console.ResetColor();
+
         try
         {
             if (!File.Exists(filePath))

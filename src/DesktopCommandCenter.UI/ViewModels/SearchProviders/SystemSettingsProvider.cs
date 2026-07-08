@@ -120,9 +120,38 @@ public class SystemSettingsProvider : ISearchProvider
     public Task<IEnumerable<SearchResultItem>> SearchAsync(string query, CancellationToken token)
     {
         var lowerQuery = query.ToLowerInvariant();
+        var loc = Helpers.LocalizationHelper.Instance;
+
         var results = _allSettings.Where(s =>
-            s.Title.ToLowerInvariant().Contains(lowerQuery) ||
-            s.Description.ToLowerInvariant().Contains(lowerQuery));
+        {
+            var keyBase = s.ActionPath == "ms-settings:" ? "Settings_Home" : "Settings_" + s.ActionPath.Replace("ms-settings:", "").Replace("-", "");
+            var titleKey = keyBase + "_Title";
+            var descKey = keyBase + "_Desc";
+
+            var t = loc.GetString(titleKey);
+            var d = loc.GetString(descKey);
+            var localizedTitle = t == titleKey ? s.Title : t;
+            var localizedDesc = d == descKey ? s.Description : d;
+
+            return localizedTitle.ToLowerInvariant().Contains(lowerQuery) || localizedDesc.ToLowerInvariant().Contains(lowerQuery);
+        }).Select(s => 
+        {
+            var keyBase = s.ActionPath == "ms-settings:" ? "Settings_Home" : "Settings_" + s.ActionPath.Replace("ms-settings:", "").Replace("-", "");
+            var titleKey = keyBase + "_Title";
+            var descKey = keyBase + "_Desc";
+
+            var t = loc.GetString(titleKey);
+            var d = loc.GetString(descKey);
+            
+            return new SearchResultItem 
+            { 
+                Title = t == titleKey ? s.Title : t,
+                Description = d == descKey ? s.Description : d,
+                Type = s.Type,
+                ActionPath = s.ActionPath
+            };
+        });
+
         return Task.FromResult(results);
     }
 }

@@ -5,6 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release;DebugCommunity;ReleaseCommunity;DebugPro;ReleasePro</Configurations>
+    <Platforms>x64;x86;ARM64;</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'DebugCommunity' Or '$(Configuration)' == 'DebugPro'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'ReleaseCommunity' Or '$(Configuration)' == 'ReleasePro'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,10 +5,13 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>DCC_Community_UI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Configurations>Debug;Release;DebugPro;ReleasePro</Configurations>
     <Platforms>x64;x86;ARM64</Platforms>
-    <!-- RID fixo win-x64: o restore da solution baixa os packs automaticamente,
-         permitindo dotnet build sem -r (NETSDK1134 proíbe -r em solution files) -->
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- RIDs plurais para habilitar as caixinhas no Assistente do Visual Studio -->
+    <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
+    <!-- Fallback for CLI/CI builds (like GitHub Actions) to prevent NETSDK1134 or missing Architecture errors -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And ('$(Platform)' == 'AnyCPU' Or '$(Platform)' == 'Any CPU')">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Platform)' != 'AnyCPU' And '$(Platform)' != 'Any CPU'">win-$(Platform)</RuntimeIdentifier>
     <PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <WinUISDKReferences>false</WinUISDKReferences>
@@ -21,11 +24,12 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <ApplicationIcon>Assets\DCCAppIcon.ico</ApplicationIcon>
     <!-- Fix WMC9999 on non-English systems: always use en-US XAML compiler resources -->
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <!-- Versão e nome do executável -->
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <DefaultLanguage>pt-BR</DefaultLanguage>
+    <!-- Encurtar o caminho do pacote MSIX final -->
+    <AppxPackageDir>$(MSBuildProjectDirectory)\AppPackages\</AppxPackageDir>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <AssemblyName>Desktop Command Center</AssemblyName>
     <PackageId>DesktopCommandCenter</PackageId>
     <Product>Desktop Command Center</Product>
@@ -71,6 +75,13 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+    <None Remove="Package.appxmanifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
   </ItemGroup>
 
   <ItemGroup>
@@ -92,6 +103,7 @@
   -->
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.4" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.*">
@@ -110,14 +122,10 @@
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
     <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Condition="'$(IsProBuild)'=='true'" Include="..\..\..\src\DesktopCommandCenter.ProFeatures\DesktopCommandCenter.ProFeatures.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <OutputItemType>Content</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ProjectReference>
     <ProjectReference Include="..\DesktopCommandCenter.Application\DesktopCommandCenter.Application.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Infrastructure\DesktopCommandCenter.Infrastructure.csproj" />
     <ProjectReference Include="..\DesktopCommandCenter.Shared\DesktopCommandCenter.Shared.csproj" />
@@ -134,10 +142,82 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
+  <!-- Dummy Configurations to trick Visual Studio MSIX Wizard into enabling the Create Packages button -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'" />
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePro|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugPro|x86'" />
+
+  <!--
+    Copy ProFeatures DLL + all its build outputs to this project's output dir
+    when building any *Pro configuration (DebugPro, ReleasePro).
+    This is what makes DependencyInjection.cs find the DLL and load FirebaseAuthService
+    instead of falling back to DummyAuthService.
+  -->
+  <PropertyGroup Condition="$(Configuration.Contains('Pro'))">
+    <!-- 3 levels up from Community\src\DesktopCommandCenter.UI\ = repo root, then into .build -->
+    <_RepoRoot>$(MSBuildThisFileDirectory)..\..\..\</_RepoRoot>
+    <ProFeaturesOutputDir Condition="'$(Platform)' != 'AnyCPU'">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Platform)\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
+    <ProFeaturesOutputDir Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(_RepoRoot).build\bin\DesktopCommandCenter.ProFeatures\$(Configuration)\net9.0-windows10.0.26100.0\</ProFeaturesOutputDir>
+    
+    <CLIOutputDir Condition="'$(Platform)' != 'AnyCPU'">$(_RepoRoot).build\bin\DesktopCommandCenter.CLI\$(Platform)\$(Configuration)\net9.0-windows10.0.26100.0\</CLIOutputDir>
+    <CLIOutputDir Condition="'$(Platform)' == 'AnyCPU' Or '$(Platform)' == ''">$(_RepoRoot).build\bin\DesktopCommandCenter.CLI\$(Configuration)\net9.0-windows10.0.26100.0\</CLIOutputDir>
+  </PropertyGroup>
+
+  <Target Name="CopyProFeaturesToOutput" AfterTargets="Build" Condition="$(Configuration.Contains('Pro'))">
+    <Message Text="[Pro Build] Copying ProFeatures from: $(ProFeaturesOutputDir)" Importance="high" />
+    <ItemGroup>
+      <ProFeatureFiles Include="$(ProFeaturesOutputDir)**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ProFeatureFiles)" DestinationFiles="@(ProFeatureFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Text="[Pro Build] ProFeatures DLL copied to $(OutDir)" Importance="high" />
+  </Target>
+
+  <Target Name="CopyCLIToOutput" AfterTargets="Build" Condition="$(Configuration.Contains('Pro'))">
+    <Message Text="[Pro Build] Copying future-shell CLI from: $(CLIOutputDir)" Importance="high" />
+    <ItemGroup>
+      <CLIFiles Include="$(CLIOutputDir)**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CLIFiles)" DestinationFiles="@(CLIFiles->'$(OutDir)CLI\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Text="[Pro Build] future-shell CLI copied to $(OutDir)CLI\" Importance="high" />
+  </Target>
+  
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <EnableMsixTooling>false</EnableMsixTooling>
+  </PropertyGroup>
+
+  <!-- Use portable PDB (not FastLink) so mspdbcmf.exe is never needed.
+       FastLink PDB only exists when building via MSBuild from VS and
+       causes WinAppSdkCheckFastlinkPdb to fail when using dotnet CLI. -->
+  <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
   <!-- Publish Properties -->
   <PropertyGroup>
+    <GenerateAppxPackageOnBuild>False</GenerateAppxPackageOnBuild>
     <PublishReadyToRun Condition="$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
     <PublishReadyToRun Condition="!$(Configuration.Contains('Debug'))">False</PublishReadyToRun>
     <PublishTrimmed>False</PublishTrimmed>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+    <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <!-- Disables _GenerateAppxUploadSymbolPackage target that requires
+         mspdbcmf.exe (only available inside VS, not in dotnet CLI path) -->
+    <AppxSymbolPackageEnabled>false</AppxSymbolPackageEnabled>
+    <_EnableMsixToolingSymbolsPackage>false</_EnableMsixToolingSymbolsPackage>
+    <_SkipWinAppSdkCheckFastlinkPdb>true</_SkipWinAppSdkCheckFastlinkPdb>
   </PropertyGroup>
 </Project>
