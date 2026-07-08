@@ -7,20 +7,29 @@
     mc:Ignorable="d"
     Title="FutureShell">
 
-    <Grid Background="Transparent" RequestedTheme="Dark">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Custom TitleBar Content -->
-        <StackPanel x:Name="AppTitleBar" Height="32" Background="Transparent" Padding="12,0" Orientation="Horizontal">
-            <Image Source="ms-appx:///Assets/FutureShell-IconSemTexto.png" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" />
-            <TextBlock Text="FutureShell" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
-        </StackPanel>
-
-        <!-- WebView2 for the Terminal UI -->
-        <WebView2 x:Name="TerminalWebView" Grid.Row="1" Source="about:blank" 
-                  DefaultBackgroundColor="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <Grid Background="#202020" RequestedTheme="Dark">
+        <!-- TabView for the Terminals -->
+        <TabView x:Name="TerminalTabView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 AddTabButtonClick="TabView_AddTabButtonClick"
+                 TabCloseRequested="TabView_TabCloseRequested"
+                 SelectionChanged="TabView_SelectionChanged">
+            
+            <TabView.TabStripHeader>
+                <Grid x:Name="AppTitleBar" Background="Transparent" Padding="12,0,12,0" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Image Source="ms-appx:///Assets/FutureShell-IconSemTexto.png" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="FutureShell" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                </Grid>
+            </TabView.TabStripHeader>
+            
+            <TabView.TabStripFooter>
+                <!-- This empty area acts as a flexible drag region and keeps tabs away from window buttons -->
+                <Grid x:Name="RightDragRegion" Background="Transparent" HorizontalAlignment="Stretch" MinWidth="200" />
+            </TabView.TabStripFooter>
+        </TabView>
     </Grid>
 </Window>

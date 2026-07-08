@@ -73,14 +73,14 @@
                         <FontIcon Glyph="&#xE92E;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NavApps" Tag="AppsWorkspaces" Content="Aplicativos">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xECA5;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
                 <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell" ToolTipService.ToolTip="CLI">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE756;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavApps" Tag="AppsWorkspaces" Content="Aplicativos">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xECA5;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NavCliCommands" Tag="CliCommands" Content="Comandos CLI" ToolTipService.ToolTip="CLI Commands">
