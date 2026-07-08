@@ -151,6 +151,22 @@ public class Translate : DependencyObject
             else if (d is ComboBoxItem comboBoxItem)
             {
                 comboBoxItem.Content = text;
+                
+                // Hack to force parent ComboBox to update its selection box if this item is selected
+                if (comboBoxItem.IsSelected)
+                {
+                    var parent = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(comboBoxItem);
+                    while (parent != null && !(parent is ComboBox))
+                    {
+                        parent = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(parent);
+                    }
+                    if (parent is ComboBox cb)
+                    {
+                        var index = cb.SelectedIndex;
+                        cb.SelectedIndex = -1;
+                        cb.SelectedIndex = index;
+                    }
+                }
             }
             else if (d is ToggleSwitch toggleSwitch)
             {

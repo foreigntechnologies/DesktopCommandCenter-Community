@@ -28,6 +28,17 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private int _selectedLanguageIndex;
 
+    // ── Comportamento do Aplicativo ────────────────────────────────────────────
+
+    [ObservableProperty]
+    private bool _startWithWindows;
+
+    [ObservableProperty]
+    private bool _minimizeToTray;
+
+    [ObservableProperty]
+    private bool _autoUpdate;
+
     // ── Configurações de IA ──────────────────────────────────────────────────────
 
     [ObservableProperty]
@@ -155,6 +166,11 @@ public partial class SettingsViewModel : ObservableObject
 
         LoadHotkeys();
 
+        // Comportamento do Aplicativo
+        StartWithWindows = App.GetStartWithWindows();
+        MinimizeToTray = App.GetMinimizeToTray();
+        AutoUpdate = App.GetAutoUpdate();
+
         // Configurações de IA
         string aiProvider = App.GetAIAgentProvider();
         SelectedAIProviderIndex = aiProvider switch
@@ -205,6 +221,9 @@ public partial class SettingsViewModel : ObservableObject
         { "PesquisaUniversal", "Nav_Search"           },
         { "Automacoes",        "Nav_Automations"      },
         { "CliCommands",       "Nav_CliCommands"      },
+        { "AppsWorkspaces",    "Nav_Apps"             },
+        { "DeveloperHub",      "NavDeveloperHub"      },
+        { "ManageHotkeys",     "Settings_HotkeysTitle"},
     };
 
     public void ReloadHotkeys() => LoadHotkeys();
@@ -348,6 +367,7 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedThemeIndexChanged(int value)
     {
+        if (value < 0) return;
         string themeStr = value switch { 0 => "Light", 1 => "Dark", _ => "Default" };
         App.SaveTheme(themeStr);
         App.ApplyTheme(themeStr);
@@ -355,6 +375,7 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedLanguageIndexChanged(int value)
     {
+        if (value < 0) return;
         string lang = value switch { 1 => "en-US", 2 => "es-ES", _ => "pt-BR" };
         App.SaveAppLanguage(lang);
         
@@ -365,8 +386,26 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
+    // ── Comportamento do Aplicativo ────────────────────────────────────────────
+
+    partial void OnStartWithWindowsChanged(bool value)
+    {
+        App.SaveStartWithWindows(value);
+    }
+
+    partial void OnMinimizeToTrayChanged(bool value)
+    {
+        App.SaveMinimizeToTray(value);
+    }
+
+    partial void OnAutoUpdateChanged(bool value)
+    {
+        App.SaveAutoUpdate(value);
+    }
+
     partial void OnSelectedTimeFormatIndexChanged(int value)
     {
+        if (value < 0) return;
         string format = value switch
         {
             0 => "HH:mm", 1 => "HH:mm:ss", 2 => "hh:mm tt", 3 => "hh:mm:ss tt", _ => "HH:mm"
@@ -376,6 +415,7 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedDateFormatIndexChanged(int value)
     {
+        if (value < 0) return;
         string format = value switch
         {
             0 => "dddd, dd MMMM yyyy", 1 => "dd/MM/yyyy", 2 => "yyyy-MM-dd", 3 => "MMM d, yyyy",
@@ -386,6 +426,7 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedAIProviderIndexChanged(int value)
     {
+        if (value < 0) return;
         string provider = value switch
         {
             0 => "Ollama",

@@ -7,50 +7,128 @@
     mc:Ignorable="d">
 
     <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="28" />
+        </Grid.RowDefinitions>
+
+        <!-- Intercepta o foco inicial para evitar que o AutoSuggestBox fique focado e piscando o cursor ao abrir o app -->
+        <Button Width="0" Height="0" Padding="0" BorderThickness="0" Margin="0" Opacity="0" IsTabStop="True" />
+
+        <!-- Workbench Header: Global Search & Action Bar -->
+        <Border Grid.Row="0" Height="48" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+            <Grid Padding="16,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Breadcrumb Placeholder (Removed) -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0" Margin="12,0,0,0" HorizontalAlignment="Left">
+                </StackPanel>
+
+                <!-- O Search foi removido daqui para evitar redundância, mantendo a Pesquisa Universal como um módulo dedicado no menu lateral -->
+
+                <!-- Header Actions -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="2" Spacing="8" HorizontalAlignment="Right">
+                    <Button x:Name="ChatFTHeaderButton" Background="Transparent" BorderThickness="0" Click="ChatFTHeaderButton_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <FontIcon Glyph="&#xEC19;" FontSize="14" />
+                            <TextBlock Text="ChatFT" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="FutureShellHeaderButton" Background="Transparent" BorderThickness="0" Click="FutureShellHeaderButton_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <FontIcon Glyph="&#xE756;" FontSize="14" />
+                            <TextBlock Text="FutureShell" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Notifications">
+                        <FontIcon Glyph="&#xEA8F;" FontSize="14" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Workspace -->
         <NavigationView x:Name="AppNavigationView" 
+                        Grid.Row="1"
                         IsBackButtonVisible="Collapsed" 
+                        IsSettingsVisible="False"
+                        IsPaneToggleButtonVisible="True"
                         PaneDisplayMode="Left"
                         ItemInvoked="OnItemInvoked"
+                        PaneOpening="AppNavigationView_PaneOpening"
+                        PaneClosing="AppNavigationView_PaneClosing"
                         Background="Transparent">
             
             <NavigationView.MenuItems>
-                <!-- FREE MODULES -->
-                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="Home" Content="Dashboard"  />
-                <NavigationViewItem x:Name="NavProcessManager" Content="Processos" Tag="ProcessManager" Icon="List"  />
-                <NavigationViewItem x:Name="NavNotes" Tag="Notes" Icon="Document" Content="Notes"  />
-                <NavigationViewItemHeader x:Name="HeaderSysUtils" Content="Ferramentas da Comunidade"  />
-                <NavigationViewItem x:Name="NavSystemUpdates" Tag="SystemUpdates" Icon="Sync" Content="Update Center"  />
-                <NavigationViewItem x:Name="NavColorPicker" Tag="ColorPicker" Content="Color Picker" Icon="Highlight"  />
-                <NavigationViewItem x:Name="NavAwake" Tag="Awake" Content="Awake (Manter PC Ativo)" Icon="Street"  />
-                <NavigationViewItem x:Name="NavCliCommands" Tag="CliCommands" Content="Comandos CLI">
+                <!-- TOP/MAIN INTERACTION -->
+                <NavigationViewItem x:Name="NavDashboard" Tag="Dashboard" Icon="Home" Content="Dashboard" ToolTipService.ToolTip="Home" />
+                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal" ToolTipService.ToolTip="Universal Search" />
+                <NavigationViewItem x:Name="NavIALocal" Tag="IALocal" Content="ChatFT" ToolTipService.ToolTip="AI Assistant">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE92E;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell" ToolTipService.ToolTip="CLI">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE756;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NavFutureShell" Tag="FutureShell" Content="FutureShell">
+                <NavigationViewItem x:Name="NavApps" Tag="AppsWorkspaces" Content="Aplicativos">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xECA5;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavCliCommands" Tag="CliCommands" Content="Comandos CLI" ToolTipService.ToolTip="CLI Commands">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8C7;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavDeveloperHub" x:Uid="NavDeveloperHub" Tag="DeveloperHub" Content="Developer Hub" ToolTipService.ToolTip="Developer Hub">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE943;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Clipboard"  />
-                <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador"  />
-                <NavigationViewItem x:Name="NavSearch" Tag="PesquisaUniversal" Icon="Find" Content="Pesquisa Universal"  />
-                <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela"  />
-                <NavigationViewItem x:Name="NavTranslator" Tag="Tradutor" Icon="Character" Content="Tradutor"  />
 
-                <!-- PRO MODULES HEADER -->
-                <NavigationViewItemHeader x:Name="HeaderPro" Content="Recursos PRO (IA &amp; Automação)"  />
-                <NavigationViewItem x:Name="NavIALocal" Tag="IALocal" Icon="PreviewLink" Content="ChatFT"  />
-                <NavigationViewItem x:Name="NavPrompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts"  />
-                <NavigationViewItem x:Name="NavAutomations" Tag="Automacoes" Icon="RepeatAll" Content="Automações"  />
-                <NavigationViewItem x:Name="NavMarketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace e Plugins"  />
+                <!-- MODULES SEPARATOR -->
+                <NavigationViewItemSeparator />
+                
+                <!-- SYSTEM MODULES -->
+                <NavigationViewItem x:Name="NavSystem" Tag="System" Content="Sistema" ToolTipService.ToolTip="System Tools">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE770;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavProcessManager" Content="Processos" Tag="ProcessManager" Icon="List" ToolTipService.ToolTip="Process Manager" />
+                
+                <!-- UTILITIES -->
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Name="NavNotes" Tag="Notes" Icon="Document" Content="Notas" ToolTipService.ToolTip="Notes" />
+                <NavigationViewItem x:Name="NavClipboard" Tag="Clipboard" Icon="Copy" Content="Área de Transferência" ToolTipService.ToolTip="Clipboard" />
+                <NavigationViewItem x:Name="NavTimer" Tag="Temporizador" Icon="Clock" Content="Temporizador" ToolTipService.ToolTip="Timer" />
+                <NavigationViewItem x:Name="NavCapture" Tag="Captura" Icon="Camera" Content="Captura de Tela" ToolTipService.ToolTip="Screen Capture" />
+                <NavigationViewItem x:Name="NavTranslator" Tag="Tradutor" Icon="Character" Content="Tradutor" ToolTipService.ToolTip="Translator" />
+                <NavigationViewItem x:Name="NavColorPicker" Tag="ColorPicker" Icon="Highlight" Content="Seletor de Cores" ToolTipService.ToolTip="Color Picker" />
+                <NavigationViewItem x:Name="NavAwake" Tag="Awake" Icon="Street" Content="Modo Ativo" ToolTipService.ToolTip="Awake" />
+                <NavigationViewItem x:Name="NavAlwaysOnTop" Tag="AlwaysOnTop" Icon="DockRight" Content="Sempre no Topo" ToolTipService.ToolTip="Always on Top" />
+
+                <!-- AUTOMATION & PLUGINS -->
+                <NavigationViewItemSeparator />
+                <NavigationViewItem x:Name="NavPrompts" Tag="Prompts" Icon="Library" Content="Biblioteca de Prompts" ToolTipService.ToolTip="Prompt Library" />
+                <NavigationViewItem x:Name="NavAutomations" Tag="Automacoes" Icon="RepeatAll" Content="Automações" ToolTipService.ToolTip="Automations" />
+                <NavigationViewItem x:Name="NavMarketplace" Tag="Marketplace" Icon="Shop" Content="Marketplace" ToolTipService.ToolTip="Extensions" />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="NavAuth" Tag="Auth" Icon="Contact" Content="Minha Conta"  />
+                <NavigationViewItem x:Name="NavAuth" Tag="Auth" Icon="Contact" Content="Minha Conta" ToolTipService.ToolTip="My Account" />
+                <NavigationViewItem x:Name="NavSettings" Tag="Settings" Icon="Setting" Content="Configurações" ToolTipService.ToolTip="Settings" />
             </NavigationView.FooterMenuItems>
 
-            <Frame x:Name="ContentFrame" Margin="24">
+            <Frame x:Name="ContentFrame" Margin="0">
                 <Frame.ContentTransitions>
                     <TransitionCollection>
                         <NavigationThemeTransition/>
@@ -59,6 +137,32 @@
             </Frame>
         </NavigationView>
 
+        <!-- Workbench Status Bar -->
+        <Border Grid.Row="2" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+            <Grid Padding="12,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="16" VerticalAlignment="Center">
+                    <TextBlock x:Name="StatusTextReady" Text="Ready" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" ToolTipService.ToolTip="DCC Core Engine Status">
+                        <FontIcon Glyph="&#xE946;" FontSize="10" Foreground="{ThemeResource SystemFillColorSuccessBrush}" />
+                        <TextBlock Text="Core Online" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Spacing="16" VerticalAlignment="Center">
+                    <TextBlock x:Name="StatusTextCpu" Text="CPU: --%" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="StatusTextRam" Text="RAM: --%" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="StatusTextVersion" Text="v1.0.0" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- First Launch Dialog -->
         <ContentDialog x:Name="FirstLaunchLanguageDialog"
                        Title="Select Language / Selecione o Idioma / Seleccione el Idioma"
                        PrimaryButtonText="OK"
