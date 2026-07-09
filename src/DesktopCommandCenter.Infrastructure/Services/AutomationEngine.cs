@@ -75,8 +75,12 @@ public class AutomationEngine : IAutomationEngine
                 _usbWatcher = null;
             }
 
-            _processTimer?.Dispose();
-            _processTimer = null;
+            if (_processTimer != null)
+            {
+                _processTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                _processTimer.Dispose();
+                _processTimer = null;
+            }
 
             ClearPeriodicTimers();
         }

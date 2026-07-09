@@ -76,6 +76,10 @@ public class ConPTYService : ITerminalService
 
     [DllImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool InitializeProcThreadAttributeList(IntPtr lpAttributeList, int dwAttributeCount, int dwFlags, ref IntPtr lpSize);
 
     [DllImport("kernel32.dll", SetLastError = true)]
@@ -264,7 +268,8 @@ public class ConPTYService : ITerminalService
 
         if (_processInfo.hProcess != IntPtr.Zero)
         {
-            // Optional: Terminate process if it hasn't exited
+            // Terminate process unconditionally
+            TerminateProcess(_processInfo.hProcess, 0);
             CloseHandle(_processInfo.hThread);
             CloseHandle(_processInfo.hProcess);
             _processInfo = default;

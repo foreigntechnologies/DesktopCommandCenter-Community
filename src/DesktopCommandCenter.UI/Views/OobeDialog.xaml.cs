@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage;
 
@@ -26,6 +26,13 @@ public sealed partial class OobeDialog : ContentDialog
         
         App.SaveTheme(themeStr);
         App.ApplyTheme(themeStr);
+
+        if (LangComboBox.SelectedItem is ComboBoxItem item && item.Tag is string lang)
+        {
+            App.SaveAppLanguage(lang);
+            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>((App.Current as App).Services);
+            _ = tService.SetLanguageAsync(lang);
+        }
     }
 
         private void UpdateTranslations()
