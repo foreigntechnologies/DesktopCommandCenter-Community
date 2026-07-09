@@ -94,9 +94,10 @@ public sealed partial class MainWindow : Window
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
 
-        // Apply TitleBar colors once after the frame loads.
+        // Apply TitleBar colors once after the frame loads, and on theme change.
         // Do NOT re-apply inside AppWindow.Changed / SizeChanged (DPI transition risk).
         RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
+        RootFrame.ActualThemeChanged += (s, e) => ApplyTitleBarColors();
     }
 
     private IntPtr WindowSubclass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, nuint uIdSubclass, IntPtr dwRefData)
