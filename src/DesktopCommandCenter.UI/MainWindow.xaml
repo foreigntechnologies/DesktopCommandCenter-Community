@@ -20,6 +20,7 @@
             x:Name="TrayIcon"
             IconSource="/Assets/DCCAppIcon.ico"
             ToolTipText="Desktop Command Center"
+            ContextMenuMode="SecondWindow"
             LeftClickCommand="{x:Bind TrayQuickAccessCommand}"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
             <tb:TaskbarIcon.ContextFlyout>
