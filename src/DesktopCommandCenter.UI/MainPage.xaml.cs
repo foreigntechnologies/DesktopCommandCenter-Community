@@ -409,16 +409,30 @@ public sealed partial class MainPage : Page
     {
         try
         {
-            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Button>(sender, "TogglePaneButton");
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ButtonBase>(sender, "TogglePaneButton");
             if (toggleButton != null)
             {
                 var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
                 { 
                     Glyph = "\uE711", 
                     FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
-                    FontSize = 16
+                    FontSize = 16,
+                    RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5),
+                    RenderTransform = new Microsoft.UI.Xaml.Media.RotateTransform { Angle = -90 }
                 };
                 toggleButton.Content = fontIcon; 
+
+                var storyboard = new Microsoft.UI.Xaml.Media.Animation.Storyboard();
+                var animation = new Microsoft.UI.Xaml.Media.Animation.DoubleAnimation
+                {
+                    To = 0,
+                    Duration = new Microsoft.UI.Xaml.Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new Microsoft.UI.Xaml.Media.Animation.ExponentialEase { EasingMode = Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut, Exponent = 4 }
+                };
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTarget(animation, fontIcon.RenderTransform);
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTargetProperty(animation, "Angle");
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
             }
         }
         catch { }
@@ -428,16 +442,30 @@ public sealed partial class MainPage : Page
     {
         try
         {
-            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Button>(sender, "TogglePaneButton");
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ButtonBase>(sender, "TogglePaneButton");
             if (toggleButton != null)
             {
                 var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
                 { 
                     Glyph = "\uE700", 
                     FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
-                    FontSize = 16
+                    FontSize = 16,
+                    RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5),
+                    RenderTransform = new Microsoft.UI.Xaml.Media.RotateTransform { Angle = 90 }
                 };
                 toggleButton.Content = fontIcon; 
+
+                var storyboard = new Microsoft.UI.Xaml.Media.Animation.Storyboard();
+                var animation = new Microsoft.UI.Xaml.Media.Animation.DoubleAnimation
+                {
+                    To = 0,
+                    Duration = new Microsoft.UI.Xaml.Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new Microsoft.UI.Xaml.Media.Animation.ExponentialEase { EasingMode = Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut, Exponent = 4 }
+                };
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTarget(animation, fontIcon.RenderTransform);
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTargetProperty(animation, "Angle");
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
             }
         }
         catch { }
