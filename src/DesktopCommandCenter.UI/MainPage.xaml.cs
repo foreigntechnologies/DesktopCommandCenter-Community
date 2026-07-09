@@ -334,17 +334,9 @@ public sealed partial class MainPage : Page
         }
     }
 
-    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         UpdateTranslations(); // Garante que o SettingsItem seja traduzido, pois no construtor ele pode não estar instanciado ainda
-
-        var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
-        var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
-        if (!System.IO.File.Exists(filePath))
-        {
-            FirstLaunchLanguageDialog.XamlRoot = this.XamlRoot;
-            await FirstLaunchLanguageDialog.ShowAsync();
-        }
 
         // Start real-time update timer for status bar
         _timer = new Microsoft.UI.Xaml.DispatcherTimer();
@@ -401,26 +393,6 @@ public sealed partial class MainPage : Page
             }
         }
         catch { }
-    }
-
-    private void CmbFirstLaunchLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        FirstLaunchLanguageDialog.IsPrimaryButtonEnabled = CmbFirstLaunchLanguage.SelectedItem != null;
-    }
-
-    private void FirstLaunchLanguageDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-    {
-        if (CmbFirstLaunchLanguage.SelectedItem is ComboBoxItem item && item.Tag is string lang)
-        {
-            App.SaveAppLanguage(lang);
-            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>((App.Current as App).Services);
-            _ = tService.SetLanguageAsync(lang);
-            UpdateTranslations();
-            
-            // Also force update the dialog UI itself using LocalizationHelper
-            var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-            FirstLaunchLanguageDialog.Title = loc.GetString("Settings_Language"); 
-        }
     }
 
     private void ChatFTHeaderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

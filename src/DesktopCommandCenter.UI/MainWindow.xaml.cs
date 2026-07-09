@@ -84,6 +84,10 @@ public sealed partial class MainWindow : Window
 
 
 
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
     /// <summary>
     /// Applies TitleBar button colors to match the current theme.
     /// Safe to call from the UI thread or via DispatcherQueue.
@@ -99,36 +103,42 @@ public sealed partial class MainWindow : Window
                 if (Content is not FrameworkElement root || root.XamlRoot == null)
                     return;
 
-                var titleBar = AppWindow?.TitleBar;
-                if (titleBar == null) return;
-
                 var isDark = root.RequestedTheme == ElementTheme.Dark || 
                              (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
                 Log.Information("ApplyTitleBarColors: isDark={IsDark}", isDark);
 
-                if (isDark)
-                {
-                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                }
-                else
-                {
-                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                }
+                // Force DWM to update the non-client area caption buttons
+                var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                int isDarkValue = isDark ? 1 : 0;
+                DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref isDarkValue, sizeof(int));
 
-                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-                titleBar.ButtonHoverBackgroundColor = isDark
-                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
-                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
-                titleBar.ButtonPressedBackgroundColor = isDark
-                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
-                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
-                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                var titleBar = AppWindow?.TitleBar;
+                if (titleBar != null)
+                {
+                    if (isDark)
+                    {
+                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
+                    else
+                    {
+                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
+
+                    titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    titleBar.ButtonHoverBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                    titleBar.ButtonPressedBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                    titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                }
 
                 Log.Information("ApplyTitleBarColors applied successfully.");
             }
@@ -448,12 +458,8 @@ public sealed partial class MainWindow : Window
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
-        DispatcherQueue.TryEnqueue(() =>
-        {
-            try { TrayIcon?.Dispose(); } catch { }
-            try { Microsoft.UI.Xaml.Application.Current.Exit(); } catch { }
-            Environment.Exit(0);
-        });
+        try { TrayIcon?.Dispose(); } catch { }
+        System.Diagnostics.Process.GetCurrentProcess().Kill();
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)

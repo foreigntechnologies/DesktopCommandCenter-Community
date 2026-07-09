@@ -9,6 +9,13 @@
             <ComboBoxItem x:Name="OobeThemeSystemElement" Content="Padrão do Sistema (Contraste)"  />
         </ComboBox>
         
+        <TextBlock x:Name="OobeLangElement" Text="Select your preferred language / Selecione seu idioma:" TextWrapping="Wrap" />
+        <ComboBox x:Name="LangComboBox" SelectedIndex="0" HorizontalAlignment="Stretch">
+            <ComboBoxItem Content="Português - Brasil" Tag="pt-BR" />
+            <ComboBoxItem Content="English" Tag="en-US" />
+            <ComboBoxItem Content="Español" Tag="es-ES" />
+        </ComboBox>
+        
         <TextBlock x:Name="OobeHintElement" Text="Você poderá alterar isso nas Configurações posteriormente." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"  />
     </StackPanel>
 </ContentDialog>
