@@ -409,11 +409,16 @@ public sealed partial class MainPage : Page
     {
         try
         {
-            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ToggleButton>(sender, "TogglePaneButton");
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Button>(sender, "TogglePaneButton");
             if (toggleButton != null)
             {
-                // Substitui o ícone para um 'X' (Cancel) de forma segura (string em vez de objeto)
-                toggleButton.Content = "\uE711"; 
+                var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
+                { 
+                    Glyph = "\uE711", 
+                    FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+                    FontSize = 16
+                };
+                toggleButton.Content = fontIcon; 
             }
         }
         catch { }
@@ -423,11 +428,16 @@ public sealed partial class MainPage : Page
     {
         try
         {
-            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ToggleButton>(sender, "TogglePaneButton");
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Button>(sender, "TogglePaneButton");
             if (toggleButton != null)
             {
-                // Volta para o ícone Hamburguer (GlobalNavButton)
-                toggleButton.Content = "\uE700"; 
+                var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
+                { 
+                    Glyph = "\uE700", 
+                    FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+                    FontSize = 16
+                };
+                toggleButton.Content = fontIcon; 
             }
         }
         catch { }
