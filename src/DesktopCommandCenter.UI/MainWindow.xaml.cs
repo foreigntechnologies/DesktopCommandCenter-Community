@@ -23,7 +23,20 @@ public sealed partial class MainWindow : Window
     [DllImport("shell32.dll", SetLastError = true)]
     static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, UIntPtr uIdSubclass, IntPtr dwRefData);
 
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, UIntPtr uIdSubclass);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+    private delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, IntPtr dwRefData);
+
+    private const uint WM_SYSCOMMAND = 0x0112;
+    private const uint SC_CLOSE = 0xF060;
+    private SUBCLASSPROC _subclassDelegate;
 
     public MainWindow()
     {
@@ -74,6 +87,10 @@ public sealed partial class MainWindow : Window
         RootFrame.Loaded += RootFrame_Loaded;
         this.Activated += MainWindow_FocusChanged;
 
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        _subclassDelegate = new SUBCLASSPROC(WindowSubclass);
+        SetWindowSubclass(hwnd, _subclassDelegate, 1, IntPtr.Zero);
+
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
 
@@ -82,11 +99,28 @@ public sealed partial class MainWindow : Window
         RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
     }
 
+    private IntPtr WindowSubclass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, nuint uIdSubclass, IntPtr dwRefData)
+    {
+        if (uMsg == WM_SYSCOMMAND)
+        {
+            uint cmd = (uint)wParam.ToInt32() & 0xFFF0;
+            if (cmd == SC_CLOSE)
+            {
+                if (!_isExiting && App.GetMinimizeToTray())
+                {
+                    Log.Information("User clicked X (SC_CLOSE). Minimizing to tray instead of closing.");
+                    this.AppWindow.Hide();
+                    return IntPtr.Zero; // Cancel the close
+                }
+            }
+        }
+        return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+    }
+
 
 
     [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
     /// <summary>
     /// Applies TitleBar button colors to match the current theme.
@@ -103,42 +137,41 @@ public sealed partial class MainWindow : Window
                 if (Content is not FrameworkElement root || root.XamlRoot == null)
                     return;
 
+                var titleBar = AppWindow?.TitleBar;
+                if (titleBar == null) return;
+
                 var isDark = root.RequestedTheme == ElementTheme.Dark || 
                              (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
                 Log.Information("ApplyTitleBarColors: isDark={IsDark}", isDark);
 
-                // Force DWM to update the non-client area caption buttons
-                var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-                int isDarkValue = isDark ? 1 : 0;
-                DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref isDarkValue, sizeof(int));
+                // Force DWM to use the correct theme for the caption buttons when using Window.ExtendsContentIntoTitleBar
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                int immersiveDarkMode = isDark ? 1 : 0;
+                DwmSetWindowAttribute(hwnd, 20, ref immersiveDarkMode, sizeof(int)); // 20 is DWMWA_USE_IMMERSIVE_DARK_MODE
 
-                var titleBar = AppWindow?.TitleBar;
-                if (titleBar != null)
+                if (isDark)
                 {
-                    if (isDark)
-                    {
-                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                    }
-                    else
-                    {
-                        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
-                        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
-                        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
-                        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
-                    }
-
-                    titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-                    titleBar.ButtonHoverBackgroundColor = isDark
-                        ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
-                        : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
-                    titleBar.ButtonPressedBackgroundColor = isDark
-                        ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
-                        : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
-                    titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
                 }
+                else
+                {
+                    titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                    titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                }
+
+                titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                titleBar.ButtonHoverBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                titleBar.ButtonPressedBackgroundColor = isDark
+                    ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                    : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
+                titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
 
                 Log.Information("ApplyTitleBarColors applied successfully.");
             }
@@ -174,19 +207,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private bool _isExiting = false;
+
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        Log.Information("MainWindow_Closed triggered.");
-        if (App.GetMinimizeToTray())
-        {
-            // Ao invés de fechar (X), oculta o app para a bandeja do sistema
-            args.Handled = true;
-            this.AppWindow.Hide();
-        }
-        else
-        {
-            Microsoft.UI.Xaml.Application.Current.Exit();
-        }
+        Log.Information("MainWindow_Closed triggered. Genuine close request (system/quit). Exiting application.");
+        Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }
@@ -403,6 +429,8 @@ public sealed partial class MainWindow : Window
             if (currentPackage != null)
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://downloadsAndUpdates"));
+                _isExiting = true;
+                Environment.Exit(0);
                 return;
             }
         }
@@ -458,8 +486,9 @@ public sealed partial class MainWindow : Window
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
-        try { TrayIcon?.Dispose(); } catch { }
-        System.Diagnostics.Process.GetCurrentProcess().Kill();
+        // Force the app to close completely
+        _isExiting = true;
+        Environment.Exit(0);
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
