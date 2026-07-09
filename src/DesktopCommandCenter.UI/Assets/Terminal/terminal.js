@@ -6,25 +6,25 @@ function initTerminal() {
         cursorBlink: true,
         theme: {
             background: 'transparent',
-            foreground: '#e0e0e0',
-            cursor: '#00d2ff',
-            selection: 'rgba(0, 210, 255, 0.3)',
-            black: '#000000',
-            red: '#e06c75',
-            green: '#98c379',
-            yellow: '#d19a66',
-            blue: '#61afef',
-            magenta: '#c678dd',
-            cyan: '#56b6c2',
-            white: '#dcdfe4',
-            brightBlack: '#5c6370',
-            brightRed: '#e06c75',
-            brightGreen: '#98c379',
-            brightYellow: '#d19a66',
-            brightBlue: '#61afef',
-            brightMagenta: '#c678dd',
-            brightCyan: '#56b6c2',
-            brightWhite: '#ffffff'
+            foreground: '#CCCCCC',
+            cursor: '#FFFFFF',
+            selection: 'rgba(255, 255, 255, 0.3)',
+            black: '#0C0C0C',
+            red: '#C50F1F',
+            green: '#13A10E',
+            yellow: '#C19C00',
+            blue: '#0037DA',
+            magenta: '#881798',
+            cyan: '#3A96DD',
+            white: '#CCCCCC',
+            brightBlack: '#767676',
+            brightRed: '#E74856',
+            brightGreen: '#16C60C',
+            brightYellow: '#F9F1A5',
+            brightBlue: '#3B78FF',
+            brightMagenta: '#B4009E',
+            brightCyan: '#61D6D6',
+            brightWhite: '#F2F2F2'
         },
         fontFamily: "'Cascadia Code', 'Consolas', 'Courier New', monospace",
         fontSize: 14,
@@ -71,7 +71,21 @@ function initTerminal() {
 // Receive messages from C# host
 if (window.chrome && window.chrome.webview) {
     window.chrome.webview.addEventListener('message', event => {
-        const msg = event.data;
+        let msg = event.data;
+        if (typeof msg === 'string') {
+            if (msg.startsWith("B64:")) {
+                const base64 = msg.substring(4);
+                const binaryString = atob(base64);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const decodedText = new TextDecoder('utf-8').decode(bytes);
+                term.write(decodedText);
+                return;
+            }
+            try { msg = JSON.parse(msg); } catch (e) {}
+        }
         if (msg.type === 'output') {
             term.write(msg.data);
         } else if (msg.type === 'hud') {

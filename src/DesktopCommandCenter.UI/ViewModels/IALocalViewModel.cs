@@ -45,6 +45,14 @@ public partial class ChatMessage : ObservableObject
     private bool _isThinking = false;
     
     public Microsoft.UI.Xaml.Visibility ThinkingVisibility => IsThinking ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StreamingVisibility))]
+    [NotifyPropertyChangedFor(nameof(NotStreamingVisibility))]
+    private bool _isStreaming = false;
+
+    public Microsoft.UI.Xaml.Visibility StreamingVisibility => IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+    public Microsoft.UI.Xaml.Visibility NotStreamingVisibility => !IsStreaming ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 }
 
 public partial class IALocalViewModel : ObservableObject
@@ -87,7 +95,7 @@ public partial class IALocalViewModel : ObservableObject
     public bool IsChatNotEmpty => Messages.Count > 0;
 
     [ObservableProperty]
-    private bool _isWebSearchMode = true; // Default: always search the web
+    private bool _isWebSearchMode = false; // Default: OFF (natural chat)
 
     [ObservableProperty]
     private bool _isEditMenuOpen = false;
@@ -343,7 +351,7 @@ public partial class IALocalViewModel : ObservableObject
         AttachedImagePath = "";
         IsGenerating = true;
 
-        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true };
+        var aiMsg = new ChatMessage { Role = "ChatFT", Content = "", IsThinking = true, IsStreaming = true };
         Messages.Add(aiMsg);
 
         var dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
@@ -353,6 +361,13 @@ public partial class IALocalViewModel : ObservableObject
             try
             {
                 string effectivePrompt = promptBackup;
+
+                // Evitar busca na web para cumprimentos simples ou testes curtos
+                bool isGreeting = System.Text.RegularExpressions.Regex.IsMatch(promptBackup.Trim(), @"^(\s*(oi|oie|ol[aá]|bom dia|boa tarde|boa noite|hello|hi|hey|e a[ií]|tudo bem|tudo bom|como vai|como est[aá]|fala a[ií]|teste|testando)[,\.\!\?]*\s*)+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (isGreeting)
+                {
+                    isWebSearch = false;
+                }
 
                 // If web search mode, search the web first and inject results
                 if (isWebSearch)
@@ -412,12 +427,32 @@ public partial class IALocalViewModel : ObservableObject
                     }
                 }
 
+                string buffer = "";
+                var lastUpdate = DateTime.UtcNow;
+
                 await foreach (var token in _agentService.SendMessageStreamAsync(effectivePrompt, imageBackup).ConfigureAwait(false))
+                {
+                    buffer += token;
+                    var now = DateTime.UtcNow;
+                    if ((now - lastUpdate).TotalMilliseconds >= 150)
+                    {
+                        var chunk = buffer;
+                        buffer = "";
+                        lastUpdate = now;
+                        dispatcher.TryEnqueue(() => 
+                        {
+                            aiMsg.IsThinking = false;
+                            aiMsg.Content += chunk;
+                        });
+                    }
+                }
+
+                if (buffer.Length > 0)
                 {
                     dispatcher.TryEnqueue(() => 
                     {
                         aiMsg.IsThinking = false;
-                        aiMsg.Content += token;
+                        aiMsg.Content += buffer;
                     });
                 }
             }
@@ -437,6 +472,7 @@ public partial class IALocalViewModel : ObservableObject
                 {
                     IsGenerating = false;
                     aiMsg.IsThinking = false;
+                    aiMsg.IsStreaming = false;
                     StatusMessage = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.GetString("ChatFT_Ready") ?? "Pronto. Ollama + Semantic Kernel.";
                 });
             }

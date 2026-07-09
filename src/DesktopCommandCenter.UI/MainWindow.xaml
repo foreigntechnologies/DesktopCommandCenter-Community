@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="DesktopCommandCenter.UI.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -20,20 +20,22 @@
             x:Name="TrayIcon"
             IconSource="/Assets/DCCAppIcon.ico"
             ToolTipText="Desktop Command Center"
+            
+            ContextMenuMode="SecondWindow"
             LeftClickCommand="{x:Bind TrayQuickAccessCommand}"
             DoubleClickCommand="{x:Bind TrayShowCommand}">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem x:Name="TrayUpdateAvailableElement" Text="Atualização disponível" Click="TrayUpdate_Click">
+                    <MenuFlyoutItem x:Name="TrayUpdateAvailableElement" Text="AtualizaÃ§Ã£o disponÃ­vel" Click="TrayUpdate_Click">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE895;" />
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem x:Name="TrayQuickAccessElement" Text="Acesso rápido" Click="TrayShow_Click"  />
-                    <MenuFlyoutItem x:Name="TraySettingsElement" Text="Configurações" Click="TraySettings_Click"  />
+                    <MenuFlyoutItem x:Name="TrayQuickAccessElement" Text="Acesso rÃ¡pido" Click="TrayShow_Click"  />
+                    <MenuFlyoutItem x:Name="TraySettingsElement" Text="ConfiguraÃ§Ãµes" Click="TraySettings_Click"  />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem x:Name="TrayDocumentationElement" Text="Documentação" Click="TrayDocs_Click"  />
+                    <MenuFlyoutItem x:Name="TrayDocumentationElement" Text="DocumentaÃ§Ã£o" Click="TrayDocs_Click"  />
                     <MenuFlyoutItem x:Name="TrayReportBugElement" Text="Reportar bug" Click="TrayBug_Click"  />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem x:Name="TrayExitElement" Text="Fechar" Click="TrayExit_Click"  />

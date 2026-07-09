@@ -60,7 +60,10 @@ public class HotkeyConfigManager : IHotkeyConfigManager
             new HotkeyConfig { ActionId = "Captura",           DisplayName = "Captura de Tela",          Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Tradutor",          DisplayName = "Tradutor",                 Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "CliCommands",       DisplayName = "Comandos CLI",             Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "AppsWorkspaces",    DisplayName = "Aplicativos",              Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "DeveloperHub",      DisplayName = "Developer Hub",            Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "FutureShell",       DisplayName = "FutureShell",              Modifiers = 0, VirtualKey = 0 },
+            new HotkeyConfig { ActionId = "ManageHotkeys",     DisplayName = "Gerenciar Atalhos",        Modifiers = 0, VirtualKey = 0 },
             new HotkeyConfig { ActionId = "Settings",          DisplayName = "Configurações",            Modifiers = 2, VirtualKey = 0xDE },
             // ── PRO (Enterprise) ──────────────────────────────────────────
             new HotkeyConfig { ActionId = "ChatFT",            DisplayName = "ChatFT",                   Modifiers = 0, VirtualKey = 0 },

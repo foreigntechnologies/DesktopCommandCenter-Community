@@ -7,11 +7,16 @@ namespace DesktopCommandCenter.UI;
 public sealed partial class MainPage : Page
 {
     private DateTime _lastNavTime = DateTime.MinValue;
+    private Microsoft.UI.Xaml.DispatcherTimer? _timer;
+    private ulong _prevIdleTime;
+    private ulong _prevKernelTime;
+    private ulong _prevUserTime;
 
     public MainPage()
     {
         InitializeComponent();
         this.Loaded += MainPage_Loaded;
+        this.Unloaded += MainPage_Unloaded;
         
         // Removed broken x:Bind DataContext
         DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
@@ -45,32 +50,43 @@ public sealed partial class MainPage : Page
     {
         var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
 
-        NavDashboard.Content = loc.GetString("Nav_Dashboard");
+        // Main nav items
+        NavDashboard.Content    = loc.GetString("Nav_Dashboard");
+        NavSearch.Content       = loc.GetString("Nav_Search");
+        NavIALocal.Content      = loc.GetString("Nav_ChatFT");
+        NavApps.Content         = loc.GetString("Nav_Apps");
+        NavFutureShell.Content  = loc.GetString("Nav_FutureShell");
+        NavCliCommands.Content  = loc.GetString("Nav_CliCommands");
+        NavDeveloperHub.Content = loc.GetString("Nav_DeveloperHub");
+
+        // System section
+        NavSystem.Content         = loc.GetString("Nav_System");
         NavProcessManager.Content = loc.GetString("Nav_ProcessManager");
-        NavNotes.Content = loc.GetString("Nav_Notes");
-        HeaderSysUtils.Content = loc.GetString("Nav_SysUtils");
-        NavSystemUpdates.Content = loc.GetString("Nav_SystemUpdates");
+
+        // Utilities
+        NavNotes.Content       = loc.GetString("Nav_Notes");
+        NavClipboard.Content   = loc.GetString("Nav_Clipboard");
+        NavTimer.Content       = loc.GetString("Nav_Timer");
+        NavCapture.Content     = loc.GetString("Nav_Capture");
+        NavTranslator.Content  = loc.GetString("Nav_Translator");
         NavColorPicker.Content = loc.GetString("Nav_ColorPicker");
-        NavAwake.Content = loc.GetString("Nav_Awake");
-        NavCliCommands.Content = loc.GetString("Nav_CliCommands");
-        NavClipboard.Content = loc.GetString("Nav_Clipboard");
+        NavAwake.Content       = loc.GetString("Nav_Awake");
+        NavAlwaysOnTop.Content = loc.GetString("Nav_AlwaysOnTop");
 
-
-
-        NavTimer.Content = loc.GetString("Nav_Timer");
-        NavCapture.Content = loc.GetString("Nav_Capture");
-        NavTranslator.Content = loc.GetString("Nav_Translator");
-        HeaderPro.Content = loc.GetString("Nav_ProFeatures");
-        NavIALocal.Content = loc.GetString("Nav_ChatFT");
-        NavSearch.Content = loc.GetString("Nav_Search");
-        NavPrompts.Content = loc.GetString("Nav_Prompts");
+        // Automation & Plugins
+        NavPrompts.Content     = loc.GetString("Nav_Prompts");
         NavAutomations.Content = loc.GetString("Nav_Automations");
         NavMarketplace.Content = loc.GetString("Nav_Marketplace");
-        NavAuth.Content = loc.GetString("Nav_Auth");
 
-        if (AppNavigationView.SettingsItem is Microsoft.UI.Xaml.Controls.NavigationViewItem navSettingsItem)
+        // Footer
+        NavAuth.Content     = loc.GetString("Nav_Auth");
+        NavSettings.Content = loc.GetString("Nav_Settings");
+
+        if (ChatFTHeaderButton != null)
         {
-            navSettingsItem.Content = loc.GetString("Nav_Settings");
+            var tooltip = new Microsoft.UI.Xaml.Controls.ToolTip();
+            tooltip.Content = loc.GetString("AskAITooltip");
+            Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ChatFTHeaderButton, tooltip);
         }
 
         UpdateNavigationLocks();
@@ -87,6 +103,12 @@ public sealed partial class MainPage : Page
             {
                 ContentFrame.Navigate(typeof(Views.SettingsPage), null, new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             }
+            AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
+            return;
+        }
+        else if (actionId == "ManageHotkeys")
+        {
+            ContentFrame.Navigate(typeof(Views.SettingsPage), "OpenHotkeysDialog", new Microsoft.UI.Xaml.Media.Animation.SuppressNavigationTransitionInfo());
             AppNavigationView.SelectedItem = AppNavigationView.SettingsItem;
             return;
         }
@@ -206,6 +228,7 @@ public sealed partial class MainPage : Page
             Type? pageType = tag switch
             {
                 "Dashboard" => typeof(Views.DashboardPage),
+                "AppsWorkspaces" => typeof(Views.AppsWorkspacesPage),
                 "ProcessManager" => typeof(Views.ProcessManagerPage),
                 "Notes" => typeof(Views.NotesPage),
                 "Clipboard" => typeof(Views.ClipboardPage),
@@ -214,16 +237,18 @@ public sealed partial class MainPage : Page
                 "Awake" => typeof(Views.AwakePage),
                 "AlwaysOnTop" => typeof(Views.AlwaysOnTopPage),
                 "Temporizador" => typeof(Views.TemporizadorPage),
-                "SystemUpdates" => typeof(Views.SystemUpdatesPage),
+                "System" => typeof(Views.SystemUpdatesPage),
                 "Captura" => typeof(Views.CapturaPage),
-            "Tradutor" => typeof(Views.TradutorPage),
-            "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
-            "Prompts" => typeof(Views.PromptsPage),
-            "Automacoes" => typeof(Views.AutomacoesPage),
-            "Auth" => typeof(Views.AuthPage),
-            "CliCommands" => typeof(Views.CliCommandsPage),
-            _ => typeof(Views.ComingSoonPage)
-        };
+                "Tradutor" => typeof(Views.TradutorPage),
+                "PesquisaUniversal" => typeof(Views.PesquisaUniversalPage),
+                "Prompts" => typeof(Views.PromptsPage),
+                "Automacoes" => typeof(Views.AutomacoesPage),
+                "Auth" => typeof(Views.AuthPage),
+                "CliCommands" => typeof(Views.CliCommandsPage),
+                "DeveloperHub" => typeof(Views.DeveloperHubPage),
+                "Settings" => typeof(Views.SettingsPage),
+                _ => typeof(Views.ComingSoonPage)
+            };
 
         bool isProFeature = tag == "Prompts" || tag == "Automacoes" || tag == "Marketplace";
 
@@ -309,36 +334,155 @@ public sealed partial class MainPage : Page
         }
     }
 
-    private async void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void MainPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         UpdateTranslations(); // Garante que o SettingsItem seja traduzido, pois no construtor ele pode não estar instanciado ainda
 
-        var dir = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "DCC");
-        var filePath = System.IO.Path.Combine(dir, "dcc_app_language.txt");
-        if (!System.IO.File.Exists(filePath))
+        // Start real-time update timer for status bar
+        _timer = new Microsoft.UI.Xaml.DispatcherTimer();
+        _timer.Interval = System.TimeSpan.FromSeconds(1.5);
+        _timer.Tick += Timer_Tick!;
+        _timer.Start();
+        Timer_Tick(this, null!);
+    }
+
+    private void MainPage_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (_timer != null)
         {
-            FirstLaunchLanguageDialog.XamlRoot = this.XamlRoot;
-            await FirstLaunchLanguageDialog.ShowAsync();
+            _timer.Stop();
+            _timer.Tick -= Timer_Tick!;
+            _timer = null;
         }
     }
 
-    private void CmbFirstLaunchLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Timer_Tick(object? sender, object? e)
     {
-        FirstLaunchLanguageDialog.IsPrimaryButtonEnabled = CmbFirstLaunchLanguage.SelectedItem != null;
+        try
+        {
+            var memStatus = new DesktopCommandCenter.UI.Views.MEMORYSTATUSEX();
+            memStatus.Init();
+            if (DesktopCommandCenter.UI.Views.NativeMethods.GlobalMemoryStatusEx(ref memStatus) && StatusTextRam != null)
+            {
+                StatusTextRam.Text = $"RAM: {memStatus.dwMemoryLoad}%";
+            }
+
+            if (DesktopCommandCenter.UI.Views.NativeMethods.GetSystemTimes(out var idle, out var kernel, out var user) && StatusTextCpu != null)
+            {
+                ulong curIdle = idle.ToULong();
+                ulong curKernel = kernel.ToULong();
+                ulong curUser = user.ToULong();
+
+                if (_prevIdleTime != 0)
+                {
+                    ulong sysDiff = (curKernel - _prevKernelTime) + (curUser - _prevUserTime);
+                    ulong idleDiff = curIdle - _prevIdleTime;
+                    
+                    if (sysDiff > 0)
+                    {
+                        double cpuPct = (sysDiff - idleDiff) * 100.0 / sysDiff;
+                        if (cpuPct < 0) cpuPct = 0;
+                        if (cpuPct > 100) cpuPct = 100;
+                        StatusTextCpu.Text = $"CPU: {cpuPct:F0}%";
+                    }
+                }
+                
+                _prevIdleTime = curIdle;
+                _prevKernelTime = curKernel;
+                _prevUserTime = curUser;
+            }
+        }
+        catch { }
     }
 
-    private void FirstLaunchLanguageDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private void ChatFTHeaderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (CmbFirstLaunchLanguage.SelectedItem is ComboBoxItem item && item.Tag is string lang)
+        NavigateToAction("IALocal");
+    }
+
+    private void FutureShellHeaderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        NavigateToAction("FutureShell");
+    }
+
+    private void AppNavigationView_PaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
+    {
+        try
         {
-            App.SaveAppLanguage(lang);
-            var tService = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<DesktopCommandCenter.Application.Interfaces.ITranslationService>((App.Current as App).Services);
-            _ = tService.SetLanguageAsync(lang);
-            UpdateTranslations();
-            
-            // Also force update the dialog UI itself using LocalizationHelper
-            var loc = DesktopCommandCenter.UI.Helpers.LocalizationHelper.Instance;
-            FirstLaunchLanguageDialog.Title = loc.GetString("Settings_Language"); 
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ButtonBase>(sender, "TogglePaneButton");
+            if (toggleButton != null)
+            {
+                var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
+                { 
+                    Glyph = "\uE711", 
+                    FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+                    FontSize = 16,
+                    RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5),
+                    RenderTransform = new Microsoft.UI.Xaml.Media.RotateTransform { Angle = -90 }
+                };
+                toggleButton.Content = fontIcon; 
+
+                var storyboard = new Microsoft.UI.Xaml.Media.Animation.Storyboard();
+                var animation = new Microsoft.UI.Xaml.Media.Animation.DoubleAnimation
+                {
+                    To = 0,
+                    Duration = new Microsoft.UI.Xaml.Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new Microsoft.UI.Xaml.Media.Animation.ExponentialEase { EasingMode = Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut, Exponent = 4 }
+                };
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTarget(animation, fontIcon.RenderTransform);
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTargetProperty(animation, "Angle");
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
+            }
         }
+        catch { }
+    }
+
+    private void AppNavigationView_PaneClosing(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs args)
+    {
+        try
+        {
+            var toggleButton = FindVisualChild<Microsoft.UI.Xaml.Controls.Primitives.ButtonBase>(sender, "TogglePaneButton");
+            if (toggleButton != null)
+            {
+                var fontIcon = new Microsoft.UI.Xaml.Controls.FontIcon 
+                { 
+                    Glyph = "\uE700", 
+                    FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"),
+                    FontSize = 16,
+                    RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5),
+                    RenderTransform = new Microsoft.UI.Xaml.Media.RotateTransform { Angle = 90 }
+                };
+                toggleButton.Content = fontIcon; 
+
+                var storyboard = new Microsoft.UI.Xaml.Media.Animation.Storyboard();
+                var animation = new Microsoft.UI.Xaml.Media.Animation.DoubleAnimation
+                {
+                    To = 0,
+                    Duration = new Microsoft.UI.Xaml.Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new Microsoft.UI.Xaml.Media.Animation.ExponentialEase { EasingMode = Microsoft.UI.Xaml.Media.Animation.EasingMode.EaseOut, Exponent = 4 }
+                };
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTarget(animation, fontIcon.RenderTransform);
+                Microsoft.UI.Xaml.Media.Animation.Storyboard.SetTargetProperty(animation, "Angle");
+                storyboard.Children.Add(animation);
+                storyboard.Begin();
+            }
+        }
+        catch { }
+    }
+
+    private T? FindVisualChild<T>(Microsoft.UI.Xaml.DependencyObject parent, string name) where T : Microsoft.UI.Xaml.FrameworkElement
+    {
+        for (int i = 0; i < Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i);
+            if (child is T element && element.Name == name)
+            {
+                return element;
+            }
+            var result = FindVisualChild<T>(child, name);
+            if (result != null) return result;
+        }
+        return null;
     }
 }

@@ -35,8 +35,7 @@ public sealed partial class ChatFTWindow : Window
 
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
-            this.ExtendsContentIntoTitleBar = true;
-            this.SetTitleBar(AppTitleBar);
+            appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         }
         else
         {
@@ -64,8 +63,28 @@ public sealed partial class ChatFTWindow : Window
             {
                 try
                 {
-                    appWindow.TitleBar.ButtonForegroundColor = isDark ? Microsoft.UI.Colors.White : Microsoft.UI.Colors.Black;
+                    if (isDark)
+                    {
+                        appWindow.TitleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+                        appWindow.TitleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+                        appWindow.TitleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+                        appWindow.TitleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
+                    else
+                    {
+                        appWindow.TitleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+                        appWindow.TitleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+                        appWindow.TitleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+                        appWindow.TitleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+                    }
+
                     appWindow.TitleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+                    appWindow.TitleBar.ButtonHoverBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+                    appWindow.TitleBar.ButtonPressedBackgroundColor = isDark
+                        ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+                        : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
                     appWindow.TitleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
                 }
                 catch { }

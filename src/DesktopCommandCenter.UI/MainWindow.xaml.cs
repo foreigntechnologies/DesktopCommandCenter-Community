@@ -4,6 +4,9 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Runtime.InteropServices;
 using WinRT.Interop;
+using Serilog;
+using Microsoft.UI.Windowing;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,6 +23,21 @@ public sealed partial class MainWindow : Window
     [DllImport("shell32.dll", SetLastError = true)]
     static extern void SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, UIntPtr uIdSubclass, IntPtr dwRefData);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, UIntPtr uIdSubclass);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+    private delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, IntPtr dwRefData);
+
+    private const uint WM_SYSCOMMAND = 0x0112;
+    private const uint SC_CLOSE = 0xF060;
+    private SUBCLASSPROC _subclassDelegate;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -27,12 +45,25 @@ public sealed partial class MainWindow : Window
         Helpers.LocalizationHelper.Instance.PropertyChanged += (s, e) => UpdateTranslations();
         TrayShowCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowApp);
         TrayQuickAccessCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(ShowQuickAccess);
-        
+
         this.Closed += MainWindow_Closed;
 
-        // Use standard Window API to avoid 0xc0000602 crash in Microsoft.UI.Input.dll on multi-monitor DPI changes
+        // ExtendsContentIntoTitleBar — set BEFORE any AppWindow property access.
+        // Use the new Window.ExtendsContentIntoTitleBar API to avoid the FailFast crash 
+        // when changing monitors with different DPIs and maximizing.
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(AppTitleBar);
+
+        Log.Information("MainWindow initializing...");
+
+        // ── IMPORTANT: Do NOT subscribe to AppWindow.Changed or Window.SizeChanged. ──
+        // Those events fire on the WinRT compositor thread during DPI transitions.
+        // Even accessing args properties (e.g. sender.Size) through WinRT COM proxies
+        // during that window raises InvalidOperationException inside WinRT.Runtime.dll.
+        // C# try/catch CANNOT intercept WinRT FailFast — it bypasses managed handlers.
+        // Instead, we use a Win32 WndProc subclass to receive WM_DPICHANGED, which
+        // fires only AFTER the DPI transition is fully complete (safe to touch XAML).
+        // ─────────────────────────────────────────────────────────────────────────────
 
         try { SetCurrentProcessExplicitAppUserModelID("ForeignTechnologies.DCC.MainApp"); } catch { }
         var iconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "DCCAppIcon.ico");
@@ -41,38 +72,61 @@ public sealed partial class MainWindow : Window
             AppWindow.SetIcon(iconPath);
         }
 
+        try
+        {
+            Log.Information("Attempting to create MicaBackdrop...");
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "MicaBackdrop failed, falling back to DesktopAcrylicBackdrop...");
+            try { SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop(); }
+            catch (Exception innerEx) { Log.Error(innerEx, "Both Mica and Acrylic backdrops failed to initialize."); }
+        }
+
         RootFrame.Loaded += RootFrame_Loaded;
         this.Activated += MainWindow_FocusChanged;
 
-        try
-        {
-            SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
-        }
-        catch
-        {
-            try
-            {
-                SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
-            }
-            catch { }
-        }
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        _subclassDelegate = new SUBCLASSPROC(WindowSubclass);
+        SetWindowSubclass(hwnd, _subclassDelegate, 1, IntPtr.Zero);
 
         // Navigate the root frame to the main page on startup.
         RootFrame.Navigate(typeof(MainPage));
 
-        // Set initial title bar button colors once the frame is ready.
-        // NOTE: We intentionally do NOT subscribe to AppWindow.Changed here.
-        // Setting TitleBar properties during a DPI transition (monitor move / maximize)
-        // causes WinRT to FailFast with 0xc0000602. TitleBar colors are applied once
-        // on load and then only when the theme actually changes (ActualThemeChanged).
+        // Apply TitleBar colors once after the frame loads.
+        // Do NOT re-apply inside AppWindow.Changed / SizeChanged (DPI transition risk).
         RootFrame.Loaded += (s, e) => ApplyTitleBarColors();
     }
 
+    private IntPtr WindowSubclass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, nuint uIdSubclass, IntPtr dwRefData)
+    {
+        if (uMsg == WM_SYSCOMMAND)
+        {
+            uint cmd = (uint)wParam.ToInt32() & 0xFFF0;
+            if (cmd == SC_CLOSE)
+            {
+                if (!_isExiting && App.GetMinimizeToTray())
+                {
+                    Log.Information("User clicked X (SC_CLOSE). Minimizing to tray instead of closing.");
+                    this.AppWindow.Hide();
+                    return IntPtr.Zero; // Cancel the close
+                }
+            }
+        }
+        return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+    }
+
+
+
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
     /// <summary>
     /// Applies TitleBar button colors to match the current theme.
-    /// Called on the UI thread only when the frame loads or the theme changes.
-    /// We no longer call this on AppWindow.Changed / DPI transitions because
-    /// setting TitleBar properties during a DPI change triggers WinRT FailFast (0xc0000602).
+    /// Safe to call from the UI thread or via DispatcherQueue.
+    /// Only called from: RootFrame.Loaded, WM_DPICHANGED WndProc, and theme change.
+    /// Never called from AppWindow.Changed or SizeChanged (those are crash zones).
     /// </summary>
     public void ApplyTitleBarColors()
     {
@@ -80,12 +134,20 @@ public sealed partial class MainWindow : Window
         {
             try
             {
-                if (Content is not Microsoft.UI.Xaml.FrameworkElement root || root.XamlRoot == null) return;
+                if (Content is not FrameworkElement root || root.XamlRoot == null)
+                    return;
 
                 var titleBar = AppWindow?.TitleBar;
                 if (titleBar == null) return;
 
-                var isDark = root.ActualTheme == Microsoft.UI.Xaml.ElementTheme.Dark;
+                var isDark = root.RequestedTheme == ElementTheme.Dark || 
+                             (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
+                Log.Information("ApplyTitleBarColors: isDark={IsDark}", isDark);
+
+                // Force DWM to use the correct theme for the caption buttons when using Window.ExtendsContentIntoTitleBar
+                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                int immersiveDarkMode = isDark ? 1 : 0;
+                DwmSetWindowAttribute(hwnd, 20, ref immersiveDarkMode, sizeof(int)); // 20 is DWMWA_USE_IMMERSIVE_DARK_MODE
 
                 if (isDark)
                 {
@@ -102,7 +164,6 @@ public sealed partial class MainWindow : Window
                     titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
                 }
 
-                // alpha=1 (near-transparent) avoids the hit-test null region
                 titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
                 titleBar.ButtonHoverBackgroundColor = isDark
                     ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
@@ -111,10 +172,12 @@ public sealed partial class MainWindow : Window
                     ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
                     : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
                 titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
+
+                Log.Information("ApplyTitleBarColors applied successfully.");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"TitleBar update skipped: {ex.Message}");
+                Log.Error(ex, "ApplyTitleBarColors exception.");
             }
         });
     }
@@ -124,6 +187,8 @@ public sealed partial class MainWindow : Window
     private DateTime _lastFocusCheck = DateTime.MinValue;
     private void MainWindow_FocusChanged(object sender, WindowActivatedEventArgs args)
     {
+
+
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
             if ((DateTime.Now - _lastFocusCheck).TotalSeconds > 60) // Check every 60s max instead of 5s
@@ -142,11 +207,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private bool _isExiting = false;
+
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
-        // Ao invés de fechar (X), oculta o app para a bandeja do sistema
-        args.Handled = true;
-        this.AppWindow.Hide();
+        Log.Information("MainWindow_Closed triggered. Genuine close request (system/quit). Exiting application.");
+        Microsoft.UI.Xaml.Application.Current.Exit();
     }
 
     public System.Windows.Input.ICommand TrayShowCommand { get; }
@@ -363,6 +429,8 @@ public sealed partial class MainWindow : Window
             if (currentPackage != null)
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://downloadsAndUpdates"));
+                _isExiting = true;
+                Environment.Exit(0);
                 return;
             }
         }
@@ -372,6 +440,7 @@ public sealed partial class MainWindow : Window
         try
         {
             var mgr = new Velopack.UpdateManager("https://github.com/foreigntechnologies/DesktopCommandCenter-Community");
+            if (!mgr.IsInstalled) return;
             var newVersion = await mgr.CheckForUpdatesAsync();
             if (newVersion != null)
             {
@@ -418,7 +487,8 @@ public sealed partial class MainWindow : Window
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
         // Force the app to close completely
-        Microsoft.UI.Xaml.Application.Current.Exit();
+        _isExiting = true;
+        Environment.Exit(0);
     }
 
     private async void RootFrame_Loaded(object sender, RoutedEventArgs e)
