@@ -20,8 +20,8 @@ public sealed partial class FutureShellWindow : Window
 
     private class TerminalTabContext
     {
-        public Microsoft.UI.Xaml.Controls.WebView2 WebView { get; set; }
-        public ITerminalService TerminalService { get; set; }
+        public Microsoft.UI.Xaml.Controls.WebView2 WebView { get; set; } = null!;
+        public ITerminalService TerminalService { get; set; } = null!;
         public bool IsInitialized { get; set; }
     }
 
