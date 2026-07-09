@@ -141,8 +141,8 @@ public sealed partial class MainWindow : Window
                 var titleBar = AppWindow?.TitleBar;
                 if (titleBar == null) return;
 
-                var isDark = root.RequestedTheme == ElementTheme.Dark || 
-                             (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
+                var themeStr = App.GetTheme();
+                var isDark = themeStr == "Dark" || (themeStr != "Light" && App.Current.RequestedTheme == ApplicationTheme.Dark);
                 Log.Information("ApplyTitleBarColors: isDark={IsDark}", isDark);
 
                 // Force DWM to use the correct theme for the caption buttons when using Window.ExtendsContentIntoTitleBar
