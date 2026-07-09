@@ -61,22 +61,51 @@ public sealed partial class FutureShellWindow : Window
         CreateNewTab();
     }
 
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
     private void ApplyTitleBarColors()
     {
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        
+        bool isDark = false;
+        if (Content is FrameworkElement root)
+        {
+            isDark = root.RequestedTheme == ElementTheme.Dark || 
+                     (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
+        }
+        
+        int isDarkValue = isDark ? 1 : 0;
+        DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref isDarkValue, sizeof(int));
+
         var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
         var titleBar = appWindow?.TitleBar;
         if (titleBar == null) return;
 
-        titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
-        titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
-        titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
-        titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+        if (isDark)
+        {
+            titleBar.ButtonForegroundColor = Microsoft.UI.Colors.White;
+            titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.White;
+            titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.White;
+            titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+        }
+        else
+        {
+            titleBar.ButtonForegroundColor = Microsoft.UI.Colors.Black;
+            titleBar.ButtonHoverForegroundColor = Microsoft.UI.Colors.Black;
+            titleBar.ButtonPressedForegroundColor = Microsoft.UI.Colors.Black;
+            titleBar.ButtonInactiveForegroundColor = Microsoft.UI.ColorHelper.FromArgb(0xFF, 0x80, 0x80, 0x80);
+        }
 
         titleBar.ButtonBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
-        titleBar.ButtonHoverBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
-        titleBar.ButtonPressedBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF);
+        titleBar.ButtonHoverBackgroundColor = isDark
+            ? Microsoft.UI.ColorHelper.FromArgb(0x20, 0xFF, 0xFF, 0xFF)
+            : Microsoft.UI.ColorHelper.FromArgb(0x20, 0x00, 0x00, 0x00);
+        titleBar.ButtonPressedBackgroundColor = isDark
+            ? Microsoft.UI.ColorHelper.FromArgb(0x40, 0xFF, 0xFF, 0xFF)
+            : Microsoft.UI.ColorHelper.FromArgb(0x40, 0x00, 0x00, 0x00);
         titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(1, 0, 0, 0);
     }
 
@@ -108,7 +137,7 @@ public sealed partial class FutureShellWindow : Window
         
         var webView = new Microsoft.UI.Xaml.Controls.WebView2 
         { 
-            DefaultBackgroundColor = Microsoft.UI.ColorHelper.FromArgb(255, 12, 12, 12), // #0C0C0C
+            DefaultBackgroundColor = Microsoft.UI.Colors.Black,
             HorizontalAlignment = HorizontalAlignment.Stretch, 
             VerticalAlignment = VerticalAlignment.Stretch 
         };
@@ -257,6 +286,12 @@ public sealed partial class FutureShellWindow : Window
 
     private void Window_Closed(object sender, WindowEventArgs args)
     {
+        if (_hudTimer != null)
+        {
+            _hudTimer.Stop();
+            _hudTimer.Tick -= HudTimer_Tick;
+        }
+
         // Close all tabs to clean up processes
         var tabs = new System.Collections.Generic.List<TabViewItem>();
         foreach (TabViewItem tab in TerminalTabView.TabItems)

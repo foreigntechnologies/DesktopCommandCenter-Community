@@ -9,7 +9,10 @@
 [![Idioma: Español](https://img.shields.io/badge/Idioma-Español-yellow.svg)](README.es.md)
 
 ## Product Vision
-**Desktop Command Center (DCC)** is an always-accessible, smart sidebar for Windows 11 designed to be a unified productivity hub. It eliminates the need for constant app-switching by bringing the most heavily used daily tools into a single, elegant interface.
+
+**Desktop Command Center (DCC)** is an always-accessible, intelligent sidebar for Windows 11 that serves as a unified productivity hub. It eliminates the need for constant app switching by bringing the tools people use most every day into a single, elegant interface.
+
+**[Download on Microsoft Store](https://apps.microsoft.com/detail/9NZK3SS1M5W6?hl=pt-br&gl=BR&ocid=pdpshare)**
 
 Targeted at professionals, developers, content creators, analysts, and power users.
 
