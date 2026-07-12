@@ -38,6 +38,7 @@ public partial class AuthViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(FreePlanVisibility))]
     [NotifyPropertyChangedFor(nameof(ProPlanVisibility))]
     [NotifyPropertyChangedFor(nameof(PausedPlanVisibility))]
+    [NotifyPropertyChangedFor(nameof(InverseProVisibility))]
     [NotifyPropertyChangedFor(nameof(PlanDisplayText))]
     private bool _isLoggedIn;
 
@@ -99,7 +100,7 @@ public partial class AuthViewModel : ObservableObject
     public bool HasNoGoogleLinked => !HasGoogleLinked;
 
     public bool IsFreePlan   => IsLoggedIn && CurrentPlan.Equals("free", StringComparison.OrdinalIgnoreCase);
-    public bool IsProPlan    => IsLoggedIn && (CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase));
+    public bool IsProPlan    => IsLoggedIn && (CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("premium", StringComparison.OrdinalIgnoreCase));
     public bool IsPausedPlan => IsLoggedIn && CurrentPlan.Equals("paused", StringComparison.OrdinalIgnoreCase);
     
     public Microsoft.UI.Xaml.Visibility FreePlanVisibility => IsFreePlan ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
@@ -192,7 +193,7 @@ public partial class AuthViewModel : ObservableObject
             plan = await _licenseService.GetCurrentPlanAsync();
             // Persist email and pro status to disk so startup is instant on next launch
             App.SaveCachedEmail(user.Email);
-            bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+            bool isPlanPro = plan.Equals("pro", StringComparison.OrdinalIgnoreCase) || plan.Equals("trial", StringComparison.OrdinalIgnoreCase) || plan.Equals("premium", StringComparison.OrdinalIgnoreCase);
             App.SaveProCached(isPlanPro);
         }
         catch (Exception)
@@ -209,7 +210,7 @@ public partial class AuthViewModel : ObservableObject
         _dispatcherQueue.TryEnqueue(() =>
         {
             CurrentPlan = plan;
-            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase);
+            bool newIsPro = CurrentPlan.Equals("pro", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("trial", StringComparison.OrdinalIgnoreCase) || CurrentPlan.Equals("premium", StringComparison.OrdinalIgnoreCase);
             
             App.IsProUnlocked = newIsPro;
             

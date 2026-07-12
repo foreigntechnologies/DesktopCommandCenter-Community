@@ -72,8 +72,8 @@ public sealed partial class FutureShellWindow : Window
         bool isDark = false;
         if (Content is FrameworkElement root)
         {
-            isDark = root.RequestedTheme == ElementTheme.Dark || 
-                     (root.RequestedTheme == ElementTheme.Default && App.Current.RequestedTheme == ApplicationTheme.Dark);
+            var themeStr = App.GetTheme();
+            isDark = themeStr == "Dark" || (themeStr != "Light" && App.Current.RequestedTheme == ApplicationTheme.Dark);
         }
         
         int isDarkValue = isDark ? 1 : 0;
