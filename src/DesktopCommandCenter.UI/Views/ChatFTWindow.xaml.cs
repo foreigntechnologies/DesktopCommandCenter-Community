@@ -53,11 +53,8 @@ public sealed partial class ChatFTWindow : Window
                 _ => ElementTheme.Default
             };
 
-            var isDark = frameworkElement.RequestedTheme == ElementTheme.Dark;
-            if (frameworkElement.RequestedTheme == ElementTheme.Default)
-            {
-                isDark = App.Current.RequestedTheme == ApplicationTheme.Dark;
-            }
+            var themeStr = App.GetTheme();
+            var isDark = themeStr == "Dark" || (themeStr != "Light" && App.Current.RequestedTheme == ApplicationTheme.Dark);
 
             if (appWindow.TitleBar != null)
             {
